@@ -114,3 +114,17 @@ export function getTextFromMessage(message: ChatMessage): string {
     .map((part) => part.text)
     .join('');
 }
+
+export function slugifyCompanyName(value: string): string {
+  const normalized = value
+    .normalize('NFKD')
+    .replace(/[^\w\s-]/g, '')
+    .trim()
+    .replace(/[\s_]+/g, '-')
+    .replace(/-+/g, '-')
+    .toLowerCase();
+
+  const slug = normalized.slice(0, 80).replace(/^-+|-+$/g, '');
+
+  return slug || `org-${generateUUID()}`;
+}

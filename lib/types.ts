@@ -1,4 +1,4 @@
-import type { InferUITool, UIMessage } from "ai";
+import type { InferUITool, InferUITools, UIMessage, Tool } from "ai";
 import { z } from "zod";
 import type { ArtifactKind } from "@/components/artifact";
 import type { createDocument } from "./ai/tools/create-document";
@@ -7,6 +7,10 @@ import type { requestSuggestions } from "./ai/tools/request-suggestions";
 import type { updateDocument } from "./ai/tools/update-document";
 import type { Suggestion } from "./db/schema";
 import type { AppUsage } from "./usage";
+import type { getOnetRoleTools } from "@/example_tooling/onet-tools";
+import type { humanTools } from "@/example_tooling/human-tools";
+import { openai } from "@ai-sdk/openai";
+import { orgReportSchema } from "./run/report-schema";
 
 export type DataPart = { type: "append-message"; message: string };
 
@@ -21,13 +25,23 @@ type createDocumentTool = InferUITool<ReturnType<typeof createDocument>>;
 type updateDocumentTool = InferUITool<ReturnType<typeof updateDocument>>;
 type requestSuggestionsTool = InferUITool<
   ReturnType<typeof requestSuggestions>
->;
+  >;
+type OnetRoleTools = InferUITools<ReturnType<typeof getOnetRoleTools>>;
+type HumanTools = InferUITools<typeof humanTools>;
+type WebSearchTool = InferUITool<ReturnType<typeof openai.tools.webSearch>>;
+type OrgReportFinalizeTool = Tool<z.infer<typeof orgReportSchema>, { status: string }>;
 
 export type ChatTools = {
   getWeather: weatherTool;
   createDocument: createDocumentTool;
   updateDocument: updateDocumentTool;
   requestSuggestions: requestSuggestionsTool;
+  onet_role_metrics: OnetRoleTools["onet_role_metrics"];
+  onet_role_summary: OnetRoleTools["onet_role_summary"];
+  org_report_finalizer: InferUITool<OrgReportFinalizeTool>;
+  think: HumanTools["think"];
+  repair_tool_call: HumanTools["repair_tool_call"];
+  web_search: WebSearchTool;
 };
 
 export type CustomUIDataTypes = {

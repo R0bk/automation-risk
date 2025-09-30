@@ -1,20 +1,39 @@
+## Automation Risk Explorer
+
+This fork repurposes the base chat template into a public "automation share explorer" that lets anyone launch and replay AI workforce impact studies for named companies. The `/api/run` endpoint orchestrates GPT-5 with OpenAI web search, O*NET mappings, AnthropX automation/augmentation share overlays, and a new finaliser tool that emits a compact organisational report. Completed runs are cached, replayed on the landing page, and guarded by a global budget counter plus lightweight rate limiting.
+
+### Getting started
+
+1. **Install dependencies** – `pnpm install` (adds `@ai-sdk/openai`).
+2. **Environment variables**
+   - `OPENAI_API_KEY` – OpenAI Responses API key with web search access.
+   - `POSTGRES_URL` – Neon (or Postgres) connection string.
+   - `RUN_RATE_LIMIT` *(optional, default 3)* – new-company submissions per IP per window.
+   - `RUN_RATE_LIMIT_WINDOW_MS` *(optional, default 3600000)*.
+   - `RUN_CACHE_TTL_MS` *(optional, default 300000)* – in-memory replay cache TTL.
+3. **Seed the database**
+   - Apply migrations: `pnpm db:migrate`.
+   - Insert a global budget row: `INSERT INTO "GlobalBudget" ("key", "remainingRuns") VALUES ('company_runs', 50);`
+  - Load the O*NET role catalog: `pnpm exec tsx scripts/seed-onet-role-catalog.ts` (requires `POSTGRES_URL`).
+4. **Local development** – `pnpm dev`, then open `http://localhost:3000`.
+
+### Commands
+
+| Command | Description |
+| ------- | ----------- |
+| `pnpm dev` | Start Next.js in development mode. |
+| `pnpm build` | Runs database migrations then builds the app. |
+| `pnpm start` | Starts the production server. |
+| `pnpm test:unit` | Executes the new Node-based unit tests (currently slugify coverage). |
+
+The original Chat SDK documentation follows for reference.
+
+---
+
 <a href="https://chat.vercel.ai/">
   <img alt="Next.js 14 and App Router-ready AI chatbot." src="app/(chat)/opengraph-image.png">
   <h1 align="center">Chat SDK</h1>
 </a>
-
-<p align="center">
-    Chat SDK is a free, open-source template built with Next.js and the AI SDK that helps you quickly build powerful chatbot applications.
-</p>
-
-<p align="center">
-  <a href="https://chat-sdk.dev"><strong>Read Docs</strong></a> ·
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#running-locally"><strong>Running locally</strong></a>
-</p>
-<br/>
 
 ## Features
 

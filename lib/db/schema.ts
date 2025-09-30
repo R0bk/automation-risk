@@ -2,12 +2,15 @@ import type { InferSelectModel } from "drizzle-orm";
 import {
   boolean,
   foreignKey,
+  integer,
   json,
   jsonb,
+  numeric,
   pgTable,
   primaryKey,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -35,6 +38,108 @@ export const chat = pgTable("Chat", {
 });
 
 export type Chat = InferSelectModel<typeof chat>;
+
+export const company = pgTable(
+  "Company",
+  {
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+    slug: varchar("slug", { length: 128 }).notNull(),
+    displayName: varchar("displayName", { length: 256 }).notNull(),
+    hqCountry: varchar("hqCountry", { length: 64 }),
+    lastRunAt: timestamp("lastRunAt"),
+  },
+  (table) => ({
+    slugIndex: uniqueIndex("Company_slug_key").on(table.slug),
+  })
+);
+
+export type Company = InferSelectModel<typeof company>;
+
+export const analysisRun = pgTable("AnalysisRun", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  companyId: uuid("companyId")
+    .notNull()
+    .references(() => company.id),
+  chatId: uuid("chatId")
+    .notNull()
+    .references(() => chat.id),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+  status: varchar("status", { length: 32 })
+    .notNull()
+    .default("pending"),
+  inputQuery: text("inputQuery").notNull(),
+  model: varchar("model", { length: 64 }).notNull(),
+  finalReportJson: jsonb("finalReportJson"),
+});
+
+export type AnalysisRun = InferSelectModel<typeof analysisRun>;
+
+export const jobRole = pgTable("JobRole", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+  onetCode: varchar("onetCode", { length: 32 }).notNull().unique(),
+  title: varchar("title", { length: 256 }).notNull(),
+  normalizedTitle: varchar("normalizedTitle", { length: 256 }).notNull(),
+  parentCluster: varchar("parentCluster", { length: 256 }),
+  isActive: boolean("isActive").notNull().default(true),
+  metadata: jsonb("metadata"),
+});
+
+export type JobRole = InferSelectModel<typeof jobRole>;
+
+export const runRoleSnapshot = pgTable("RunRoleSnapshot", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  runId: uuid("runId")
+    .notNull()
+    .references(() => analysisRun.id),
+  jobRoleId: uuid("jobRoleId")
+    .notNull()
+    .references(() => jobRole.id),
+  hierarchyPath: jsonb("hierarchyPath").notNull(),
+  headcount: integer("headcount"),
+  automationRisk: numeric("automationRisk", { precision: 6, scale: 3 }),
+  augmentationScore: numeric("augmentationScore", { precision: 6, scale: 3 }),
+  data: jsonb("data"),
+});
+
+export type RunRoleSnapshot = InferSelectModel<typeof runRoleSnapshot>;
+
+export const runMetric = pgTable("RunMetric", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  runId: uuid("runId")
+    .notNull()
+    .references(() => analysisRun.id),
+  metricType: varchar("metricType", { length: 64 }).notNull(),
+  label: varchar("label", { length: 256 }).notNull(),
+  headcount: integer("headcount"),
+  automationRisk: numeric("automationRisk", { precision: 6, scale: 3 }),
+  augmentationScore: numeric("augmentationScore", { precision: 6, scale: 3 }),
+  data: jsonb("data"),
+});
+
+export type RunMetric = InferSelectModel<typeof runMetric>;
+
+export const runPopularity = pgTable("RunPopularity", {
+  runId: uuid("runId")
+    .primaryKey()
+    .references(() => analysisRun.id),
+  viewCount: integer("viewCount").notNull().default(0),
+  lastViewedAt: timestamp("lastViewedAt"),
+});
+
+export type RunPopularity = InferSelectModel<typeof runPopularity>;
+
+export const globalBudget = pgTable("GlobalBudget", {
+  key: varchar("key", { length: 64 }).primaryKey().notNull(),
+  remainingRuns: integer("remainingRuns").notNull(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
+
+export type GlobalBudget = InferSelectModel<typeof globalBudget>;
 
 // DEPRECATED: The following schema is deprecated and will be removed in the future.
 // Read the migration guide at https://chat-sdk.dev/docs/migration-guides/message-parts

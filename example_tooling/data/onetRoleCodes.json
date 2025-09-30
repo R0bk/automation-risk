@@ -1,0 +1,3902 @@
+{
+  "accountants": {
+    "code": "13-2011.01",
+    "title": "Accountants"
+  },
+  "actors": {
+    "code": "27-2011.00",
+    "title": "Actors"
+  },
+  "actuaries": {
+    "code": "15-2011.00",
+    "title": "Actuaries"
+  },
+  "acupuncturists": {
+    "code": "29-1199.01",
+    "title": "Acupuncturists"
+  },
+  "acute care nurses": {
+    "code": "29-1141.01",
+    "title": "Acute Care Nurses"
+  },
+  "adapted physical education specialists": {
+    "code": "25-2059.01",
+    "title": "Adapted Physical Education Specialists"
+  },
+  "adhesive bonding machine operators and tenders": {
+    "code": "51-9191.00",
+    "title": "Adhesive Bonding Machine Operators and Tenders"
+  },
+  "administrative law judges, adjudicators, and hearing officers": {
+    "code": "23-1021.00",
+    "title": "Administrative Law Judges, Adjudicators, and Hearing Officers"
+  },
+  "administrative services managers": {
+    "code": "11-3011.00",
+    "title": "Administrative Services Managers"
+  },
+  "adult basic and secondary education and literacy teachers and instructors": {
+    "code": "25-3011.00",
+    "title": "Adult Basic and Secondary Education and Literacy Teachers and Instructors"
+  },
+  "advanced practice psychiatric nurses": {
+    "code": "29-1141.02",
+    "title": "Advanced Practice Psychiatric Nurses"
+  },
+  "advertising and promotions managers": {
+    "code": "11-2011.00",
+    "title": "Advertising and Promotions Managers"
+  },
+  "advertising sales agents": {
+    "code": "41-3011.00",
+    "title": "Advertising Sales Agents"
+  },
+  "aerospace engineering and operations technicians": {
+    "code": "17-3021.00",
+    "title": "Aerospace Engineering and Operations Technicians"
+  },
+  "aerospace engineers": {
+    "code": "17-2011.00",
+    "title": "Aerospace Engineers"
+  },
+  "agents and business managers of artists, performers, and athletes": {
+    "code": "13-1011.00",
+    "title": "Agents and Business Managers of Artists, Performers, and Athletes"
+  },
+  "agricultural engineers": {
+    "code": "17-2021.00",
+    "title": "Agricultural Engineers"
+  },
+  "agricultural equipment operators": {
+    "code": "45-2091.00",
+    "title": "Agricultural Equipment Operators"
+  },
+  "agricultural inspectors": {
+    "code": "45-2011.00",
+    "title": "Agricultural Inspectors"
+  },
+  "agricultural sciences teachers, postsecondary": {
+    "code": "25-1041.00",
+    "title": "Agricultural Sciences Teachers, Postsecondary"
+  },
+  "agricultural technicians": {
+    "code": "19-4011.01",
+    "title": "Agricultural Technicians"
+  },
+  "air traffic controllers": {
+    "code": "53-2021.00",
+    "title": "Air Traffic Controllers"
+  },
+  "aircraft cargo handling supervisors": {
+    "code": "53-1011.00",
+    "title": "Aircraft Cargo Handling Supervisors"
+  },
+  "aircraft mechanics and service technicians": {
+    "code": "49-3011.00",
+    "title": "Aircraft Mechanics and Service Technicians"
+  },
+  "aircraft structure, surfaces, rigging, and systems assemblers": {
+    "code": "51-2011.00",
+    "title": "Aircraft Structure, Surfaces, Rigging, and Systems Assemblers"
+  },
+  "airfield operations specialists": {
+    "code": "53-2022.00",
+    "title": "Airfield Operations Specialists"
+  },
+  "airline pilots, copilots, and flight engineers": {
+    "code": "53-2011.00",
+    "title": "Airline Pilots, Copilots, and Flight Engineers"
+  },
+  "allergists and immunologists": {
+    "code": "29-1069.01",
+    "title": "Allergists and Immunologists"
+  },
+  "ambulance drivers and attendants, except emergency medical technicians": {
+    "code": "53-3011.00",
+    "title": "Ambulance Drivers and Attendants, Except Emergency Medical Technicians"
+  },
+  "amusement and recreation attendants": {
+    "code": "39-3091.00",
+    "title": "Amusement and Recreation Attendants"
+  },
+  "anesthesiologist assistants": {
+    "code": "29-1071.01",
+    "title": "Anesthesiologist Assistants"
+  },
+  "anesthesiologists": {
+    "code": "29-1061.00",
+    "title": "Anesthesiologists"
+  },
+  "animal breeders": {
+    "code": "45-2021.00",
+    "title": "Animal Breeders"
+  },
+  "animal control workers": {
+    "code": "33-9011.00",
+    "title": "Animal Control Workers"
+  },
+  "animal scientists": {
+    "code": "19-1011.00",
+    "title": "Animal Scientists"
+  },
+  "animal trainers": {
+    "code": "39-2011.00",
+    "title": "Animal Trainers"
+  },
+  "anthropologists": {
+    "code": "19-3091.01",
+    "title": "Anthropologists"
+  },
+  "anthropology and archeology teachers, postsecondary": {
+    "code": "25-1061.00",
+    "title": "Anthropology and Archeology Teachers, Postsecondary"
+  },
+  "appraisers, real estate": {
+    "code": "13-2021.02",
+    "title": "Appraisers, Real Estate"
+  },
+  "aquacultural managers": {
+    "code": "11-9013.03",
+    "title": "Aquacultural Managers"
+  },
+  "arbitrators, mediators, and conciliators": {
+    "code": "23-1022.00",
+    "title": "Arbitrators, Mediators, and Conciliators"
+  },
+  "archeologists": {
+    "code": "19-3091.02",
+    "title": "Archeologists"
+  },
+  "architects, except landscape and naval": {
+    "code": "17-1011.00",
+    "title": "Architects, Except Landscape and Naval"
+  },
+  "architectural and engineering managers": {
+    "code": "11-9041.00",
+    "title": "Architectural and Engineering Managers"
+  },
+  "architectural drafters": {
+    "code": "17-3011.01",
+    "title": "Architectural Drafters"
+  },
+  "architecture teachers, postsecondary": {
+    "code": "25-1031.00",
+    "title": "Architecture Teachers, Postsecondary"
+  },
+  "archivists": {
+    "code": "25-4011.00",
+    "title": "Archivists"
+  },
+  "area, ethnic, and cultural studies teachers, postsecondary": {
+    "code": "25-1062.00",
+    "title": "Area, Ethnic, and Cultural Studies Teachers, Postsecondary"
+  },
+  "art directors": {
+    "code": "27-1011.00",
+    "title": "Art Directors"
+  },
+  "art therapists": {
+    "code": "29-1125.01",
+    "title": "Art Therapists"
+  },
+  "art, drama, and music teachers, postsecondary": {
+    "code": "25-1121.00",
+    "title": "Art, Drama, and Music Teachers, Postsecondary"
+  },
+  "assessors": {
+    "code": "13-2021.01",
+    "title": "Assessors"
+  },
+  "astronomers": {
+    "code": "19-2011.00",
+    "title": "Astronomers"
+  },
+  "athletes and sports competitors": {
+    "code": "27-2021.00",
+    "title": "Athletes and Sports Competitors"
+  },
+  "athletic trainers": {
+    "code": "29-9091.00",
+    "title": "Athletic Trainers"
+  },
+  "atmospheric and space scientists": {
+    "code": "19-2021.00",
+    "title": "Atmospheric and Space Scientists"
+  },
+  "atmospheric, earth, marine, and space sciences teachers, postsecondary": {
+    "code": "25-1051.00",
+    "title": "Atmospheric, Earth, Marine, and Space Sciences Teachers, Postsecondary"
+  },
+  "audio and video equipment technicians": {
+    "code": "27-4011.00",
+    "title": "Audio and Video Equipment Technicians"
+  },
+  "audio-visual and multimedia collections specialists": {
+    "code": "25-9011.00",
+    "title": "Audio-Visual and Multimedia Collections Specialists"
+  },
+  "audiologists": {
+    "code": "29-1181.00",
+    "title": "Audiologists"
+  },
+  "auditors": {
+    "code": "13-2011.02",
+    "title": "Auditors"
+  },
+  "automotive and watercraft service attendants": {
+    "code": "53-6031.00",
+    "title": "Automotive and Watercraft Service Attendants"
+  },
+  "automotive body and related repairers": {
+    "code": "49-3021.00",
+    "title": "Automotive Body and Related Repairers"
+  },
+  "automotive engineering technicians": {
+    "code": "17-3027.01",
+    "title": "Automotive Engineering Technicians"
+  },
+  "automotive engineers": {
+    "code": "17-2141.02",
+    "title": "Automotive Engineers"
+  },
+  "automotive glass installers and repairers": {
+    "code": "49-3022.00",
+    "title": "Automotive Glass Installers and Repairers"
+  },
+  "automotive master mechanics": {
+    "code": "49-3023.01",
+    "title": "Automotive Master Mechanics"
+  },
+  "automotive specialty technicians": {
+    "code": "49-3023.02",
+    "title": "Automotive Specialty Technicians"
+  },
+  "aviation inspectors": {
+    "code": "53-6051.01",
+    "title": "Aviation Inspectors"
+  },
+  "avionics technicians": {
+    "code": "49-2091.00",
+    "title": "Avionics Technicians"
+  },
+  "baggage porters and bellhops": {
+    "code": "39-6011.00",
+    "title": "Baggage Porters and Bellhops"
+  },
+  "bailiffs": {
+    "code": "33-3011.00",
+    "title": "Bailiffs"
+  },
+  "bakers": {
+    "code": "51-3011.00",
+    "title": "Bakers"
+  },
+  "barbers": {
+    "code": "39-5011.00",
+    "title": "Barbers"
+  },
+  "baristas": {
+    "code": "35-3022.01",
+    "title": "Baristas"
+  },
+  "bartenders": {
+    "code": "35-3011.00",
+    "title": "Bartenders"
+  },
+  "bicycle repairers": {
+    "code": "49-3091.00",
+    "title": "Bicycle Repairers"
+  },
+  "bill and account collectors": {
+    "code": "43-3011.00",
+    "title": "Bill and Account Collectors"
+  },
+  "billing, cost, and rate clerks": {
+    "code": "43-3021.02",
+    "title": "Billing, Cost, and Rate Clerks"
+  },
+  "biochemical engineers": {
+    "code": "17-2199.01",
+    "title": "Biochemical Engineers"
+  },
+  "biochemists and biophysicists": {
+    "code": "19-1021.00",
+    "title": "Biochemists and Biophysicists"
+  },
+  "biofuels processing technicians": {
+    "code": "51-8099.01",
+    "title": "Biofuels Processing Technicians"
+  },
+  "biofuels production managers": {
+    "code": "11-3051.03",
+    "title": "Biofuels Production Managers"
+  },
+  "biofuels/biodiesel technology and product development managers": {
+    "code": "11-9041.01",
+    "title": "Biofuels/Biodiesel Technology and Product Development Managers"
+  },
+  "bioinformatics scientists": {
+    "code": "19-1029.01",
+    "title": "Bioinformatics Scientists"
+  },
+  "bioinformatics technicians": {
+    "code": "43-9111.01",
+    "title": "Bioinformatics Technicians"
+  },
+  "biological science teachers, postsecondary": {
+    "code": "25-1042.00",
+    "title": "Biological Science Teachers, Postsecondary"
+  },
+  "biological technicians": {
+    "code": "19-4021.00",
+    "title": "Biological Technicians"
+  },
+  "biologists": {
+    "code": "19-1020.01",
+    "title": "Biologists"
+  },
+  "biomass plant technicians": {
+    "code": "51-8099.03",
+    "title": "Biomass Plant Technicians"
+  },
+  "biomass power plant managers": {
+    "code": "11-3051.04",
+    "title": "Biomass Power Plant Managers"
+  },
+  "biomedical engineers": {
+    "code": "17-2031.00",
+    "title": "Biomedical Engineers"
+  },
+  "biostatisticians": {
+    "code": "15-2041.01",
+    "title": "Biostatisticians"
+  },
+  "boilermakers": {
+    "code": "47-2011.00",
+    "title": "Boilermakers"
+  },
+  "bookkeeping, accounting, and auditing clerks": {
+    "code": "43-3031.00",
+    "title": "Bookkeeping, Accounting, and Auditing Clerks"
+  },
+  "brickmasons and blockmasons": {
+    "code": "47-2021.00",
+    "title": "Brickmasons and Blockmasons"
+  },
+  "bridge and lock tenders": {
+    "code": "53-6011.00",
+    "title": "Bridge and Lock Tenders"
+  },
+  "broadcast news analysts": {
+    "code": "27-3021.00",
+    "title": "Broadcast News Analysts"
+  },
+  "broadcast technicians": {
+    "code": "27-4012.00",
+    "title": "Broadcast Technicians"
+  },
+  "brokerage clerks": {
+    "code": "43-4011.00",
+    "title": "Brokerage Clerks"
+  },
+  "brownfield redevelopment specialists and site managers": {
+    "code": "11-9199.11",
+    "title": "Brownfield Redevelopment Specialists and Site Managers"
+  },
+  "budget analysts": {
+    "code": "13-2031.00",
+    "title": "Budget Analysts"
+  },
+  "bus and truck mechanics and diesel engine specialists": {
+    "code": "49-3031.00",
+    "title": "Bus and Truck Mechanics and Diesel Engine Specialists"
+  },
+  "bus drivers, school or special client": {
+    "code": "53-3022.00",
+    "title": "Bus Drivers, School or Special Client"
+  },
+  "bus drivers, transit and intercity": {
+    "code": "53-3021.00",
+    "title": "Bus Drivers, Transit and Intercity"
+  },
+  "business continuity planners": {
+    "code": "13-1199.04",
+    "title": "Business Continuity Planners"
+  },
+  "business intelligence analysts": {
+    "code": "15-1199.08",
+    "title": "Business Intelligence Analysts"
+  },
+  "business teachers, postsecondary": {
+    "code": "25-1011.00",
+    "title": "Business Teachers, Postsecondary"
+  },
+  "butchers and meat cutters": {
+    "code": "51-3021.00",
+    "title": "Butchers and Meat Cutters"
+  },
+  "buyers and purchasing agents, farm products": {
+    "code": "13-1021.00",
+    "title": "Buyers and Purchasing Agents, Farm Products"
+  },
+  "cabinetmakers and bench carpenters": {
+    "code": "51-7011.00",
+    "title": "Cabinetmakers and Bench Carpenters"
+  },
+  "camera and photographic equipment repairers": {
+    "code": "49-9061.00",
+    "title": "Camera and Photographic Equipment Repairers"
+  },
+  "camera operators, television, video, and motion picture": {
+    "code": "27-4031.00",
+    "title": "Camera Operators, Television, Video, and Motion Picture"
+  },
+  "cardiovascular technologists and technicians": {
+    "code": "29-2031.00",
+    "title": "Cardiovascular Technologists and Technicians"
+  },
+  "career/technical education teachers, middle school": {
+    "code": "25-2023.00",
+    "title": "Career/Technical Education Teachers, Middle School"
+  },
+  "career/technical education teachers, secondary school": {
+    "code": "25-2032.00",
+    "title": "Career/Technical Education Teachers, Secondary School"
+  },
+  "cargo and freight agents": {
+    "code": "43-5011.00",
+    "title": "Cargo and Freight Agents"
+  },
+  "carpet installers": {
+    "code": "47-2041.00",
+    "title": "Carpet Installers"
+  },
+  "cartographers and photogrammetrists": {
+    "code": "17-1021.00",
+    "title": "Cartographers and Photogrammetrists"
+  },
+  "cashiers": {
+    "code": "41-2011.00",
+    "title": "Cashiers"
+  },
+  "cement masons and concrete finishers": {
+    "code": "47-2051.00",
+    "title": "Cement Masons and Concrete Finishers"
+  },
+  "chefs and head cooks": {
+    "code": "35-1011.00",
+    "title": "Chefs and Head Cooks"
+  },
+  "chemical engineers": {
+    "code": "17-2041.00",
+    "title": "Chemical Engineers"
+  },
+  "chemical equipment operators and tenders": {
+    "code": "51-9011.00",
+    "title": "Chemical Equipment Operators and Tenders"
+  },
+  "chemical plant and system operators": {
+    "code": "51-8091.00",
+    "title": "Chemical Plant and System Operators"
+  },
+  "chemical technicians": {
+    "code": "19-4031.00",
+    "title": "Chemical Technicians"
+  },
+  "chemistry teachers, postsecondary": {
+    "code": "25-1052.00",
+    "title": "Chemistry Teachers, Postsecondary"
+  },
+  "chemists": {
+    "code": "19-2031.00",
+    "title": "Chemists"
+  },
+  "chief executives": {
+    "code": "11-1011.00",
+    "title": "Chief Executives"
+  },
+  "chief sustainability officers": {
+    "code": "11-1011.03",
+    "title": "Chief Sustainability Officers"
+  },
+  "child, family, and school social workers": {
+    "code": "21-1021.00",
+    "title": "Child, Family, and School Social Workers"
+  },
+  "childcare workers": {
+    "code": "39-9011.00",
+    "title": "Childcare Workers"
+  },
+  "chiropractors": {
+    "code": "29-1011.00",
+    "title": "Chiropractors"
+  },
+  "choreographers": {
+    "code": "27-2032.00",
+    "title": "Choreographers"
+  },
+  "city and regional planning aides": {
+    "code": "19-4061.01",
+    "title": "City and Regional Planning Aides"
+  },
+  "civil drafters": {
+    "code": "17-3011.02",
+    "title": "Civil Drafters"
+  },
+  "civil engineering technicians": {
+    "code": "17-3022.00",
+    "title": "Civil Engineering Technicians"
+  },
+  "civil engineers": {
+    "code": "17-2051.00",
+    "title": "Civil Engineers"
+  },
+  "claims examiners, property and casualty insurance": {
+    "code": "13-1031.01",
+    "title": "Claims Examiners, Property and Casualty Insurance"
+  },
+  "cleaners of vehicles and equipment": {
+    "code": "53-7061.00",
+    "title": "Cleaners of Vehicles and Equipment"
+  },
+  "cleaning, washing, and metal pickling equipment operators and tenders": {
+    "code": "51-9192.00",
+    "title": "Cleaning, Washing, and Metal Pickling Equipment Operators and Tenders"
+  },
+  "clergy": {
+    "code": "21-2011.00",
+    "title": "Clergy"
+  },
+  "climate change analysts": {
+    "code": "19-2041.01",
+    "title": "Climate Change Analysts"
+  },
+  "clinical data managers": {
+    "code": "15-2041.02",
+    "title": "Clinical Data Managers"
+  },
+  "clinical nurse specialists": {
+    "code": "29-1141.04",
+    "title": "Clinical Nurse Specialists"
+  },
+  "clinical psychologists": {
+    "code": "19-3031.02",
+    "title": "Clinical Psychologists"
+  },
+  "clinical research coordinators": {
+    "code": "11-9121.01",
+    "title": "Clinical Research Coordinators"
+  },
+  "coaches and scouts": {
+    "code": "27-2022.00",
+    "title": "Coaches and Scouts"
+  },
+  "coating, painting, and spraying machine setters, operators, and tenders": {
+    "code": "51-9121.00",
+    "title": "Coating, Painting, and Spraying Machine Setters, Operators, and Tenders"
+  },
+  "coil winders, tapers, and finishers": {
+    "code": "51-2021.00",
+    "title": "Coil Winders, Tapers, and Finishers"
+  },
+  "coin, vending, and amusement machine servicers and repairers": {
+    "code": "49-9091.00",
+    "title": "Coin, Vending, and Amusement Machine Servicers and Repairers"
+  },
+  "combined food preparation and serving workers, including fast food": {
+    "code": "35-3021.00",
+    "title": "Combined Food Preparation and Serving Workers, Including Fast Food"
+  },
+  "commercial and industrial designers": {
+    "code": "27-1021.00",
+    "title": "Commercial and Industrial Designers"
+  },
+  "commercial divers": {
+    "code": "49-9092.00",
+    "title": "Commercial Divers"
+  },
+  "commercial pilots": {
+    "code": "53-2012.00",
+    "title": "Commercial Pilots"
+  },
+  "communications teachers, postsecondary": {
+    "code": "25-1122.00",
+    "title": "Communications Teachers, Postsecondary"
+  },
+  "community health workers": {
+    "code": "21-1094.00",
+    "title": "Community Health Workers"
+  },
+  "compensation and benefits managers": {
+    "code": "11-3111.00",
+    "title": "Compensation and Benefits Managers"
+  },
+  "compensation, benefits, and job analysis specialists": {
+    "code": "13-1141.00",
+    "title": "Compensation, Benefits, and Job Analysis Specialists"
+  },
+  "compliance managers": {
+    "code": "11-9199.02",
+    "title": "Compliance Managers"
+  },
+  "computer and information research scientists": {
+    "code": "15-1111.00",
+    "title": "Computer and Information Research Scientists"
+  },
+  "computer and information systems managers": {
+    "code": "11-3021.00",
+    "title": "Computer and Information Systems Managers"
+  },
+  "computer hardware engineers": {
+    "code": "17-2061.00",
+    "title": "Computer Hardware Engineers"
+  },
+  "computer network architects": {
+    "code": "15-1143.00",
+    "title": "Computer Network Architects"
+  },
+  "computer network support specialists": {
+    "code": "15-1152.00",
+    "title": "Computer Network Support Specialists"
+  },
+  "computer numerically controlled machine tool programmers, metal and plastic": {
+    "code": "51-4012.00",
+    "title": "Computer Numerically Controlled Machine Tool Programmers, Metal and Plastic"
+  },
+  "computer operators": {
+    "code": "43-9011.00",
+    "title": "Computer Operators"
+  },
+  "computer programmers": {
+    "code": "15-1131.00",
+    "title": "Computer Programmers"
+  },
+  "computer science teachers, postsecondary": {
+    "code": "25-1021.00",
+    "title": "Computer Science Teachers, Postsecondary"
+  },
+  "computer systems analysts": {
+    "code": "15-1121.00",
+    "title": "Computer Systems Analysts"
+  },
+  "computer systems engineers/architects": {
+    "code": "15-1199.02",
+    "title": "Computer Systems Engineers/Architects"
+  },
+  "computer user support specialists": {
+    "code": "15-1151.00",
+    "title": "Computer User Support Specialists"
+  },
+  "computer, automated teller, and office machine repairers": {
+    "code": "49-2011.00",
+    "title": "Computer, Automated Teller, and Office Machine Repairers"
+  },
+  "computer-controlled machine tool operators, metal and plastic": {
+    "code": "51-4011.00",
+    "title": "Computer-Controlled Machine Tool Operators, Metal and Plastic"
+  },
+  "concierges": {
+    "code": "39-6012.00",
+    "title": "Concierges"
+  },
+  "construction and building inspectors": {
+    "code": "47-4011.00",
+    "title": "Construction and Building Inspectors"
+  },
+  "construction carpenters": {
+    "code": "47-2031.01",
+    "title": "Construction Carpenters"
+  },
+  "construction laborers": {
+    "code": "47-2061.00",
+    "title": "Construction Laborers"
+  },
+  "construction managers": {
+    "code": "11-9021.00",
+    "title": "Construction Managers"
+  },
+  "continuous mining machine operators": {
+    "code": "47-5041.00",
+    "title": "Continuous Mining Machine Operators"
+  },
+  "control and valve installers and repairers, except mechanical door": {
+    "code": "49-9012.00",
+    "title": "Control and Valve Installers and Repairers, Except Mechanical Door"
+  },
+  "conveyor operators and tenders": {
+    "code": "53-7011.00",
+    "title": "Conveyor Operators and Tenders"
+  },
+  "cooks, fast food": {
+    "code": "35-2011.00",
+    "title": "Cooks, Fast Food"
+  },
+  "cooks, institution and cafeteria": {
+    "code": "35-2012.00",
+    "title": "Cooks, Institution and Cafeteria"
+  },
+  "cooks, private household": {
+    "code": "35-2013.00",
+    "title": "Cooks, Private Household"
+  },
+  "cooks, restaurant": {
+    "code": "35-2014.00",
+    "title": "Cooks, Restaurant"
+  },
+  "cooks, short order": {
+    "code": "35-2015.00",
+    "title": "Cooks, Short Order"
+  },
+  "cooling and freezing equipment operators and tenders": {
+    "code": "51-9193.00",
+    "title": "Cooling and Freezing Equipment Operators and Tenders"
+  },
+  "copy writers": {
+    "code": "27-3043.04",
+    "title": "Copy Writers"
+  },
+  "coroners": {
+    "code": "13-1041.06",
+    "title": "Coroners"
+  },
+  "correctional officers and jailers": {
+    "code": "33-3012.00",
+    "title": "Correctional Officers and Jailers"
+  },
+  "correspondence clerks": {
+    "code": "43-4021.00",
+    "title": "Correspondence Clerks"
+  },
+  "cost estimators": {
+    "code": "13-1051.00",
+    "title": "Cost Estimators"
+  },
+  "costume attendants": {
+    "code": "39-3092.00",
+    "title": "Costume Attendants"
+  },
+  "counseling psychologists": {
+    "code": "19-3031.03",
+    "title": "Counseling Psychologists"
+  },
+  "counter and rental clerks": {
+    "code": "41-2021.00",
+    "title": "Counter and Rental Clerks"
+  },
+  "counter attendants, cafeteria, food concession, and coffee shop": {
+    "code": "35-3022.00",
+    "title": "Counter Attendants, Cafeteria, Food Concession, and Coffee Shop"
+  },
+  "couriers and messengers": {
+    "code": "43-5021.00",
+    "title": "Couriers and Messengers"
+  },
+  "court clerks": {
+    "code": "43-4031.01",
+    "title": "Court Clerks"
+  },
+  "court reporters": {
+    "code": "23-2091.00",
+    "title": "Court Reporters"
+  },
+  "craft artists": {
+    "code": "27-1012.00",
+    "title": "Craft Artists"
+  },
+  "crane and tower operators": {
+    "code": "53-7021.00",
+    "title": "Crane and Tower Operators"
+  },
+  "credit analysts": {
+    "code": "13-2041.00",
+    "title": "Credit Analysts"
+  },
+  "credit authorizers": {
+    "code": "43-4041.01",
+    "title": "Credit Authorizers"
+  },
+  "credit checkers": {
+    "code": "43-4041.02",
+    "title": "Credit Checkers"
+  },
+  "credit counselors": {
+    "code": "13-2071.00",
+    "title": "Credit Counselors"
+  },
+  "criminal investigators and special agents": {
+    "code": "33-3021.03",
+    "title": "Criminal Investigators and Special Agents"
+  },
+  "criminal justice and law enforcement teachers, postsecondary": {
+    "code": "25-1111.00",
+    "title": "Criminal Justice and Law Enforcement Teachers, Postsecondary"
+  },
+  "critical care nurses": {
+    "code": "29-1141.03",
+    "title": "Critical Care Nurses"
+  },
+  "crossing guards": {
+    "code": "33-9091.00",
+    "title": "Crossing Guards"
+  },
+  "crushing, grinding, and polishing machine setters, operators, and tenders": {
+    "code": "51-9021.00",
+    "title": "Crushing, Grinding, and Polishing Machine Setters, Operators, and Tenders"
+  },
+  "curators": {
+    "code": "25-4012.00",
+    "title": "Curators"
+  },
+  "customer service representatives": {
+    "code": "43-4051.00",
+    "title": "Customer Service Representatives"
+  },
+  "customs brokers": {
+    "code": "13-1199.03",
+    "title": "Customs Brokers"
+  },
+  "cutters and trimmers, hand": {
+    "code": "51-9031.00",
+    "title": "Cutters and Trimmers, Hand"
+  },
+  "cutting and slicing machine setters, operators, and tenders": {
+    "code": "51-9032.00",
+    "title": "Cutting and Slicing Machine Setters, Operators, and Tenders"
+  },
+  "cutting, punching, and press machine setters, operators, and tenders, metal and plastic": {
+    "code": "51-4031.00",
+    "title": "Cutting, Punching, and Press Machine Setters, Operators, and Tenders, Metal and Plastic"
+  },
+  "cytogenetic technologists": {
+    "code": "29-2011.01",
+    "title": "Cytogenetic Technologists"
+  },
+  "cytotechnologists": {
+    "code": "29-2011.02",
+    "title": "Cytotechnologists"
+  },
+  "dancers": {
+    "code": "27-2031.00",
+    "title": "Dancers"
+  },
+  "data entry keyers": {
+    "code": "43-9021.00",
+    "title": "Data Entry Keyers"
+  },
+  "data warehousing specialists": {
+    "code": "15-1199.07",
+    "title": "Data Warehousing Specialists"
+  },
+  "database administrators": {
+    "code": "15-1141.00",
+    "title": "Database Administrators"
+  },
+  "database architects": {
+    "code": "15-1199.06",
+    "title": "Database Architects"
+  },
+  "demonstrators and product promoters": {
+    "code": "41-9011.00",
+    "title": "Demonstrators and Product Promoters"
+  },
+  "dental assistants": {
+    "code": "31-9091.00",
+    "title": "Dental Assistants"
+  },
+  "dental hygienists": {
+    "code": "29-2021.00",
+    "title": "Dental Hygienists"
+  },
+  "dental laboratory technicians": {
+    "code": "51-9081.00",
+    "title": "Dental Laboratory Technicians"
+  },
+  "dentists, general": {
+    "code": "29-1021.00",
+    "title": "Dentists, General"
+  },
+  "dermatologists": {
+    "code": "29-1069.02",
+    "title": "Dermatologists"
+  },
+  "derrick operators, oil and gas": {
+    "code": "47-5011.00",
+    "title": "Derrick Operators, Oil and Gas"
+  },
+  "desktop publishers": {
+    "code": "43-9031.00",
+    "title": "Desktop Publishers"
+  },
+  "diagnostic medical sonographers": {
+    "code": "29-2032.00",
+    "title": "Diagnostic Medical Sonographers"
+  },
+  "dietetic technicians": {
+    "code": "29-2051.00",
+    "title": "Dietetic Technicians"
+  },
+  "dietitians and nutritionists": {
+    "code": "29-1031.00",
+    "title": "Dietitians and Nutritionists"
+  },
+  "dining room and cafeteria attendants and bartender helpers": {
+    "code": "35-9011.00",
+    "title": "Dining Room and Cafeteria Attendants and Bartender Helpers"
+  },
+  "directors, religious activities and education": {
+    "code": "21-2021.00",
+    "title": "Directors, Religious Activities and Education"
+  },
+  "directors- stage, motion pictures, television, and radio": {
+    "code": "27-2012.02",
+    "title": "Directors- Stage, Motion Pictures, Television, and Radio"
+  },
+  "dishwashers": {
+    "code": "35-9021.00",
+    "title": "Dishwashers"
+  },
+  "dispatchers, except police, fire, and ambulance": {
+    "code": "43-5032.00",
+    "title": "Dispatchers, Except Police, Fire, and Ambulance"
+  },
+  "distance learning coordinators": {
+    "code": "11-9039.01",
+    "title": "Distance Learning Coordinators"
+  },
+  "document management specialists": {
+    "code": "15-1199.12",
+    "title": "Document Management Specialists"
+  },
+  "door-to-door sales workers, news and street vendors, and related workers": {
+    "code": "41-9091.00",
+    "title": "Door-To-Door Sales Workers, News and Street Vendors, and Related Workers"
+  },
+  "dredge operators": {
+    "code": "53-7031.00",
+    "title": "Dredge Operators"
+  },
+  "drilling and boring machine tool setters, operators, and tenders, metal and plastic": {
+    "code": "51-4032.00",
+    "title": "Drilling and Boring Machine Tool Setters, Operators, and Tenders, Metal and Plastic"
+  },
+  "driver/sales workers": {
+    "code": "53-3031.00",
+    "title": "Driver/Sales Workers"
+  },
+  "drywall and ceiling tile installers": {
+    "code": "47-2081.00",
+    "title": "Drywall and Ceiling Tile Installers"
+  },
+  "earth drillers, except oil and gas": {
+    "code": "47-5021.00",
+    "title": "Earth Drillers, Except Oil and Gas"
+  },
+  "economics teachers, postsecondary": {
+    "code": "25-1063.00",
+    "title": "Economics Teachers, Postsecondary"
+  },
+  "economists": {
+    "code": "19-3011.00",
+    "title": "Economists"
+  },
+  "editors": {
+    "code": "27-3041.00",
+    "title": "Editors"
+  },
+  "education administrators, elementary and secondary school": {
+    "code": "11-9032.00",
+    "title": "Education Administrators, Elementary and Secondary School"
+  },
+  "education administrators, postsecondary": {
+    "code": "11-9033.00",
+    "title": "Education Administrators, Postsecondary"
+  },
+  "education administrators, preschool and childcare center/program": {
+    "code": "11-9031.00",
+    "title": "Education Administrators, Preschool and Childcare Center/Program"
+  },
+  "education teachers, postsecondary": {
+    "code": "25-1081.00",
+    "title": "Education Teachers, Postsecondary"
+  },
+  "educational, guidance, school, and vocational counselors": {
+    "code": "21-1012.00",
+    "title": "Educational, Guidance, School, and Vocational Counselors"
+  },
+  "electric motor, power tool, and related repairers": {
+    "code": "49-2092.00",
+    "title": "Electric Motor, Power Tool, and Related Repairers"
+  },
+  "electrical and electronic equipment assemblers": {
+    "code": "51-2022.00",
+    "title": "Electrical and Electronic Equipment Assemblers"
+  },
+  "electrical and electronics installers and repairers, transportation equipment": {
+    "code": "49-2093.00",
+    "title": "Electrical and Electronics Installers and Repairers, Transportation Equipment"
+  },
+  "electrical and electronics repairers, commercial and industrial equipment": {
+    "code": "49-2094.00",
+    "title": "Electrical and Electronics Repairers, Commercial and Industrial Equipment"
+  },
+  "electrical and electronics repairers, powerhouse, substation, and relay": {
+    "code": "49-2095.00",
+    "title": "Electrical and Electronics Repairers, Powerhouse, Substation, and Relay"
+  },
+  "electrical drafters": {
+    "code": "17-3012.02",
+    "title": "Electrical Drafters"
+  },
+  "electrical engineering technicians": {
+    "code": "17-3023.03",
+    "title": "Electrical Engineering Technicians"
+  },
+  "electrical engineering technologists": {
+    "code": "17-3029.02",
+    "title": "Electrical Engineering Technologists"
+  },
+  "electrical engineers": {
+    "code": "17-2071.00",
+    "title": "Electrical Engineers"
+  },
+  "electrical power-line installers and repairers": {
+    "code": "49-9051.00",
+    "title": "Electrical Power-Line Installers and Repairers"
+  },
+  "electricians": {
+    "code": "47-2111.00",
+    "title": "Electricians"
+  },
+  "electro-mechanical technicians": {
+    "code": "17-3024.00",
+    "title": "Electro-Mechanical Technicians"
+  },
+  "electromechanical engineering technologists": {
+    "code": "17-3029.03",
+    "title": "Electromechanical Engineering Technologists"
+  },
+  "electromechanical equipment assemblers": {
+    "code": "51-2023.00",
+    "title": "Electromechanical Equipment Assemblers"
+  },
+  "electronic drafters": {
+    "code": "17-3012.01",
+    "title": "Electronic Drafters"
+  },
+  "electronic equipment installers and repairers, motor vehicles": {
+    "code": "49-2096.00",
+    "title": "Electronic Equipment Installers and Repairers, Motor Vehicles"
+  },
+  "electronic home entertainment equipment installers and repairers": {
+    "code": "49-2097.00",
+    "title": "Electronic Home Entertainment Equipment Installers and Repairers"
+  },
+  "electronics engineering technicians": {
+    "code": "17-3023.01",
+    "title": "Electronics Engineering Technicians"
+  },
+  "electronics engineering technologists": {
+    "code": "17-3029.04",
+    "title": "Electronics Engineering Technologists"
+  },
+  "electronics engineers, except computer": {
+    "code": "17-2072.00",
+    "title": "Electronics Engineers, Except Computer"
+  },
+  "elementary school teachers, except special education": {
+    "code": "25-2021.00",
+    "title": "Elementary School Teachers, Except Special Education"
+  },
+  "elevator installers and repairers": {
+    "code": "47-4021.00",
+    "title": "Elevator Installers and Repairers"
+  },
+  "eligibility interviewers, government programs": {
+    "code": "43-4061.00",
+    "title": "Eligibility Interviewers, Government Programs"
+  },
+  "embalmers": {
+    "code": "39-4011.00",
+    "title": "Embalmers"
+  },
+  "emergency management directors": {
+    "code": "11-9161.00",
+    "title": "Emergency Management Directors"
+  },
+  "emergency medical technicians and paramedics": {
+    "code": "29-2041.00",
+    "title": "Emergency Medical Technicians and Paramedics"
+  },
+  "endoscopy technicians": {
+    "code": "31-9099.02",
+    "title": "Endoscopy Technicians"
+  },
+  "energy auditors": {
+    "code": "13-1199.01",
+    "title": "Energy Auditors"
+  },
+  "energy brokers": {
+    "code": "41-3099.01",
+    "title": "Energy Brokers"
+  },
+  "energy engineers": {
+    "code": "17-2199.03",
+    "title": "Energy Engineers"
+  },
+  "engine and other machine assemblers": {
+    "code": "51-2031.00",
+    "title": "Engine and Other Machine Assemblers"
+  },
+  "engineering teachers, postsecondary": {
+    "code": "25-1032.00",
+    "title": "Engineering Teachers, Postsecondary"
+  },
+  "english language and literature teachers, postsecondary": {
+    "code": "25-1123.00",
+    "title": "English Language and Literature Teachers, Postsecondary"
+  },
+  "environmental compliance inspectors": {
+    "code": "13-1041.01",
+    "title": "Environmental Compliance Inspectors"
+  },
+  "environmental economists": {
+    "code": "19-3011.01",
+    "title": "Environmental Economists"
+  },
+  "environmental engineering technicians": {
+    "code": "17-3025.00",
+    "title": "Environmental Engineering Technicians"
+  },
+  "environmental engineers": {
+    "code": "17-2081.00",
+    "title": "Environmental Engineers"
+  },
+  "environmental restoration planners": {
+    "code": "19-2041.02",
+    "title": "Environmental Restoration Planners"
+  },
+  "environmental science and protection technicians, including health": {
+    "code": "19-4091.00",
+    "title": "Environmental Science and Protection Technicians, Including Health"
+  },
+  "environmental science teachers, postsecondary": {
+    "code": "25-1053.00",
+    "title": "Environmental Science Teachers, Postsecondary"
+  },
+  "environmental scientists and specialists, including health": {
+    "code": "19-2041.00",
+    "title": "Environmental Scientists and Specialists, Including Health"
+  },
+  "epidemiologists": {
+    "code": "19-1041.00",
+    "title": "Epidemiologists"
+  },
+  "equal opportunity representatives and officers": {
+    "code": "13-1041.03",
+    "title": "Equal Opportunity Representatives and Officers"
+  },
+  "etchers and engravers": {
+    "code": "51-9194.00",
+    "title": "Etchers and Engravers"
+  },
+  "excavating and loading machine and dragline operators": {
+    "code": "53-7032.00",
+    "title": "Excavating and Loading Machine and Dragline Operators"
+  },
+  "executive secretaries and executive administrative assistants": {
+    "code": "43-6011.00",
+    "title": "Executive Secretaries and Executive Administrative Assistants"
+  },
+  "exercise physiologists": {
+    "code": "29-1128.00",
+    "title": "Exercise Physiologists"
+  },
+  "explosives workers, ordnance handling experts, and blasters": {
+    "code": "47-5031.00",
+    "title": "Explosives Workers, Ordnance Handling Experts, and Blasters"
+  },
+  "extruding and drawing machine setters, operators, and tenders, metal and plastic": {
+    "code": "51-4021.00",
+    "title": "Extruding and Drawing Machine Setters, Operators, and Tenders, Metal and Plastic"
+  },
+  "extruding and forming machine setters, operators, and tenders, synthetic and glass fibers": {
+    "code": "51-6091.00",
+    "title": "Extruding and Forming Machine Setters, Operators, and Tenders, Synthetic and Glass Fibers"
+  },
+  "extruding, forming, pressing, and compacting machine setters, operators, and tenders": {
+    "code": "51-9041.00",
+    "title": "Extruding, Forming, Pressing, and Compacting Machine Setters, Operators, and Tenders"
+  },
+  "fabric and apparel patternmakers": {
+    "code": "51-6092.00",
+    "title": "Fabric and Apparel Patternmakers"
+  },
+  "fabric menders, except garment": {
+    "code": "49-9093.00",
+    "title": "Fabric Menders, Except Garment"
+  },
+  "fallers": {
+    "code": "45-4021.00",
+    "title": "Fallers"
+  },
+  "family and general practitioners": {
+    "code": "29-1062.00",
+    "title": "Family and General Practitioners"
+  },
+  "farm and home management advisors": {
+    "code": "25-9021.00",
+    "title": "Farm and Home Management Advisors"
+  },
+  "farm and ranch managers": {
+    "code": "11-9013.02",
+    "title": "Farm and Ranch Managers"
+  },
+  "farm equipment mechanics and service technicians": {
+    "code": "49-3041.00",
+    "title": "Farm Equipment Mechanics and Service Technicians"
+  },
+  "farm labor contractors": {
+    "code": "13-1074.00",
+    "title": "Farm Labor Contractors"
+  },
+  "farmworkers and laborers, crop": {
+    "code": "45-2092.02",
+    "title": "Farmworkers and Laborers, Crop"
+  },
+  "farmworkers, farm, ranch, and aquacultural animals": {
+    "code": "45-2093.00",
+    "title": "Farmworkers, Farm, Ranch, and Aquacultural Animals"
+  },
+  "fashion designers": {
+    "code": "27-1022.00",
+    "title": "Fashion Designers"
+  },
+  "fence erectors": {
+    "code": "47-4031.00",
+    "title": "Fence Erectors"
+  },
+  "fiberglass laminators and fabricators": {
+    "code": "51-2091.00",
+    "title": "Fiberglass Laminators and Fabricators"
+  },
+  "file clerks": {
+    "code": "43-4071.00",
+    "title": "File Clerks"
+  },
+  "film and video editors": {
+    "code": "27-4032.00",
+    "title": "Film and Video Editors"
+  },
+  "financial analysts": {
+    "code": "13-2051.00",
+    "title": "Financial Analysts"
+  },
+  "financial examiners": {
+    "code": "13-2061.00",
+    "title": "Financial Examiners"
+  },
+  "financial managers, branch or department": {
+    "code": "11-3031.02",
+    "title": "Financial Managers, Branch or Department"
+  },
+  "financial quantitative analysts": {
+    "code": "13-2099.01",
+    "title": "Financial Quantitative Analysts"
+  },
+  "fine artists, including painters, sculptors, and illustrators": {
+    "code": "27-1013.00",
+    "title": "Fine Artists, Including Painters, Sculptors, and Illustrators"
+  },
+  "fire inspectors": {
+    "code": "33-2021.01",
+    "title": "Fire Inspectors"
+  },
+  "fire investigators": {
+    "code": "33-2021.02",
+    "title": "Fire Investigators"
+  },
+  "fire-prevention and protection engineers": {
+    "code": "17-2111.02",
+    "title": "Fire-Prevention and Protection Engineers"
+  },
+  "first-line supervisors of agricultural crop and horticultural workers": {
+    "code": "45-1011.07",
+    "title": "First-Line Supervisors of Agricultural Crop and Horticultural Workers"
+  },
+  "first-line supervisors of animal husbandry and animal care workers": {
+    "code": "45-1011.08",
+    "title": "First-Line Supervisors of Animal Husbandry and Animal Care Workers"
+  },
+  "first-line supervisors of aquacultural workers": {
+    "code": "45-1011.06",
+    "title": "First-Line Supervisors of Aquacultural Workers"
+  },
+  "first-line supervisors of construction trades and extraction workers": {
+    "code": "47-1011.00",
+    "title": "First-Line Supervisors of Construction Trades and Extraction Workers"
+  },
+  "first-line supervisors of correctional officers": {
+    "code": "33-1011.00",
+    "title": "First-Line Supervisors of Correctional Officers"
+  },
+  "first-line supervisors of food preparation and serving workers": {
+    "code": "35-1012.00",
+    "title": "First-Line Supervisors of Food Preparation and Serving Workers"
+  },
+  "first-line supervisors of helpers, laborers, and material movers, hand": {
+    "code": "53-1021.00",
+    "title": "First-Line Supervisors of Helpers, Laborers, and Material Movers, Hand"
+  },
+  "first-line supervisors of housekeeping and janitorial workers": {
+    "code": "37-1011.00",
+    "title": "First-Line Supervisors of Housekeeping and Janitorial Workers"
+  },
+  "first-line supervisors of landscaping, lawn service, and groundskeeping workers": {
+    "code": "37-1012.00",
+    "title": "First-Line Supervisors of Landscaping, Lawn Service, and Groundskeeping Workers"
+  },
+  "first-line supervisors of logging workers": {
+    "code": "45-1011.05",
+    "title": "First-Line Supervisors of Logging Workers"
+  },
+  "first-line supervisors of mechanics, installers, and repairers": {
+    "code": "49-1011.00",
+    "title": "First-Line Supervisors of Mechanics, Installers, and Repairers"
+  },
+  "first-line supervisors of non-retail sales workers": {
+    "code": "41-1012.00",
+    "title": "First-Line Supervisors of Non-Retail Sales Workers"
+  },
+  "first-line supervisors of office and administrative support workers": {
+    "code": "43-1011.00",
+    "title": "First-Line Supervisors of Office and Administrative Support Workers"
+  },
+  "first-line supervisors of personal service workers": {
+    "code": "39-1021.00",
+    "title": "First-Line Supervisors of Personal Service Workers"
+  },
+  "first-line supervisors of police and detectives": {
+    "code": "33-1012.00",
+    "title": "First-Line Supervisors of Police and Detectives"
+  },
+  "first-line supervisors of production and operating workers": {
+    "code": "51-1011.00",
+    "title": "First-Line Supervisors of Production and Operating Workers"
+  },
+  "first-line supervisors of retail sales workers": {
+    "code": "41-1011.00",
+    "title": "First-Line Supervisors of Retail Sales Workers"
+  },
+  "first-line supervisors of transportation and material-moving machine and vehicle operators": {
+    "code": "53-1031.00",
+    "title": "First-Line Supervisors of Transportation and Material-Moving Machine and Vehicle Operators"
+  },
+  "fish and game wardens": {
+    "code": "33-3031.00",
+    "title": "Fish and Game Wardens"
+  },
+  "fishers and related fishing workers": {
+    "code": "45-3011.00",
+    "title": "Fishers and Related Fishing Workers"
+  },
+  "fitness and wellness coordinators": {
+    "code": "11-9039.02",
+    "title": "Fitness and Wellness Coordinators"
+  },
+  "fitness trainers and aerobics instructors": {
+    "code": "39-9031.00",
+    "title": "Fitness Trainers and Aerobics Instructors"
+  },
+  "flight attendants": {
+    "code": "53-2031.00",
+    "title": "Flight Attendants"
+  },
+  "floor layers, except carpet, wood, and hard tiles": {
+    "code": "47-2042.00",
+    "title": "Floor Layers, Except Carpet, Wood, and Hard Tiles"
+  },
+  "floor sanders and finishers": {
+    "code": "47-2043.00",
+    "title": "Floor Sanders and Finishers"
+  },
+  "floral designers": {
+    "code": "27-1023.00",
+    "title": "Floral Designers"
+  },
+  "food and tobacco roasting, baking, and drying machine operators and tenders": {
+    "code": "51-3091.00",
+    "title": "Food and Tobacco Roasting, Baking, and Drying Machine Operators and Tenders"
+  },
+  "food batchmakers": {
+    "code": "51-3092.00",
+    "title": "Food Batchmakers"
+  },
+  "food cooking machine operators and tenders": {
+    "code": "51-3093.00",
+    "title": "Food Cooking Machine Operators and Tenders"
+  },
+  "food preparation workers": {
+    "code": "35-2021.00",
+    "title": "Food Preparation Workers"
+  },
+  "food science technicians": {
+    "code": "19-4011.02",
+    "title": "Food Science Technicians"
+  },
+  "food scientists and technologists": {
+    "code": "19-1012.00",
+    "title": "Food Scientists and Technologists"
+  },
+  "food servers, nonrestaurant": {
+    "code": "35-3041.00",
+    "title": "Food Servers, Nonrestaurant"
+  },
+  "food service managers": {
+    "code": "11-9051.00",
+    "title": "Food Service Managers"
+  },
+  "foreign language and literature teachers, postsecondary": {
+    "code": "25-1124.00",
+    "title": "Foreign Language and Literature Teachers, Postsecondary"
+  },
+  "forensic science technicians": {
+    "code": "19-4092.00",
+    "title": "Forensic Science Technicians"
+  },
+  "forest and conservation technicians": {
+    "code": "19-4093.00",
+    "title": "Forest and Conservation Technicians"
+  },
+  "forest and conservation workers": {
+    "code": "45-4011.00",
+    "title": "Forest and Conservation Workers"
+  },
+  "forest fire fighting and prevention supervisors": {
+    "code": "33-1021.02",
+    "title": "Forest Fire Fighting and Prevention Supervisors"
+  },
+  "forest fire inspectors and prevention specialists": {
+    "code": "33-2022.00",
+    "title": "Forest Fire Inspectors and Prevention Specialists"
+  },
+  "forest firefighters": {
+    "code": "33-2011.02",
+    "title": "Forest Firefighters"
+  },
+  "foresters": {
+    "code": "19-1032.00",
+    "title": "Foresters"
+  },
+  "forestry and conservation science teachers, postsecondary": {
+    "code": "25-1043.00",
+    "title": "Forestry and Conservation Science Teachers, Postsecondary"
+  },
+  "forging machine setters, operators, and tenders, metal and plastic": {
+    "code": "51-4022.00",
+    "title": "Forging Machine Setters, Operators, and Tenders, Metal and Plastic"
+  },
+  "foundry mold and coremakers": {
+    "code": "51-4071.00",
+    "title": "Foundry Mold and Coremakers"
+  },
+  "fraud examiners, investigators and analysts": {
+    "code": "13-2099.04",
+    "title": "Fraud Examiners, Investigators and Analysts"
+  },
+  "freight and cargo inspectors": {
+    "code": "53-6051.08",
+    "title": "Freight and Cargo Inspectors"
+  },
+  "freight forwarders": {
+    "code": "43-5011.01",
+    "title": "Freight Forwarders"
+  },
+  "fuel cell engineers": {
+    "code": "17-2141.01",
+    "title": "Fuel Cell Engineers"
+  },
+  "fuel cell technicians": {
+    "code": "17-3029.10",
+    "title": "Fuel Cell Technicians"
+  },
+  "fundraisers": {
+    "code": "13-1131.00",
+    "title": "Fundraisers"
+  },
+  "funeral attendants": {
+    "code": "39-4021.00",
+    "title": "Funeral Attendants"
+  },
+  "funeral service managers": {
+    "code": "11-9061.00",
+    "title": "Funeral Service Managers"
+  },
+  "furnace, kiln, oven, drier, and kettle operators and tenders": {
+    "code": "51-9051.00",
+    "title": "Furnace, Kiln, Oven, Drier, and Kettle Operators and Tenders"
+  },
+  "furniture finishers": {
+    "code": "51-7021.00",
+    "title": "Furniture Finishers"
+  },
+  "gaming and sports book writers and runners": {
+    "code": "39-3012.00",
+    "title": "Gaming and Sports Book Writers and Runners"
+  },
+  "gaming cage workers": {
+    "code": "43-3041.00",
+    "title": "Gaming Cage Workers"
+  },
+  "gaming change persons and booth cashiers": {
+    "code": "41-2012.00",
+    "title": "Gaming Change Persons and Booth Cashiers"
+  },
+  "gaming dealers": {
+    "code": "39-3011.00",
+    "title": "Gaming Dealers"
+  },
+  "gaming managers": {
+    "code": "11-9071.00",
+    "title": "Gaming Managers"
+  },
+  "gaming supervisors": {
+    "code": "39-1011.00",
+    "title": "Gaming Supervisors"
+  },
+  "gaming surveillance officers and gaming investigators": {
+    "code": "33-9031.00",
+    "title": "Gaming Surveillance Officers and Gaming Investigators"
+  },
+  "gas compressor and gas pumping station operators": {
+    "code": "53-7071.00",
+    "title": "Gas Compressor and Gas Pumping Station Operators"
+  },
+  "gas plant operators": {
+    "code": "51-8092.00",
+    "title": "Gas Plant Operators"
+  },
+  "gem and diamond workers": {
+    "code": "51-9071.06",
+    "title": "Gem and Diamond Workers"
+  },
+  "general and operations managers": {
+    "code": "11-1021.00",
+    "title": "General and Operations Managers"
+  },
+  "genetic counselors": {
+    "code": "29-9092.00",
+    "title": "Genetic Counselors"
+  },
+  "geneticists": {
+    "code": "19-1029.03",
+    "title": "Geneticists"
+  },
+  "geodetic surveyors": {
+    "code": "17-1022.01",
+    "title": "Geodetic Surveyors"
+  },
+  "geographers": {
+    "code": "19-3092.00",
+    "title": "Geographers"
+  },
+  "geographic information systems technicians": {
+    "code": "15-1199.05",
+    "title": "Geographic Information Systems Technicians"
+  },
+  "geography teachers, postsecondary": {
+    "code": "25-1064.00",
+    "title": "Geography Teachers, Postsecondary"
+  },
+  "geological sample test technicians": {
+    "code": "19-4041.02",
+    "title": "Geological Sample Test Technicians"
+  },
+  "geophysical data technicians": {
+    "code": "19-4041.01",
+    "title": "Geophysical Data Technicians"
+  },
+  "geoscientists, except hydrologists and geographers": {
+    "code": "19-2042.00",
+    "title": "Geoscientists, Except Hydrologists and Geographers"
+  },
+  "geospatial information scientists and technologists": {
+    "code": "15-1199.04",
+    "title": "Geospatial Information Scientists and Technologists"
+  },
+  "geothermal production managers": {
+    "code": "11-3051.02",
+    "title": "Geothermal Production Managers"
+  },
+  "geothermal technicians": {
+    "code": "49-9099.01",
+    "title": "Geothermal Technicians"
+  },
+  "glass blowers, molders, benders, and finishers": {
+    "code": "51-9195.04",
+    "title": "Glass Blowers, Molders, Benders, and Finishers"
+  },
+  "glaziers": {
+    "code": "47-2121.00",
+    "title": "Glaziers"
+  },
+  "government property inspectors and investigators": {
+    "code": "13-1041.04",
+    "title": "Government Property Inspectors and Investigators"
+  },
+  "graders and sorters, agricultural products": {
+    "code": "45-2041.00",
+    "title": "Graders and Sorters, Agricultural Products"
+  },
+  "graduate teaching assistants": {
+    "code": "25-1191.00",
+    "title": "Graduate Teaching Assistants"
+  },
+  "graphic designers": {
+    "code": "27-1024.00",
+    "title": "Graphic Designers"
+  },
+  "green marketers": {
+    "code": "11-2011.01",
+    "title": "Green Marketers"
+  },
+  "grinding and polishing workers, hand": {
+    "code": "51-9022.00",
+    "title": "Grinding and Polishing Workers, Hand"
+  },
+  "grinding, lapping, polishing, and buffing machine tool setters, operators, and tenders, metal and plastic": {
+    "code": "51-4033.00",
+    "title": "Grinding, Lapping, Polishing, and Buffing Machine Tool Setters, Operators, and Tenders, Metal and Plastic"
+  },
+  "hairdressers, hairstylists, and cosmetologists": {
+    "code": "39-5012.00",
+    "title": "Hairdressers, Hairstylists, and Cosmetologists"
+  },
+  "hazardous materials removal workers": {
+    "code": "47-4041.00",
+    "title": "Hazardous Materials Removal Workers"
+  },
+  "health educators": {
+    "code": "21-1091.00",
+    "title": "Health Educators"
+  },
+  "health specialties teachers, postsecondary": {
+    "code": "25-1071.00",
+    "title": "Health Specialties Teachers, Postsecondary"
+  },
+  "healthcare social workers": {
+    "code": "21-1022.00",
+    "title": "Healthcare Social Workers"
+  },
+  "hearing aid specialists": {
+    "code": "29-2092.00",
+    "title": "Hearing Aid Specialists"
+  },
+  "heat treating equipment setters, operators, and tenders, metal and plastic": {
+    "code": "51-4191.00",
+    "title": "Heat Treating Equipment Setters, Operators, and Tenders, Metal and Plastic"
+  },
+  "heating and air conditioning mechanics and installers": {
+    "code": "49-9021.01",
+    "title": "Heating and Air Conditioning Mechanics and Installers"
+  },
+  "heavy and tractor-trailer truck drivers": {
+    "code": "53-3032.00",
+    "title": "Heavy and Tractor-Trailer Truck Drivers"
+  },
+  "helpers--brickmasons, blockmasons, stonemasons, and tile and marble setters": {
+    "code": "47-3011.00",
+    "title": "Helpers--Brickmasons, Blockmasons, Stonemasons, and Tile and Marble Setters"
+  },
+  "helpers--carpenters": {
+    "code": "47-3012.00",
+    "title": "Helpers--Carpenters"
+  },
+  "helpers--electricians": {
+    "code": "47-3013.00",
+    "title": "Helpers--Electricians"
+  },
+  "helpers--extraction workers": {
+    "code": "47-5081.00",
+    "title": "Helpers--Extraction Workers"
+  },
+  "helpers--installation, maintenance, and repair workers": {
+    "code": "49-9098.00",
+    "title": "Helpers--Installation, Maintenance, and Repair Workers"
+  },
+  "helpers--painters, paperhangers, plasterers, and stucco masons": {
+    "code": "47-3014.00",
+    "title": "Helpers--Painters, Paperhangers, Plasterers, and Stucco Masons"
+  },
+  "helpers--pipelayers, plumbers, pipefitters, and steamfitters": {
+    "code": "47-3015.00",
+    "title": "Helpers--Pipelayers, Plumbers, Pipefitters, and Steamfitters"
+  },
+  "helpers--production workers": {
+    "code": "51-9198.00",
+    "title": "Helpers--Production Workers"
+  },
+  "helpers--roofers": {
+    "code": "47-3016.00",
+    "title": "Helpers--Roofers"
+  },
+  "highway maintenance workers": {
+    "code": "47-4051.00",
+    "title": "Highway Maintenance Workers"
+  },
+  "historians": {
+    "code": "19-3093.00",
+    "title": "Historians"
+  },
+  "history teachers, postsecondary": {
+    "code": "25-1125.00",
+    "title": "History Teachers, Postsecondary"
+  },
+  "histotechnologists and histologic technicians": {
+    "code": "29-2011.03",
+    "title": "Histotechnologists and Histologic Technicians"
+  },
+  "hoist and winch operators": {
+    "code": "53-7041.00",
+    "title": "Hoist and Winch Operators"
+  },
+  "home appliance repairers": {
+    "code": "49-9031.00",
+    "title": "Home Appliance Repairers"
+  },
+  "home economics teachers, postsecondary": {
+    "code": "25-1192.00",
+    "title": "Home Economics Teachers, Postsecondary"
+  },
+  "home health aides": {
+    "code": "31-1011.00",
+    "title": "Home Health Aides"
+  },
+  "hospitalists": {
+    "code": "29-1069.03",
+    "title": "Hospitalists"
+  },
+  "hosts and hostesses, restaurant, lounge, and coffee shop": {
+    "code": "35-9031.00",
+    "title": "Hosts and Hostesses, Restaurant, Lounge, and Coffee Shop"
+  },
+  "hotel, motel, and resort desk clerks": {
+    "code": "43-4081.00",
+    "title": "Hotel, Motel, and Resort Desk Clerks"
+  },
+  "human factors engineers and ergonomists": {
+    "code": "17-2112.01",
+    "title": "Human Factors Engineers and Ergonomists"
+  },
+  "human resources assistants, except payroll and timekeeping": {
+    "code": "43-4161.00",
+    "title": "Human Resources Assistants, Except Payroll and Timekeeping"
+  },
+  "human resources managers": {
+    "code": "11-3121.00",
+    "title": "Human Resources Managers"
+  },
+  "human resources specialists": {
+    "code": "13-1071.00",
+    "title": "Human Resources Specialists"
+  },
+  "hunters and trappers": {
+    "code": "45-3021.00",
+    "title": "Hunters and Trappers"
+  },
+  "hydroelectric plant technicians": {
+    "code": "51-8099.04",
+    "title": "Hydroelectric Plant Technicians"
+  },
+  "hydroelectric production managers": {
+    "code": "11-3051.06",
+    "title": "Hydroelectric Production Managers"
+  },
+  "hydrologists": {
+    "code": "19-2043.00",
+    "title": "Hydrologists"
+  },
+  "immigration and customs inspectors": {
+    "code": "33-3021.05",
+    "title": "Immigration and Customs Inspectors"
+  },
+  "industrial ecologists": {
+    "code": "19-2041.03",
+    "title": "Industrial Ecologists"
+  },
+  "industrial engineering technicians": {
+    "code": "17-3026.00",
+    "title": "Industrial Engineering Technicians"
+  },
+  "industrial engineering technologists": {
+    "code": "17-3029.05",
+    "title": "Industrial Engineering Technologists"
+  },
+  "industrial engineers": {
+    "code": "17-2112.00",
+    "title": "Industrial Engineers"
+  },
+  "industrial machinery mechanics": {
+    "code": "49-9041.00",
+    "title": "Industrial Machinery Mechanics"
+  },
+  "industrial production managers": {
+    "code": "11-3051.00",
+    "title": "Industrial Production Managers"
+  },
+  "industrial safety and health engineers": {
+    "code": "17-2111.01",
+    "title": "Industrial Safety and Health Engineers"
+  },
+  "industrial truck and tractor operators": {
+    "code": "53-7051.00",
+    "title": "Industrial Truck and Tractor Operators"
+  },
+  "industrial-organizational psychologists": {
+    "code": "19-3032.00",
+    "title": "Industrial-Organizational Psychologists"
+  },
+  "informatics nurse specialists": {
+    "code": "15-1121.01",
+    "title": "Informatics Nurse Specialists"
+  },
+  "information security analysts": {
+    "code": "15-1122.00",
+    "title": "Information Security Analysts"
+  },
+  "information technology project managers": {
+    "code": "15-1199.09",
+    "title": "Information Technology Project Managers"
+  },
+  "inspectors, testers, sorters, samplers, and weighers": {
+    "code": "51-9061.00",
+    "title": "Inspectors, Testers, Sorters, Samplers, and Weighers"
+  },
+  "instructional coordinators": {
+    "code": "25-9031.00",
+    "title": "Instructional Coordinators"
+  },
+  "instructional designers and technologists": {
+    "code": "25-9031.01",
+    "title": "Instructional Designers and Technologists"
+  },
+  "insulation workers, floor, ceiling, and wall": {
+    "code": "47-2131.00",
+    "title": "Insulation Workers, Floor, Ceiling, and Wall"
+  },
+  "insulation workers, mechanical": {
+    "code": "47-2132.00",
+    "title": "Insulation Workers, Mechanical"
+  },
+  "insurance adjusters, examiners, and investigators": {
+    "code": "13-1031.02",
+    "title": "Insurance Adjusters, Examiners, and Investigators"
+  },
+  "insurance appraisers, auto damage": {
+    "code": "13-1032.00",
+    "title": "Insurance Appraisers, Auto Damage"
+  },
+  "insurance claims clerks": {
+    "code": "43-9041.01",
+    "title": "Insurance Claims Clerks"
+  },
+  "insurance policy processing clerks": {
+    "code": "43-9041.02",
+    "title": "Insurance Policy Processing Clerks"
+  },
+  "insurance sales agents": {
+    "code": "41-3021.00",
+    "title": "Insurance Sales Agents"
+  },
+  "insurance underwriters": {
+    "code": "13-2053.00",
+    "title": "Insurance Underwriters"
+  },
+  "intelligence analysts": {
+    "code": "33-3021.06",
+    "title": "Intelligence Analysts"
+  },
+  "interior designers": {
+    "code": "27-1025.00",
+    "title": "Interior Designers"
+  },
+  "internists, general": {
+    "code": "29-1063.00",
+    "title": "Internists, General"
+  },
+  "interpreters and translators": {
+    "code": "27-3091.00",
+    "title": "Interpreters and Translators"
+  },
+  "interviewers, except eligibility and loan": {
+    "code": "43-4111.00",
+    "title": "Interviewers, Except Eligibility and Loan"
+  },
+  "investment fund managers": {
+    "code": "11-9199.03",
+    "title": "Investment Fund Managers"
+  },
+  "investment underwriters": {
+    "code": "13-2099.03",
+    "title": "Investment Underwriters"
+  },
+  "janitors and cleaners, except maids and housekeeping cleaners": {
+    "code": "37-2011.00",
+    "title": "Janitors and Cleaners, Except Maids and Housekeeping Cleaners"
+  },
+  "jewelers": {
+    "code": "51-9071.01",
+    "title": "Jewelers"
+  },
+  "judges, magistrate judges, and magistrates": {
+    "code": "23-1023.00",
+    "title": "Judges, Magistrate Judges, and Magistrates"
+  },
+  "judicial law clerks": {
+    "code": "23-1012.00",
+    "title": "Judicial Law Clerks"
+  },
+  "kindergarten teachers, except special education": {
+    "code": "25-2012.00",
+    "title": "Kindergarten Teachers, Except Special Education"
+  },
+  "labor relations specialists": {
+    "code": "13-1075.00",
+    "title": "Labor Relations Specialists"
+  },
+  "laborers and freight, stock, and material movers, hand": {
+    "code": "53-7062.00",
+    "title": "Laborers and Freight, Stock, and Material Movers, Hand"
+  },
+  "landscape architects": {
+    "code": "17-1012.00",
+    "title": "Landscape Architects"
+  },
+  "landscaping and groundskeeping workers": {
+    "code": "37-3011.00",
+    "title": "Landscaping and Groundskeeping Workers"
+  },
+  "lathe and turning machine tool setters, operators, and tenders, metal and plastic": {
+    "code": "51-4034.00",
+    "title": "Lathe and Turning Machine Tool Setters, Operators, and Tenders, Metal and Plastic"
+  },
+  "laundry and dry-cleaning workers": {
+    "code": "51-6011.00",
+    "title": "Laundry and Dry-Cleaning Workers"
+  },
+  "law teachers, postsecondary": {
+    "code": "25-1112.00",
+    "title": "Law Teachers, Postsecondary"
+  },
+  "lawyers": {
+    "code": "23-1011.00",
+    "title": "Lawyers"
+  },
+  "layout workers, metal and plastic": {
+    "code": "51-4192.00",
+    "title": "Layout Workers, Metal and Plastic"
+  },
+  "legal secretaries": {
+    "code": "43-6012.00",
+    "title": "Legal Secretaries"
+  },
+  "legislators": {
+    "code": "11-1031.00",
+    "title": "Legislators"
+  },
+  "librarians": {
+    "code": "25-4021.00",
+    "title": "Librarians"
+  },
+  "library assistants, clerical": {
+    "code": "43-4121.00",
+    "title": "Library Assistants, Clerical"
+  },
+  "library science teachers, postsecondary": {
+    "code": "25-1082.00",
+    "title": "Library Science Teachers, Postsecondary"
+  },
+  "library technicians": {
+    "code": "25-4031.00",
+    "title": "Library Technicians"
+  },
+  "license clerks": {
+    "code": "43-4031.03",
+    "title": "License Clerks"
+  },
+  "licensed practical and licensed vocational nurses": {
+    "code": "29-2061.00",
+    "title": "Licensed Practical and Licensed Vocational Nurses"
+  },
+  "licensing examiners and inspectors": {
+    "code": "13-1041.02",
+    "title": "Licensing Examiners and Inspectors"
+  },
+  "lifeguards, ski patrol, and other recreational protective service workers": {
+    "code": "33-9092.00",
+    "title": "Lifeguards, Ski Patrol, and Other Recreational Protective Service Workers"
+  },
+  "light truck or delivery services drivers": {
+    "code": "53-3033.00",
+    "title": "Light Truck or Delivery Services Drivers"
+  },
+  "loading machine operators, underground mining": {
+    "code": "53-7033.00",
+    "title": "Loading Machine Operators, Underground Mining"
+  },
+  "loan counselors": {
+    "code": "13-2071.01",
+    "title": "Loan Counselors"
+  },
+  "loan interviewers and clerks": {
+    "code": "43-4131.00",
+    "title": "Loan Interviewers and Clerks"
+  },
+  "loan officers": {
+    "code": "13-2072.00",
+    "title": "Loan Officers"
+  },
+  "locker room, coatroom, and dressing room attendants": {
+    "code": "39-3093.00",
+    "title": "Locker Room, Coatroom, and Dressing Room Attendants"
+  },
+  "locksmiths and safe repairers": {
+    "code": "49-9094.00",
+    "title": "Locksmiths and Safe Repairers"
+  },
+  "locomotive engineers": {
+    "code": "53-4011.00",
+    "title": "Locomotive Engineers"
+  },
+  "locomotive firers": {
+    "code": "53-4012.00",
+    "title": "Locomotive Firers"
+  },
+  "lodging managers": {
+    "code": "11-9081.00",
+    "title": "Lodging Managers"
+  },
+  "log graders and scalers": {
+    "code": "45-4023.00",
+    "title": "Log Graders and Scalers"
+  },
+  "logging equipment operators": {
+    "code": "45-4022.00",
+    "title": "Logging Equipment Operators"
+  },
+  "logisticians": {
+    "code": "13-1081.00",
+    "title": "Logisticians"
+  },
+  "logistics analysts": {
+    "code": "13-1081.02",
+    "title": "Logistics Analysts"
+  },
+  "logistics engineers": {
+    "code": "13-1081.01",
+    "title": "Logistics Engineers"
+  },
+  "logistics managers": {
+    "code": "11-3071.03",
+    "title": "Logistics Managers"
+  },
+  "loss prevention managers": {
+    "code": "11-9199.08",
+    "title": "Loss Prevention Managers"
+  },
+  "low vision therapists, orientation and mobility specialists, and vision rehabilitation therapists": {
+    "code": "29-1122.01",
+    "title": "Low Vision Therapists, Orientation and Mobility Specialists, and Vision Rehabilitation Therapists"
+  },
+  "machine feeders and offbearers": {
+    "code": "53-7063.00",
+    "title": "Machine Feeders and Offbearers"
+  },
+  "machinists": {
+    "code": "51-4041.00",
+    "title": "Machinists"
+  },
+  "magnetic resonance imaging technologists": {
+    "code": "29-2035.00",
+    "title": "Magnetic Resonance Imaging Technologists"
+  },
+  "maids and housekeeping cleaners": {
+    "code": "37-2012.00",
+    "title": "Maids and Housekeeping Cleaners"
+  },
+  "mail clerks and mail machine operators, except postal service": {
+    "code": "43-9051.00",
+    "title": "Mail Clerks and Mail Machine Operators, Except Postal Service"
+  },
+  "maintenance and repair workers, general": {
+    "code": "49-9071.00",
+    "title": "Maintenance and Repair Workers, General"
+  },
+  "maintenance workers, machinery": {
+    "code": "49-9043.00",
+    "title": "Maintenance Workers, Machinery"
+  },
+  "makeup artists, theatrical and performance": {
+    "code": "39-5091.00",
+    "title": "Makeup Artists, Theatrical and Performance"
+  },
+  "management analysts": {
+    "code": "13-1111.00",
+    "title": "Management Analysts"
+  },
+  "manicurists and pedicurists": {
+    "code": "39-5092.00",
+    "title": "Manicurists and Pedicurists"
+  },
+  "manufactured building and mobile home installers": {
+    "code": "49-9095.00",
+    "title": "Manufactured Building and Mobile Home Installers"
+  },
+  "manufacturing engineering technologists": {
+    "code": "17-3029.06",
+    "title": "Manufacturing Engineering Technologists"
+  },
+  "manufacturing engineers": {
+    "code": "17-2199.04",
+    "title": "Manufacturing Engineers"
+  },
+  "manufacturing production technicians": {
+    "code": "17-3029.09",
+    "title": "Manufacturing Production Technicians"
+  },
+  "mapping technicians": {
+    "code": "17-3031.02",
+    "title": "Mapping Technicians"
+  },
+  "marine architects": {
+    "code": "17-2121.02",
+    "title": "Marine Architects"
+  },
+  "marine engineers": {
+    "code": "17-2121.01",
+    "title": "Marine Engineers"
+  },
+  "market research analysts and marketing specialists": {
+    "code": "13-1161.00",
+    "title": "Market Research Analysts and Marketing Specialists"
+  },
+  "marketing managers": {
+    "code": "11-2021.00",
+    "title": "Marketing Managers"
+  },
+  "marking clerks": {
+    "code": "43-5081.02",
+    "title": "Marking Clerks"
+  },
+  "marriage and family therapists": {
+    "code": "21-1013.00",
+    "title": "Marriage and Family Therapists"
+  },
+  "massage therapists": {
+    "code": "31-9011.00",
+    "title": "Massage Therapists"
+  },
+  "materials engineers": {
+    "code": "17-2131.00",
+    "title": "Materials Engineers"
+  },
+  "materials scientists": {
+    "code": "19-2032.00",
+    "title": "Materials Scientists"
+  },
+  "mates- ship, boat, and barge": {
+    "code": "53-5021.02",
+    "title": "Mates- Ship, Boat, and Barge"
+  },
+  "mathematical science teachers, postsecondary": {
+    "code": "25-1022.00",
+    "title": "Mathematical Science Teachers, Postsecondary"
+  },
+  "mathematical technicians": {
+    "code": "15-2091.00",
+    "title": "Mathematical Technicians"
+  },
+  "mathematicians": {
+    "code": "15-2021.00",
+    "title": "Mathematicians"
+  },
+  "meat, poultry, and fish cutters and trimmers": {
+    "code": "51-3022.00",
+    "title": "Meat, Poultry, and Fish Cutters and Trimmers"
+  },
+  "mechanical door repairers": {
+    "code": "49-9011.00",
+    "title": "Mechanical Door Repairers"
+  },
+  "mechanical drafters": {
+    "code": "17-3013.00",
+    "title": "Mechanical Drafters"
+  },
+  "mechanical engineering technicians": {
+    "code": "17-3027.00",
+    "title": "Mechanical Engineering Technicians"
+  },
+  "mechanical engineering technologists": {
+    "code": "17-3029.07",
+    "title": "Mechanical Engineering Technologists"
+  },
+  "mechanical engineers": {
+    "code": "17-2141.00",
+    "title": "Mechanical Engineers"
+  },
+  "mechatronics engineers": {
+    "code": "17-2199.05",
+    "title": "Mechatronics Engineers"
+  },
+  "medical and clinical laboratory technicians": {
+    "code": "29-2012.00",
+    "title": "Medical and Clinical Laboratory Technicians"
+  },
+  "medical and clinical laboratory technologists": {
+    "code": "29-2011.00",
+    "title": "Medical and Clinical Laboratory Technologists"
+  },
+  "medical and health services managers": {
+    "code": "11-9111.00",
+    "title": "Medical and Health Services Managers"
+  },
+  "medical appliance technicians": {
+    "code": "51-9082.00",
+    "title": "Medical Appliance Technicians"
+  },
+  "medical assistants": {
+    "code": "31-9092.00",
+    "title": "Medical Assistants"
+  },
+  "medical equipment preparers": {
+    "code": "31-9093.00",
+    "title": "Medical Equipment Preparers"
+  },
+  "medical equipment repairers": {
+    "code": "49-9062.00",
+    "title": "Medical Equipment Repairers"
+  },
+  "medical records and health information technicians": {
+    "code": "29-2071.00",
+    "title": "Medical Records and Health Information Technicians"
+  },
+  "medical scientists, except epidemiologists": {
+    "code": "19-1042.00",
+    "title": "Medical Scientists, Except Epidemiologists"
+  },
+  "medical secretaries": {
+    "code": "43-6013.00",
+    "title": "Medical Secretaries"
+  },
+  "medical transcriptionists": {
+    "code": "31-9094.00",
+    "title": "Medical Transcriptionists"
+  },
+  "meeting, convention, and event planners": {
+    "code": "13-1121.00",
+    "title": "Meeting, Convention, and Event Planners"
+  },
+  "mental health and substance abuse social workers": {
+    "code": "21-1023.00",
+    "title": "Mental Health and Substance Abuse Social Workers"
+  },
+  "mental health counselors": {
+    "code": "21-1014.00",
+    "title": "Mental Health Counselors"
+  },
+  "merchandise displayers and window trimmers": {
+    "code": "27-1026.00",
+    "title": "Merchandise Displayers and Window Trimmers"
+  },
+  "metal-refining furnace operators and tenders": {
+    "code": "51-4051.00",
+    "title": "Metal-Refining Furnace Operators and Tenders"
+  },
+  "meter readers, utilities": {
+    "code": "43-5041.00",
+    "title": "Meter Readers, Utilities"
+  },
+  "methane/landfill gas collection system operators": {
+    "code": "11-3051.05",
+    "title": "Methane/Landfill Gas Collection System Operators"
+  },
+  "methane/landfill gas generation system technicians": {
+    "code": "51-8099.02",
+    "title": "Methane/Landfill Gas Generation System Technicians"
+  },
+  "microbiologists": {
+    "code": "19-1022.00",
+    "title": "Microbiologists"
+  },
+  "microsystems engineers": {
+    "code": "17-2199.06",
+    "title": "Microsystems Engineers"
+  },
+  "middle school teachers, except special and career/technical education": {
+    "code": "25-2022.00",
+    "title": "Middle School Teachers, Except Special and Career/Technical Education"
+  },
+  "midwives": {
+    "code": "29-9099.01",
+    "title": "Midwives"
+  },
+  "milling and planing machine setters, operators, and tenders, metal and plastic": {
+    "code": "51-4035.00",
+    "title": "Milling and Planing Machine Setters, Operators, and Tenders, Metal and Plastic"
+  },
+  "millwrights": {
+    "code": "49-9044.00",
+    "title": "Millwrights"
+  },
+  "mine cutting and channeling machine operators": {
+    "code": "47-5042.00",
+    "title": "Mine Cutting and Channeling Machine Operators"
+  },
+  "mine shuttle car operators": {
+    "code": "53-7111.00",
+    "title": "Mine Shuttle Car Operators"
+  },
+  "mining and geological engineers, including mining safety engineers": {
+    "code": "17-2151.00",
+    "title": "Mining and Geological Engineers, Including Mining Safety Engineers"
+  },
+  "mixing and blending machine setters, operators, and tenders": {
+    "code": "51-9023.00",
+    "title": "Mixing and Blending Machine Setters, Operators, and Tenders"
+  },
+  "mobile heavy equipment mechanics, except engines": {
+    "code": "49-3042.00",
+    "title": "Mobile Heavy Equipment Mechanics, Except Engines"
+  },
+  "model makers, metal and plastic": {
+    "code": "51-4061.00",
+    "title": "Model Makers, Metal and Plastic"
+  },
+  "model makers, wood": {
+    "code": "51-7031.00",
+    "title": "Model Makers, Wood"
+  },
+  "models": {
+    "code": "41-9012.00",
+    "title": "Models"
+  },
+  "molding and casting workers": {
+    "code": "51-9195.07",
+    "title": "Molding and Casting Workers"
+  },
+  "molding, coremaking, and casting machine setters, operators, and tenders, metal and plastic": {
+    "code": "51-4072.00",
+    "title": "Molding, Coremaking, and Casting Machine Setters, Operators, and Tenders, Metal and Plastic"
+  },
+  "molecular and cellular biologists": {
+    "code": "19-1029.02",
+    "title": "Molecular and Cellular Biologists"
+  },
+  "morticians, undertakers, and funeral directors": {
+    "code": "39-4031.00",
+    "title": "Morticians, Undertakers, and Funeral Directors"
+  },
+  "motion picture projectionists": {
+    "code": "39-3021.00",
+    "title": "Motion Picture Projectionists"
+  },
+  "motorboat mechanics and service technicians": {
+    "code": "49-3051.00",
+    "title": "Motorboat Mechanics and Service Technicians"
+  },
+  "motorboat operators": {
+    "code": "53-5022.00",
+    "title": "Motorboat Operators"
+  },
+  "motorcycle mechanics": {
+    "code": "49-3052.00",
+    "title": "Motorcycle Mechanics"
+  },
+  "multimedia artists and animators": {
+    "code": "27-1014.00",
+    "title": "Multimedia Artists and Animators"
+  },
+  "multiple machine tool setters, operators, and tenders, metal and plastic": {
+    "code": "51-4081.00",
+    "title": "Multiple Machine Tool Setters, Operators, and Tenders, Metal and Plastic"
+  },
+  "municipal clerks": {
+    "code": "43-4031.02",
+    "title": "Municipal Clerks"
+  },
+  "municipal fire fighting and prevention supervisors": {
+    "code": "33-1021.01",
+    "title": "Municipal Fire Fighting and Prevention Supervisors"
+  },
+  "municipal firefighters": {
+    "code": "33-2011.01",
+    "title": "Municipal Firefighters"
+  },
+  "museum technicians and conservators": {
+    "code": "25-4013.00",
+    "title": "Museum Technicians and Conservators"
+  },
+  "music composers and arrangers": {
+    "code": "27-2041.04",
+    "title": "Music Composers and Arrangers"
+  },
+  "music directors": {
+    "code": "27-2041.01",
+    "title": "Music Directors"
+  },
+  "music therapists": {
+    "code": "29-1125.02",
+    "title": "Music Therapists"
+  },
+  "musical instrument repairers and tuners": {
+    "code": "49-9063.00",
+    "title": "Musical Instrument Repairers and Tuners"
+  },
+  "musicians, instrumental": {
+    "code": "27-2042.02",
+    "title": "Musicians, Instrumental"
+  },
+  "nannies": {
+    "code": "39-9011.01",
+    "title": "Nannies"
+  },
+  "nanosystems engineers": {
+    "code": "17-2199.09",
+    "title": "Nanosystems Engineers"
+  },
+  "nanotechnology engineering technicians": {
+    "code": "17-3029.12",
+    "title": "Nanotechnology Engineering Technicians"
+  },
+  "nanotechnology engineering technologists": {
+    "code": "17-3029.11",
+    "title": "Nanotechnology Engineering Technologists"
+  },
+  "natural sciences managers": {
+    "code": "11-9121.00",
+    "title": "Natural Sciences Managers"
+  },
+  "naturopathic physicians": {
+    "code": "29-1199.04",
+    "title": "Naturopathic Physicians"
+  },
+  "network and computer systems administrators": {
+    "code": "15-1142.00",
+    "title": "Network and Computer Systems Administrators"
+  },
+  "neurodiagnostic technologists": {
+    "code": "29-2099.01",
+    "title": "Neurodiagnostic Technologists"
+  },
+  "neurologists": {
+    "code": "29-1069.04",
+    "title": "Neurologists"
+  },
+  "neuropsychologists and clinical neuropsychologists": {
+    "code": "19-3039.01",
+    "title": "Neuropsychologists and Clinical Neuropsychologists"
+  },
+  "new accounts clerks": {
+    "code": "43-4141.00",
+    "title": "New Accounts Clerks"
+  },
+  "non-destructive testing specialists": {
+    "code": "17-3029.01",
+    "title": "Non-Destructive Testing Specialists"
+  },
+  "nonfarm animal caretakers": {
+    "code": "39-2021.00",
+    "title": "Nonfarm Animal Caretakers"
+  },
+  "nuclear engineers": {
+    "code": "17-2161.00",
+    "title": "Nuclear Engineers"
+  },
+  "nuclear equipment operation technicians": {
+    "code": "19-4051.01",
+    "title": "Nuclear Equipment Operation Technicians"
+  },
+  "nuclear medicine physicians": {
+    "code": "29-1069.05",
+    "title": "Nuclear Medicine Physicians"
+  },
+  "nuclear medicine technologists": {
+    "code": "29-2033.00",
+    "title": "Nuclear Medicine Technologists"
+  },
+  "nuclear monitoring technicians": {
+    "code": "19-4051.02",
+    "title": "Nuclear Monitoring Technicians"
+  },
+  "nuclear power reactor operators": {
+    "code": "51-8011.00",
+    "title": "Nuclear Power Reactor Operators"
+  },
+  "nurse anesthetists": {
+    "code": "29-1151.00",
+    "title": "Nurse Anesthetists"
+  },
+  "nurse midwives": {
+    "code": "29-1161.00",
+    "title": "Nurse Midwives"
+  },
+  "nurse practitioners": {
+    "code": "29-1171.00",
+    "title": "Nurse Practitioners"
+  },
+  "nursery and greenhouse managers": {
+    "code": "11-9013.01",
+    "title": "Nursery and Greenhouse Managers"
+  },
+  "nursery workers": {
+    "code": "45-2092.01",
+    "title": "Nursery Workers"
+  },
+  "nursing assistants": {
+    "code": "31-1014.00",
+    "title": "Nursing Assistants"
+  },
+  "nursing instructors and teachers, postsecondary": {
+    "code": "25-1072.00",
+    "title": "Nursing Instructors and Teachers, Postsecondary"
+  },
+  "obstetricians and gynecologists": {
+    "code": "29-1064.00",
+    "title": "Obstetricians and Gynecologists"
+  },
+  "occupational health and safety specialists": {
+    "code": "29-9011.00",
+    "title": "Occupational Health and Safety Specialists"
+  },
+  "occupational health and safety technicians": {
+    "code": "29-9012.00",
+    "title": "Occupational Health and Safety Technicians"
+  },
+  "occupational therapists": {
+    "code": "29-1122.00",
+    "title": "Occupational Therapists"
+  },
+  "occupational therapy aides": {
+    "code": "31-2012.00",
+    "title": "Occupational Therapy Aides"
+  },
+  "occupational therapy assistants": {
+    "code": "31-2011.00",
+    "title": "Occupational Therapy Assistants"
+  },
+  "office clerks, general": {
+    "code": "43-9061.00",
+    "title": "Office Clerks, General"
+  },
+  "office machine operators, except computer": {
+    "code": "43-9071.00",
+    "title": "Office Machine Operators, Except Computer"
+  },
+  "online merchants": {
+    "code": "13-1199.06",
+    "title": "Online Merchants"
+  },
+  "operating engineers and other construction equipment operators": {
+    "code": "47-2073.00",
+    "title": "Operating Engineers and Other Construction Equipment Operators"
+  },
+  "operations research analysts": {
+    "code": "15-2031.00",
+    "title": "Operations Research Analysts"
+  },
+  "ophthalmic laboratory technicians": {
+    "code": "51-9083.00",
+    "title": "Ophthalmic Laboratory Technicians"
+  },
+  "ophthalmic medical technicians": {
+    "code": "29-2057.00",
+    "title": "Ophthalmic Medical Technicians"
+  },
+  "ophthalmic medical technologists": {
+    "code": "29-2099.05",
+    "title": "Ophthalmic Medical Technologists"
+  },
+  "ophthalmologists": {
+    "code": "29-1069.06",
+    "title": "Ophthalmologists"
+  },
+  "opticians, dispensing": {
+    "code": "29-2081.00",
+    "title": "Opticians, Dispensing"
+  },
+  "optometrists": {
+    "code": "29-1041.00",
+    "title": "Optometrists"
+  },
+  "oral and maxillofacial surgeons": {
+    "code": "29-1022.00",
+    "title": "Oral and Maxillofacial Surgeons"
+  },
+  "order clerks": {
+    "code": "43-4151.00",
+    "title": "Order Clerks"
+  },
+  "order fillers, wholesale and retail sales": {
+    "code": "43-5081.04",
+    "title": "Order Fillers, Wholesale and Retail Sales"
+  },
+  "orderlies": {
+    "code": "31-1015.00",
+    "title": "Orderlies"
+  },
+  "orthodontists": {
+    "code": "29-1023.00",
+    "title": "Orthodontists"
+  },
+  "orthoptists": {
+    "code": "29-1199.05",
+    "title": "Orthoptists"
+  },
+  "orthotists and prosthetists": {
+    "code": "29-2091.00",
+    "title": "Orthotists and Prosthetists"
+  },
+  "outdoor power equipment and other small engine mechanics": {
+    "code": "49-3053.00",
+    "title": "Outdoor Power Equipment and Other Small Engine Mechanics"
+  },
+  "packaging and filling machine operators and tenders": {
+    "code": "51-9111.00",
+    "title": "Packaging and Filling Machine Operators and Tenders"
+  },
+  "packers and packagers, hand": {
+    "code": "53-7064.00",
+    "title": "Packers and Packagers, Hand"
+  },
+  "painters, construction and maintenance": {
+    "code": "47-2141.00",
+    "title": "Painters, Construction and Maintenance"
+  },
+  "painters, transportation equipment": {
+    "code": "51-9122.00",
+    "title": "Painters, Transportation Equipment"
+  },
+  "painting, coating, and decorating workers": {
+    "code": "51-9123.00",
+    "title": "Painting, Coating, and Decorating Workers"
+  },
+  "paper goods machine setters, operators, and tenders": {
+    "code": "51-9196.00",
+    "title": "Paper Goods Machine Setters, Operators, and Tenders"
+  },
+  "paperhangers": {
+    "code": "47-2142.00",
+    "title": "Paperhangers"
+  },
+  "paralegals and legal assistants": {
+    "code": "23-2011.00",
+    "title": "Paralegals and Legal Assistants"
+  },
+  "park naturalists": {
+    "code": "19-1031.03",
+    "title": "Park Naturalists"
+  },
+  "parking enforcement workers": {
+    "code": "33-3041.00",
+    "title": "Parking Enforcement Workers"
+  },
+  "parking lot attendants": {
+    "code": "53-6021.00",
+    "title": "Parking Lot Attendants"
+  },
+  "parts salespersons": {
+    "code": "41-2022.00",
+    "title": "Parts Salespersons"
+  },
+  "pathologists": {
+    "code": "29-1069.07",
+    "title": "Pathologists"
+  },
+  "patient representatives": {
+    "code": "43-4051.03",
+    "title": "Patient Representatives"
+  },
+  "patternmakers, metal and plastic": {
+    "code": "51-4062.00",
+    "title": "Patternmakers, Metal and Plastic"
+  },
+  "patternmakers, wood": {
+    "code": "51-7032.00",
+    "title": "Patternmakers, Wood"
+  },
+  "paving, surfacing, and tamping equipment operators": {
+    "code": "47-2071.00",
+    "title": "Paving, Surfacing, and Tamping Equipment Operators"
+  },
+  "payroll and timekeeping clerks": {
+    "code": "43-3051.00",
+    "title": "Payroll and Timekeeping Clerks"
+  },
+  "pediatricians, general": {
+    "code": "29-1065.00",
+    "title": "Pediatricians, General"
+  },
+  "personal care aides": {
+    "code": "39-9021.00",
+    "title": "Personal Care Aides"
+  },
+  "personal financial advisors": {
+    "code": "13-2052.00",
+    "title": "Personal Financial Advisors"
+  },
+  "pest control workers": {
+    "code": "37-2021.00",
+    "title": "Pest Control Workers"
+  },
+  "pesticide handlers, sprayers, and applicators, vegetation": {
+    "code": "37-3012.00",
+    "title": "Pesticide Handlers, Sprayers, and Applicators, Vegetation"
+  },
+  "petroleum engineers": {
+    "code": "17-2171.00",
+    "title": "Petroleum Engineers"
+  },
+  "petroleum pump system operators, refinery operators, and gaugers": {
+    "code": "51-8093.00",
+    "title": "Petroleum Pump System Operators, Refinery Operators, and Gaugers"
+  },
+  "pharmacists": {
+    "code": "29-1051.00",
+    "title": "Pharmacists"
+  },
+  "pharmacy aides": {
+    "code": "31-9095.00",
+    "title": "Pharmacy Aides"
+  },
+  "pharmacy technicians": {
+    "code": "29-2052.00",
+    "title": "Pharmacy Technicians"
+  },
+  "philosophy and religion teachers, postsecondary": {
+    "code": "25-1126.00",
+    "title": "Philosophy and Religion Teachers, Postsecondary"
+  },
+  "phlebotomists": {
+    "code": "31-9097.00",
+    "title": "Phlebotomists"
+  },
+  "photographers": {
+    "code": "27-4021.00",
+    "title": "Photographers"
+  },
+  "photographic process workers and processing machine operators": {
+    "code": "51-9151.00",
+    "title": "Photographic Process Workers and Processing Machine Operators"
+  },
+  "photonics engineers": {
+    "code": "17-2199.07",
+    "title": "Photonics Engineers"
+  },
+  "photonics technicians": {
+    "code": "17-3029.08",
+    "title": "Photonics Technicians"
+  },
+  "physical medicine and rehabilitation physicians": {
+    "code": "29-1069.08",
+    "title": "Physical Medicine and Rehabilitation Physicians"
+  },
+  "physical therapist aides": {
+    "code": "31-2022.00",
+    "title": "Physical Therapist Aides"
+  },
+  "physical therapist assistants": {
+    "code": "31-2021.00",
+    "title": "Physical Therapist Assistants"
+  },
+  "physical therapists": {
+    "code": "29-1123.00",
+    "title": "Physical Therapists"
+  },
+  "physician assistants": {
+    "code": "29-1071.00",
+    "title": "Physician Assistants"
+  },
+  "physicists": {
+    "code": "19-2012.00",
+    "title": "Physicists"
+  },
+  "physics teachers, postsecondary": {
+    "code": "25-1054.00",
+    "title": "Physics Teachers, Postsecondary"
+  },
+  "pile-driver operators": {
+    "code": "47-2072.00",
+    "title": "Pile-Driver Operators"
+  },
+  "pilots, ship": {
+    "code": "53-5021.03",
+    "title": "Pilots, Ship"
+  },
+  "pipe fitters and steamfitters": {
+    "code": "47-2152.01",
+    "title": "Pipe Fitters and Steamfitters"
+  },
+  "pipelayers": {
+    "code": "47-2151.00",
+    "title": "Pipelayers"
+  },
+  "plasterers and stucco masons": {
+    "code": "47-2161.00",
+    "title": "Plasterers and Stucco Masons"
+  },
+  "plating and coating machine setters, operators, and tenders, metal and plastic": {
+    "code": "51-4193.00",
+    "title": "Plating and Coating Machine Setters, Operators, and Tenders, Metal and Plastic"
+  },
+  "plumbers": {
+    "code": "47-2152.02",
+    "title": "Plumbers"
+  },
+  "podiatrists": {
+    "code": "29-1081.00",
+    "title": "Podiatrists"
+  },
+  "poets, lyricists and creative writers": {
+    "code": "27-3043.05",
+    "title": "Poets, Lyricists and Creative Writers"
+  },
+  "police detectives": {
+    "code": "33-3021.01",
+    "title": "Police Detectives"
+  },
+  "police identification and records officers": {
+    "code": "33-3021.02",
+    "title": "Police Identification and Records Officers"
+  },
+  "police patrol officers": {
+    "code": "33-3051.01",
+    "title": "Police Patrol Officers"
+  },
+  "police, fire, and ambulance dispatchers": {
+    "code": "43-5031.00",
+    "title": "Police, Fire, and Ambulance Dispatchers"
+  },
+  "political science teachers, postsecondary": {
+    "code": "25-1065.00",
+    "title": "Political Science Teachers, Postsecondary"
+  },
+  "political scientists": {
+    "code": "19-3094.00",
+    "title": "Political Scientists"
+  },
+  "postal service clerks": {
+    "code": "43-5051.00",
+    "title": "Postal Service Clerks"
+  },
+  "postal service mail carriers": {
+    "code": "43-5052.00",
+    "title": "Postal Service Mail Carriers"
+  },
+  "postal service mail sorters, processors, and processing machine operators": {
+    "code": "43-5053.00",
+    "title": "Postal Service Mail Sorters, Processors, and Processing Machine Operators"
+  },
+  "postmasters and mail superintendents": {
+    "code": "11-9131.00",
+    "title": "Postmasters and Mail Superintendents"
+  },
+  "potters, manufacturing": {
+    "code": "51-9195.05",
+    "title": "Potters, Manufacturing"
+  },
+  "pourers and casters, metal": {
+    "code": "51-4052.00",
+    "title": "Pourers and Casters, Metal"
+  },
+  "power distributors and dispatchers": {
+    "code": "51-8012.00",
+    "title": "Power Distributors and Dispatchers"
+  },
+  "power plant operators": {
+    "code": "51-8013.00",
+    "title": "Power Plant Operators"
+  },
+  "precious metal workers": {
+    "code": "51-9071.07",
+    "title": "Precious Metal Workers"
+  },
+  "precision agriculture technicians": {
+    "code": "19-4099.02",
+    "title": "Precision Agriculture Technicians"
+  },
+  "prepress technicians and workers": {
+    "code": "51-5111.00",
+    "title": "Prepress Technicians and Workers"
+  },
+  "preschool teachers, except special education": {
+    "code": "25-2011.00",
+    "title": "Preschool Teachers, Except Special Education"
+  },
+  "pressers, textile, garment, and related materials": {
+    "code": "51-6021.00",
+    "title": "Pressers, Textile, Garment, and Related Materials"
+  },
+  "preventive medicine physicians": {
+    "code": "29-1069.09",
+    "title": "Preventive Medicine Physicians"
+  },
+  "print binding and finishing workers": {
+    "code": "51-5113.00",
+    "title": "Print Binding and Finishing Workers"
+  },
+  "printing press operators": {
+    "code": "51-5112.00",
+    "title": "Printing Press Operators"
+  },
+  "private detectives and investigators": {
+    "code": "33-9021.00",
+    "title": "Private Detectives and Investigators"
+  },
+  "probation officers and correctional treatment specialists": {
+    "code": "21-1092.00",
+    "title": "Probation Officers and Correctional Treatment Specialists"
+  },
+  "procurement clerks": {
+    "code": "43-3061.00",
+    "title": "Procurement Clerks"
+  },
+  "producers": {
+    "code": "27-2012.01",
+    "title": "Producers"
+  },
+  "product safety engineers": {
+    "code": "17-2111.03",
+    "title": "Product Safety Engineers"
+  },
+  "production, planning, and expediting clerks": {
+    "code": "43-5061.00",
+    "title": "Production, Planning, and Expediting Clerks"
+  },
+  "program directors": {
+    "code": "27-2012.03",
+    "title": "Program Directors"
+  },
+  "proofreaders and copy markers": {
+    "code": "43-9081.00",
+    "title": "Proofreaders and Copy Markers"
+  },
+  "property, real estate, and community association managers": {
+    "code": "11-9141.00",
+    "title": "Property, Real Estate, and Community Association Managers"
+  },
+  "prosthodontists": {
+    "code": "29-1024.00",
+    "title": "Prosthodontists"
+  },
+  "psychiatric aides": {
+    "code": "31-1013.00",
+    "title": "Psychiatric Aides"
+  },
+  "psychiatric technicians": {
+    "code": "29-2053.00",
+    "title": "Psychiatric Technicians"
+  },
+  "psychiatrists": {
+    "code": "29-1066.00",
+    "title": "Psychiatrists"
+  },
+  "psychology teachers, postsecondary": {
+    "code": "25-1066.00",
+    "title": "Psychology Teachers, Postsecondary"
+  },
+  "public address system and other announcers": {
+    "code": "27-3012.00",
+    "title": "Public Address System and Other Announcers"
+  },
+  "public relations and fundraising managers": {
+    "code": "11-2031.00",
+    "title": "Public Relations and Fundraising Managers"
+  },
+  "public relations specialists": {
+    "code": "27-3031.00",
+    "title": "Public Relations Specialists"
+  },
+  "pump operators, except wellhead pumpers": {
+    "code": "53-7072.00",
+    "title": "Pump Operators, Except Wellhead Pumpers"
+  },
+  "purchasing agents, except wholesale, retail, and farm products": {
+    "code": "13-1023.00",
+    "title": "Purchasing Agents, Except Wholesale, Retail, and Farm Products"
+  },
+  "purchasing managers": {
+    "code": "11-3061.00",
+    "title": "Purchasing Managers"
+  },
+  "quality control analysts": {
+    "code": "19-4099.01",
+    "title": "Quality Control Analysts"
+  },
+  "quality control systems managers": {
+    "code": "11-3051.01",
+    "title": "Quality Control Systems Managers"
+  },
+  "radiation therapists": {
+    "code": "29-1124.00",
+    "title": "Radiation Therapists"
+  },
+  "radio and television announcers": {
+    "code": "27-3011.00",
+    "title": "Radio and Television Announcers"
+  },
+  "radio frequency identification device specialists": {
+    "code": "17-2072.01",
+    "title": "Radio Frequency Identification Device Specialists"
+  },
+  "radio mechanics": {
+    "code": "49-2021.01",
+    "title": "Radio Mechanics"
+  },
+  "radio operators": {
+    "code": "27-4013.00",
+    "title": "Radio Operators"
+  },
+  "radio, cellular, and tower equipment installers and repairers": {
+    "code": "49-2021.00",
+    "title": "Radio, Cellular, and Tower Equipment Installers and Repairers"
+  },
+  "radiologic technicians": {
+    "code": "29-2099.06",
+    "title": "Radiologic Technicians"
+  },
+  "radiologic technologists": {
+    "code": "29-2034.00",
+    "title": "Radiologic Technologists"
+  },
+  "radiologists": {
+    "code": "29-1069.10",
+    "title": "Radiologists"
+  },
+  "rail car repairers": {
+    "code": "49-3043.00",
+    "title": "Rail Car Repairers"
+  },
+  "rail yard engineers, dinkey operators, and hostlers": {
+    "code": "53-4013.00",
+    "title": "Rail Yard Engineers, Dinkey Operators, and Hostlers"
+  },
+  "rail-track laying and maintenance equipment operators": {
+    "code": "47-4061.00",
+    "title": "Rail-Track Laying and Maintenance Equipment Operators"
+  },
+  "railroad brake, signal, and switch operators": {
+    "code": "53-4021.00",
+    "title": "Railroad Brake, Signal, and Switch Operators"
+  },
+  "railroad conductors and yardmasters": {
+    "code": "53-4031.00",
+    "title": "Railroad Conductors and Yardmasters"
+  },
+  "range managers": {
+    "code": "19-1031.02",
+    "title": "Range Managers"
+  },
+  "real estate brokers": {
+    "code": "41-9021.00",
+    "title": "Real Estate Brokers"
+  },
+  "real estate sales agents": {
+    "code": "41-9022.00",
+    "title": "Real Estate Sales Agents"
+  },
+  "receptionists and information clerks": {
+    "code": "43-4171.00",
+    "title": "Receptionists and Information Clerks"
+  },
+  "recreation and fitness studies teachers, postsecondary": {
+    "code": "25-1193.00",
+    "title": "Recreation and Fitness Studies Teachers, Postsecondary"
+  },
+  "recreation workers": {
+    "code": "39-9032.00",
+    "title": "Recreation Workers"
+  },
+  "recreational therapists": {
+    "code": "29-1125.00",
+    "title": "Recreational Therapists"
+  },
+  "recreational vehicle service technicians": {
+    "code": "49-3092.00",
+    "title": "Recreational Vehicle Service Technicians"
+  },
+  "recycling and reclamation workers": {
+    "code": "51-9199.01",
+    "title": "Recycling and Reclamation Workers"
+  },
+  "recycling coordinators": {
+    "code": "53-1021.01",
+    "title": "Recycling Coordinators"
+  },
+  "refractory materials repairers, except brickmasons": {
+    "code": "49-9045.00",
+    "title": "Refractory Materials Repairers, Except Brickmasons"
+  },
+  "refrigeration mechanics and installers": {
+    "code": "49-9021.02",
+    "title": "Refrigeration Mechanics and Installers"
+  },
+  "refuse and recyclable material collectors": {
+    "code": "53-7081.00",
+    "title": "Refuse and Recyclable Material Collectors"
+  },
+  "registered nurses": {
+    "code": "29-1141.00",
+    "title": "Registered Nurses"
+  },
+  "regulatory affairs managers": {
+    "code": "11-9199.01",
+    "title": "Regulatory Affairs Managers"
+  },
+  "regulatory affairs specialists": {
+    "code": "13-1041.07",
+    "title": "Regulatory Affairs Specialists"
+  },
+  "rehabilitation counselors": {
+    "code": "21-1015.00",
+    "title": "Rehabilitation Counselors"
+  },
+  "reinforcing iron and rebar workers": {
+    "code": "47-2171.00",
+    "title": "Reinforcing Iron and Rebar Workers"
+  },
+  "remote sensing scientists and technologists": {
+    "code": "19-2099.01",
+    "title": "Remote Sensing Scientists and Technologists"
+  },
+  "remote sensing technicians": {
+    "code": "19-4099.03",
+    "title": "Remote Sensing Technicians"
+  },
+  "reporters and correspondents": {
+    "code": "27-3022.00",
+    "title": "Reporters and Correspondents"
+  },
+  "reservation and transportation ticket agents and travel clerks": {
+    "code": "43-4181.00",
+    "title": "Reservation and Transportation Ticket Agents and Travel Clerks"
+  },
+  "residential advisors": {
+    "code": "39-9041.00",
+    "title": "Residential Advisors"
+  },
+  "respiratory therapists": {
+    "code": "29-1126.00",
+    "title": "Respiratory Therapists"
+  },
+  "respiratory therapy technicians": {
+    "code": "29-2054.00",
+    "title": "Respiratory Therapy Technicians"
+  },
+  "retail loss prevention specialists": {
+    "code": "33-9099.02",
+    "title": "Retail Loss Prevention Specialists"
+  },
+  "retail salespersons": {
+    "code": "41-2031.00",
+    "title": "Retail Salespersons"
+  },
+  "riggers": {
+    "code": "49-9096.00",
+    "title": "Riggers"
+  },
+  "risk management specialists": {
+    "code": "13-2099.02",
+    "title": "Risk Management Specialists"
+  },
+  "robotics engineers": {
+    "code": "17-2199.08",
+    "title": "Robotics Engineers"
+  },
+  "robotics technicians": {
+    "code": "17-3024.01",
+    "title": "Robotics Technicians"
+  },
+  "rock splitters, quarry": {
+    "code": "47-5051.00",
+    "title": "Rock Splitters, Quarry"
+  },
+  "rolling machine setters, operators, and tenders, metal and plastic": {
+    "code": "51-4023.00",
+    "title": "Rolling Machine Setters, Operators, and Tenders, Metal and Plastic"
+  },
+  "roof bolters, mining": {
+    "code": "47-5061.00",
+    "title": "Roof Bolters, Mining"
+  },
+  "roofers": {
+    "code": "47-2181.00",
+    "title": "Roofers"
+  },
+  "rotary drill operators, oil and gas": {
+    "code": "47-5012.00",
+    "title": "Rotary Drill Operators, Oil and Gas"
+  },
+  "rough carpenters": {
+    "code": "47-2031.02",
+    "title": "Rough Carpenters"
+  },
+  "roustabouts, oil and gas": {
+    "code": "47-5071.00",
+    "title": "Roustabouts, Oil and Gas"
+  },
+  "sailors and marine oilers": {
+    "code": "53-5011.00",
+    "title": "Sailors and Marine Oilers"
+  },
+  "sales agents, financial services": {
+    "code": "41-3031.02",
+    "title": "Sales Agents, Financial Services"
+  },
+  "sales agents, securities and commodities": {
+    "code": "41-3031.01",
+    "title": "Sales Agents, Securities and Commodities"
+  },
+  "sales engineers": {
+    "code": "41-9031.00",
+    "title": "Sales Engineers"
+  },
+  "sales managers": {
+    "code": "11-2022.00",
+    "title": "Sales Managers"
+  },
+  "sales representatives, wholesale and manufacturing, except technical and scientific products": {
+    "code": "41-4012.00",
+    "title": "Sales Representatives, Wholesale and Manufacturing, Except Technical and Scientific Products"
+  },
+  "sales representatives, wholesale and manufacturing, technical and scientific products": {
+    "code": "41-4011.00",
+    "title": "Sales Representatives, Wholesale and Manufacturing, Technical and Scientific Products"
+  },
+  "sawing machine setters, operators, and tenders, wood": {
+    "code": "51-7041.00",
+    "title": "Sawing Machine Setters, Operators, and Tenders, Wood"
+  },
+  "school psychologists": {
+    "code": "19-3031.01",
+    "title": "School Psychologists"
+  },
+  "search marketing strategists": {
+    "code": "15-1199.10",
+    "title": "Search Marketing Strategists"
+  },
+  "secondary school teachers, except special and career/technical education": {
+    "code": "25-2031.00",
+    "title": "Secondary School Teachers, Except Special and Career/Technical Education"
+  },
+  "secretaries and administrative assistants, except legal, medical, and executive": {
+    "code": "43-6014.00",
+    "title": "Secretaries and Administrative Assistants, Except Legal, Medical, and Executive"
+  },
+  "securities and commodities traders": {
+    "code": "41-3031.03",
+    "title": "Securities and Commodities Traders"
+  },
+  "security and fire alarm systems installers": {
+    "code": "49-2098.00",
+    "title": "Security and Fire Alarm Systems Installers"
+  },
+  "security guards": {
+    "code": "33-9032.00",
+    "title": "Security Guards"
+  },
+  "security management specialists": {
+    "code": "13-1199.02",
+    "title": "Security Management Specialists"
+  },
+  "security managers": {
+    "code": "11-9199.07",
+    "title": "Security Managers"
+  },
+  "segmental pavers": {
+    "code": "47-4091.00",
+    "title": "Segmental Pavers"
+  },
+  "self-enrichment education teachers": {
+    "code": "25-3021.00",
+    "title": "Self-Enrichment Education Teachers"
+  },
+  "semiconductor processors": {
+    "code": "51-9141.00",
+    "title": "Semiconductor Processors"
+  },
+  "separating, filtering, clarifying, precipitating, and still machine setters, operators, and tenders": {
+    "code": "51-9012.00",
+    "title": "Separating, Filtering, Clarifying, Precipitating, and Still Machine Setters, Operators, and Tenders"
+  },
+  "septic tank servicers and sewer pipe cleaners": {
+    "code": "47-4071.00",
+    "title": "Septic Tank Servicers and Sewer Pipe Cleaners"
+  },
+  "service unit operators, oil, gas, and mining": {
+    "code": "47-5013.00",
+    "title": "Service Unit Operators, Oil, Gas, and Mining"
+  },
+  "set and exhibit designers": {
+    "code": "27-1027.00",
+    "title": "Set and Exhibit Designers"
+  },
+  "sewers, hand": {
+    "code": "51-6051.00",
+    "title": "Sewers, Hand"
+  },
+  "sewing machine operators": {
+    "code": "51-6031.00",
+    "title": "Sewing Machine Operators"
+  },
+  "shampooers": {
+    "code": "39-5093.00",
+    "title": "Shampooers"
+  },
+  "sheet metal workers": {
+    "code": "47-2211.00",
+    "title": "Sheet Metal Workers"
+  },
+  "sheriffs and deputy sheriffs": {
+    "code": "33-3051.03",
+    "title": "Sheriffs and Deputy Sheriffs"
+  },
+  "ship and boat captains": {
+    "code": "53-5021.01",
+    "title": "Ship and Boat Captains"
+  },
+  "ship engineers": {
+    "code": "53-5031.00",
+    "title": "Ship Engineers"
+  },
+  "shipping, receiving, and traffic clerks": {
+    "code": "43-5071.00",
+    "title": "Shipping, Receiving, and Traffic Clerks"
+  },
+  "shoe and leather workers and repairers": {
+    "code": "51-6041.00",
+    "title": "Shoe and Leather Workers and Repairers"
+  },
+  "shoe machine operators and tenders": {
+    "code": "51-6042.00",
+    "title": "Shoe Machine Operators and Tenders"
+  },
+  "signal and track switch repairers": {
+    "code": "49-9097.00",
+    "title": "Signal and Track Switch Repairers"
+  },
+  "singers": {
+    "code": "27-2042.01",
+    "title": "Singers"
+  },
+  "skincare specialists": {
+    "code": "39-5094.00",
+    "title": "Skincare Specialists"
+  },
+  "slaughterers and meat packers": {
+    "code": "51-3023.00",
+    "title": "Slaughterers and Meat Packers"
+  },
+  "slot supervisors": {
+    "code": "39-1012.00",
+    "title": "Slot Supervisors"
+  },
+  "social and community service managers": {
+    "code": "11-9151.00",
+    "title": "Social and Community Service Managers"
+  },
+  "social and human service assistants": {
+    "code": "21-1093.00",
+    "title": "Social and Human Service Assistants"
+  },
+  "social science research assistants": {
+    "code": "19-4061.00",
+    "title": "Social Science Research Assistants"
+  },
+  "social work teachers, postsecondary": {
+    "code": "25-1113.00",
+    "title": "Social Work Teachers, Postsecondary"
+  },
+  "sociologists": {
+    "code": "19-3041.00",
+    "title": "Sociologists"
+  },
+  "sociology teachers, postsecondary": {
+    "code": "25-1067.00",
+    "title": "Sociology Teachers, Postsecondary"
+  },
+  "software developers, applications": {
+    "code": "15-1132.00",
+    "title": "Software Developers, Applications"
+  },
+  "software developers, systems software": {
+    "code": "15-1133.00",
+    "title": "Software Developers, Systems Software"
+  },
+  "software developers": {
+    "code": "15-1252.00",
+    "title": "Software Developers"
+  },
+  "software quality assurance engineers and testers": {
+    "code": "15-1199.01",
+    "title": "Software Quality Assurance Engineers and Testers"
+  },
+  "soil and plant scientists": {
+    "code": "19-1013.00",
+    "title": "Soil and Plant Scientists"
+  },
+  "soil and water conservationists": {
+    "code": "19-1031.01",
+    "title": "Soil and Water Conservationists"
+  },
+  "solar energy installation managers": {
+    "code": "47-1011.03",
+    "title": "Solar Energy Installation Managers"
+  },
+  "solar energy systems engineers": {
+    "code": "17-2199.11",
+    "title": "Solar Energy Systems Engineers"
+  },
+  "solar photovoltaic installers": {
+    "code": "47-2231.00",
+    "title": "Solar Photovoltaic Installers"
+  },
+  "solar sales representatives and assessors": {
+    "code": "41-4011.07",
+    "title": "Solar Sales Representatives and Assessors"
+  },
+  "solar thermal installers and technicians": {
+    "code": "47-4099.02",
+    "title": "Solar Thermal Installers and Technicians"
+  },
+  "solderers and brazers": {
+    "code": "51-4121.07",
+    "title": "Solderers and Brazers"
+  },
+  "sound engineering technicians": {
+    "code": "27-4014.00",
+    "title": "Sound Engineering Technicians"
+  },
+  "spa managers": {
+    "code": "39-1021.01",
+    "title": "Spa Managers"
+  },
+  "special education teachers, kindergarten and elementary school": {
+    "code": "25-2052.00",
+    "title": "Special Education Teachers, Kindergarten and Elementary School"
+  },
+  "special education teachers, middle school": {
+    "code": "25-2053.00",
+    "title": "Special Education Teachers, Middle School"
+  },
+  "special education teachers, preschool": {
+    "code": "25-2051.00",
+    "title": "Special Education Teachers, Preschool"
+  },
+  "special education teachers, secondary school": {
+    "code": "25-2054.00",
+    "title": "Special Education Teachers, Secondary School"
+  },
+  "speech-language pathologists": {
+    "code": "29-1127.00",
+    "title": "Speech-Language Pathologists"
+  },
+  "speech-language pathology assistants": {
+    "code": "31-9099.01",
+    "title": "Speech-Language Pathology Assistants"
+  },
+  "sports medicine physicians": {
+    "code": "29-1069.11",
+    "title": "Sports Medicine Physicians"
+  },
+  "statement clerks": {
+    "code": "43-3021.01",
+    "title": "Statement Clerks"
+  },
+  "stationary engineers and boiler operators": {
+    "code": "51-8021.00",
+    "title": "Stationary Engineers and Boiler Operators"
+  },
+  "statistical assistants": {
+    "code": "43-9111.00",
+    "title": "Statistical Assistants"
+  },
+  "statisticians": {
+    "code": "15-2041.00",
+    "title": "Statisticians"
+  },
+  "stock clerks, sales floor": {
+    "code": "43-5081.01",
+    "title": "Stock Clerks, Sales Floor"
+  },
+  "stock clerks- stockroom, warehouse, or storage yard": {
+    "code": "43-5081.03",
+    "title": "Stock Clerks- Stockroom, Warehouse, or Storage Yard"
+  },
+  "stone cutters and carvers, manufacturing": {
+    "code": "51-9195.03",
+    "title": "Stone Cutters and Carvers, Manufacturing"
+  },
+  "stonemasons": {
+    "code": "47-2022.00",
+    "title": "Stonemasons"
+  },
+  "storage and distribution managers": {
+    "code": "11-3071.02",
+    "title": "Storage and Distribution Managers"
+  },
+  "structural iron and steel workers": {
+    "code": "47-2221.00",
+    "title": "Structural Iron and Steel Workers"
+  },
+  "structural metal fabricators and fitters": {
+    "code": "51-2041.00",
+    "title": "Structural Metal Fabricators and Fitters"
+  },
+  "substance abuse and behavioral disorder counselors": {
+    "code": "21-1011.00",
+    "title": "Substance Abuse and Behavioral Disorder Counselors"
+  },
+  "subway and streetcar operators": {
+    "code": "53-4041.00",
+    "title": "Subway and Streetcar Operators"
+  },
+  "supply chain managers": {
+    "code": "11-9199.04",
+    "title": "Supply Chain Managers"
+  },
+  "surgeons": {
+    "code": "29-1067.00",
+    "title": "Surgeons"
+  },
+  "surgical assistants": {
+    "code": "29-2099.07",
+    "title": "Surgical Assistants"
+  },
+  "surgical technologists": {
+    "code": "29-2055.00",
+    "title": "Surgical Technologists"
+  },
+  "survey researchers": {
+    "code": "19-3022.00",
+    "title": "Survey Researchers"
+  },
+  "surveying technicians": {
+    "code": "17-3031.01",
+    "title": "Surveying Technicians"
+  },
+  "surveyors": {
+    "code": "17-1022.00",
+    "title": "Surveyors"
+  },
+  "sustainability specialists": {
+    "code": "13-1199.05",
+    "title": "Sustainability Specialists"
+  },
+  "switchboard operators, including answering service": {
+    "code": "43-2011.00",
+    "title": "Switchboard Operators, Including Answering Service"
+  },
+  "tailors, dressmakers, and custom sewers": {
+    "code": "51-6052.00",
+    "title": "Tailors, Dressmakers, and Custom Sewers"
+  },
+  "talent directors": {
+    "code": "27-2012.04",
+    "title": "Talent Directors"
+  },
+  "tank car, truck, and ship loaders": {
+    "code": "53-7121.00",
+    "title": "Tank Car, Truck, and Ship Loaders"
+  },
+  "tapers": {
+    "code": "47-2082.00",
+    "title": "Tapers"
+  },
+  "tax examiners and collectors, and revenue agents": {
+    "code": "13-2081.00",
+    "title": "Tax Examiners and Collectors, and Revenue Agents"
+  },
+  "tax preparers": {
+    "code": "13-2082.00",
+    "title": "Tax Preparers"
+  },
+  "taxi drivers and chauffeurs": {
+    "code": "53-3041.00",
+    "title": "Taxi Drivers and Chauffeurs"
+  },
+  "teacher assistants": {
+    "code": "25-9041.00",
+    "title": "Teacher Assistants"
+  },
+  "team assemblers": {
+    "code": "51-2092.00",
+    "title": "Team Assemblers"
+  },
+  "technical directors/managers": {
+    "code": "27-2012.05",
+    "title": "Technical Directors/Managers"
+  },
+  "technical writers": {
+    "code": "27-3042.00",
+    "title": "Technical Writers"
+  },
+  "telecommunications engineering specialists": {
+    "code": "15-1143.01",
+    "title": "Telecommunications Engineering Specialists"
+  },
+  "telecommunications equipment installers and repairers, except line installers": {
+    "code": "49-2022.00",
+    "title": "Telecommunications Equipment Installers and Repairers, Except Line Installers"
+  },
+  "telecommunications line installers and repairers": {
+    "code": "49-9052.00",
+    "title": "Telecommunications Line Installers and Repairers"
+  },
+  "telemarketers": {
+    "code": "41-9041.00",
+    "title": "Telemarketers"
+  },
+  "telephone operators": {
+    "code": "43-2021.00",
+    "title": "Telephone Operators"
+  },
+  "tellers": {
+    "code": "43-3071.00",
+    "title": "Tellers"
+  },
+  "terrazzo workers and finishers": {
+    "code": "47-2053.00",
+    "title": "Terrazzo Workers and Finishers"
+  },
+  "textile bleaching and dyeing machine operators and tenders": {
+    "code": "51-6061.00",
+    "title": "Textile Bleaching and Dyeing Machine Operators and Tenders"
+  },
+  "textile cutting machine setters, operators, and tenders": {
+    "code": "51-6062.00",
+    "title": "Textile Cutting Machine Setters, Operators, and Tenders"
+  },
+  "textile knitting and weaving machine setters, operators, and tenders": {
+    "code": "51-6063.00",
+    "title": "Textile Knitting and Weaving Machine Setters, Operators, and Tenders"
+  },
+  "textile winding, twisting, and drawing out machine setters, operators, and tenders": {
+    "code": "51-6064.00",
+    "title": "Textile Winding, Twisting, and Drawing Out Machine Setters, Operators, and Tenders"
+  },
+  "tile and marble setters": {
+    "code": "47-2044.00",
+    "title": "Tile and Marble Setters"
+  },
+  "timing device assemblers and adjusters": {
+    "code": "51-2093.00",
+    "title": "Timing Device Assemblers and Adjusters"
+  },
+  "tire builders": {
+    "code": "51-9197.00",
+    "title": "Tire Builders"
+  },
+  "tire repairers and changers": {
+    "code": "49-3093.00",
+    "title": "Tire Repairers and Changers"
+  },
+  "title examiners, abstractors, and searchers": {
+    "code": "23-2093.00",
+    "title": "Title Examiners, Abstractors, and Searchers"
+  },
+  "tool and die makers": {
+    "code": "51-4111.00",
+    "title": "Tool and Die Makers"
+  },
+  "tool grinders, filers, and sharpeners": {
+    "code": "51-4194.00",
+    "title": "Tool Grinders, Filers, and Sharpeners"
+  },
+  "tour guides and escorts": {
+    "code": "39-7011.00",
+    "title": "Tour Guides and Escorts"
+  },
+  "traffic technicians": {
+    "code": "53-6041.00",
+    "title": "Traffic Technicians"
+  },
+  "training and development managers": {
+    "code": "11-3131.00",
+    "title": "Training and Development Managers"
+  },
+  "training and development specialists": {
+    "code": "13-1151.00",
+    "title": "Training and Development Specialists"
+  },
+  "transit and railroad police": {
+    "code": "33-3052.00",
+    "title": "Transit and Railroad Police"
+  },
+  "transportation attendants, except flight attendants": {
+    "code": "53-6061.00",
+    "title": "Transportation Attendants, Except Flight Attendants"
+  },
+  "transportation engineers": {
+    "code": "17-2051.01",
+    "title": "Transportation Engineers"
+  },
+  "transportation managers": {
+    "code": "11-3071.01",
+    "title": "Transportation Managers"
+  },
+  "transportation planners": {
+    "code": "19-3099.01",
+    "title": "Transportation Planners"
+  },
+  "transportation security screeners": {
+    "code": "33-9093.00",
+    "title": "Transportation Security Screeners"
+  },
+  "transportation vehicle, equipment and systems inspectors, except aviation": {
+    "code": "53-6051.07",
+    "title": "Transportation Vehicle, Equipment and Systems Inspectors, Except Aviation"
+  },
+  "travel agents": {
+    "code": "41-3041.00",
+    "title": "Travel Agents"
+  },
+  "travel guides": {
+    "code": "39-7012.00",
+    "title": "Travel Guides"
+  },
+  "treasurers and controllers": {
+    "code": "11-3031.01",
+    "title": "Treasurers and Controllers"
+  },
+  "tree trimmers and pruners": {
+    "code": "37-3013.00",
+    "title": "Tree Trimmers and Pruners"
+  },
+  "tutors": {
+    "code": "25-3099.02",
+    "title": "Tutors"
+  },
+  "umpires, referees, and other sports officials": {
+    "code": "27-2023.00",
+    "title": "Umpires, Referees, and Other Sports Officials"
+  },
+  "upholsterers": {
+    "code": "51-6093.00",
+    "title": "Upholsterers"
+  },
+  "urban and regional planners": {
+    "code": "19-3051.00",
+    "title": "Urban and Regional Planners"
+  },
+  "urologists": {
+    "code": "29-1069.12",
+    "title": "Urologists"
+  },
+  "ushers, lobby attendants, and ticket takers": {
+    "code": "39-3031.00",
+    "title": "Ushers, Lobby Attendants, and Ticket Takers"
+  },
+  "validation engineers": {
+    "code": "17-2199.02",
+    "title": "Validation Engineers"
+  },
+  "veterinarians": {
+    "code": "29-1131.00",
+    "title": "Veterinarians"
+  },
+  "veterinary assistants and laboratory animal caretakers": {
+    "code": "31-9096.00",
+    "title": "Veterinary Assistants and Laboratory Animal Caretakers"
+  },
+  "veterinary technologists and technicians": {
+    "code": "29-2056.00",
+    "title": "Veterinary Technologists and Technicians"
+  },
+  "video game designers": {
+    "code": "15-1199.11",
+    "title": "Video Game Designers"
+  },
+  "vocational education teachers, postsecondary": {
+    "code": "25-1194.00",
+    "title": "Vocational Education Teachers, Postsecondary"
+  },
+  "waiters and waitresses": {
+    "code": "35-3031.00",
+    "title": "Waiters and Waitresses"
+  },
+  "watch repairers": {
+    "code": "49-9064.00",
+    "title": "Watch Repairers"
+  },
+  "water and wastewater treatment plant and system operators": {
+    "code": "51-8031.00",
+    "title": "Water and Wastewater Treatment Plant and System Operators"
+  },
+  "water resource specialists": {
+    "code": "11-9121.02",
+    "title": "Water Resource Specialists"
+  },
+  "water/wastewater engineers": {
+    "code": "17-2081.01",
+    "title": "Water/Wastewater Engineers"
+  },
+  "weatherization installers and technicians": {
+    "code": "47-4099.03",
+    "title": "Weatherization Installers and Technicians"
+  },
+  "web administrators": {
+    "code": "15-1199.03",
+    "title": "Web Administrators"
+  },
+  "web developers": {
+    "code": "15-1134.00",
+    "title": "Web Developers"
+  },
+  "weighers, measurers, checkers, and samplers, recordkeeping": {
+    "code": "43-5111.00",
+    "title": "Weighers, Measurers, Checkers, and Samplers, Recordkeeping"
+  },
+  "welders, cutters, and welder fitters": {
+    "code": "51-4121.06",
+    "title": "Welders, Cutters, and Welder Fitters"
+  },
+  "welding, soldering, and brazing machine setters, operators, and tenders": {
+    "code": "51-4122.00",
+    "title": "Welding, Soldering, and Brazing Machine Setters, Operators, and Tenders"
+  },
+  "wellhead pumpers": {
+    "code": "53-7073.00",
+    "title": "Wellhead Pumpers"
+  },
+  "wholesale and retail buyers, except farm products": {
+    "code": "13-1022.00",
+    "title": "Wholesale and Retail Buyers, Except Farm Products"
+  },
+  "wind energy engineers": {
+    "code": "17-2199.10",
+    "title": "Wind Energy Engineers"
+  },
+  "wind energy operations managers": {
+    "code": "11-9199.09",
+    "title": "Wind Energy Operations Managers"
+  },
+  "wind energy project managers": {
+    "code": "11-9199.10",
+    "title": "Wind Energy Project Managers"
+  },
+  "wind turbine service technicians": {
+    "code": "49-9081.00",
+    "title": "Wind Turbine Service Technicians"
+  },
+  "woodworking machine setters, operators, and tenders, except sawing": {
+    "code": "51-7042.00",
+    "title": "Woodworking Machine Setters, Operators, and Tenders, Except Sawing"
+  },
+  "word processors and typists": {
+    "code": "43-9022.00",
+    "title": "Word Processors and Typists"
+  },
+  "zoologists and wildlife biologists": {
+    "code": "19-1023.00",
+    "title": "Zoologists and Wildlife Biologists"
+  }
+}
