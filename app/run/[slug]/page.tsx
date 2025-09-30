@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { RunExperience } from "@/components/run/run-experience";
 import { SiteFooter } from "@/components/site-footer";
 import {
@@ -9,10 +9,10 @@ import {
   getRemainingCompanyRuns,
 } from "@/lib/db/queries";
 import { orgReportSchema, type OrgReport } from "@/lib/run/report-schema";
-import { convertToUIMessages } from "@/lib/utils";
 import type { ChatMessage } from "@/lib/types";
+import { convertToUIMessages } from "@/lib/utils";
 
-interface RunPageProps {
+type RunPageProps = {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ name?: string; refresh?: string }>;
 }
@@ -76,8 +76,8 @@ export default async function RunPage({ params, searchParams }: RunPageProps) {
 
   return (
     <div
-      id="top"
       className="relative min-h-screen overflow-hidden"
+      id="top"
       style={{ backgroundColor: "#f7f7f4" }}
     >
       <div className="pointer-events-none absolute inset-0" aria-hidden>
@@ -110,15 +110,15 @@ export default async function RunPage({ params, searchParams }: RunPageProps) {
           )}
         </div>
         <RunExperience
-          slug={slug}
           initialName={resolvedInitialName}
-          refresh={refresh}
           initialChatId={initialChatId}
           initialRunId={initialRunId}
           initialStatus={initialStatus}
           initialReport={initialReport}
           initialMessages={initialMessages}
           initialRemainingRuns={initialRemainingRuns}
+          refresh={refresh}
+          slug={slug}
         />
       </div>
 

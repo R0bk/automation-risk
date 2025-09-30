@@ -5,13 +5,13 @@ import React, { useEffect, useRef, useState, memo, useMemo } from "react";
 
 import { PulsingDot } from "@/components/elements/pulsing-dot";
 import { Streamdown } from 'streamdown';
-import { TextShimmer } from "./ShimmerText";
+import { TextShimmer } from "../../text-shimmer";
 import type { ChatMessage } from "@/lib/types";
-import { ToolContainer } from "./ToolComponents";
+import { ToolContainer } from "./tool-container";
 
 export type ThinkingToolPart = Extract<ChatMessage["parts"][number], { type: `tool-think` }>;
 
-const ThinkingToolComponent: React.FC<{ toolCall: ThinkingToolPart }> = ({ toolCall }) => {
+const ThinkingToolComponent: React.FC<{ toolCall: ThinkingToolPart; }> = ({ toolCall }) => {
   const [expanded, setExpanded] = useState(true);
 
   // Extract thought - it might be partial during call/partial-call
@@ -36,7 +36,7 @@ const ThinkingToolComponent: React.FC<{ toolCall: ThinkingToolPart }> = ({ toolC
   }, [toolCall.state]);
 
   const thoughtMarkdown = useMemo(
-    () => <Streamdown children={thought} />,
+    () => <Streamdown children={thought} className="size-full [&_p]:py-[2px]" />,
     [thought, toolCall.toolCallId],
   );
 
@@ -84,9 +84,7 @@ const ThinkingToolComponent: React.FC<{ toolCall: ThinkingToolPart }> = ({ toolC
                 className="mt-1 ml-[7px] border-l border-gray-300 pl-3 text-[13px] text-gray-500 dark:border-gray-700 dark:text-gray-500"
               >
                 <Scroller className="max-h-[300px]" orientation="vertical" size={30} offset={20}>
-                  <div className="py-2">
-                    <Streamdown children={thought} />
-                  </div>
+                  <Streamdown children={thought} className="size-full [&_p]:py-[2px] [&_p]:my-[2px]"/>
                 </Scroller>
               </motion.div>
             )}

@@ -1,8 +1,25 @@
 import { OrgRole } from "./report-schema";
 import { OrgGraph, OrgGraphNode } from "./org-graph";
+import {
+  ORG_FLOW_NODE_DEFAULT_HEIGHT,
+  getDenseNodePreferredHeight,
+} from "./org-flow-tokens";
 
 export type OrgFlowLayoutEngine = "dagre" | "d3" | "elk";
 export type OrgFlowDirection = "TB" | "LR";
+
+export type OrgFlowNodeKind = "structure" | "roleContainer" | "denseRoleContainer";
+
+export interface OrgFlowDenseRoleSummary {
+  title: string;
+  onetCode?: string | null;
+  headcount?: number | null;
+  automationShare?: number | null;
+  augmentationShare?: number | null;
+  groupId?: string | null;
+  groupLabel?: string | null;
+  groupHeadcount?: number | null;
+}
 
 export interface OrgFlowNodeData {
   id: string;
@@ -14,6 +31,9 @@ export interface OrgFlowNodeData {
   augmentationShare: number | null;
   descendantCount: number;
   roles: OrgRole[];
+  denseRoles: OrgFlowDenseRoleSummary[];
+  kind: OrgFlowNodeKind;
+  totalHeadcount: number | null;
   isCollapsed: boolean;
   isHighlighted: boolean;
 }
@@ -24,6 +44,7 @@ export interface OrgFlowNode {
   data: OrgFlowNodeData;
   layout: {
     order: number;
+    preferredHeight?: number;
   };
 }
 
@@ -46,6 +67,44 @@ const DEFAULT_OPTIONS: Required<Omit<BuildOrgFlowModelOptions, "includeCollapsed
   maxRolesPerNode: 4,
 };
 
+function isRoleLeafNode(node: OrgGraphNode): boolean {
+  return node.children.length === 0 && node.roles.length > 0;
+}
+
+function toDenseRoleSummaries(node: OrgGraphNode): OrgFlowDenseRoleSummary[] {
+  if (node.roles.length > 0) {
+    const baseHeadcount = node.aggregate.headcount ?? node.data.headcount ?? null;
+    const baseAutomation = node.data.automationShare ?? node.aggregate.automationShare ?? null;
+    const baseAugmentation = node.data.augmentationShare ?? node.aggregate.augmentationShare ?? null;
+    const groupLabel = node.data.name;
+    const groupId = node.id;
+
+    return node.roles.map((role) => ({
+      title: role.title,
+      onetCode: role.onetCode ?? null,
+      headcount: role.headcount ?? baseHeadcount,
+      automationShare: role.automationShare ?? baseAutomation,
+      augmentationShare: role.augmentationShare ?? baseAugmentation,
+      groupId,
+      groupLabel,
+      groupHeadcount: baseHeadcount,
+    }));
+  }
+
+  return [
+    {
+      title: node.data.name,
+      onetCode: null,
+      headcount: node.aggregate.headcount ?? node.data.headcount ?? null,
+      automationShare: node.data.automationShare ?? node.aggregate.automationShare ?? null,
+      augmentationShare: node.data.augmentationShare ?? node.aggregate.augmentationShare ?? null,
+      groupId: node.id,
+      groupLabel: node.data.name,
+      groupHeadcount: node.aggregate.headcount ?? node.data.headcount ?? null,
+    },
+  ];
+}
+
 function focusRoles(roles: OrgRole[], limit: number): OrgRole[] {
   if (roles.length <= limit) return roles;
   return roles.slice(0, limit);
@@ -67,8 +126,6 @@ function shouldIncludeNode(
   includeCollapsedDescendants: boolean,
   collapsedNodeIds: Set<string>
 ): boolean {
-  //HACK
-  return true;
   if (!collapsedNodeIds.has(node.id)) {
     return true;
   }
@@ -109,6 +166,45 @@ export function buildOrgFlowModel(
       continue;
     }
 
+    const rawChildren = node.children
+      .map((childId) => graph.nodes.get(childId))
+      .filter((maybeChild): maybeChild is OrgGraphNode => Boolean(maybeChild));
+
+    const includedChildren = rawChildren.filter((child) =>
+      shouldIncludeNode(child, includeCollapsedDescendants, graph.collapsedNodeIds)
+    );
+
+    const collapsibleRoleChildren =
+      includedChildren.length > 0 && includedChildren.every((child) => isRoleLeafNode(child));
+
+    const denseRoleSummaries = collapsibleRoleChildren
+      ? includedChildren.flatMap((child) => toDenseRoleSummaries(child))
+      : [];
+    const denseRoleGroupCount = collapsibleRoleChildren ? includedChildren.length : 1;
+
+    const nodeKind: OrgFlowNodeKind = collapsibleRoleChildren
+      ? "denseRoleContainer"
+      : isRoleLeafNode(node)
+        ? "roleContainer"
+        : "structure";
+
+    const descendantCount = collapsibleRoleChildren
+      ? Math.max(0, node.aggregate.descendantCount - includedChildren.length)
+      : node.aggregate.descendantCount;
+
+    const selfHighlighted = node.roles.some((role) => isRoleHighlighted(role, graph.highlightRoleIds));
+    const denseHighlight = collapsibleRoleChildren
+      ? includedChildren.some((child) =>
+          child.roles.some((role) => isRoleHighlighted(role, graph.highlightRoleIds))
+        )
+      : false;
+
+    const totalHeadcount = node.aggregate.headcount ?? node.data.headcount ?? null;
+    const preferredHeight =
+      nodeKind === "denseRoleContainer"
+        ? getDenseNodePreferredHeight(denseRoleSummaries.length, denseRoleGroupCount)
+        : ORG_FLOW_NODE_DEFAULT_HEIGHT;
+
     nodes.push({
       id: node.id,
       parentId: node.parentId,
@@ -120,22 +216,35 @@ export function buildOrgFlowModel(
         headcount: node.aggregate.headcount ?? node.data.headcount ?? null,
         automationShare: node.data.automationShare ?? node.aggregate.automationShare,
         augmentationShare: node.data.augmentationShare ?? node.aggregate.augmentationShare,
-        descendantCount: node.aggregate.descendantCount,
+        descendantCount,
         roles: focusRoles(node.roles, mergedOptions.maxRolesPerNode),
+        denseRoles: denseRoleSummaries,
+        kind: nodeKind,
+        totalHeadcount,
         isCollapsed: false, //graph.collapsedNodeIds.has(node.id), //HACK
-        isHighlighted: node.roles.some((role) => isRoleHighlighted(role, graph.highlightRoleIds)),
+        isHighlighted: selfHighlighted || denseHighlight,
       },
       layout: {
         order,
+        preferredHeight,
       },
     });
+
+    const collapsedChildIds = collapsibleRoleChildren
+      ? new Set(includedChildren.map((child) => child.id))
+      : null;
 
     for (const childId of node.children) {
       const childNode = graph.nodes.get(childId);
       if (!childNode) continue;
 
-      const parentExpanded = true; //!graph.collapsedNodeIds.has(node.id) || includeCollapsedDescendants; //HACK
-      const childVisible = true; //!graph.collapsedNodeIds.has(childId) || includeCollapsedDescendants; //HACK
+      if (collapsedChildIds?.has(childId)) {
+        continue;
+      }
+
+      const parentCollapsed = graph.collapsedNodeIds.has(node.id);
+      const parentExpanded = !parentCollapsed || includeCollapsedDescendants;
+      const childVisible = shouldIncludeNode(childNode, includeCollapsedDescendants, graph.collapsedNodeIds);
 
       if (!parentExpanded) {
         continue;
@@ -143,9 +252,6 @@ export function buildOrgFlowModel(
 
       if (childVisible) {
         queue.push({ node: childNode, order: nodes.length + queue.length });
-      }
-
-      if (childVisible) {
         edges.push({
           id: `${node.id}-${childId}`,
           source: node.id,

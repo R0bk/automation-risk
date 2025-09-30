@@ -2,13 +2,12 @@ import type { InferUITool, InferUITools, UIMessage, Tool } from "ai";
 import { z } from "zod";
 import type { ArtifactKind } from "@/components/artifact";
 import type { createDocument } from "./ai/tools/create-document";
-import type { getWeather } from "./ai/tools/get-weather";
 import type { requestSuggestions } from "./ai/tools/request-suggestions";
 import type { updateDocument } from "./ai/tools/update-document";
 import type { Suggestion } from "./db/schema";
 import type { AppUsage } from "./usage";
-import type { getOnetRoleTools } from "@/example_tooling/onet-tools";
-import type { humanTools } from "@/example_tooling/human-tools";
+import type { getOnetRoleTools } from "@/lib/ai/tools/onet-tools";
+import type { humanTools } from "@/lib/ai/tools/human-tools";
 import { openai } from "@ai-sdk/openai";
 import { orgReportSchema } from "./run/report-schema";
 
@@ -20,7 +19,6 @@ export const messageMetadataSchema = z.object({
 
 export type MessageMetadata = z.infer<typeof messageMetadataSchema>;
 
-type weatherTool = InferUITool<typeof getWeather>;
 type createDocumentTool = InferUITool<ReturnType<typeof createDocument>>;
 type updateDocumentTool = InferUITool<ReturnType<typeof updateDocument>>;
 type requestSuggestionsTool = InferUITool<
@@ -32,7 +30,6 @@ type WebSearchTool = InferUITool<ReturnType<typeof openai.tools.webSearch>>;
 type OrgReportFinalizeTool = Tool<z.infer<typeof orgReportSchema>, { status: string }>;
 
 export type ChatTools = {
-  getWeather: weatherTool;
   createDocument: createDocumentTool;
   updateDocument: updateDocumentTool;
   requestSuggestions: requestSuggestionsTool;

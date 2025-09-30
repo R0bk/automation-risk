@@ -101,8 +101,8 @@ export const runRoleSnapshot = pgTable("RunRoleSnapshot", {
     .references(() => jobRole.id),
   hierarchyPath: jsonb("hierarchyPath").notNull(),
   headcount: integer("headcount"),
-  automationRisk: numeric("automationRisk", { precision: 6, scale: 3 }),
-  augmentationScore: numeric("augmentationScore", { precision: 6, scale: 3 }),
+  automationShare: numeric("automationShare", { precision: 6, scale: 3 }),
+  augmentationShare: numeric("augmentationShare", { precision: 6, scale: 3 }),
   data: jsonb("data"),
 });
 
@@ -116,8 +116,8 @@ export const runMetric = pgTable("RunMetric", {
   metricType: varchar("metricType", { length: 64 }).notNull(),
   label: varchar("label", { length: 256 }).notNull(),
   headcount: integer("headcount"),
-  automationRisk: numeric("automationRisk", { precision: 6, scale: 3 }),
-  augmentationScore: numeric("augmentationScore", { precision: 6, scale: 3 }),
+  automationShare: numeric("automationShare", { precision: 6, scale: 3 }),
+  augmentationShare: numeric("augmentationShare", { precision: 6, scale: 3 }),
   data: jsonb("data"),
 });
 

@@ -1,6 +1,6 @@
-import onetDataJson from "@/example_tooling/data/onetData.json" assert { type: "json" };
-import onetRoleCodesJson from "@/example_tooling/data/onetRoleCodes.json" assert { type: "json" };
-import onetCrosswalksJson from "@/example_tooling/data/onetCrosswalks.json" assert { type: "json" };
+import onetDataJson from "@/data/onet/onetData.json" assert { type: "json" };
+import onetRoleCodesJson from "@/data/onet/onetRoleCodes.json" assert { type: "json" };
+import onetCrosswalksJson from "@/data/onet/onetCrosswalks.json" assert { type: "json" };
 
 const METRIC_KEYS = [
   "automation_pct",

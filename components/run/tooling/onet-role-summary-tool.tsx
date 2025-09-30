@@ -1,8 +1,8 @@
 import { AnimatePresence } from "framer-motion";
 import React from "react";
 
-import { TextShimmer } from "./ShimmerText";
-import { ToolContainer } from "./ToolComponents";
+import { TextShimmer } from "../../text-shimmer";
+import { ToolContainer } from "./tool-container";
 import type { ChatMessage } from "@/lib/types";
 import { TaskMixLine } from "@/components/run/TaskMixLine";
 import type { TaskMixCounts } from "@/lib/constants/task-mix";

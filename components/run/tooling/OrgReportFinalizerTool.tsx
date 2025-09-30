@@ -3,8 +3,8 @@ import { CheckCircle2 } from "lucide-react";
 import React from "react";
 
 import { PulsingDot } from "@/components/elements/pulsing-dot";
-import { ToolContainer } from "@/example_tooling/ToolComponents";
-import { ReportPreview } from "./report-preview";
+import { ToolContainer } from "@/components/run/tooling/tool-container";
+import { ReportPreview } from "../report-preview";
 import { orgReportSchema, type OrgReport } from "@/lib/run/report-schema";
 import type { ChatMessage } from "@/lib/types";
 import { normaliseLegacyReport } from "@/lib/run/normalize-report";
@@ -38,7 +38,8 @@ export const OrgReportFinalizerTool: React.FC<{ toolCall: OrgReportFinalizerTool
             <span className="font-medium">Final organisation automation report</span>
           </div>
           {report ? (
-            <ReportPreview report={report} />
+            null
+            // <ReportPreview report={report} />
           ) : (
             <div className="rounded-md border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.7)] p-4 text-sm text-[rgba(38,37,30,0.7)]">
               Unable to render report payload. The assistant confirmed completion, but the tool input did not match the expected schema.

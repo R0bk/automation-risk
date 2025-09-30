@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { OrgReport } from "@/lib/run/report-schema";
 import { TaskMixSelector } from "./TaskMixSelector";
+import { OrgFlowChart } from "./OrgFlowChart";
 
 interface ReportPreviewProps {
   report: OrgReport;
@@ -46,6 +47,9 @@ export function ReportPreview({ report }: ReportPreviewProps) {
           {report.metadata.summary}
         </p>
       )}
+      <div id="org-chart" className="-mx-6">
+        <OrgFlowChart report={report} />
+      </div>
 
       <div className="mt-6 grid gap-5 md:grid-cols-2">
         <div
@@ -120,12 +124,12 @@ export function ReportPreview({ report }: ReportPreviewProps) {
             Last updated {new Date(report.metadata.lastUpdatedIso).toLocaleString()}
           </span>
         </div>
-        <Link
+        {/* <Link
           href="#org-chart"
           className="rounded-full border border-[rgba(38,37,30,0.12)] bg-[rgba(38,37,30,0.08)] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-[#26251e] transition hover:bg-[rgba(38,37,30,0.12)]"
         >
           View full org chart
-        </Link>
+        </Link> */}
       </div>
     </section>
   );

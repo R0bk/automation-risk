@@ -5,16 +5,8 @@ import { findJobRoleByCode, searchJobRolesByPrefix } from "@/lib/db/queries";
 import type { JobRole } from "@/lib/db/schema";
 
 const querySchema = z.object({
-  code: z
-    .string()
-    .trim()
-    .min(1)
-    .optional(),
-  prefix: z
-    .string()
-    .trim()
-    .min(1)
-    .optional(),
+  code: z.string().trim().min(1).optional(),
+  prefix: z.string().trim().min(1).optional(),
   limit: z
     .string()
     .trim()

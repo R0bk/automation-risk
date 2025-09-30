@@ -26,11 +26,13 @@ import type { OrgRole } from "@/lib/run/report-schema";
 import { TaskMixLine } from "./TaskMixLine";
 import { deriveTaskMixForView } from "@/lib/run/task-mix";
 import { useTaskMixView } from "./task-mix-view-context";
+import { DenseOrgNode } from "./DenseOrgNode";
+import { ORG_FLOW_NODE_DEFAULT_HEIGHT, ORG_FLOW_NODE_WIDTH } from "@/lib/run/org-flow-tokens";
+import { DENSE_NODE_HEADCOUNT_FONT_SIZE, DENSE_NODE_MUTED_TEXT_COLOR } from "./org-flow-tokens";
 
-const NODE_WIDTH = 260;
-const NODE_HEIGHT = 140;
-const LAYOUT_NODE_WIDTH = 230;
-const LAYOUT_NODE_HEIGHT = 240;
+const NODE_WIDTH = ORG_FLOW_NODE_WIDTH;
+const LAYOUT_NODE_WIDTH = ORG_FLOW_NODE_WIDTH - 30;
+const LAYOUT_NODE_HEIGHT = ORG_FLOW_NODE_DEFAULT_HEIGHT;
 
 interface OrgFlowChartProps {
   report: OrgReport;
@@ -47,12 +49,20 @@ const OrgNode = ({ id, data }: NodeProps<OrgFlowNodeData>) => {
     roles,
     isCollapsed,
     isHighlighted,
+    totalHeadcount,
+    kind,
   } = data as OrgFlowNodeData;
+
+  const nodeHeadcount = totalHeadcount ?? headcount;
+  const automationPercent =
+    typeof automationShare === "number" ? `${Math.round(automationShare * 100)}%` : null;
+  const augmentationPercent =
+    typeof augmentationShare === "number" ? `${Math.round(augmentationShare * 100)}%` : null;
 
   return (
     <div
       className={clsx(
-        "rounded-2xl border border-[rgba(38,37,30,0.14)] bg-[#f7f5ef]/95 px-4 py-3 shadow-[0_18px_38px_rgba(34,28,20,0.08)]",
+        "relative rounded-2xl border border-[rgba(38,37,30,0.14)] bg-[#f7f5ef]/95 px-4 py-4 shadow-[0_18px_38px_rgba(34,28,20,0.08)]",
         isHighlighted && "ring-2 ring-[#cf2d56]",
       )}
       style={{ width: NODE_WIDTH }}
@@ -63,24 +73,40 @@ const OrgNode = ({ id, data }: NodeProps<OrgFlowNodeData>) => {
         position={Position.Top}
         style={{ width: 8, height: 8, background: "#26251e" }}
       />
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-semibold text-[#26251e]">{label}</span>
-        {isCollapsed && (
-          <span className="rounded-full bg-[rgba(38,37,30,0.08)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[rgba(38,37,30,0.6)]">
-            Collapsed
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <span className="block text-sm font-semibold leading-tight text-[#26251e]" title={label}>
+            {label}
           </span>
-        )}
+          {kind === "roleContainer" && (
+            <span className="text-[10px] uppercase tracking-[0.14em] text-[rgba(38,37,30,0.5)]">
+              Role node
+            </span>
+          )}
+          {isCollapsed && (
+            <span className="mt-1 inline-flex rounded-full bg-[rgba(38,37,30,0.08)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[rgba(38,37,30,0.6)]">
+              Collapsed
+            </span>
+          )}
+        </div>
+        <div className="text-right">
+          <div
+            className="font-semibold leading-none text-[#26251e]"
+            style={{ fontSize: DENSE_NODE_HEADCOUNT_FONT_SIZE }}
+          >
+            {nodeHeadcount != null ? nodeHeadcount.toLocaleString() : "—"}
+          </div>
+          <div
+            className="text-[10px] uppercase tracking-[0.16em]"
+            style={{ color: DENSE_NODE_MUTED_TEXT_COLOR }}
+          >
+            Headcount
+          </div>
+        </div>
       </div>
-      <div className="mt-2 flex items-center gap-3 text-xs text-[rgba(38,37,30,0.65)]">
-        {headcount != null && (
-          <span className="font-mono">HC {headcount.toLocaleString()}</span>
-        )}
-        {automationShare != null && (
-          <span className="text-[#cf2d56]">Auto {(automationShare * 100).toFixed(0)}%</span>
-        )}
-        {augmentationShare != null && (
-          <span className="text-[#2d6fce]">Aug {(augmentationShare * 100).toFixed(0)}%</span>
-        )}
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs" style={{ color: DENSE_NODE_MUTED_TEXT_COLOR }}>
+        {automationPercent && <span className="font-medium text-[#cf2d56]">Auto {automationPercent}</span>}
+        {augmentationPercent && <span className="font-medium text-[#2d6fce]">Aug {augmentationPercent}</span>}
       </div>
       {roles && roles.length > 0 && (
         <div className="mt-3 space-y-1">
@@ -114,7 +140,7 @@ const OrgNode = ({ id, data }: NodeProps<OrgFlowNodeData>) => {
   );
 };
 
-const defaultNodeTypes = { orgNode: OrgNode };
+const defaultNodeTypes = { orgNode: OrgNode, denseOrgNode: DenseOrgNode };
 
 export function OrgFlowChart({ report }: OrgFlowChartProps) {
   const graph = useOrgReportGraph(report);
@@ -142,15 +168,18 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
       ? getLayoutedElements(model.nodes, model.edges, model.direction, LAYOUT_NODE_WIDTH, LAYOUT_NODE_HEIGHT)
       : applyLayeredLayout(model.nodes, model.edges, {direction: model.direction});
 
-    const nodes: Node<OrgFlowNodeData>[] = layout.nodes.map((node) => ({
-      id: node.id,
-      type: "orgNode",
-      position: node.position,
-      data: node.data,
-      sourcePosition: Position.Bottom,
-      targetPosition: Position.Top,
-      style: { width: NODE_WIDTH },
-    }));
+    const nodes: Node<OrgFlowNodeData>[] = layout.nodes.map((node) => {
+      const nodeType = node.data.kind === "denseRoleContainer" ? "denseOrgNode" : "orgNode";
+      return {
+        id: node.id,
+        type: nodeType,
+        position: node.position,
+        data: node.data,
+        sourcePosition: Position.Bottom,
+        targetPosition: Position.Top,
+        style: { width: NODE_WIDTH },
+      };
+    });
 
     const edges: Edge[] = layout.edges.map((edge) => ({
       id: edge.id,
@@ -191,7 +220,8 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
   }
 
   return (
-    <div className="h-[600px] w-full rounded-3xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.4)]">
+    // <div className="h-[600px] w-full rounded-3xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.4)]">
+    <div className="h-[1200px] w-full">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -200,10 +230,10 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
         minZoom={0.3}
         maxZoom={1.5}
         onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
+        onEdgesChange={onEdgesChange} 
       >
         <Background gap={24} size={1} color="rgba(38,37,30,0.08)" />
-        <MiniMap nodeStrokeColor={() => "#26251e"} nodeColor={() => "#f7f5ef"} pannable zoomable />
+        {/* <MiniMap nodeStrokeColor={() => "#26251e"} nodeColor={() => "#f7f5ef"} pannable zoomable /> */}
         <Controls showInteractive={false} />
       </ReactFlow>
     </div>

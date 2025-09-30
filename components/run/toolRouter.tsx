@@ -1,10 +1,10 @@
 import React from "react";
 import type { ChatMessage } from "@/lib/types";
-import { ThinkingTool } from "@/example_tooling/ThinkingTool";
-import { OnetRoleMetricsTool } from "@/example_tooling/OnetRoleMetricsTool";
-import { OnetRoleSummaryTool } from "@/example_tooling/OnetRoleSummaryTool";
-import { OrgReportFinalizerTool } from "./OrgReportFinalizerTool";
-import { WebSearchCard } from "./web-search-card";
+import { ThinkingTool } from "@/components/run/tooling/thinking-tool";
+import { OnetRoleMetricsTool } from "@/components/run/tooling/onet-role-metrics-tool";
+import { OnetRoleSummaryTool } from "@/components/run/tooling/onet-role-summary-tool";
+import { OrgReportFinalizerTool } from "./tooling/OrgReportFinalizerTool";
+import { WebSearchCard } from "./tooling/web-search-card";
 
 export type ChatMessagePart = ChatMessage["parts"][number];
 

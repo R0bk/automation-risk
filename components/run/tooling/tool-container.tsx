@@ -1,5 +1,6 @@
 import { clsx } from "clsx";
 import { motion } from "framer-motion";
+import type { ReactNode } from "react";
 
 const ToolContainer = ({
   toolState,
@@ -8,7 +9,7 @@ const ToolContainer = ({
   blur = true,
 }: {
   toolState: "input-streaming" | "input-available" | "output-available" | "output-error";
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   blur?: boolean;
 }) => {

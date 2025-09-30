@@ -3,30 +3,31 @@ import type { ChatMessage } from "@/lib/types";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Streamdown } from "streamdown";
 import { isToolPart, ToolRenderer } from "./toolRouter";
-import { ReasoningAsThinkingToolMemo } from "@/example_tooling/ThinkingTool";
+import { ReasoningAsThinkingToolMemo } from "@/components/run/tooling/thinking-tool";
 
 interface RunMessageListProps {
   messages: ChatMessage[];
 }
 
 const RunMessageList: React.FC<RunMessageListProps> = ({ messages }) => {
+  if (!messages.length) return null;
+  if (!messages[0].parts.length) return null;
   return (
     <TooltipProvider delayDuration={150}>
       <div className="mb-6 space-y-3">
         {messages.map((message) => {
           if (message.role !== "assistant") return null;
 
-          const parts = message.parts ?? [];
-
           return (
             <article
               key={message.id}
-              className="rounded-xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.75)] px-4 py-3 text-sm text-[rgba(38,37,30,0.72)] shadow-[0_6px_14px_rgba(34,28,20,0.08)]"
+              className="flex flex-col items-center rounded-xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.75)] px-4 py-3 text-sm text-[rgba(38,37,30,0.72)] shadow-[0_6px_14px_rgba(34,28,20,0.08)]"
             >
-              {parts.map((part, index) => {
+              <div className="max-w-[860px] justify-start">
+              {message.parts.map((part, index) => {
                 if (part.type === "text") {
                   return (
-                    <Streamdown key={`${message.id}-text-${index}`}>
+                    <Streamdown key={`${message.id}-text-${index}`} >
                       {part.text}
                     </Streamdown>
                   );
@@ -34,7 +35,7 @@ const RunMessageList: React.FC<RunMessageListProps> = ({ messages }) => {
 
                 if (part.type === "reasoning") {
                   return (
-                    <div className="py-[10px]" key={`${message.id}-reasoning-${index}`}>
+                    <div className="py-[6px]" key={`${message.id}-reasoning-${index}`}>
                       <ReasoningAsThinkingToolMemo part={part} id={`${message.id}-reasoning-${index}`} />
                     </div>
                   );
@@ -42,7 +43,7 @@ const RunMessageList: React.FC<RunMessageListProps> = ({ messages }) => {
 
                 if (isToolPart(part)) {
                   return (
-                    <div className="py-[10px]" key={`tool-${message.id}-${index}`}>
+                    <div className="py-[6px]" key={`tool-${message.id}-${index}`}>
                       <ToolRenderer part={part} />
                     </div>
                   );
@@ -50,6 +51,7 @@ const RunMessageList: React.FC<RunMessageListProps> = ({ messages }) => {
 
                 return null;
               })}
+              </div>
             </article>
           );
         })}

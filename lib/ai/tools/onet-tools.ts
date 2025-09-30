@@ -1,8 +1,8 @@
 import { tool } from "ai";
 import { z } from "zod";
 
-import onetData from "./data/onetData.json" assert { type: "json" };
-import onetRoleCodes from "./data/onetRoleCodes.json" assert { type: "json" };
+import onetData from "@/data/onet/onetData.json" assert { type: "json" };
+import onetRoleCodes from "@/data/onet/onetRoleCodes.json" assert { type: "json" };
 
 const METRIC_KEYS = [
   "automation_pct",

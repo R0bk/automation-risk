@@ -15,7 +15,7 @@ import type { ChatMessage } from "@/lib/types";
 import { ReportPreview } from "./report-preview";
 import { OrgFlowChart } from "./OrgFlowChart";
 import { GroupedMessages } from "./messages";
-import { StatusBar } from "@/example_tooling/StatusBar";
+import { StatusBar } from "@/components/run/status-bar";
 import { TaskMixViewProvider } from "./task-mix-view-context";
 
 interface RunExperienceProps {
@@ -406,7 +406,9 @@ export function RunExperience({
           applyTranscript({ chatId: existing.chatId, messages: existing.messages });
 
           if (existing.status === "completed" && existing.finalReportJson) {
+            console.log("[RunExperience] bootstrap completed report", existing.finalReportJson)
             const parsed = orgReportSchema.safeParse(existing.finalReportJson);
+            console.log("[RunExperience] bootstrap completed report parsed", parsed)
             if (parsed.success) {
               setReport(parsed.data);
             }
@@ -503,6 +505,8 @@ export function RunExperience({
 
   const isLoading = chatStatus === "submitted" || chatStatus === "streaming";
   const isStreaming = chatStatus === "streaming";
+  console.log(snapshot)
+  console.log(report)
 
   return (
     <TaskMixViewProvider>
@@ -554,24 +558,22 @@ export function RunExperience({
           <>
             <div className="flex flex-col gap-5">
               <ReportPreview report={report} />
-              <div id="org-chart">
-                <OrgFlowChart report={report} />
-              </div>
             </div>
 
             <div
-              className="relative rounded-[20px] border border-[rgba(38,37,30,0.1)] px-5 py-6 shadow-[0_16px_40px_rgba(34,28,20,0.12)] backdrop-blur-[18px]"
+              className="flex flex-col relative rounded-[20px] border border-[rgba(38,37,30,0.1)] px-5 py-6 shadow-[0_16px_40px_rgba(34,28,20,0.12)] backdrop-blur-[18px]"
               style={{
                 backgroundImage: "linear-gradient(160deg, rgba(244,243,239,0.95), rgba(236,234,228,0.9))",
               }}
             >
-              <StatusBar isLoading={isLoading} isStreaming={isStreaming} />
-              <h2
-                id="narrative"
-                className="text-[11px] font-semibold uppercase tracking-[0.32em] leading-[0.5] text-[rgba(38,37,30,0.6)]"
-              >
-                Analyst narrative
-              </h2>
+              <div className="flex flex-1 gap-2">
+                <h2
+                  id="narrative"
+                  className="text-[11px] font-semibold uppercase tracking-[0.32em] leading-[0.5] text-[rgba(38,37,30,0.6)]"
+                >
+                  Analyst narrative
+                </h2>
+              </div>
               <div className="mt-4 min-h-[220px] space-y-4 text-sm leading-7 text-[rgba(38,37,30,0.72)]">
                 {messages.length > 0 ? (
                   <GroupedMessages messages={messages} />
@@ -579,6 +581,7 @@ export function RunExperience({
                   <Skeleton className="h-28 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />
                 )}
               </div>
+              <StatusBar isLoading={isLoading} isStreaming={isStreaming} />
             </div>
           </>
         ) : (
@@ -589,7 +592,7 @@ export function RunExperience({
                 backgroundImage: "linear-gradient(160deg, rgba(244,243,239,0.95), rgba(236,234,228,0.9))",
               }}
             >
-              <StatusBar isLoading={isLoading} isStreaming={isStreaming} />
+              
               <h2
                 id="narrative"
                 className="text-[11px] font-semibold uppercase tracking-[0.32em] leading-[0.5] text-[rgba(38,37,30,0.6)]"
@@ -603,6 +606,7 @@ export function RunExperience({
                   <Skeleton className="h-28 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />
                 )}
               </div>
+              <StatusBar isLoading={isLoading} isStreaming={isStreaming} />
             </div>
 
             <div className="flex flex-col gap-5">

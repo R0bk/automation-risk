@@ -4,8 +4,8 @@ import { AlertTriangle } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import React from "react";
 
-import { TextShimmer } from "./ShimmerText";
-import { ToolContainer } from "./ToolComponents";
+import { TextShimmer } from "../../text-shimmer";
+import { ToolContainer } from "./tool-container";
 import type { ChatMessage } from "@/lib/types";
 import { TASK_MIX_COLORS, type TaskMixCounts, type TaskMixCategory } from "@/lib/constants/task-mix";
 import { TaskMixLine } from "@/components/run/TaskMixLine";

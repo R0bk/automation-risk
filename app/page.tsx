@@ -77,11 +77,11 @@ export default async function Page() {
 
   return (
     <div
-      id="top"
       className="relative min-h-screen overflow-hidden"
+      id="top"
       style={{ backgroundColor: "#f7f7f4" }}
     >
-      <div className="pointer-events-none absolute inset-0" aria-hidden>
+      <div aria-hidden className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(245,78,0,0.08),_transparent_55%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_24%,_rgba(31,138,101,0.08),_transparent_45%)]" />
         <div

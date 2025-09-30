@@ -10,31 +10,33 @@ export const StatusBar: React.FC<StatusBarProps> = ({ isLoading, isStreaming = f
     <AnimatePresence>
       {isLoading && (
         <motion.div
-          className="pointer-events-none inline-flex"
-          initial={{ opacity: 0, y: 6, scale: 0.95 }}
+          className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2"
+          initial={{ opacity: 0, y: 6, scale: 0.90 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 6, scale: 0.95 }}
+          exit={{ opacity: 0, y: 6, scale: 0.9 }}
           transition={{
             duration: 0.3,
             ease: [0.4, 0, 0.2, 1], // Cubic bezier for smooth easing
           }}
         >
           <motion.div
-            className="mx-auto overflow-hidden rounded-full shadow-[0_10px_24px_rgba(38,37,30,0.18)]"
+            className="overflow-hidden rounded-full shadow-[0_10px_24px_rgba(38,37,30,0.18)]"
             animate={{
               width: isStreaming ? 220 : 96,
               height: 6,
               backgroundColor: isStreaming
                 ? "rgba(207, 45, 86, 0.2)"
                 : "rgba(38, 37, 30, 0.92)",
-              scale: !isStreaming ? [0.94, 1, 0.94] : 1,
-              opacity: !isStreaming ? [0.55, 1, 0.55] : 1,
+              scale: !isStreaming ? [0.93, 1, 0.93] : [0.96, 1, 0.96],
+              scaleX: !isStreaming ? [0.97, 1, 0.97] : 1,
+              opacity: !isStreaming ? [0.0, 1, 0.0] : [1, 1, 1],
             }}
             transition={{
-              width: { duration: 0.45, ease: [0.4, 0, 0.2, 1] },
-              backgroundColor: { duration: 0.45, ease: [0.4, 0, 0.2, 1] },
-              scale: { duration: 1.6, ease: "easeInOut", repeat: !isStreaming ? Infinity : 0 },
-              opacity: { duration: 1.6, ease: "easeInOut", repeat: !isStreaming ? Infinity : 0 },
+              width: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
+              backgroundColor: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+              scaleX: { duration: 2.5, ease: [0.17, 0.67, 0.9, 0.33], repeat: !isStreaming ? Infinity : 1 },
+              scale: { duration: 2.5, ease: "easeInOut", repeat: Infinity },
+              opacity: { duration: 2.5, ease: [0.17, 0.67, 0.9, 0.33], repeat: !isStreaming ? Infinity : 1 },
             }}
           >
             {!isStreaming ? (

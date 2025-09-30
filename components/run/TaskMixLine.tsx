@@ -51,7 +51,7 @@ export const TaskMixLine: React.FC<TaskMixLineProps> = ({ counts, className, hei
         const tooltip = `${label}: ${value}/${total} tasks`;
 
         return (
-          <TooltipProvider delayDuration={150}>
+          <TooltipProvider delayDuration={150} key={category} >
           <Tooltip key={category}>
             <TooltipTrigger asChild>
               <div

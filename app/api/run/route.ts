@@ -10,8 +10,8 @@ import {
   tool,
 } from "ai";
 import { z } from "zod";
-import { humanTools } from "@/example_tooling/human-tools";
-import { getOnetRoleTools } from "@/example_tooling/onet-tools";
+import { humanTools } from "@/lib/ai/tools/human-tools";
+import { getOnetRoleTools } from "@/lib/ai/tools/onet-tools";
 import { runSystemPrompt } from "@/lib/ai/run/prompts";
 import {
   createAnalysisRunWithBudget,

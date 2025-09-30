@@ -1,4 +1,5 @@
-import { ToolContainer } from "@/example_tooling/ToolComponents";
+import { ToolContainer } from "@/components/run/tooling/tool-container";
+import { Globe } from "lucide-react";
 import { z } from "zod";
 
 interface WebSearchCardProps {
@@ -48,36 +49,38 @@ const renderAction = (action: z.infer<typeof webSearchActionSchema> | null) => {
   switch (action.type) {
     case "search":
       return action.query && action.query.length > 0
-        ? `Search for "${action.query}"`
-        : "Search requested";
+        ? <span>Searched <span className="ml-2 font-normal text-xs text-gray-500">{action.query}</span></span>
+        : <span>Search</span>;
     case "open_page":
-      return `Open page ${action.url}`;
+      return <span>Open page <span className="ml-2 font-normal text-xs text-gray-500">{action.url}</span></span>;
     case "find":
-      return `Find "${action.pattern}" in ${action.url}`;
+      return <span>Find <span className="ml-2 font-normal text-xs text-gray-500">{action.pattern}</span> in <span className="ml-2 font-normal text-xs text-gray-500">{action.url}</span></span>;
     default:
-      return "Web search action";
+      return <span>Web search action</span>;
   }
 };
 
 export function WebSearchCard({ args, result, title = "Web search" }: WebSearchCardProps) {
   const call = parseCall(args);
   const action = call?.action ?? null;
+  console.log(JSON.stringify(action, null, 2));
   const parsedResult = parseResult(result);
-  const statusLabel = parsedResult?.status ?? (action ? "pending" : undefined);
+  // const statusLabel = parsedResult?.status ?? (action ? "pending" : undefined);
 
   return (
     // <div className="rounded-lg border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.7)] p-2 text-xs text-[rgba(38,37,30,0.68)]">
     <ToolContainer toolState="input-available">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center">
         {/* <span className="font-semibold uppercase tracking-[0.3em] text-[rgba(38,37,30,0.55)]">
           {title}
         </span> */}
-        <p className=" text-[rgba(38,37,30,0.65)] text-sm">{renderAction(action)}</p>
-        {statusLabel && (
+        <Globe className="size-3 min-w-3" />
+        <p className="font-medium ml-2">{renderAction(action)}</p>
+        {/* {statusLabel && (
           <span className="rounded-full bg-[rgba(38,37,30,0.08)] px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-[rgba(38,37,30,0.5)]">
             {statusLabel}
           </span>
-        )}
+        )} */}
       </div>
     </ToolContainer>
     // </div>
