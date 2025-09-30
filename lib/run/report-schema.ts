@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 
-export const orgRoleSchema = z.object({
+export const deprecatedOrgRoleSchema = z.object({
   onetCode: z.string().min(1).max(32),
   title: z.string().min(1).max(256),
   normalizedTitle: z.string().min(1).max(256).optional(),
@@ -37,13 +37,32 @@ export const orgRoleSchema = z.object({
   sources: z.array(z.string().url()).max(20).optional(),
 });
 
+const dominantRoleEntrySchema = z.object({
+  id: z
+    .string()
+    .min(1)
+    .max(32)
+    .describe("Exact O*NET code for the dominant role (e.g. 35-2014.00). Do not invent custom labels."),
+  headcount: z
+    .number()
+    .int()
+    .nonnegative()
+    .describe("Estimated headcount for this role within the node."),
+});
+
 export const orgNodeSchema = z.object({
   id: z.string().min(1).max(64),
   name: z.string().min(1).max(256),
   level: z.number().int().min(0).max(10),
   parentId: z.string().min(1).max(64).nullable().describe("id of parent orgNodeSchema. null for root node"),
   headcount: z.number().int().nonnegative().nullable().optional().describe("number of employees in the node"),
-  dominantRoleIds: z.array(z.string()).max(50).optional().describe("O*NET code (e.g. 41-1011.00)"),
+  dominantRoles: z
+    .array(dominantRoleEntrySchema)
+    .max(50)
+    .default([])
+    .describe(
+      "List the key O*NET roles (objects) that cover the majority of this node's headcount (>2/3s). We generally expect to see 50+ roles medium size organisation. Provide role IDs and per-node headcount estimates; include at least one entry for every leaf node."
+    ),
   summary: z.string().max(2000).optional(),
 });
 
@@ -77,7 +96,7 @@ export const orgReportSchema = z.object({
     sources: z.array(reportSourceSchema).max(100).default([]),
   }),
   hierarchy: z.array(orgNodeSchema).max(400),
-  roles: z.array(orgRoleSchema).max(400),
+  // roles: z.array(orgRoleSchema).max(400),
   aggregations: z.array(aggregationSchema).max(120).optional().default([]),
   visualizationHints: z
     .object({
@@ -88,6 +107,12 @@ export const orgReportSchema = z.object({
     .partial()
     .optional(),
 });
+
+
+export type DeprecatedOrgRole = z.infer<typeof deprecatedOrgRoleSchema>;
+export type OrgNode = z.infer<typeof orgNodeSchema>;
+export type Aggregation = z.infer<typeof aggregationSchema>;
+export type OrgReport = z.infer<typeof orgReportSchema>;
 
 
 
@@ -138,7 +163,7 @@ export const enrichedOrgNodeSchema = z.object({
   headcount: z.number().int().nonnegative().nullable().optional(),
   automationShare: z.number().min(0).max(1).nullable().optional(),
   augmentationShare: z.number().min(0).max(1).nullable().optional(),
-  dominantRoleIds: z.array(z.string()).max(12).optional().describe("O*NET code (e.g. 41-1011.00)"),
+  dominantRoles: z.array(dominantRoleEntrySchema).max(50).default([]),
   summary: z.string().max(2000).optional(),
   collapsed: z.boolean().optional(),
   highlights: z
@@ -189,7 +214,7 @@ export const enrichedOrgReportSchema = z.object({
     sources: z.array(enrichedReportSourceSchema).max(100).default([]),
   }),
   hierarchy: z.array(enrichedOrgNodeSchema).max(400),
-  roles: z.array(enrichedOrgRoleSchema).max(400),
+  roles: z.array(enrichedOrgRoleSchema).max(400).default([]),
   aggregations: z.array(enrichedAggregationSchema).max(120).optional().default([]),
   visualizationHints: z
     .object({
@@ -200,11 +225,6 @@ export const enrichedOrgReportSchema = z.object({
     .partial()
     .optional(),
 });
-
-export type OrgRole = z.infer<typeof orgRoleSchema>;
-export type OrgNode = z.infer<typeof orgNodeSchema>;
-export type Aggregation = z.infer<typeof aggregationSchema>;
-export type OrgReport = z.infer<typeof orgReportSchema>;
 
 
 export type EnrichedOrgRole = z.infer<typeof enrichedOrgRoleSchema>;

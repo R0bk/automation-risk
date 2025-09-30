@@ -216,7 +216,7 @@ function getClosestMatch(normalizedRole: string): string | undefined {
     const distance = levenshtein(normalizedRole, record.normalizedRole);
     if (distance === 0) continue;
     const maxLen = Math.max(normalizedRole.length, record.normalizedRole.length);
-    const threshold = Math.max(1, Math.ceil(maxLen * 0.3));
+    const threshold = Math.max(1, Math.ceil(maxLen * 0.2));
     if (distance > threshold) continue;
 
     if (!bestMatch || distance < bestMatch.distance) {

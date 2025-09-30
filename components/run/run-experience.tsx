@@ -7,8 +7,8 @@ import { useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { OrgReport } from "@/lib/run/report-schema";
-import { orgReportSchema } from "@/lib/run/report-schema";
+import type { EnrichedOrgReport } from "@/lib/run/report-schema";
+import { enrichedOrgReportSchema, orgReportSchema } from "@/lib/run/report-schema";
 import { normaliseLegacyReport } from "@/lib/run/normalize-report";
 import { generateUUID, slugifyCompanyName } from "@/lib/utils";
 import type { ChatMessage } from "@/lib/types";
@@ -25,7 +25,7 @@ interface RunExperienceProps {
   initialChatId?: string | null;
   initialRunId?: string | null;
   initialStatus?: RunSnapshot["status"];
-  initialReport?: OrgReport | null;
+  initialReport?: EnrichedOrgReport | null;
   initialMessages?: ChatMessage[];
   initialRemainingRuns?: number | null;
 }
@@ -42,7 +42,7 @@ type RunSnapshot = {
 interface RunStatusResponse {
   status: string;
   runId?: string;
-  finalReportJson?: OrgReport | null;
+  finalReportJson?: EnrichedOrgReport | null;
   chatId?: string;
   messages?: ChatMessage[];
   company?: {
@@ -84,7 +84,7 @@ export function RunExperience({
     remainingRuns: initialRemainingRuns ?? null,
     companyName: initialName ?? undefined,
   }));
-  const [report, setReport] = useState<OrgReport | null>(initialReport);
+  const [report, setReport] = useState<EnrichedOrgReport | null>(initialReport);
   const [isPolling, setIsPolling] = useState(false);
   const [chatIdState, setChatIdState] = useState<string | null>(initialChatId);
   const [initialChatMessages, setInitialChatMessages] = useState<ChatMessage[]>(
@@ -109,14 +109,25 @@ export function RunExperience({
     return slug.replace(/-/g, " ");
   }, [initialName, searchParams, slug]);
 
-  const parseReport = useCallback((input: unknown): OrgReport | null => {
+  const parseReport = useCallback((input: unknown): EnrichedOrgReport | null => {
     if (!input) return null;
-    const direct = orgReportSchema.safeParse(input);
-    if (direct.success) {
-      return direct.data;
+    console.log("Parse report:", input)
+    const enriched = enrichedOrgReportSchema.safeParse(input);
+    console.log("Enriched:", enriched)
+    if (enriched.success) {
+      return enriched.data;
     }
-    const fallback = orgReportSchema.safeParse(normaliseLegacyReport(input));
-    return fallback.success ? fallback.data : null;
+    console.log("failed to enrich sucessfully")
+    const normalized = normaliseLegacyReport(input);
+    const normalizedEnriched = enrichedOrgReportSchema.safeParse(normalized);
+    if (normalizedEnriched.success) {
+      return normalizedEnriched.data;
+    }
+    const base = orgReportSchema.safeParse(normalized);
+    if (base.success) {
+      console.warn("[RunExperience] Received base org report without enrichment; ignoring payload");
+    }
+    return null;
   }, []);
 
   const fetchRunBySlug = useCallback(async (): Promise<RunStatusResponse | null> => {
@@ -130,6 +141,7 @@ export function RunExperience({
         status: data.status,
         chatId: data.chatId,
         messageCount: data.messages?.length ?? 0,
+        data
       });
       return data;
     } catch (error) {
@@ -191,6 +203,7 @@ export function RunExperience({
       void (async () => {
         await updateRemainingRuns();
         const latest = await fetchRunBySlug();
+        console.log("Latest", latest)
         if (latest?.finalReportJson) {
           const parsed = parseReport(latest.finalReportJson);
           if (parsed) {
@@ -236,6 +249,7 @@ export function RunExperience({
         let backoff = 2000;
         for (let attempt = 0; attempt < 10; attempt++) {
           const data = await fetchRunBySlug();
+          console.log("Data", data)
           if (!data) break;
 
           console.log("[RunExperience] pollRun fetch", {
@@ -395,6 +409,7 @@ export function RunExperience({
 
       if (!refresh) {
         const existing = await fetchRunBySlug();
+        console.log("Bootstrap:", existing)
         if (cancelled) return;
 
         if (existing) {
@@ -406,11 +421,10 @@ export function RunExperience({
           applyTranscript({ chatId: existing.chatId, messages: existing.messages });
 
           if (existing.status === "completed" && existing.finalReportJson) {
-            console.log("[RunExperience] bootstrap completed report", existing.finalReportJson)
-            const parsed = orgReportSchema.safeParse(existing.finalReportJson);
-            console.log("[RunExperience] bootstrap completed report parsed", parsed)
-            if (parsed.success) {
-              setReport(parsed.data);
+            console.log("Bootstrap: completed, trying to parse")
+            const parsed = parseReport(existing.finalReportJson);
+            if (parsed) {
+              setReport(parsed);
             }
             bootstrappedRef.current = true;
             setSnapshot((prev) => ({
@@ -576,12 +590,11 @@ export function RunExperience({
               </div>
               <div className="mt-4 min-h-[220px] space-y-4 text-sm leading-7 text-[rgba(38,37,30,0.72)]">
                 {messages.length > 0 ? (
-                  <GroupedMessages messages={messages} />
+                  <GroupedMessages messages={messages} statusBar={<StatusBar isLoading={isLoading} isStreaming={isStreaming} />} />
                 ) : (
                   <Skeleton className="h-28 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />
                 )}
               </div>
-              <StatusBar isLoading={isLoading} isStreaming={isStreaming} />
             </div>
           </>
         ) : (
@@ -601,12 +614,11 @@ export function RunExperience({
               </h2>
               <div className="mt-4 min-h-[220px] space-y-4 text-sm leading-7 text-[rgba(38,37,30,0.72)]">
                 {messages.length > 0 ? (
-                  <GroupedMessages messages={messages} />
+                  <GroupedMessages messages={messages} statusBar={<StatusBar isLoading={isLoading} isStreaming={isStreaming} />} />
                 ) : (
                   <Skeleton className="h-28 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />
                 )}
               </div>
-              <StatusBar isLoading={isLoading} isStreaming={isStreaming} />
             </div>
 
             <div className="flex flex-col gap-5">

@@ -94,7 +94,7 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
         </p>
         <div className="text-balance text-[clamp(42px,5vw,64px)] leading-[1.05] text-[#26251e]">
           <span className="font-light text-[#1f1d16]/85">
-            What is the AI impact at
+            What AI effect is
           </span>
           <input
             ref={autoRef}
@@ -122,7 +122,7 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
             style={autoWidthStyle}
           />
           <span className="ml-1 font-light text-[#1f1d16]/85">
-            <br/>likely to be across their workforce?
+            <br/>likely seeing across their workforce?
           </span>
         </div>
 

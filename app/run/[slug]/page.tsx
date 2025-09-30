@@ -8,7 +8,7 @@ import {
   getMessagesByChatId,
   getRemainingCompanyRuns,
 } from "@/lib/db/queries";
-import { orgReportSchema, type OrgReport } from "@/lib/run/report-schema";
+import { enrichedOrgReportSchema, type EnrichedOrgReport } from "@/lib/run/report-schema";
 import type { ChatMessage } from "@/lib/types";
 import { convertToUIMessages } from "@/lib/utils";
 
@@ -27,7 +27,7 @@ export default async function RunPage({ params, searchParams }: RunPageProps) {
   let initialChatId: string | null = null;
   let initialRunId: string | null = null;
   let initialStatus: "idle" | "running" | "replay" | "completed" | "failed" = "idle";
-  let initialReport: OrgReport | null = null;
+  let initialReport: EnrichedOrgReport | null = null;
   let initialMessages: ChatMessage[] = [];
   let initialRemainingRuns: number | null = null;
 
@@ -53,7 +53,7 @@ export default async function RunPage({ params, searchParams }: RunPageProps) {
         }
 
         if (latestRun.finalReportJson && latestRun.status === "completed") {
-          const parsedReport = orgReportSchema.safeParse(latestRun.finalReportJson);
+          const parsedReport = enrichedOrgReportSchema.safeParse(latestRun.finalReportJson);
           initialReport = parsedReport.success ? parsedReport.data : null;
         }
 

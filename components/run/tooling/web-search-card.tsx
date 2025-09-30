@@ -63,8 +63,7 @@ const renderAction = (action: z.infer<typeof webSearchActionSchema> | null) => {
 export function WebSearchCard({ args, result, title = "Web search" }: WebSearchCardProps) {
   const call = parseCall(args);
   const action = call?.action ?? null;
-  console.log(JSON.stringify(action, null, 2));
-  const parsedResult = parseResult(result);
+  // const parsedResult = parseResult(result);
   // const statusLabel = parsedResult?.status ?? (action ? "pending" : undefined);
 
   return (
@@ -74,8 +73,8 @@ export function WebSearchCard({ args, result, title = "Web search" }: WebSearchC
         {/* <span className="font-semibold uppercase tracking-[0.3em] text-[rgba(38,37,30,0.55)]">
           {title}
         </span> */}
-        <Globe className="size-3 min-w-3" />
-        <p className="font-medium ml-2">{renderAction(action)}</p>
+        <Globe className="size-3 min-w-3 m-0.5" />
+        <p className="font-medium ml-1">{renderAction(action)}</p>
         {/* {statusLabel && (
           <span className="rounded-full bg-[rgba(38,37,30,0.08)] px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-[rgba(38,37,30,0.5)]">
             {statusLabel}
@@ -86,10 +85,3 @@ export function WebSearchCard({ args, result, title = "Web search" }: WebSearchC
     // </div>
   );
 }
-
-        // <ToolContainer key="org-report-finalizing" toolState="input-streaming">
-        //   <div className="flex items-center gap-2 text-sm text-[rgba(38,37,30,0.7)]">
-        //     <div className="size-2 animate-pulse rounded-full bg-[#26251e]" aria-hidden />
-        //     Finalizing organisation report...
-        //   </div>
-        // </ToolContainer>

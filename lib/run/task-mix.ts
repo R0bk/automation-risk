@@ -1,4 +1,4 @@
-import type { OrgRole } from "./report-schema";
+import type { EnrichedOrgRole } from "./report-schema";
 import type { TaskMixCounts, TaskMixShares } from "@/lib/constants/task-mix";
 import {
   buildCodeLookup,
@@ -29,7 +29,7 @@ function classifyTask(automation?: number | null, augmentation?: number | null):
 let cachedLookup: Map<string, OnetCatalogRole> | null = null;
 let cachedNormalizedLookup: Map<string, OnetCatalogRole> | null = null;
 
-function getCatalogRole(role: OrgRole): OnetCatalogRole | null {
+function getCatalogRole(role: EnrichedOrgRole): OnetCatalogRole | null {
   if (!cachedLookup) {
     try {
       const catalog = loadOnetCatalog();
@@ -59,7 +59,7 @@ function getCatalogRole(role: OrgRole): OnetCatalogRole | null {
   return cachedNormalizedLookup?.get(normalized) ?? null;
 }
 
-export function deriveTaskMixCounts(role: OrgRole | undefined | null): TaskMixCounts {
+export function deriveTaskMixCounts(role: EnrichedOrgRole | undefined | null): TaskMixCounts {
   if (!role) {
     return DEFAULT_COUNTS;
   }
@@ -142,7 +142,7 @@ export function deriveTaskMixCounts(role: OrgRole | undefined | null): TaskMixCo
   return counts;
 }
 
-export function deriveTaskMixShares(role: OrgRole | undefined | null): TaskMixShares {
+export function deriveTaskMixShares(role: EnrichedOrgRole | undefined | null): TaskMixShares {
   if (!role) {
     return DEFAULT_SHARES;
   }
@@ -229,7 +229,10 @@ function normalizeSharesToCounts(shares: TaskMixShares, totalSegments: number): 
   };
 }
 
-export function deriveTaskMixForView(role: OrgRole | undefined | null, view: TaskMixView): TaskMixCounts {
+export function deriveTaskMixForView(
+  role: EnrichedOrgRole | undefined | null,
+  view: TaskMixView
+): TaskMixCounts {
   if (view === "coverage") {
     return deriveTaskMixCounts(role);
   }

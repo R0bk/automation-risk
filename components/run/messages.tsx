@@ -7,14 +7,15 @@ import { ReasoningAsThinkingToolMemo } from "@/components/run/tooling/thinking-t
 
 interface RunMessageListProps {
   messages: ChatMessage[];
+  statusBar?: React.ReactNode;
 }
 
-const RunMessageList: React.FC<RunMessageListProps> = ({ messages }) => {
+const RunMessageList: React.FC<RunMessageListProps> = ({ messages, statusBar }) => {
   if (!messages.length) return null;
   if (!messages[0].parts.length) return null;
   return (
     <TooltipProvider delayDuration={150}>
-      <div className="mb-6 space-y-3">
+      <div className="mb-6 space-y-3 relative">
         {messages.map((message) => {
           if (message.role !== "assistant") return null;
 
@@ -55,14 +56,15 @@ const RunMessageList: React.FC<RunMessageListProps> = ({ messages }) => {
             </article>
           );
         })}
+        {statusBar}
       </div>
     </TooltipProvider>
   );
 };
 
-export const GroupedMessages: React.FC<{ messages: ChatMessage[] }> = ({ messages }) => {
+export const GroupedMessages: React.FC<{ messages: ChatMessage[], statusBar?: React.ReactNode }> = ({ messages, statusBar }) => {
   const grouped = React.useMemo(() => messages.map(groupConsecutiveReasoningParts), [messages]);
-  return <RunMessageList messages={grouped} />;
+  return <RunMessageList messages={grouped} statusBar={statusBar} />;
 };
 
 export { RunMessageList };

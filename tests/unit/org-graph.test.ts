@@ -4,10 +4,10 @@ import assert from "node:assert/strict";
 import { buildOrgGraph } from "@/lib/run/org-graph";
 import { buildOrgFlowModel } from "@/lib/run/org-flow-model";
 import { applyLayeredLayout } from "@/lib/run/org-flow-layout";
-import type { OrgReport } from "@/lib/run/report-schema";
+import type { EnrichedOrgReport } from "@/lib/run/report-schema";
 import { getDenseNodePreferredHeight } from "@/lib/run/org-flow-tokens";
 
-const sampleReport: OrgReport = {
+const sampleReport: EnrichedOrgReport = {
   metadata: {
     companyName: "Example Corp",
     companySlug: "example-corp",
@@ -23,7 +23,7 @@ const sampleReport: OrgReport = {
       headcount: null,
       automationShare: null,
       augmentationShare: 0.4,
-      dominantRoleIds: ["11-1011.00"],
+      dominantRoles: [{ id: "11-1011.00", headcount: 200 }],
     },
     {
       id: "ops",
@@ -33,7 +33,7 @@ const sampleReport: OrgReport = {
       headcount: 800,
       automationShare: 0.55,
       augmentationShare: 0.25,
-      dominantRoleIds: ["13-1051.00"],
+      dominantRoles: [{ id: "13-1051.00", headcount: 350 }],
     },
     {
       id: "eng",
@@ -43,7 +43,7 @@ const sampleReport: OrgReport = {
       headcount: 400,
       automationShare: 0.32,
       augmentationShare: 0.6,
-      dominantRoleIds: ["15-1252.00"],
+      dominantRoles: [{ id: "15-1252.00", headcount: 200 }],
     },
   ],
   roles: [
@@ -99,6 +99,9 @@ test("buildOrgGraph indexes hierarchy and aggregates metrics", () => {
   assert.equal(rootNode.aggregate.headcount, 1200);
   assert.equal(rootNode.aggregate.descendantCount, 2);
   assert.equal(graph.highlightRoleIds.has("15-1252.00".toLowerCase()), true);
+  const opsNode = graph.nodes.get("ops");
+  assert(opsNode);
+  assert.equal(opsNode.roles[0]?.headcount, 350);
 });
 
 test("org flow model focuses roles and computes layout", () => {
@@ -120,7 +123,7 @@ test("org flow model focuses roles and computes layout", () => {
 });
 
 test("collapsed children are skipped along with their edges", () => {
-  const reportWithCollapse: OrgReport = {
+const reportWithCollapse: EnrichedOrgReport = {
     ...sampleReport,
     visualizationHints: {
       ...(sampleReport.visualizationHints ?? {}),
@@ -139,7 +142,7 @@ test("collapsed children are skipped along with their edges", () => {
 });
 
 test("dense role containers collapse child role nodes", () => {
-  const denseReport: OrgReport = {
+  const denseReport: EnrichedOrgReport = {
     metadata: {
       companyName: "Compact Org",
       companySlug: "compact-org",
@@ -155,7 +158,7 @@ test("dense role containers collapse child role nodes", () => {
         headcount: null,
         automationShare: 0.5,
         augmentationShare: 0.3,
-        dominantRoleIds: [],
+        dominantRoles: [],
       },
       {
         id: "role-a",
@@ -165,7 +168,7 @@ test("dense role containers collapse child role nodes", () => {
         headcount: 120,
         automationShare: 0.22,
         augmentationShare: 0.41,
-        dominantRoleIds: ["51-1011.00"],
+      dominantRoles: [{ id: "51-1011.00", headcount: 70 }],
       },
       {
         id: "role-b",
@@ -175,7 +178,7 @@ test("dense role containers collapse child role nodes", () => {
         headcount: 80,
         automationShare: 0.36,
         augmentationShare: 0.28,
-        dominantRoleIds: ["43-5061.00"],
+      dominantRoles: [{ id: "43-5061.00", headcount: 50 }],
       },
     ],
     roles: [
@@ -188,6 +191,8 @@ test("dense role containers collapse child role nodes", () => {
         automationShare: 0.22,
         augmentationShare: 0.41,
         topTasks: [],
+        taskMixCounts: { automation: 15, augmentation: 30, manual: 15 },
+        taskMixShares: { automation: 0.25, augmentation: 0.5, manual: 0.25 },
         notes: undefined,
         sources: [],
       },
@@ -200,6 +205,8 @@ test("dense role containers collapse child role nodes", () => {
         automationShare: 0.36,
         augmentationShare: 0.28,
         topTasks: [],
+        taskMixCounts: { automation: 10, augmentation: 5, manual: 25 },
+        taskMixShares: { automation: 0.3, augmentation: 0.25, manual: 0.45 },
         notes: undefined,
         sources: [],
       },
@@ -222,6 +229,12 @@ test("dense role containers collapse child role nodes", () => {
   const firstGroupRoles = root.data.denseRoles.filter((role) => role.groupId === "role-a");
   assert.equal(firstGroupRoles.length, 1);
   assert.equal(firstGroupRoles[0]?.groupHeadcount, 120);
+  assert.deepEqual(firstGroupRoles[0]?.taskMixCounts, { automation: 15, augmentation: 30, manual: 15 });
+  assert.deepEqual(firstGroupRoles[0]?.taskMixShares, { automation: 0.25, augmentation: 0.5, manual: 0.25 });
+
+  const secondRole = root.data.denseRoles.find((role) => role.groupId === "role-b");
+  assert.deepEqual(secondRole?.taskMixCounts, { automation: 10, augmentation: 5, manual: 25 });
+  assert.deepEqual(secondRole?.taskMixShares, { automation: 0.3, augmentation: 0.25, manual: 0.45 });
 
   const preferredHeight = root.layout.preferredHeight;
   assert.equal(

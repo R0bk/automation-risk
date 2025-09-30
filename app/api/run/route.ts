@@ -26,7 +26,11 @@ import {
   updateAnalysisRunResult,
   updateAnalysisRunStatus,
 } from "@/lib/db/queries";
-import { orgReportSchema, type OrgReport } from "@/lib/run/report-schema";
+import {
+  enrichedOrgReportSchema,
+  orgReportSchema,
+  type EnrichedOrgReport,
+} from "@/lib/run/report-schema";
 import { enrichReportWithJobRoles } from "@/lib/run/enrich-report";
 import { ChatSDKError } from "@/lib/errors";
 import { convertToUIMessages, slugifyCompanyName } from "@/lib/utils";
@@ -208,7 +212,7 @@ export async function POST(request: Request) {
   const webSearch = openai.tools.webSearch({ searchContextSize: "medium" });
   const onetTools = getOnetRoleTools();
 
-  let finalReport: OrgReport | null = null;
+  let finalReport: EnrichedOrgReport | null = null;
 
   const orgReportCollector = tool({
     description:
@@ -219,7 +223,8 @@ export async function POST(request: Request) {
         finalReport = await enrichReportWithJobRoles(input);
       } catch (error) {
         console.error("Failed to enrich report with O*NET roles", error);
-        finalReport = input;
+        const fallback = enrichedOrgReportSchema.safeParse(input);
+        finalReport = fallback.success ? fallback.data : null;
       }
       return { status: "accepted" };
     },
@@ -283,11 +288,11 @@ export async function POST(request: Request) {
           companySlug,
           hqCountry: hqCountry ?? null,
         }),
-        stopWhen: stepCountIs(25),
+        stopWhen: stepCountIs(30),
         prompt: `Target company: ${companyName}`,
         tools,
         maxRetries: 3,
-        providerOptions: { openai: { ...openaiProviderOptions } },
+        providerOptions: { openai: openaiProviderOptions },
         experimental_transform: smoothStream(),
         experimental_repairToolCall: async ({ toolCall, inputSchema }) => {
           const prompt = [
@@ -474,13 +479,16 @@ export async function GET(request: Request) {
   await recordRunPopularity(runRecord.id).catch(() => undefined);
 
   if (runRecord.finalReportJson) {
-    setRunCache({
-      runId: runRecord.id,
-      slug: slug ?? undefined,
-      chatId: runRecord.chatId,
-      report: runRecord.finalReportJson as OrgReport | null,
-      updatedAt: Date.now(),
-    });
+    const parsed = enrichedOrgReportSchema.safeParse(runRecord.finalReportJson);
+    if (parsed.success) {
+      setRunCache({
+        runId: runRecord.id,
+        slug: slug ?? undefined,
+        chatId: runRecord.chatId,
+        report: parsed.data,
+        updatedAt: Date.now(),
+      });
+    }
   }
 
   let messagesPayload = [] as ReturnType<typeof convertToUIMessages>;

@@ -1,10 +1,10 @@
-import type { OrgReport } from "@/lib/run/report-schema";
+import type { EnrichedOrgReport } from "@/lib/run/report-schema";
 
 type CacheEntry = {
   runId: string;
   slug?: string;
   chatId?: string;
-  report: OrgReport | null;
+  report: EnrichedOrgReport | null;
   updatedAt: number;
 };
 

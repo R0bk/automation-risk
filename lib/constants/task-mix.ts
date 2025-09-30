@@ -1,8 +1,8 @@
 export type TaskMixCategory = "automation" | "augmentation" | "manual";
 
 export const TASK_MIX_COLORS: Record<TaskMixCategory, string> = {
-  automation: "#FD5108",
-  augmentation: "#FFAA72",
+  automation: "#B7410E", //#FD5108",
+  augmentation: "#4F7F7D", //"#FFAA72",
   manual: "#D1D5DB",
 };
 

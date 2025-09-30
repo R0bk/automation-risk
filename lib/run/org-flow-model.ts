@@ -1,9 +1,11 @@
-import { OrgRole } from "./report-schema";
+import { EnrichedOrgRole } from "./report-schema";
 import { OrgGraph, OrgGraphNode } from "./org-graph";
 import {
   ORG_FLOW_NODE_DEFAULT_HEIGHT,
   getDenseNodePreferredHeight,
 } from "./org-flow-tokens";
+import type { TaskMixCounts, TaskMixShares } from "@/lib/constants/task-mix";
+import { deriveTaskMixCounts, deriveTaskMixShares } from "./task-mix";
 
 export type OrgFlowLayoutEngine = "dagre" | "d3" | "elk";
 export type OrgFlowDirection = "TB" | "LR";
@@ -19,6 +21,8 @@ export interface OrgFlowDenseRoleSummary {
   groupId?: string | null;
   groupLabel?: string | null;
   groupHeadcount?: number | null;
+  taskMixCounts?: TaskMixCounts | null;
+  taskMixShares?: TaskMixShares | null;
 }
 
 export interface OrgFlowNodeData {
@@ -30,7 +34,7 @@ export interface OrgFlowNodeData {
   automationShare: number | null;
   augmentationShare: number | null;
   descendantCount: number;
-  roles: OrgRole[];
+  roles: EnrichedOrgRole[];
   denseRoles: OrgFlowDenseRoleSummary[];
   kind: OrgFlowNodeKind;
   totalHeadcount: number | null;
@@ -88,29 +92,47 @@ function toDenseRoleSummaries(node: OrgGraphNode): OrgFlowDenseRoleSummary[] {
       groupId,
       groupLabel,
       groupHeadcount: baseHeadcount,
+      taskMixCounts: deriveTaskMixCounts(role),
+      taskMixShares: deriveTaskMixShares(role),
     }));
   }
+
+  const fallbackAutomation = node.data.automationShare ?? node.aggregate.automationShare ?? null;
+  const fallbackAugmentation = node.data.augmentationShare ?? node.aggregate.augmentationShare ?? null;
+  const inferredManual =
+    fallbackAutomation != null || fallbackAugmentation != null
+      ? Math.max(0, 1 - (fallbackAutomation ?? 0) - (fallbackAugmentation ?? 0))
+      : null;
 
   return [
     {
       title: node.data.name,
       onetCode: null,
       headcount: node.aggregate.headcount ?? node.data.headcount ?? null,
-      automationShare: node.data.automationShare ?? node.aggregate.automationShare ?? null,
-      augmentationShare: node.data.augmentationShare ?? node.aggregate.augmentationShare ?? null,
+      automationShare: fallbackAutomation,
+      augmentationShare: fallbackAugmentation,
       groupId: node.id,
       groupLabel: node.data.name,
       groupHeadcount: node.aggregate.headcount ?? node.data.headcount ?? null,
+      taskMixCounts: null,
+      taskMixShares:
+        fallbackAutomation != null || fallbackAugmentation != null || inferredManual != null
+          ? {
+              automation: fallbackAutomation,
+              augmentation: fallbackAugmentation,
+              manual: inferredManual,
+            }
+          : null,
     },
   ];
 }
 
-function focusRoles(roles: OrgRole[], limit: number): OrgRole[] {
+function focusRoles(roles: EnrichedOrgRole[], limit: number): EnrichedOrgRole[] {
   if (roles.length <= limit) return roles;
   return roles.slice(0, limit);
 }
 
-function isRoleHighlighted(role: OrgRole, highlightIds: Set<string>): boolean {
+function isRoleHighlighted(role: EnrichedOrgRole, highlightIds: Set<string>): boolean {
   if (highlightIds.size === 0) return false;
   const candidates = [role.onetCode, role.normalizedTitle, role.title];
   return candidates.some((candidate) => {
@@ -126,6 +148,7 @@ function shouldIncludeNode(
   includeCollapsedDescendants: boolean,
   collapsedNodeIds: Set<string>
 ): boolean {
+  return true;
   if (!collapsedNodeIds.has(node.id)) {
     return true;
   }
@@ -244,7 +267,7 @@ export function buildOrgFlowModel(
 
       const parentCollapsed = graph.collapsedNodeIds.has(node.id);
       const parentExpanded = !parentCollapsed || includeCollapsedDescendants;
-      const childVisible = shouldIncludeNode(childNode, includeCollapsedDescendants, graph.collapsedNodeIds);
+      const childVisible = true; //shouldIncludeNode(childNode, includeCollapsedDescendants, graph.collapsedNodeIds);
 
       if (!parentExpanded) {
         continue;

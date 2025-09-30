@@ -7,8 +7,7 @@ import React from "react";
 import { TextShimmer } from "../../text-shimmer";
 import { ToolContainer } from "./tool-container";
 import type { ChatMessage } from "@/lib/types";
-import { TASK_MIX_COLORS, type TaskMixCounts, type TaskMixCategory } from "@/lib/constants/task-mix";
-import { TaskMixLine } from "@/components/run/TaskMixLine";
+import { TASK_MIX_COLORS, type TaskMixCategory } from "@/lib/constants/task-mix";
 import { PulsingDot } from "@/components/elements/pulsing-dot";
 
 const METRIC_DISPLAY_ORDER = [
@@ -194,14 +193,6 @@ export const OnetRoleMetricsTool: React.FC<{ toolCall: OnetRoleMetricsToolPart }
                 }
                 return (b.task_share_pct ?? 0) - (a.task_share_pct ?? 0);
               });
-              const mix: TaskMixCounts = sortedTasks.reduce(
-                (acc, task) => {
-                  const { group } = getTaskGroup(task.metrics ?? null);
-                  acc[group] += 1;
-                  return acc;
-                },
-                { automation: 0, augmentation: 0, manual: 0 } as TaskMixCounts,
-              );
               const columnEstimate =
                 sortedTasks.length <= 30
                   ? Math.max(1, Math.ceil(sortedTasks.length / 3))
@@ -224,8 +215,6 @@ export const OnetRoleMetricsTool: React.FC<{ toolCall: OnetRoleMetricsToolPart }
                       <div>Workforce: {formatPercent(role.workforce_share_pct, 2)}</div>
                     </div>
                   </div>
-
-                  <TaskMixLine counts={mix} className="mt-2" />
 
                   {sortedTasks.length > 0 && (
                     <div

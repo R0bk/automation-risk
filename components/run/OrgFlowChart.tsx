@@ -20,9 +20,8 @@ import "reactflow/dist/style.css";
 import { useOrgReportGraph } from "@/hooks/useOrgReportGraph";
 import { buildOrgFlowModel, type OrgFlowNodeData } from "@/lib/run/org-flow-model";
 import { applyLayeredLayout } from "@/lib/run/org-flow-layout";
-import type { OrgReport } from "@/lib/run/report-schema";
+import type { EnrichedOrgReport, EnrichedOrgRole } from "@/lib/run/report-schema";
 import { getLayoutedElements } from "@/lib/run/org-flow-layout-dagre";
-import type { OrgRole } from "@/lib/run/report-schema";
 import { TaskMixLine } from "./TaskMixLine";
 import { deriveTaskMixForView } from "@/lib/run/task-mix";
 import { useTaskMixView } from "./task-mix-view-context";
@@ -35,7 +34,7 @@ const LAYOUT_NODE_WIDTH = ORG_FLOW_NODE_WIDTH - 30;
 const LAYOUT_NODE_HEIGHT = ORG_FLOW_NODE_DEFAULT_HEIGHT;
 
 interface OrgFlowChartProps {
-  report: OrgReport;
+  report: EnrichedOrgReport;
 }
 
 const OrgNode = ({ id, data }: NodeProps<OrgFlowNodeData>) => {
@@ -110,7 +109,7 @@ const OrgNode = ({ id, data }: NodeProps<OrgFlowNodeData>) => {
       </div>
       {roles && roles.length > 0 && (
         <div className="mt-3 space-y-1">
-          {roles.map((role: OrgRole) => {
+          {roles.map((role: EnrichedOrgRole) => {
             const mix = deriveTaskMixForView(role, view);
 
             return (
@@ -229,6 +228,7 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
         fitView
         minZoom={0.3}
         maxZoom={1.5}
+        nodesDraggable={false}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange} 
       >

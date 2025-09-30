@@ -1,10 +1,10 @@
 import Link from "next/link";
-import type { OrgReport } from "@/lib/run/report-schema";
+import type { EnrichedOrgReport } from "@/lib/run/report-schema";
 import { TaskMixSelector } from "./TaskMixSelector";
 import { OrgFlowChart } from "./OrgFlowChart";
 
 interface ReportPreviewProps {
-  report: OrgReport;
+  report: EnrichedOrgReport;
 }
 
 export function ReportPreview({ report }: ReportPreviewProps) {
@@ -13,7 +13,7 @@ export function ReportPreview({ report }: ReportPreviewProps) {
     .sort((a, b) => a.level - b.level)
     .slice(0, 6);
 
-  const vulnerableRoles = report.roles
+  const vulnerableRoles = (report.roles ?? [])
     .slice()
     .sort((a, b) => (b.automationShare ?? 0) - (a.automationShare ?? 0))
     .slice(0, 6);

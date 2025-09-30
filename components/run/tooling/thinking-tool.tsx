@@ -36,7 +36,7 @@ const ThinkingToolComponent: React.FC<{ toolCall: ThinkingToolPart; }> = ({ tool
   }, [toolCall.state]);
 
   const thoughtMarkdown = useMemo(
-    () => <Streamdown children={thought} className="size-full [&_p]:py-[2px]" />,
+    () => <Streamdown children={thought} className="size-full [&_p]:py-[2px] [&_p]:my-[2px]" />,
     [thought, toolCall.toolCallId],
   );
 
@@ -48,13 +48,13 @@ const ThinkingToolComponent: React.FC<{ toolCall: ThinkingToolPart; }> = ({ tool
         <ToolContainer key="tool-streaming" toolState={toolCall.state} blur={false}>
           {/* Header area with loading indicator */}
           <div className="mb-1 flex items-center">
-            <PulsingDot className="mr-2 flex-shrink-0" />
+            <PulsingDot className="ml-1 mr-2 flex-shrink-0" />
             <TextShimmer className="mr-2 font-medium">Thinking...</TextShimmer>
           </div>
           {/* Display streaming thought with markdown */}
-          <div className="pl-0.5 text-[13px] text-gray-500 dark:text-gray-500">
+          <div className="mt-1 ml-[7px] border-l border-gray-300 pl-3 text-[13px] text-gray-500 dark:text-gray-500">
             <Scroller className="max-h-[300px]" orientation="vertical" size={30} offset={20}>
-              <div className="py-2">{thoughtMarkdown}</div>
+              {thoughtMarkdown}
             </Scroller>
           </div>
         </ToolContainer>

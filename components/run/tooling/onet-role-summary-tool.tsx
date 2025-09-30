@@ -1,5 +1,5 @@
-import { AnimatePresence } from "framer-motion";
-import React from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { useState } from "react";
 
 import { TextShimmer } from "../../text-shimmer";
 import { ToolContainer } from "./tool-container";
@@ -7,6 +7,7 @@ import type { ChatMessage } from "@/lib/types";
 import { TaskMixLine } from "@/components/run/TaskMixLine";
 import type { TaskMixCounts } from "@/lib/constants/task-mix";
 import { PulsingDot } from "@/components/elements/pulsing-dot";
+import { ChevronRight } from "lucide-react";
 
 type OnetRoleSummaryToolPart = Extract<ChatMessage["parts"][number], { type: "tool-onet_role_summary" }>;
 
@@ -34,6 +35,7 @@ export const OnetRoleSummaryTool: React.FC<{ toolCall: OnetRoleSummaryToolPart }
   const payload = (toolCall.output ?? undefined) as SummaryPayload | undefined;
   const roles = payload?.roles ?? [];
   const invalidRoles = payload?.invalid_roles ?? [];
+  const [expanded, setExpanded] = useState(true);
 
   return (
     <AnimatePresence mode="wait">
@@ -52,13 +54,15 @@ export const OnetRoleSummaryTool: React.FC<{ toolCall: OnetRoleSummaryToolPart }
       {toolCall.state === "output-available" && (
         <ToolContainer key="onet-summary-result" toolState="output-available">
           <div className="mb-1 flex items-center gap-2">
+            <motion.div animate={{ rotate: expanded ? 90 : 0 }} children={<ChevronRight size={14} />} />
             <span className="font-medium">O*NET high-level summary</span>
             <span className="text-xs text-gray-500 dark:text-gray-400">
               {roles.length} matched · {invalidRoles.length} unmatched
             </span>
           </div>
 
-          <div className="mt-4 grid gap-6 md:grid-cols-2">
+          <div className="mt-1 ml-[7px] border-l border-gray-300 pl-3 flex flex-col cursor-pointer items-center" onClick={() => setExpanded(!expanded)}>
+          <div className=" grid gap-6 md:grid-cols-2 w-full">
             {roles.map((role) => {
               const showRequested =
                 role.requested && role.requested.trim().toLowerCase() !== role.role.trim().toLowerCase();
@@ -70,25 +74,28 @@ export const OnetRoleSummaryTool: React.FC<{ toolCall: OnetRoleSummaryToolPart }
               };
 
               return (
-                <div key={role.role} className="space-y-2">
-                  <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-gray-600 dark:text-gray-300">
-                    <div>
-                      <div className="text-[13px] font-medium text-gray-900 dark:text-gray-100">{role.role}</div>
-                      {role.onet_code && (
-                        <div className="text-[10px] uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                          {role.onet_code}
-                        </div>
-                      )}
+                <div key={role.role} className="space-y-1 mt-2">
+                  <div className="text-[11px] text-gray-600 dark:text-gray-300">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div>
+                        <div className="text-[13px] font-medium text-gray-900 dark:text-gray-100">{role.role}</div>
+                        
+                      </div>
+                      {showRequested && <div className="text-right">Requested: {role.requested}</div>}
+                    </div>
+                    <div className="flex items-center justify-between">
                       <div className="text-[9px] tracking-wide text-gray-500 uppercase dark:text-gray-400">
                         {role.parent_cluster}
+                      {role.onet_code && (
+                          <span className="text-[9px] ml-3 uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                            {role.onet_code}
+                          </span>
+                        )}
                       </div>
-                    </div>
-                    <div className="text-right">
-                      {showRequested && <div>Requested: {role.requested}</div>}
-                      <div>Total tasks: {role.task_count}</div>
+                      <div className="text-right">{role.task_count} tasks</div>
                     </div>
                   </div>
-                  <TaskMixLine counts={mix} height={12} />
+                  <TaskMixLine counts={mix} height={8} />
                 </div>
               );
             })}
@@ -101,7 +108,7 @@ export const OnetRoleSummaryTool: React.FC<{ toolCall: OnetRoleSummaryToolPart }
           </div>
 
           {invalidRoles.length > 0 && (
-            <div className="mt-3 rounded-md border border-amber-200 bg-amber-50/50 p-2 text-[11px] text-amber-700 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-200">
+            <div className="mt-3 min-w-100 self-start rounded-md border border-amber-200 bg-amber-50/50 p-2 text-[11px] text-amber-700 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-200">
               <div className="mb-1 font-medium">Could not match some roles</div>
               <ul className="space-y-1">
                 {invalidRoles.map(({ requested, suggestions, did_you_mean }) => (
@@ -118,6 +125,7 @@ export const OnetRoleSummaryTool: React.FC<{ toolCall: OnetRoleSummaryToolPart }
               </ul>
             </div>
           )}
+          </div>
         </ToolContainer>
       )}
     </AnimatePresence>

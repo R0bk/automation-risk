@@ -1,6 +1,10 @@
-import { OrgReport, OrgNode, OrgRole } from "./report-schema";
+import {
+  type EnrichedOrgReport,
+  type EnrichedOrgNode,
+  type EnrichedOrgRole,
+} from "./report-schema";
 
-type RoleLookupMap = Map<string, OrgRole>;
+type RoleLookupMap = Map<string, EnrichedOrgRole>;
 
 type AggregationInternal = {
   headcount: number | null;
@@ -20,10 +24,10 @@ export interface OrgNodeAggregate {
 
 export interface OrgGraphNode {
   id: string;
-  data: OrgNode;
+  data: EnrichedOrgNode;
   children: string[];
   parentId: string | null;
-  roles: OrgRole[];
+  roles: EnrichedOrgRole[];
   aggregate: OrgNodeAggregate;
 }
 
@@ -36,14 +40,15 @@ export interface OrgGraph {
   rootId?: string;
 }
 
-const FALLBACK_ROLE_KEYS: Array<(role: OrgRole) => string | undefined> = [
+const FALLBACK_ROLE_KEYS: Array<(role: EnrichedOrgRole) => string | undefined> = [
   (role) => role.onetCode,
   (role) => role.normalizedTitle,
   (role) => role.title,
 ];
 
-function buildRoleLookup(roles: OrgRole[]): RoleLookupMap {
+function buildRoleLookup(rolesInput: EnrichedOrgRole[] | null | undefined): RoleLookupMap {
   const lookup: RoleLookupMap = new Map();
+  const roles = Array.isArray(rolesInput) ? rolesInput : [];
 
   for (const role of roles) {
     for (const getter of FALLBACK_ROLE_KEYS) {
@@ -60,25 +65,79 @@ function buildRoleLookup(roles: OrgRole[]): RoleLookupMap {
   return lookup;
 }
 
-function resolveRolesForNode(node: OrgNode, lookup: RoleLookupMap): OrgRole[] {
-  const resolved: OrgRole[] = [];
+type DominantRoleEntry = { id: string; headcount: number | null };
+
+function extractDominantRoleEntries(node: EnrichedOrgNode): DominantRoleEntry[] {
+  const source = Array.isArray((node as unknown as { dominantRoles?: unknown }).dominantRoles)
+    ? (node as unknown as { dominantRoles?: unknown }).dominantRoles
+    : Array.isArray((node as unknown as { dominantRoleIds?: unknown }).dominantRoleIds)
+      ? (node as unknown as { dominantRoleIds?: unknown }).dominantRoleIds
+      : [];
+
+  return (source as unknown[]).map((entry) => {
+    if (typeof entry === "string") {
+      const trimmed = entry.trim();
+      return { id: trimmed.length > 0 ? trimmed : entry, headcount: null };
+    }
+    if (entry && typeof entry === "object") {
+      const record = entry as Record<string, unknown>;
+      const rawId = typeof record.id === "string" ? record.id : typeof record.code === "string" ? record.code : "";
+      const trimmed = rawId.trim();
+      const id = trimmed.length > 0 ? trimmed : rawId;
+      const rawHeadcount = record.headcount;
+      const headcount =
+        typeof rawHeadcount === "number" && Number.isFinite(rawHeadcount)
+          ? Math.max(0, Math.trunc(rawHeadcount))
+          : null;
+      return { id, headcount };
+    }
+    return { id: "", headcount: null };
+  }).filter((entry) => Boolean(entry.id));
+}
+
+function resolveRolesForNode(
+  node: EnrichedOrgNode,
+  lookup: RoleLookupMap
+): EnrichedOrgRole[] {
+  const resolved: EnrichedOrgRole[] = [];
   const seen = new Set<string>();
 
-  for (const rawId of node.dominantRoleIds ?? []) {
+  const dominantEntries = extractDominantRoleEntries(node);
+
+  for (const entry of dominantEntries) {
+    const rawId = entry.id;
     const normalized = rawId.trim().toLowerCase();
     if (!normalized || seen.has(normalized)) continue;
     const role = lookup.get(normalized);
     if (role) {
-      resolved.push(role);
+      const roleClone: EnrichedOrgRole = {
+        ...role,
+        headcount: entry.headcount ?? role.headcount ?? null,
+      };
+      resolved.push(roleClone);
       seen.add(normalized);
     }
+  }
+
+  const hasAnyHeadcount = resolved.some((role) => typeof role.headcount === "number" && role.headcount > 0);
+  if (!hasAnyHeadcount && resolved.length > 0 && node.headcount != null && node.headcount > 0) {
+    const equalShare = Math.max(1, Math.floor(node.headcount / resolved.length));
+    let remaining = node.headcount;
+    resolved.forEach((role, index) => {
+      if (index === resolved.length - 1) {
+        role.headcount = Math.max(0, remaining);
+      } else {
+        role.headcount = Math.max(0, equalShare);
+        remaining -= equalShare;
+      }
+    });
   }
 
   return resolved;
 }
 
 function createAggregationCalculator(
-  nodes: Map<string, OrgNode>,
+  nodes: Map<string, EnrichedOrgNode>,
   childrenMap: Map<string, string[]>
 ): {
   aggregates: Map<string, OrgNodeAggregate>;
@@ -108,8 +167,9 @@ function createAggregationCalculator(
 
     const children = childrenMap.get(id) ?? [];
 
-    let totalHeadcount = node.headcount ?? 0;
-    let hasHeadcount = node.headcount != null;
+    let totalHeadcount = node.headcount ?? null;
+    const hasOwnHeadcount = node.headcount != null;
+    let hasHeadcount = hasOwnHeadcount;
 
     let automationWeightedSum = 0;
     let automationWeight = 0;
@@ -133,8 +193,8 @@ function createAggregationCalculator(
     for (const childId of children) {
       const childAggregation = visit(childId);
 
-      if (childAggregation.headcount != null) {
-        totalHeadcount += childAggregation.headcount;
+      if (!hasOwnHeadcount && childAggregation.headcount != null) {
+        totalHeadcount = (totalHeadcount ?? 0) + childAggregation.headcount;
         hasHeadcount = true;
       }
 
@@ -179,7 +239,7 @@ function createAggregationCalculator(
 
 function sortChildren(
   nodeIds: string[],
-  nodes: Map<string, OrgNode>
+  nodes: Map<string, EnrichedOrgNode>
 ): string[] {
   return [...nodeIds].sort((a, b) => {
     const nodeA = nodes.get(a);
@@ -196,10 +256,14 @@ function sortChildren(
   });
 }
 
-export function buildOrgGraph(report: OrgReport): OrgGraph {
-  const nodeMap = new Map<string, OrgNode>();
+export function buildOrgGraph(report: EnrichedOrgReport): OrgGraph {
+  const nodeMap = new Map<string, EnrichedOrgNode>();
   const childrenMap = new Map<string, string[]>();
   const roots: string[] = [];
+
+  const rolesArray = Array.isArray(report.roles) ? report.roles : [];
+  const lookup = buildRoleLookup(rolesArray);
+  const rolesByNode = new Map<string, EnrichedOrgRole[]>();
 
   for (const node of report.hierarchy) {
     nodeMap.set(node.id, node);
@@ -215,9 +279,6 @@ export function buildOrgGraph(report: OrgReport): OrgGraph {
   for (const [parentId, childIds] of childrenMap.entries()) {
     childrenMap.set(parentId, sortChildren(childIds, nodeMap));
   }
-
-  const lookup = buildRoleLookup(report.roles);
-  const rolesByNode = new Map<string, OrgRole[]>();
 
   for (const node of report.hierarchy) {
     const roles = resolveRolesForNode(node, lookup);
