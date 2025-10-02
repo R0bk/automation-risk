@@ -6,7 +6,7 @@ import { ToolContainer } from "./tool-container";
 import type { ChatMessage } from "@/lib/types";
 import { TaskMixLine } from "@/components/run/TaskMixLine";
 import type { TaskMixCounts } from "@/lib/constants/task-mix";
-import { PulsingDot } from "@/components/elements/pulsing-dot";
+import { PulsingDot } from "@/components/run/pulsing-dot";
 import { ChevronRight } from "lucide-react";
 
 type OnetRoleSummaryToolPart = Extract<ChatMessage["parts"][number], { type: "tool-onet_role_summary" }>;

@@ -2,7 +2,7 @@ import { AnimatePresence } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import React from "react";
 
-import { PulsingDot } from "@/components/elements/pulsing-dot";
+import { PulsingDot } from "@/components/run/pulsing-dot";
 import { ToolContainer } from "@/components/run/tooling/tool-container";
 import { ReportPreview } from "../report-preview";
 import { orgReportSchema, type OrgReport } from "@/lib/run/report-schema";

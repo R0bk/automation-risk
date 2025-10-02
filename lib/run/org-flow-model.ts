@@ -68,7 +68,7 @@ export interface BuildOrgFlowModelOptions {
 const DEFAULT_OPTIONS: Required<Omit<BuildOrgFlowModelOptions, "includeCollapsedDescendants">> = {
   direction: "TB",
   engine: "dagre",
-  maxRolesPerNode: 4,
+  maxRolesPerNode: 20,
 };
 
 function isRoleLeafNode(node: OrgGraphNode): boolean {

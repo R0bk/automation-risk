@@ -1,10 +1,5 @@
 import type { InferUITool, InferUITools, UIMessage, Tool } from "ai";
 import { z } from "zod";
-import type { ArtifactKind } from "@/components/artifact";
-import type { createDocument } from "./ai/tools/create-document";
-import type { requestSuggestions } from "./ai/tools/request-suggestions";
-import type { updateDocument } from "./ai/tools/update-document";
-import type { Suggestion } from "./db/schema";
 import type { AppUsage } from "./usage";
 import type { getOnetRoleTools } from "@/lib/ai/tools/onet-tools";
 import type { humanTools } from "@/lib/ai/tools/human-tools";
@@ -19,20 +14,12 @@ export const messageMetadataSchema = z.object({
 
 export type MessageMetadata = z.infer<typeof messageMetadataSchema>;
 
-type createDocumentTool = InferUITool<ReturnType<typeof createDocument>>;
-type updateDocumentTool = InferUITool<ReturnType<typeof updateDocument>>;
-type requestSuggestionsTool = InferUITool<
-  ReturnType<typeof requestSuggestions>
-  >;
 type OnetRoleTools = InferUITools<ReturnType<typeof getOnetRoleTools>>;
 type HumanTools = InferUITools<typeof humanTools>;
 type WebSearchTool = InferUITool<ReturnType<typeof openai.tools.webSearch>>;
 type OrgReportFinalizeTool = Tool<z.infer<typeof orgReportSchema>, { status: string }>;
 
 export type ChatTools = {
-  createDocument: createDocumentTool;
-  updateDocument: updateDocumentTool;
-  requestSuggestions: requestSuggestionsTool;
   onet_role_metrics: OnetRoleTools["onet_role_metrics"];
   onet_role_summary: OnetRoleTools["onet_role_summary"];
   org_report_finalizer: InferUITool<OrgReportFinalizeTool>;
@@ -46,11 +33,9 @@ export type CustomUIDataTypes = {
   imageDelta: string;
   sheetDelta: string;
   codeDelta: string;
-  suggestion: Suggestion;
   appendMessage: string;
   id: string;
   title: string;
-  kind: ArtifactKind;
   clear: null;
   finish: null;
   usage: AppUsage;

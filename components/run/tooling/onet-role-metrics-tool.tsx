@@ -8,7 +8,7 @@ import { TextShimmer } from "../../text-shimmer";
 import { ToolContainer } from "./tool-container";
 import type { ChatMessage } from "@/lib/types";
 import { TASK_MIX_COLORS, type TaskMixCategory } from "@/lib/constants/task-mix";
-import { PulsingDot } from "@/components/elements/pulsing-dot";
+import { PulsingDot } from "@/components/run/pulsing-dot";
 
 const METRIC_DISPLAY_ORDER = [
   "Automation",

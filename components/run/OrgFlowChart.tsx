@@ -153,7 +153,7 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
     const model = buildOrgFlowModel(graph, {
       direction: "TB",
       engine: "dagre",
-      maxRolesPerNode: 3,
+      maxRolesPerNode: 20,
     });
 
     if (process.env.NODE_ENV !== "production") {

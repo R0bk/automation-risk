@@ -3,7 +3,7 @@ import { ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useRef, useState, memo, useMemo } from "react";
 
-import { PulsingDot } from "@/components/elements/pulsing-dot";
+import { PulsingDot } from "@/components/run/pulsing-dot";
 import { Streamdown } from 'streamdown';
 import { TextShimmer } from "../../text-shimmer";
 import type { ChatMessage } from "@/lib/types";
