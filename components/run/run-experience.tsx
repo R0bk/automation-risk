@@ -17,6 +17,7 @@ import { OrgFlowChart } from "./OrgFlowChart";
 import { GroupedMessages } from "./messages";
 import { StatusBar } from "@/components/run/status-bar";
 import { TaskMixViewProvider } from "./task-mix-view-context";
+import { ReportStateProvider } from "./report-context";
 
 interface RunExperienceProps {
   slug: string;
@@ -97,6 +98,7 @@ export function RunExperience({
   const pendingTranscriptRef = useRef<ChatMessage[] | null>(
     initialMessages.length > 0 ? initialMessages : null
   );
+  const reportSourceRef = useRef<string | null>(null);
 
   const companyName = useMemo(() => {
     if (initialName && initialName.length > 0) {
@@ -204,19 +206,21 @@ export function RunExperience({
         await updateRemainingRuns();
         const latest = await fetchRunBySlug();
         console.log("Latest", latest)
-        if (latest?.finalReportJson) {
+        if (latest?.finalReportJson && !report) {
           const parsed = parseReport(latest.finalReportJson);
           if (parsed) {
             setReport(parsed);
           }
         }
-        applyTranscript({ chatId: latest?.chatId, messages: latest?.messages });
-        if (latest?.runId) {
+        if (latest?.runId || latest?.chatId) {
           setSnapshot((prev) => ({
             ...prev,
-            runId: latest.runId,
-            chatId: latest.chatId ?? prev.chatId,
+            runId: latest?.runId ?? prev.runId,
+            chatId: latest?.chatId ?? prev.chatId,
           }));
+        }
+        if (latest?.messages) {
+          applyTranscript({ chatId: latest.chatId, messages: latest.messages });
         }
       })();
     },
@@ -224,6 +228,17 @@ export function RunExperience({
 
   const applyTranscript = useCallback(
     ({ chatId, messages }: { chatId?: string; messages?: ChatMessage[] | null }) => {
+      const hasRenderableAssistant = (payload: ChatMessage[]) =>
+        payload.some(
+          (message) =>
+            message.role === "assistant" &&
+            (message.parts ?? []).some((part) => {
+              if (!part) return false;
+              if (part.type === "text" || part.type === "reasoning") return true;
+              return typeof part.type === "string" && part.type.startsWith("tool-");
+            })
+        );
+
       if (messages && messages.length > 0) {
         console.log("[RunExperience] applyTranscript received", {
           chatId,
@@ -231,8 +246,10 @@ export function RunExperience({
           ids: messages.map((message) => message.id),
         });
         pendingTranscriptRef.current = messages;
-        setInitialChatMessages(messages);
-        setMessages(messages);
+        if (hasRenderableAssistant(messages)) {
+          setInitialChatMessages(messages);
+          setMessages(messages);
+        }
       }
 
       if (chatId) {
@@ -522,9 +539,29 @@ export function RunExperience({
   console.log(snapshot)
   console.log(report)
 
+  const setReportFromTool = useCallback(
+    (next: EnrichedOrgReport, sourceId?: string | null) => {
+      if (sourceId && reportSourceRef.current === sourceId) {
+        return;
+      }
+      reportSourceRef.current = sourceId ?? null;
+      setReport(next);
+    },
+    [setReport]
+  );
+
+  const reportProviderValue = useMemo(
+    () => ({
+      report,
+      setReportFromTool,
+    }),
+    [report, setReportFromTool]
+  );
+
   return (
-    <TaskMixViewProvider>
-      <div className="space-y-10">
+    <ReportStateProvider value={reportProviderValue}>
+      <TaskMixViewProvider>
+        <div className="space-y-10">
       <header
         className="rounded-[20px] border border-[rgba(38,37,30,0.1)] px-7 py-8 shadow-[0_28px_70px_rgba(34,28,20,0.14)] backdrop-blur-[20px]"
         style={{
@@ -540,7 +577,7 @@ export function RunExperience({
               {companyName || slugifyCompanyName(slug)}
             </h1>
             <p className="text-sm leading-relaxed text-[rgba(38,37,30,0.66)]">
-              Streaming GPT-5 analysis with native web search, O*NET role alignment, and Anthropic automation/augmentation share overlays. Every insight and tool call is captured in real time.
+              Streaming AI analysis with native web search, O*NET role alignment, and AnthropX automation/augmentation share overlays. Every insight and tool call is captured in real time.
             </p>
           </div>
           <div className="flex flex-col items-end gap-3 text-right">
@@ -568,7 +605,7 @@ export function RunExperience({
       </header>
 
       <section className="grid gap-7 lg:grid-cols-[2fr,1fr]">
-        {snapshot.status === "completed" && report ? (
+            {snapshot.status === "completed" && report ? (
           <>
             <div className="flex flex-col gap-5">
               <ReportPreview report={report} />
@@ -648,6 +685,7 @@ export function RunExperience({
         </div>
       )}
       </div>
-    </TaskMixViewProvider>
+      </TaskMixViewProvider>
+    </ReportStateProvider>
   );
 }

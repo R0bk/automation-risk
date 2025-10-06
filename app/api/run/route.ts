@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createOpenAI, OpenAIResponsesProviderOptions } from "@ai-sdk/openai";
+import { createAnthropic, AnthropicProviderOptions, anthropic } from "@ai-sdk/anthropic";
 import {
   JsonToSseTransformStream,
   ToolSet,
@@ -39,6 +40,8 @@ import { enforceRunRateLimit } from "@/lib/rate-limit";
 import { runRequestSchema } from "./schema";
 import { createLongTimeoutFetch } from "@/lib/http/long-timeout-fetch";
 import { generateUUID } from "@/lib/utils";
+import { providerWebTools } from "@/lib/ai/tools/provider-tools";
+import { withEphemeralCacheControl } from "@/lib/http/cache";
 
 export const runtime = "nodejs";
 export const maxDuration = 240;
@@ -52,13 +55,18 @@ if (!openaiApiKey) {
   console.warn("OPENAI_API_KEY is not set. /api/run will fail until configured.");
 }
 
-const openai = openaiApiKey
-  ? createOpenAI({
-      apiKey: openaiApiKey,
-      fetch: createLongTimeoutFetch(THIRTY_MINUTES_IN_MS),
-      ...(openaiBaseUrl ? { baseURL: openaiBaseUrl } : {}),
-    })
-  : null;
+const anthropicProviderOptions: AnthropicProviderOptions = {
+  thinking: { type: "enabled", budgetTokens: 6000 },
+} satisfies AnthropicProviderOptions;
+
+
+const openai = createOpenAI({
+  apiKey: openaiApiKey,
+  fetch: createLongTimeoutFetch(THIRTY_MINUTES_IN_MS),
+  ...(openaiBaseUrl ? { baseURL: openaiBaseUrl } : {}),
+});
+
+const anthropicProvider = createAnthropic({fetch: withEphemeralCacheControl()});
 
 const openaiProviderOptions: OpenAIResponsesProviderOptions = {
   reasoningSummary: "detailed", // 'auto' for condensed or 'detailed' for comprehensive
@@ -180,7 +188,7 @@ export async function POST(request: Request) {
     displayName: companyName,
     hqCountry: hqCountry ?? null,
     inputQuery: companyName,
-    model: "gpt-5",
+    model: "claude-4-5",
   });
 
   await updateAnalysisRunStatus(run.id, "running");
@@ -209,7 +217,6 @@ export async function POST(request: Request) {
     persistedMessageIds.add(message.id);
   }
 
-  const webSearch = openai.tools.webSearch({ searchContextSize: "medium" });
   const onetTools = getOnetRoleTools();
 
   let finalReport: EnrichedOrgReport | null = null;
@@ -231,7 +238,7 @@ export async function POST(request: Request) {
   });
 
   const tools = {
-    web_search: webSearch,
+    ...providerWebTools,
     ...humanTools,
     ...onetTools,
     org_report_finalizer: orgReportCollector,
@@ -282,7 +289,7 @@ export async function POST(request: Request) {
       };
 
       const result = streamText({
-        model: openai("gpt-5-mini"),
+        model: anthropicProvider("claude-sonnet-4-5"), //openai("gpt-5-mini"),
         system: runSystemPrompt({
           companyName,
           companySlug,
@@ -292,7 +299,7 @@ export async function POST(request: Request) {
         prompt: `Target company: ${companyName}`,
         tools,
         maxRetries: 3,
-        providerOptions: { openai: openaiProviderOptions },
+        providerOptions: { openai: openaiProviderOptions, anthropic: anthropicProviderOptions },
         experimental_transform: smoothStream(),
         experimental_repairToolCall: async ({ toolCall, inputSchema }) => {
           const prompt = [

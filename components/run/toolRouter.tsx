@@ -20,7 +20,7 @@ export function isToolPart(part: ChatMessagePart): part is ToolPart {
 
 export function ToolRenderer({ part }: {part: ToolPart}): React.ReactNode {
   if (part.type === "dynamic-tool") {
-    return <WebSearchCard key={part.toolCallId} title={part.toolName} args={part.input} result={part.output} />;
+    return null;
   }
 
   const toolName = part.type.replace("tool-", "");
@@ -49,7 +49,15 @@ export function ToolRenderer({ part }: {part: ToolPart}): React.ReactNode {
         />
       );
     case "tool-web_search":
-      return <WebSearchCard key={fallbackKey} args={part.input} result={part.output} />;
+      return (
+        <WebSearchCard
+          key={fallbackKey}
+          args={part.input}
+          result={part.state === "output-available" ? part.output : undefined}
+          state={part.state}
+          error={part.state === "output-error" ? part.errorText : undefined}
+        />
+      );
     case "tool-org_report_finalizer":
       return (
         <OrgReportFinalizerTool
@@ -58,6 +66,15 @@ export function ToolRenderer({ part }: {part: ToolPart}): React.ReactNode {
         />
       );
     default:
-      return <WebSearchCard key={fallbackKey} args={part.input} result={part.output} title={toolName} />;
+      return (
+        <WebSearchCard
+          key={fallbackKey}
+          args={part.input}
+          result={part.state === "output-available" ? part.output : undefined}
+          state={part.state}
+          error={part.state === "output-error" ? part.errorText : undefined}
+          title={toolName}
+        />
+      );
   }
 }

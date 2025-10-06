@@ -1,11 +1,16 @@
 import { ToolContainer } from "@/components/run/tooling/tool-container";
 import { Globe } from "lucide-react";
+import type { ReactNode } from "react";
 import { z } from "zod";
 
-interface WebSearchCardProps {
+type ToolState = "input-streaming" | "input-available" | "output-available" | "output-error";
+
+export interface WebSearchCardProps {
   args?: unknown;
   result?: unknown;
   title?: string;
+  state?: ToolState;
+  error?: string;
 }
 
 const webSearchActionSchema = z.union([
@@ -21,6 +26,27 @@ const webSearchCallSchema = z.object({
 const webSearchResultSchema = z
   .object({ status: z.string().optional() })
   .catchall(z.unknown());
+
+const anthropicCallSchema = z
+  .object({
+    query: z.string().optional(),
+    url: z.string().optional(),
+    pattern: z.string().optional(),
+    type: z.string().optional(),
+  })
+  .catchall(z.unknown());
+
+const anthropicOutputSchema = z
+  .object({
+    url: z.string().optional(),
+    title: z.string().optional(),
+  })
+  .catchall(z.unknown());
+
+type NormalizedAction =
+  | { kind: "search"; query?: string | null }
+  | { kind: "open"; url?: string | null }
+  | { kind: "find"; url?: string | null; pattern?: string | null };
 
 const parseJson = (value: unknown) => {
   if (typeof value !== "string") return value;
@@ -41,47 +67,162 @@ const parseResult = (value: unknown) => {
   return parsed.success ? parsed.data : null;
 };
 
-const renderAction = (action: z.infer<typeof webSearchActionSchema> | null) => {
-  if (!action) {
-    return "Waiting for web search action...";
+const parseAnthropicCall = (value: unknown) => {
+  const parsed = anthropicCallSchema.safeParse(parseJson(value));
+  return parsed.success ? parsed.data : null;
+};
+
+const parseAnthropicResults = (value: unknown) => {
+  const parsedValue = parseJson(value);
+  if (!Array.isArray(parsedValue)) {
+    return null;
+  }
+  const parsed = z.array(anthropicOutputSchema).safeParse(parsedValue);
+  return parsed.success ? parsed.data : null;
+};
+
+const normalizeWebSearchAction = (args: unknown): NormalizedAction | null => {
+  const call = parseCall(args);
+  const action = call?.action ?? null;
+  if (action) {
+    switch (action.type) {
+      case "search":
+        return { kind: "search", query: action.query ?? undefined };
+      case "open_page":
+        return { kind: "open", url: action.url };
+      case "find":
+        return { kind: "find", url: action.url, pattern: action.pattern };
+      default:
+        return null;
+    }
   }
 
-  switch (action.type) {
-    case "search":
-      return action.query && action.query.length > 0
-        ? <span>Searched <span className="ml-2 font-normal text-xs text-gray-500">{action.query}</span></span>
-        : <span>Search</span>;
-    case "open_page":
-      return <span>Open page <span className="ml-2 font-normal text-xs text-gray-500">{action.url}</span></span>;
+  const anthropicCall = parseAnthropicCall(args);
+  if (!anthropicCall) return null;
+
+  if (anthropicCall.query) {
+    return { kind: "search", query: anthropicCall.query };
+  }
+
+  if (anthropicCall.url && anthropicCall.pattern) {
+    return { kind: "find", url: anthropicCall.url, pattern: anthropicCall.pattern };
+  }
+
+  if (anthropicCall.url) {
+    return { kind: "open", url: anthropicCall.url };
+  }
+
+  return null;
+};
+
+const formatHighlight = (value?: string | null): ReactNode => {
+  if (!value) return null;
+  return (
+    <span className="ml-2 truncate text-xs font-normal text-gray-500">
+      {value}
+    </span>
+  );
+};
+
+const renderAction = (normalized: NormalizedAction | null, state: ToolState): ReactNode => {
+  if (!normalized) {
+    return state === "output-error" ? "Web search failed" : "Web search";
+  }
+
+  switch (normalized.kind) {
+    case "search": {
+      const verb = state === "output-available" ? "Searched" : state === "output-error" ? "Search" : "Searching";
+      return (
+        <span>
+          {verb}
+          {formatHighlight(normalized.query)}
+        </span>
+      );
+    }
+    case "open":
+      return (
+        <span>
+          Open page
+          {formatHighlight(normalized.url)}
+        </span>
+      );
     case "find":
-      return <span>Find <span className="ml-2 font-normal text-xs text-gray-500">{action.pattern}</span> in <span className="ml-2 font-normal text-xs text-gray-500">{action.url}</span></span>;
+      return (
+        <span>
+          Find
+          {formatHighlight(normalized.pattern)}
+          {normalized.url ? (
+            <>
+              <span className="ml-1">in</span>
+              {formatHighlight(normalized.url)}
+            </>
+          ) : null}
+        </span>
+      );
     default:
-      return <span>Web search action</span>;
+      return "Web search";
   }
 };
 
-export function WebSearchCard({ args, result, title = "Web search" }: WebSearchCardProps) {
-  const call = parseCall(args);
-  const action = call?.action ?? null;
-  // const parsedResult = parseResult(result);
-  // const statusLabel = parsedResult?.status ?? (action ? "pending" : undefined);
+const summarizeResults = (
+  state: ToolState,
+  action: NormalizedAction | null,
+  result: unknown,
+  error?: string,
+): string | undefined => {
+  if (state === "output-error") {
+    return error ?? "error";
+  }
+
+  if (state !== "output-available") {
+    return action ? "pending" : undefined;
+  }
+
+  const anthropicResults = parseAnthropicResults(result);
+  if (anthropicResults && anthropicResults.length > 0) {
+    const count = anthropicResults.length;
+    return count === 1 ? "1 result" : `${count} results`;
+  }
+
+  const parsed = parseResult(result);
+  if (parsed?.status) {
+    return parsed.status;
+  }
+
+  return undefined;
+};
+
+export { normalizeWebSearchAction };
+
+export function WebSearchCard({
+  args,
+  result,
+  title = "Web search",
+  state = "input-available",
+  error,
+}: WebSearchCardProps) {
+  const normalizedAction = normalizeWebSearchAction(args);
+  const statusLabel = summarizeResults(state, normalizedAction, result, error);
+  const showTitle = title && title !== "Web search";
 
   return (
-    // <div className="rounded-lg border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.7)] p-2 text-xs text-[rgba(38,37,30,0.68)]">
-    <ToolContainer toolState="input-available">
-      <div className="flex items-center">
-        {/* <span className="font-semibold uppercase tracking-[0.3em] text-[rgba(38,37,30,0.55)]">
-          {title}
-        </span> */}
-        <Globe className="size-3 min-w-3 m-0.5" />
-        <p className="font-medium ml-1">{renderAction(action)}</p>
-        {/* {statusLabel && (
-          <span className="rounded-full bg-[rgba(38,37,30,0.08)] px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-[rgba(38,37,30,0.5)]">
+    <ToolContainer toolState={state}>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <Globe className="m-0.5 size-3 min-w-3" />
+          <p className="ml-1 font-medium">{renderAction(normalizedAction, state)}</p>
+        </div>
+        {statusLabel && (
+          <span className="ml-2 rounded-full bg-[rgba(38,37,30,0.08)] px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-[rgba(38,37,30,0.6)]">
             {statusLabel}
           </span>
-        )} */}
+        )}
       </div>
+      {showTitle && (
+        <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-[rgba(38,37,30,0.45)]">
+          {title}
+        </p>
+      )}
     </ToolContainer>
-    // </div>
   );
 }

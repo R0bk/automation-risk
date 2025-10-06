@@ -101,7 +101,7 @@ export default async function Page() {
             {
               title: "Iterative web intelligence",
               body:
-                "GPT-5 orchestrates up to 100 native web searches to reconstruct org structure with citations in real time.",
+                "AI orchestration can run up to 100 native web searches to reconstruct org structure with citations in real time.",
             },
             {
               title: "O*NET-aligned workforce lens",

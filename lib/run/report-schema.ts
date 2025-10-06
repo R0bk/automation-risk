@@ -99,11 +99,7 @@ export const orgReportSchema = z.object({
   // roles: z.array(orgRoleSchema).max(400),
   aggregations: z.array(aggregationSchema).max(120).optional().default([]),
   visualizationHints: z
-    .object({
-      rootId: z.string().min(1).max(64).optional(),
-      collapsedNodeIds: z.array(z.string().min(1).max(64)).max(200).optional().describe("Leave empty"),
-      highlightRoleIds: z.array(z.string().min(1).max(64)).max(200).optional().describe("O*NET code (e.g. 51-4072)"),
-    })
+    .object({ rootId: z.string().min(1).max(64).optional() })
     .partial()
     .optional(),
 });
