@@ -18,16 +18,17 @@ import clsx from "clsx";
 import "reactflow/dist/style.css";
 
 import { useOrgReportGraph } from "@/hooks/useOrgReportGraph";
-import { buildOrgFlowModel, type OrgFlowNodeData } from "@/lib/run/org-flow-model";
+import { buildOrgFlowModel, type OrgFlowNodeData, type OrgFlowDenseRoleSummary } from "@/lib/run/org-flow-model";
 import { applyLayeredLayout } from "@/lib/run/org-flow-layout";
 import type { EnrichedOrgReport, EnrichedOrgRole } from "@/lib/run/report-schema";
 import { getLayoutedElements } from "@/lib/run/org-flow-layout-dagre";
-import { TaskMixLine } from "./TaskMixLine";
-import { deriveTaskMixForView } from "@/lib/run/task-mix";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { deriveTaskMixCounts, deriveTaskMixShares } from "@/lib/run/task-mix";
 import { useTaskMixView } from "./task-mix-view-context";
 import { DenseOrgNode } from "./DenseOrgNode";
 import { ORG_FLOW_NODE_DEFAULT_HEIGHT, ORG_FLOW_NODE_WIDTH } from "@/lib/run/org-flow-tokens";
 import { DENSE_NODE_HEADCOUNT_FONT_SIZE, DENSE_NODE_MUTED_TEXT_COLOR } from "./org-flow-tokens";
+import { RoleTaskMixItem } from "./RoleTaskMixItem";
 
 const NODE_WIDTH = ORG_FLOW_NODE_WIDTH;
 const LAYOUT_NODE_WIDTH = ORG_FLOW_NODE_WIDTH - 30;
@@ -77,11 +78,6 @@ const OrgNode = ({ id, data }: NodeProps<OrgFlowNodeData>) => {
           <span className="block text-sm font-semibold leading-tight text-[#26251e]" title={label}>
             {label}
           </span>
-          {kind === "roleContainer" && (
-            <span className="text-[10px] uppercase tracking-[0.14em] text-[rgba(38,37,30,0.5)]">
-              Role node
-            </span>
-          )}
           {isCollapsed && (
             <span className="mt-1 inline-flex rounded-full bg-[rgba(38,37,30,0.08)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[rgba(38,37,30,0.6)]">
               Collapsed
@@ -108,26 +104,34 @@ const OrgNode = ({ id, data }: NodeProps<OrgFlowNodeData>) => {
         {augmentationPercent && <span className="font-medium text-[#2d6fce]">Aug {augmentationPercent}</span>}
       </div>
       {roles && roles.length > 0 && (
-        <div className="mt-3 space-y-1">
-          {roles.map((role: EnrichedOrgRole) => {
-            const mix = deriveTaskMixForView(role, view);
+        <TooltipProvider>
+          <div className="mt-3 space-y-2">
+            {roles.map((role: EnrichedOrgRole) => {
+              const summary: OrgFlowDenseRoleSummary = {
+                title: role.title,
+                onetCode: role.onetCode ?? null,
+                headcount: role.headcount ?? null,
+                automationShare: role.automationShare ?? null,
+                augmentationShare: role.augmentationShare ?? null,
+                groupId: role.onetCode ?? role.title,
+                groupLabel: label,
+                groupHeadcount: nodeHeadcount ?? null,
+                taskMixCounts: deriveTaskMixCounts(role),
+                taskMixShares: deriveTaskMixShares(role),
+              };
 
-            return (
-              <div
-                key={role.onetCode ?? role.title}
-                className="rounded-lg bg-[rgba(38,37,30,0.06)] px-2 py-1 text-[11px] text-[rgba(38,37,30,0.75)]"
-              >
-                <div className="font-medium text-[#26251e]">{role.title}</div>
-                {role.onetCode && (
-                  <div className="text-[9px] uppercase tracking-[0.24em] text-[rgba(38,37,30,0.5)]">
-                    {role.onetCode}
-                  </div>
-                )}
-                <TaskMixLine counts={mix} height={2} className="mt-1" />
-              </div>
-            );
-          })}
-        </div>
+              return (
+                <RoleTaskMixItem
+                  key={role.onetCode ?? role.title}
+                  role={summary}
+                  view={view}
+                  nodeHeadcount={nodeHeadcount ?? null}
+                  className="bg-[rgba(38,37,30,0.06)]"
+                />
+              );
+            })}
+          </div>
+        </TooltipProvider>
       )}
       <Handle
         type="source"
@@ -225,6 +229,7 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
+        defaultViewport={{ x: 0, y: 0, zoom: 0.85 }}
         fitView
         minZoom={0.3}
         maxZoom={1.5}
@@ -233,7 +238,6 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
         onEdgesChange={onEdgesChange} 
       >
         <Background gap={24} size={1} color="rgba(38,37,30,0.08)" />
-        {/* <MiniMap nodeStrokeColor={() => "#26251e"} nodeColor={() => "#f7f5ef"} pannable zoomable /> */}
         <Controls showInteractive={false} />
       </ReactFlow>
     </div>

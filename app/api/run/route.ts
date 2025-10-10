@@ -10,6 +10,7 @@ import {
   streamText,
   tool,
 } from "ai";
+import type { StopCondition } from "ai";
 import { z } from "zod";
 import { humanTools } from "@/lib/ai/tools/human-tools";
 import { getOnetRoleTools } from "@/lib/ai/tools/onet-tools";
@@ -56,7 +57,7 @@ if (!openaiApiKey) {
 }
 
 const anthropicProviderOptions: AnthropicProviderOptions = {
-  thinking: { type: "enabled", budgetTokens: 6000 },
+  thinking: { type: "enabled", budgetTokens: 11000 },
 } satisfies AnthropicProviderOptions;
 
 
@@ -220,20 +221,36 @@ export async function POST(request: Request) {
   const onetTools = getOnetRoleTools();
 
   let finalReport: EnrichedOrgReport | null = null;
+  let earlyFinalized = false;
+
+  const persistCompletedRun = async () => {
+    if (!finalReport) return;
+    await updateAnalysisRunResult({
+      runId: run.id,
+      status: "completed",
+      finalReportJson: finalReport,
+    });
+
+    setRunCache({
+      runId: run.id,
+      slug: company.slug,
+      chatId,
+      report: finalReport,
+      updatedAt: Date.now(),
+    });
+  };
 
   const orgReportCollector = tool({
     description:
       "Finalize the organisation automation impact report. Call exactly once after gathering evidence.",
     inputSchema: orgReportSchema,
     execute: async (input) => {
-      try {
-        finalReport = await enrichReportWithJobRoles(input);
-      } catch (error) {
-        console.error("Failed to enrich report with O*NET roles", error);
-        const fallback = enrichedOrgReportSchema.safeParse(input);
-        finalReport = fallback.success ? fallback.data : null;
-      }
-      return { status: "accepted" };
+      const validatedInput = orgReportSchema.parse(input);
+      const enriched = await enrichReportWithJobRoles(validatedInput);
+      finalReport = enriched;
+      await persistCompletedRun();
+      earlyFinalized = true;
+      return { status: "accepted", report: enriched };
     },
   });
 
@@ -244,32 +261,30 @@ export async function POST(request: Request) {
     org_report_finalizer: orgReportCollector,
   } as ToolSet;
 
+  const stopAfterFinalReport: StopCondition<typeof tools> = ({ steps }) =>
+    steps.some((step) =>
+      step.toolResults.some((result) => {
+        if (result.toolName !== "org_report_finalizer") {
+          return false;
+        }
+        const output = result.output as { status?: string } | undefined;
+        return output?.status === "accepted";
+      })
+    );
+
   const uiStream = createUIMessageStream({
     execute: ({ writer }) => {
       let hasFinalized = false;
 
-      const finalizeRun = async (
-        status: "completed" | "failed",
-        message?: string
-      ) => {
+      const finalizeRun = async (status: "completed" | "failed") => {
         if (hasFinalized) return;
         hasFinalized = true;
 
         try {
           if (status === "completed" && finalReport) {
-            await updateAnalysisRunResult({
-              runId: run.id,
-              status: "completed",
-              finalReportJson: finalReport,
-            });
-
-            setRunCache({
-              runId: run.id,
-              slug: company.slug,
-              chatId,
-              report: finalReport,
-              updatedAt: Date.now(),
-            });
+            if (!earlyFinalized) {
+              await persistCompletedRun();
+            }
           } else {
             await updateAnalysisRunResult({
               runId: run.id,
@@ -282,12 +297,6 @@ export async function POST(request: Request) {
         }
       };
 
-      const handleFailure = async (error: unknown) => {
-        const message =
-          error instanceof Error ? error.message : "Unknown error occurred";
-        await finalizeRun("failed", message);
-      };
-
       const result = streamText({
         model: anthropicProvider("claude-sonnet-4-5"), //openai("gpt-5-mini"),
         system: runSystemPrompt({
@@ -295,9 +304,10 @@ export async function POST(request: Request) {
           companySlug,
           hqCountry: hqCountry ?? null,
         }),
-        stopWhen: stepCountIs(30),
+        stopWhen: [stopAfterFinalReport, stepCountIs(30)],
         prompt: `Target company: ${companyName}`,
         tools,
+        maxOutputTokens: 31000,
         maxRetries: 3,
         providerOptions: { openai: openaiProviderOptions, anthropic: anthropicProviderOptions },
         experimental_transform: smoothStream(),
@@ -317,14 +327,12 @@ export async function POST(request: Request) {
           } as const;
         },
         onError: async ({ error }) => {
-          await handleFailure(error);
+          console.error("/api/run stream error", error);
+          await finalizeRun("failed");
         },
         onFinish: async () => {
           if (!finalReport) {
-            await finalizeRun(
-              "failed",
-              "Report generation ended without finalizer call."
-            );
+            await finalizeRun("failed");
             return;
           }
 
@@ -414,7 +422,7 @@ export async function GET(request: Request) {
         slug: entry.slug,
         displayName: entry.displayName,
         status: entry.status,
-        viewCount: entry.viewCount ?? 0,
+        viewCount: entry.viewCount ?? 1,
         updatedAt: entry.updatedAt,
       })),
     });

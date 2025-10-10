@@ -2,12 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { RunExperience } from "@/components/run/run-experience";
 import { SiteFooter } from "@/components/site-footer";
-import {
-  getCompanyBySlug,
-  getLatestRunForCompany,
-  getMessagesByChatId,
-  getRemainingCompanyRuns,
-} from "@/lib/db/queries";
+import { getRunPageDataBySlug } from "@/lib/db/queries";
 import { enrichedOrgReportSchema, type EnrichedOrgReport } from "@/lib/run/report-schema";
 import type { ChatMessage } from "@/lib/types";
 import { convertToUIMessages } from "@/lib/utils";
@@ -34,12 +29,12 @@ export default async function RunPage({ params, searchParams }: RunPageProps) {
   let fallbackDisplayName: string | undefined;
 
   try {
-    const company = await getCompanyBySlug(slug);
-    initialRemainingRuns = await getRemainingCompanyRuns();
+    const { company, remainingRuns, latestRun, messages } = await getRunPageDataBySlug(slug);
+
+    initialRemainingRuns = remainingRuns ?? null;
 
     if (company && !refresh) {
       fallbackDisplayName = company.displayName ?? undefined;
-      const latestRun = await getLatestRunForCompany(company.id);
 
       if (latestRun) {
         initialRunId = latestRun.id;
@@ -56,11 +51,10 @@ export default async function RunPage({ params, searchParams }: RunPageProps) {
           const parsedReport = enrichedOrgReportSchema.safeParse(latestRun.finalReportJson);
           initialReport = parsedReport.success ? parsedReport.data : null;
         }
+      }
 
-        if (latestRun.chatId) {
-          const storedMessages = await getMessagesByChatId({ id: latestRun.chatId });
-          initialMessages = convertToUIMessages(storedMessages);
-        }
+      if (messages.length > 0) {
+        initialMessages = convertToUIMessages(messages);
       }
     }
   } catch (error) {

@@ -100,6 +100,12 @@ export function RunExperience({
   );
   const reportSourceRef = useRef<string | null>(null);
 
+  useEffect(() => {
+    if (initialReport && !reportSourceRef.current) {
+      reportSourceRef.current = "initial";
+    }
+  }, [initialReport]);
+
   const companyName = useMemo(() => {
     if (initialName && initialName.length > 0) {
       return initialName;
@@ -204,14 +210,12 @@ export function RunExperience({
       setSnapshot((prev) => ({ ...prev, status: "completed" }));
       void (async () => {
         await updateRemainingRuns();
+        const shouldHydrateFromApi = reportSourceRef.current == null;
+        if (!shouldHydrateFromApi && snapshot.runId && snapshot.chatId) {
+          return;
+        }
         const latest = await fetchRunBySlug();
         console.log("Latest", latest)
-        if (latest?.finalReportJson && !report) {
-          const parsed = parseReport(latest.finalReportJson);
-          if (parsed) {
-            setReport(parsed);
-          }
-        }
         if (latest?.runId || latest?.chatId) {
           setSnapshot((prev) => ({
             ...prev,
@@ -219,8 +223,17 @@ export function RunExperience({
             chatId: latest?.chatId ?? prev.chatId,
           }));
         }
-        if (latest?.messages) {
-          applyTranscript({ chatId: latest.chatId, messages: latest.messages });
+        if (shouldHydrateFromApi) {
+          if (latest?.finalReportJson) {
+            const parsed = parseReport(latest.finalReportJson);
+            if (parsed) {
+              setReport(parsed);
+              reportSourceRef.current = "api";
+            }
+          }
+          if (latest?.messages) {
+            applyTranscript({ chatId: latest.chatId, messages: latest.messages });
+          }
         }
       })();
     },
@@ -282,6 +295,7 @@ export function RunExperience({
               const parsed = parseReport(data.finalReportJson);
               if (parsed) {
                 setReport(parsed);
+                reportSourceRef.current = "api";
               }
             }
 
@@ -375,6 +389,7 @@ export function RunExperience({
         refresh: override?.refresh ?? refresh,
       };
 
+      reportSourceRef.current = null;
       setReport(null);
       setMessages([]);
       pendingTranscriptRef.current = null;
@@ -442,6 +457,7 @@ export function RunExperience({
             const parsed = parseReport(existing.finalReportJson);
             if (parsed) {
               setReport(parsed);
+              reportSourceRef.current = "api";
             }
             bootstrappedRef.current = true;
             setSnapshot((prev) => ({
@@ -544,7 +560,7 @@ export function RunExperience({
       if (sourceId && reportSourceRef.current === sourceId) {
         return;
       }
-      reportSourceRef.current = sourceId ?? null;
+      reportSourceRef.current = sourceId ?? "tool";
       setReport(next);
     },
     [setReport]
@@ -569,7 +585,7 @@ export function RunExperience({
         }}
       >
         <div className="flex flex-wrap items-start justify-between gap-6">
-          <div className="max-w-[720px] space-y-3">
+          <div className="max-w-[800px] space-y-3">
             <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[rgba(38,37,30,0.6)]">
               Live automation impact run
             </p>
@@ -577,7 +593,10 @@ export function RunExperience({
               {companyName || slugifyCompanyName(slug)}
             </h1>
             <p className="text-sm leading-relaxed text-[rgba(38,37,30,0.66)]">
-              Streaming AI analysis with native web search, O*NET role alignment, and AnthropX automation/augmentation share overlays. Every insight and tool call is captured in real time.
+              Explore potential AI-driven changes across {companyName}'s workforce. Below our AI Analyst approximates their organizational composition and maps identified roles to occupational standards. Allowing us to estimate automation and augmentation opportunities for different positions.
+            </p>
+            <p className="text-sm leading-relaxed text-[rgba(38,37,30,0.66)]">
+              While these are indicative projections rather than precise measurements, they're grounded in real-world data: task-level usage patterns from Claude interactions analyzed in Anthropic's Economic Index.
             </p>
           </div>
           <div className="flex flex-col items-end gap-3 text-right">

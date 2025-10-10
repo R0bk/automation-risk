@@ -3,6 +3,11 @@ import { MostViewedMarketplace } from "@/components/run/most-viewed-marketplace"
 import { TrendingRuns } from "@/components/run/trending-runs";
 import { SiteFooter } from "@/components/site-footer";
 import type { MarketplacePage } from "@/lib/run/marketplace-types";
+import {
+  getRemainingCompanyRuns,
+  listMostViewedRuns,
+  listTrendingRuns,
+} from "@/lib/db/queries";
 
 const LANDING_FOOTER_LINKS = [
   { label: "Home", href: "#top" },
@@ -10,70 +15,56 @@ const LANDING_FOOTER_LINKS = [
   { label: "Marketplace", href: "#marketplace" },
 ];
 
-function resolveBaseUrl() {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
-
-  return baseUrl;
-}
-
-async function fetchSummary() {
-  const baseUrl = resolveBaseUrl();
+export default async function Page() {
+  let remainingRuns: number | null = null;
+  let trending: Array<{
+    runId: string;
+    slug: string | null;
+    displayName: string | null;
+    status: string | null;
+    viewCount: number;
+    updatedAt: string | null;
+  }> = [];
+  let marketplaceInitial: MarketplacePage | null = null;
 
   try {
-    const response = await fetch(`${baseUrl}/api/run?summary=1`, {
-      next: { revalidate: 30 },
-    });
+    const [remainingRunsValue, trendingRows, mostViewed] = await Promise.all([
+      getRemainingCompanyRuns(),
+      listTrendingRuns(8),
+      listMostViewedRuns({ limit: 12, offset: 0 }),
+    ]);
 
-    if (!response.ok) {
-      return null;
-    }
+    remainingRuns = remainingRunsValue ?? null;
 
-    const data = await response.json();
-    return data as {
-      status: string;
-      remainingRuns?: number;
-      trending?: Array<{
-        runId: string;
-        slug: string | null;
-        displayName: string | null;
-        status: string | null;
-        viewCount: number;
-        updatedAt: string | null;
-      }>;
+    trending = trendingRows.map((entry) => ({
+      runId: entry.runId,
+      slug: entry.slug,
+      displayName: entry.displayName,
+      status: entry.status,
+      viewCount: Math.max(entry.viewCount ?? 1, 1),
+      updatedAt: entry.updatedAt?.toString() ?? null,
+    }));
+
+    marketplaceInitial = {
+      runs: mostViewed.runs.map((run) => ({
+        runId: run.runId,
+        slug: run.slug,
+        displayName: run.displayName,
+        status: run.status,
+        viewCount: Math.max(run.viewCount ?? 1, 1),
+        updatedAt: run.updatedAt,
+        hqCountry: run.hqCountry ?? null,
+      })),
+      pagination: {
+        limit: 12,
+        offset: 0,
+        nextOffset: mostViewed.hasMore ? 12 : null,
+        hasMore: mostViewed.hasMore,
+      },
     };
   } catch (error) {
-    console.warn("Failed to load summary", error);
-    return null;
+    console.warn("Failed to load landing data", error);
   }
-}
-
-async function fetchMarketplacePage(limit = 12): Promise<MarketplacePage | null> {
-  const baseUrl = resolveBaseUrl();
-
-  try {
-    const response = await fetch(`${baseUrl}/api/run/marketplace?limit=${limit}`, {
-      next: { revalidate: 60 },
-    });
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = (await response.json()) as MarketplacePage;
-    return data;
-  } catch (error) {
-    console.warn("Failed to load marketplace page", error);
-    return null;
-  }
-}
-
-export default async function Page() {
-  const summary = await fetchSummary();
-  const remainingRuns = summary?.remainingRuns ?? null;
-  const trending = summary?.trending ?? [];
-  const marketplaceInitial = await fetchMarketplacePage();
 
   return (
     <div

@@ -57,7 +57,7 @@ export function TrendingRuns({ runs }: TrendingRunsProps) {
                   <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.28em] text-[rgba(38,37,30,0.5)]">
                     <span>{statusLabel}</span>
                     <span className="font-mono text-[11px] text-[rgba(38,37,30,0.45)]">
-                      {run.viewCount?.toLocaleString() ?? "0"} views
+                      {run.viewCount.toLocaleString()} views
                     </span>
                   </div>
                   <div className="mt-4 text-lg font-semibold text-[#26251e]">
