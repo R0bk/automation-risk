@@ -47,7 +47,8 @@ type OnetRoleMetricsPayload = {
   }[];
 };
 
-type ToolTask = NonNullable<OnetRoleMetricsPayload["roles"]>[number]["tasks"][number];
+type RoleItem = NonNullable<OnetRoleMetricsPayload["roles"]>[number];
+type ToolTask = NonNullable<RoleItem["tasks"]>[number];
 
 const AUTOMATION_METRICS: MetricName[] = ["Automation", "Directive", "Feedback"];
 const AUGMENTATION_METRICS: MetricName[] = ["Augmentation", "Task Iteration", "Validation", "Learning"];
