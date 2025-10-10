@@ -1,0 +1,52 @@
+--- a/node_modules/ai/dist/index.js
++++ b/node_modules/ai/dist/index.js
+@@ -5893,16 +5893,21 @@
+                 }
+               } else if (isToolUIPart(part)) {
+                 const toolName = getToolName(part);
++                const isProviderManagedTool = toolName === "web_search" || toolName === "web_fetch" || toolName === "code_execution";
++                const providerExecuted = part.providerExecuted === true || isProviderManagedTool && (part.state === "output-available" || part.state === "output-error");
++                if (providerExecuted && part.providerExecuted !== true) {
++                  part.providerExecuted = true;
++                }
+                 if (part.state !== "input-streaming") {
+                   content.push({
+                     type: "tool-call",
+                     toolCallId: part.toolCallId,
+                     toolName,
+                     input: part.state === "output-error" ? (_a17 = part.input) != null ? _a17 : part.rawInput : part.input,
+-                    providerExecuted: part.providerExecuted,
++                    providerExecuted,
+                     ...part.callProviderMetadata != null ? { providerOptions: part.callProviderMetadata } : {}
+                   });
+-                  if (part.providerExecuted === true && (part.state === "output-available" || part.state === "output-error")) {
++                  if (providerExecuted === true && (part.state === "output-available" || part.state === "output-error")) {
+                     content.push({
+                       type: "tool-result",
+                       toolCallId: part.toolCallId,
+--- a/node_modules/ai/dist/index.mjs
++++ b/node_modules/ai/dist/index.mjs
+@@ -5830,16 +5830,21 @@
+                 }
+               } else if (isToolUIPart(part)) {
+                 const toolName = getToolName(part);
++                const isProviderManagedTool = toolName === "web_search" || toolName === "web_fetch" || toolName === "code_execution";
++                const providerExecuted = part.providerExecuted === true || isProviderManagedTool && (part.state === "output-available" || part.state === "output-error");
++                if (providerExecuted && part.providerExecuted !== true) {
++                  part.providerExecuted = true;
++                }
+                 if (part.state !== "input-streaming") {
+                   content.push({
+                     type: "tool-call",
+                     toolCallId: part.toolCallId,
+                     toolName,
+                     input: part.state === "output-error" ? (_a17 = part.input) != null ? _a17 : part.rawInput : part.input,
+-                    providerExecuted: part.providerExecuted,
++                    providerExecuted,
+                     ...part.callProviderMetadata != null ? { providerOptions: part.callProviderMetadata } : {}
+                   });
+-                  if (part.providerExecuted === true && (part.state === "output-available" || part.state === "output-error")) {
++                  if (providerExecuted === true && (part.state === "output-available" || part.state === "output-error")) {
+                     content.push({
+                       type: "tool-result",
+                       toolCallId: part.toolCallId,
