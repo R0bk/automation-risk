@@ -47,7 +47,8 @@ export function ReportPreview({ report }: ReportPreviewProps) {
           {report.metadata.summary}
         </p>
       )}
-      <div id="org-chart" className="-mx-6">
+      {/* TODO: Dont do neg margin tricks for mobile */}
+      <div id="org-chart" className="-ml-[340px] -mr-[340px] mt-6 rounded-[32px] border bg-[rgba(244,243,239,0.96)] border-[rgba(38,37,30,0.1)] shadow-[0_26px_65px_rgba(34,28,20,0.14)] backdrop-blur-[18px] overflow-hidden"> {/* -mx-6 */}
         <OrgFlowChart report={report} />
       </div>
 

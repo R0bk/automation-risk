@@ -244,6 +244,82 @@ export async function getRemainingCompanyRuns() {
   }
 }
 
+export async function getRunPageDataBySlug(slug: string) {
+  try {
+    return await db.transaction(async (tx) => {
+      const startedAt = Date.now();
+
+      const [companyRow] = await tx
+        .select({
+          company,
+          remainingRuns: globalBudget.remainingRuns,
+        })
+        .from(company)
+        .leftJoin(globalBudget, eq(globalBudget.key, COMPANY_BUDGET_KEY))
+        .where(eq(company.slug, slug))
+        .limit(1);
+      const afterCompanyMs = Date.now() - startedAt;
+
+      const companyRecord = companyRow?.company ?? null;
+      const remainingRunsValue = companyRow?.remainingRuns ?? 0;
+
+      let latestRunRecord: AnalysisRunRecord | null = null;
+      let messagesForRun: typeof message.$inferSelect[] = [];
+      let latestRunDurationMs = 0;
+      let messagesDurationMs = 0;
+
+      if (companyRecord) {
+        const beforeRun = Date.now();
+        const [latestRun] = await tx
+          .select()
+          .from(analysisRun)
+          .where(eq(analysisRun.companyId, companyRecord.id))
+          .orderBy(desc(analysisRun.createdAt))
+          .limit(1);
+        latestRunDurationMs = Date.now() - beforeRun;
+
+        latestRunRecord = latestRun ?? null;
+
+        if (latestRun?.chatId) {
+          const beforeMessages = Date.now();
+          messagesForRun = await tx
+            .select()
+            .from(message)
+            .where(eq(message.chatId, latestRun.chatId))
+            .orderBy(asc(message.createdAt));
+          messagesDurationMs = Date.now() - beforeMessages;
+        }
+      }
+
+      const durationMs = Date.now() - startedAt;
+      console.log("[getRunPageDataBySlug] timings", {
+        slug,
+        companyMs: afterCompanyMs,
+        latestRunMs: latestRunDurationMs,
+        messagesMs: messagesDurationMs,
+        messageCount: messagesForRun.length,
+        totalMs: durationMs,
+      });
+
+      return {
+        company: companyRecord,
+        remainingRuns: remainingRunsValue,
+        latestRun: latestRunRecord,
+        messages: messagesForRun,
+      };
+    });
+  } catch (_error) {
+    console.error("[getRunPageDataBySlug] failed", {
+      slug,
+      error: _error,
+    });
+    throw new ChatSDKError(
+      "bad_request:database",
+      "Failed to load run page data"
+    );
+  }
+}
+
 export async function setRemainingCompanyRuns(value: number) {
   try {
     const now = new Date();

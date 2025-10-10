@@ -4,7 +4,7 @@ import type { AppUsage } from "./usage";
 import type { getOnetRoleTools } from "@/lib/ai/tools/onet-tools";
 import type { humanTools } from "@/lib/ai/tools/human-tools";
 import { openai } from "@ai-sdk/openai";
-import { orgReportSchema } from "./run/report-schema";
+import { enrichedOrgReportSchema, orgReportSchema } from "./run/report-schema";
 
 export type DataPart = { type: "append-message"; message: string };
 
@@ -17,7 +17,10 @@ export type MessageMetadata = z.infer<typeof messageMetadataSchema>;
 type OnetRoleTools = InferUITools<ReturnType<typeof getOnetRoleTools>>;
 type HumanTools = InferUITools<typeof humanTools>;
 type WebSearchTool = InferUITool<ReturnType<typeof openai.tools.webSearch>>;
-type OrgReportFinalizeTool = Tool<z.infer<typeof orgReportSchema>, { status: string }>;
+type OrgReportFinalizeTool = Tool<
+  z.infer<typeof orgReportSchema>,
+  { status: string; report?: z.infer<typeof enrichedOrgReportSchema> }
+>;
 
 export type ChatTools = {
   onet_role_metrics: OnetRoleTools["onet_role_metrics"];

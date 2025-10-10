@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ReactFlow, {
   Background,
   Controls,
@@ -23,6 +23,7 @@ import { applyLayeredLayout } from "@/lib/run/org-flow-layout";
 import type { EnrichedOrgReport, EnrichedOrgRole } from "@/lib/run/report-schema";
 import { getLayoutedElements } from "@/lib/run/org-flow-layout-dagre";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 import { deriveTaskMixCounts, deriveTaskMixShares } from "@/lib/run/task-mix";
 import { useTaskMixView } from "./task-mix-view-context";
 import { DenseOrgNode } from "./DenseOrgNode";
@@ -145,9 +146,41 @@ const OrgNode = ({ id, data }: NodeProps<OrgFlowNodeData>) => {
 
 const defaultNodeTypes = { orgNode: OrgNode, denseOrgNode: DenseOrgNode };
 
+const LEVEL_OPTIONS = [1, 2, 3, 4] as const;
+
 export function OrgFlowChart({ report }: OrgFlowChartProps) {
   const graph = useOrgReportGraph(report);
   const nodeTypes = useMemo(() => defaultNodeTypes, []);
+  const [maxVisibleLevel, setMaxVisibleLevel] = useState<number>(1);
+
+  const maxGraphLevel = useMemo(() => {
+    if (!graph) return 1;
+    let maxLevel = 1;
+    graph.nodes.forEach((node) => {
+      const level = node.data.level ?? 0;
+      if (level > maxLevel) {
+        maxLevel = level;
+      }
+    });
+    return maxLevel;
+  }, [graph]);
+
+  useEffect(() => {
+    if (!graph) {
+      return;
+    }
+
+    const availableLevels = LEVEL_OPTIONS.filter((level) => level <= maxGraphLevel);
+    const fallbackLevel =
+      availableLevels.length > 0 ? availableLevels[availableLevels.length - 1] : LEVEL_OPTIONS[0];
+
+    setMaxVisibleLevel((current) => {
+      if (current > fallbackLevel) {
+        return fallbackLevel;
+      }
+      return current;
+    });
+  }, [graph, maxGraphLevel]);
 
   const { initialNodes, initialEdges } = useMemo(() => {
     if (!graph) {
@@ -158,6 +191,7 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
       direction: "TB",
       engine: "dagre",
       maxRolesPerNode: 20,
+      maxVisibleLevel,
     });
 
     if (process.env.NODE_ENV !== "production") {
@@ -201,7 +235,7 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
     }
 
     return { initialNodes: nodes, initialEdges: edges };
-  }, [graph]);
+  }, [graph, maxVisibleLevel]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -223,19 +257,46 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
   }
 
   return (
-    // <div className="h-[600px] w-full rounded-3xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.4)]">
-    <div className="h-[1200px] w-full">
+    <div className="relative h-[900px] w-full">
+      <div className="pointer-events-auto absolute right-4 top-6 z-20 flex flex-col gap-2">
+        {LEVEL_OPTIONS.map((level) => {
+          const disabled = level > maxGraphLevel;
+          const isActive = maxVisibleLevel === level;
+          return (
+            <Button
+              key={level}
+              size="sm"
+              variant="ghost"
+              onClick={() => setMaxVisibleLevel(level)}
+              disabled={disabled}
+              aria-pressed={isActive}
+              className={clsx(
+                "min-w-[56px] rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] transition",
+                "backdrop-blur-[14px] shadow-[0_18px_40px_rgba(34,28,20,0.12)]",
+                "text-[rgba(38,37,30,0.68)] border-[rgba(38,37,30,0.14)] bg-[rgba(244,242,236,0.48)]",
+                "hover:border-[rgba(38,37,30,0.24)] hover:bg-[rgba(254,252,247,0.72)]",
+                isActive &&
+                  "border-[rgba(207,45,86,0.38)] bg-[rgba(255,252,247,0.9)] text-[#26251e] shadow-[0_22px_48px_rgba(34,28,20,0.18)]",
+                disabled && "cursor-not-allowed opacity-40 hover:border-[rgba(38,37,30,0.14)] hover:bg-[rgba(244,242,236,0.48)]"
+              )}
+            >
+              L{level}
+            </Button>
+          );
+        })}
+      </div>
       <ReactFlow
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
         defaultViewport={{ x: 0, y: 0, zoom: 0.85 }}
-        fitView
+        // fitView
         minZoom={0.3}
         maxZoom={1.5}
         nodesDraggable={false}
+        zoomOnScroll={false}
         onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange} 
+        onEdgesChange={onEdgesChange}
       >
         <Background gap={24} size={1} color="rgba(38,37,30,0.08)" />
         <Controls showInteractive={false} />
