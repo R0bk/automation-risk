@@ -1,6 +1,6 @@
 import onetDataJson from "@/data/onet/onetData.json" assert { type: "json" };
 import onetRoleCodesJson from "@/data/onet/onetRoleCodes.json" assert { type: "json" };
-import onetCrosswalksJson from "@/data/onet/onetCrosswalks.json" assert { type: "json" };
+// import onetCrosswalksJson from "@/data/onet/onetCrosswalks.json" assert { type: "json" };
 
 const METRIC_KEYS = [
   "automation_pct",
@@ -61,12 +61,12 @@ export interface OnetCatalogRole {
 
 const onetHierarchy: OnetHierarchy = onetDataJson as OnetHierarchy;
 const roleCodes: RoleCodeMap = onetRoleCodesJson as RoleCodeMap;
-const crosswalks = onetCrosswalksJson as Array<{
-  code: string;
-  title: string;
-  normalizedTitle: string;
-  sourceTitles: string[];
-}>;
+// const crosswalks = onetCrosswalksJson as Array<{
+//   code: string;
+//   title: string;
+//   normalizedTitle: string;
+//   sourceTitles: string[];
+// }>;
 
 function normalizeRole(value: string | undefined): string {
   return value?.trim().toLowerCase() ?? "";
@@ -236,81 +236,81 @@ export function loadOnetCatalog(): OnetCatalogRole[] {
     }
   }
 
-  for (const alias of crosswalks) {
-    if (catalog.some((role) => role.code === alias.code)) {
-      continue;
-    }
+  // for (const alias of crosswalks) {
+  //   if (catalog.some((role) => role.code === alias.code)) {
+  //     continue;
+  //   }
 
-    const sources = alias.sourceTitles
-      .map((title) => byNormalizedTitle.get(title))
-      .filter((role): role is OnetCatalogRole => Boolean(role));
+  //   const sources = alias.sourceTitles
+  //     .map((title) => byNormalizedTitle.get(title))
+  //     .filter((role): role is OnetCatalogRole => Boolean(role));
 
-    if (sources.length === 0) {
-      continue;
-    }
+  //   if (sources.length === 0) {
+  //     continue;
+  //   }
 
-    const metrics: Partial<Record<MetricKey, number>> = {};
-    let automationCount = 0;
-    let augmentationCount = 0;
-    let totalCount = 0;
-    let automationTasks = 0;
-    let augmentationTasks = 0;
-    let manualTasks = 0;
+  //   const metrics: Partial<Record<MetricKey, number>> = {};
+  //   let automationCount = 0;
+  //   let augmentationCount = 0;
+  //   let totalCount = 0;
+  //   let automationTasks = 0;
+  //   let augmentationTasks = 0;
+  //   let manualTasks = 0;
 
-    for (const key of METRIC_KEYS) {
-      const values = sources
-        .map((role) => role.metrics.metrics?.[key] ?? null)
-        .filter((value): value is number => value != null);
+  //   for (const key of METRIC_KEYS) {
+  //     const values = sources
+  //       .map((role) => role.metrics.metrics?.[key] ?? null)
+  //       .filter((value): value is number => value != null);
 
-      if (!values.length) {
-        continue;
-      }
+  //     if (!values.length) {
+  //       continue;
+  //     }
 
-      const average = values.reduce((sum, value) => sum + value, 0) / values.length;
-      metrics[key] = round(average);
-    }
+  //     const average = values.reduce((sum, value) => sum + value, 0) / values.length;
+  //     metrics[key] = round(average);
+  //   }
 
-    const coverages = sources
-      .map((role) => role.metrics.coverage)
-      .filter((value): value is number => value != null);
-    const coverageAvg = coverages.length
-      ? round(coverages.reduce((sum, value) => sum + value, 0) / coverages.length)
-      : null;
+  //   const coverages = sources
+  //     .map((role) => role.metrics.coverage)
+  //     .filter((value): value is number => value != null);
+  //   const coverageAvg = coverages.length
+  //     ? round(coverages.reduce((sum, value) => sum + value, 0) / coverages.length)
+  //     : null;
 
-    const taskCount = sources.reduce((sum, role) => sum + role.metrics.taskCount, 0);
-    const parentCluster = sources.find((role) => role.parentCluster)?.parentCluster ?? null;
+  //   const taskCount = sources.reduce((sum, role) => sum + role.metrics.taskCount, 0);
+  //   const parentCluster = sources.find((role) => role.parentCluster)?.parentCluster ?? null;
 
-    for (const source of sources) {
-      automationCount += source.metrics.automationCount;
-      augmentationCount += source.metrics.augmentationCount;
-      totalCount += source.metrics.totalCount;
-      automationTasks += source.metrics.automationTasks;
-      augmentationTasks += source.metrics.augmentationTasks;
-      manualTasks += source.metrics.manualTasks;
-    }
+  //   for (const source of sources) {
+  //     automationCount += source.metrics.automationCount;
+  //     augmentationCount += source.metrics.augmentationCount;
+  //     totalCount += source.metrics.totalCount;
+  //     automationTasks += source.metrics.automationTasks;
+  //     augmentationTasks += source.metrics.augmentationTasks;
+  //     manualTasks += source.metrics.manualTasks;
+  //   }
 
-    const compositeRole: OnetCatalogRole = {
-      code: alias.code,
-      title: alias.title,
-      normalizedTitle: alias.normalizedTitle,
-      parentCluster,
-      metrics: {
-        automationCount,
-        augmentationCount,
-        manualCount: Math.max(totalCount - automationCount - augmentationCount, 0),
-        totalCount,
-        coverage: coverageAvg,
-        taskCount,
-        metrics: Object.keys(metrics).length > 0 ? metrics : null,
-        automationTasks,
-        augmentationTasks,
-        manualTasks,
-      },
-    };
+  //   const compositeRole: OnetCatalogRole = {
+  //     code: alias.code,
+  //     title: alias.title,
+  //     normalizedTitle: alias.normalizedTitle,
+  //     parentCluster,
+  //     metrics: {
+  //       automationCount,
+  //       augmentationCount,
+  //       manualCount: Math.max(totalCount - automationCount - augmentationCount, 0),
+  //       totalCount,
+  //       coverage: coverageAvg,
+  //       taskCount,
+  //       metrics: Object.keys(metrics).length > 0 ? metrics : null,
+  //       automationTasks,
+  //       augmentationTasks,
+  //       manualTasks,
+  //     },
+  //   };
 
-    catalog.push(compositeRole);
-    byNormalizedTitle.set(alias.normalizedTitle, compositeRole);
-  }
+  //   catalog.push(compositeRole);
+  //   byNormalizedTitle.set(alias.normalizedTitle, compositeRole);
+  // }
 
   cachedCatalog = catalog;
   return catalog;
