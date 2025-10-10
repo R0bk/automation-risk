@@ -16,7 +16,9 @@ export type Surface =
   | "vote"
   | "document"
   | "suggestions"
-  | "activate_gateway";
+  | "activate_gateway"
+  | "budget"
+  | "budget_exhausted";
 
 export type ErrorCode = `${ErrorType}:${Surface}`;
 
@@ -33,6 +35,8 @@ export const visibilityBySurface: Record<Surface, ErrorVisibility> = {
   document: "response",
   suggestions: "response",
   activate_gateway: "response",
+  budget: "response",
+  budget_exhausted: "response",
 };
 
 export class ChatSDKError extends Error {
@@ -111,6 +115,11 @@ export function getMessageByErrorCode(errorCode: ErrorCode): string {
       return "You need to sign in to view this document. Please sign in and try again.";
     case "bad_request:document":
       return "The request to create or update the document was invalid. Please check your input and try again.";
+
+    case "not_found:budget":
+      return "The global budget counter is not configured.";
+    case "forbidden:budget_exhausted":
+      return "No remaining company runs. Please try again later.";
 
     default:
       return "Something went wrong. Please try again later.";

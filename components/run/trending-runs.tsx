@@ -43,38 +43,75 @@ export function TrendingRuns({ runs }: TrendingRunsProps) {
                 ? new Date(run.updatedAt).toLocaleDateString()
                 : "Awaiting first run";
               const isPlaceholder = run.runId.startsWith("placeholder");
-              const CardComponent = isPlaceholder ? "div" : Link;
 
-              return (
-                <CardComponent
+              return isPlaceholder ? (
+                <div
                   key={run.runId}
-                  {...(!isPlaceholder ? { href: `/run/${slug}` } : {})}
                   className="group min-w-[260px] rounded-[18px] border border-[rgba(38,37,30,0.1)] px-5 py-6 shadow-[0_20px_48px_rgba(34,28,20,0.14)] transition hover:border-[rgba(38,37,30,0.18)] hover:shadow-[0_26px_58px_rgba(34,28,20,0.18)]"
                   style={{
                     backgroundImage: "linear-gradient(150deg, rgba(242,241,237,0.94), rgba(235,233,227,0.88))",
                   }}
                 >
-                  <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.28em] text-[rgba(38,37,30,0.5)]">
-                    <span>{statusLabel}</span>
-                    <span className="font-mono text-[11px] text-[rgba(38,37,30,0.45)]">
-                      {run.viewCount.toLocaleString()} views
-                    </span>
-                  </div>
-                  <div className="mt-4 text-lg font-semibold text-[#26251e]">
-                    {title}
-                  </div>
-                  <div className="mt-2 text-xs text-[rgba(38,37,30,0.55)]">Updated {updatedCaption}</div>
-                  <div className="mt-6 flex items-center justify-between text-xs text-[rgba(38,37,30,0.45)]">
-                    <span>{isPlaceholder ? "Waiting for first run" : "Open report"}</span>
-                    <span className="text-[#f54e00] transition group-hover:text-[#ff9440]">→</span>
-                  </div>
-                </CardComponent>
+                  <CardContent
+                    statusLabel={statusLabel}
+                    title={title}
+                    updatedCaption={updatedCaption}
+                    views={run.viewCount}
+                    cta="Waiting for first run"
+                  />
+                </div>
+              ) : (
+                <Link
+                  key={run.runId}
+                  href={`/run/${slug}`}
+                  className="group min-w-[260px] rounded-[18px] border border-[rgba(38,37,30,0.1)] px-5 py-6 shadow-[0_20px_48px_rgba(34,28,20,0.14)] transition hover:border-[rgba(38,37,30,0.18)] hover:shadow-[0_26px_58px_rgba(34,28,20,0.18)]"
+                  style={{
+                    backgroundImage: "linear-gradient(150deg, rgba(242,241,237,0.94), rgba(235,233,227,0.88))",
+                  }}
+                >
+                  <CardContent
+                    statusLabel={statusLabel}
+                    title={title}
+                    updatedCaption={updatedCaption}
+                    views={run.viewCount}
+                    cta="Open report"
+                  />
+                </Link>
               );
             })}
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function CardContent({
+  statusLabel,
+  title,
+  updatedCaption,
+  views,
+  cta,
+}: {
+  statusLabel: string;
+  title: string;
+  updatedCaption: string;
+  views: number;
+  cta: string;
+}) {
+  return (
+    <>
+      <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.28em] text-[rgba(38,37,30,0.5)]">
+        <span>{statusLabel}</span>
+        <span className="font-mono text-[11px] text-[rgba(38,37,30,0.45)]">{views.toLocaleString()} views</span>
+      </div>
+      <div className="mt-4 text-lg font-semibold text-[#26251e]">{title}</div>
+      <div className="mt-2 text-xs text-[rgba(38,37,30,0.55)]">Updated {updatedCaption}</div>
+      <div className="mt-6 flex items-center justify-between text-xs text-[rgba(38,37,30,0.45)]">
+        <span>{cta}</span>
+        <span className="text-[#f54e00] transition group-hover:text-[#ff9440]">→</span>
+      </div>
+    </>
   );
 }
 

@@ -74,8 +74,9 @@ export function createLongTimeoutFetch(timeoutMs: number): typeof fetch {
           }
         }
 
+        const body = Readable.toWeb(res) as unknown as ReadableStream<Uint8Array>;
         resolve(
-          new Response(Readable.toWeb(res), {
+          new Response(body, {
             status,
             statusText,
             headers: responseHeaders,

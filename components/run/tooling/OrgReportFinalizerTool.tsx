@@ -27,19 +27,20 @@ export const OrgReportFinalizerTool: React.FC<{ toolCall: OrgReportFinalizerTool
     : fallback?.success
     ? fallback.data
     : null;
+  const enrichedReport = enrichedOutput?.success ? enrichedOutput.data : null;
   const { setReportFromTool } = useReportState();
   const hasPublishedRef = useRef(false);
 
   useEffect(() => {
-    if (toolCall.state === "output-available" && report && !hasPublishedRef.current) {
-      const hasStructure = (report.hierarchy?.length ?? 0) > 0;
-      const hasRoles = (report.roles?.length ?? 0) > 0;
+    if (toolCall.state === "output-available" && enrichedReport && !hasPublishedRef.current) {
+      const hasStructure = (enrichedReport.hierarchy?.length ?? 0) > 0;
+      const hasRoles = (enrichedReport.roles?.length ?? 0) > 0;
       if (hasStructure || hasRoles) {
-        setReportFromTool(report as EnrichedOrgReport, toolCall.toolCallId ?? null);
+        setReportFromTool(enrichedReport, toolCall.toolCallId ?? null);
         hasPublishedRef.current = true;
       }
     }
-  }, [report, setReportFromTool, toolCall.state, toolCall.toolCallId]);
+  }, [enrichedReport, setReportFromTool, toolCall.state, toolCall.toolCallId]);
 
   return (
     <AnimatePresence mode="wait">

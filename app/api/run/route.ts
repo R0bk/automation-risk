@@ -43,6 +43,7 @@ import { createLongTimeoutFetch } from "@/lib/http/long-timeout-fetch";
 import { generateUUID } from "@/lib/utils";
 import { providerWebTools } from "@/lib/ai/tools/provider-tools";
 import { withEphemeralCacheControl } from "@/lib/http/cache";
+import type { ChatMessage } from "@/lib/types";
 
 export const runtime = "nodejs";
 export const maxDuration = 240;
@@ -87,10 +88,6 @@ function getClientIp(request: Request) {
 }
 
 export async function POST(request: Request) {
-  if (!openai) {
-    return new ChatSDKError("server_error:api", "OpenAI configuration missing").toResponse();
-  }
-
   let body: z.infer<typeof runRequestSchema>;
 
   try {
@@ -272,7 +269,7 @@ export async function POST(request: Request) {
       })
     );
 
-  const uiStream = createUIMessageStream({
+  const uiStream = createUIMessageStream<ChatMessage>({
     execute: ({ writer }) => {
       let hasFinalized = false;
 
