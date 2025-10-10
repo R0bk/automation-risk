@@ -1,14 +1,16 @@
---- a/node_modules/@ai-sdk/anthropic/dist/index.js
-+++ b/node_modules/@ai-sdk/anthropic/dist/index.js
-@@ -651,10 +651,20 @@
-                 }
-                 let handledServerToolResult = false;
-                 if (part.toolName === "code_execution") {
+--- a/node_modules/@ai-sdk/anthropic/dist/index.js	2025-10-10 23:31:46
++++ b/node_modules/@ai-sdk/anthropic/dist/index.js	2025-10-10 23:49:16
+@@ -609,6 +609,114 @@
+                 const isLastPart = i2 === content.length - 1;
+                 const cacheControl = (_d = getCacheControl(part.providerOptions)) != null ? _d : isLastPart ? getCacheControl(message.providerOptions) : void 0;
+                 const output = part.output;
++                let handledServerToolResult = false;
++                if (part.toolName === "code_execution") {
 +                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
++                  if (output.type !== "json") {
++                    warnings.push({
++                      type: "other",
++                      message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
 +                    });
 +                    anthropicContent.push({
 +                      type: "code_execution_tool_result",
@@ -18,18 +20,28 @@
 +                        error_code: errorCode
 +                      },
 +                      cache_control: cacheControl
-                     });
-                     handledServerToolResult = true;
-                   } else {
-@@ -676,10 +686,20 @@
-                   }
-                 }
-                 if (part.toolName === "web_fetch") {
++                    });
++                    handledServerToolResult = true;
++                  }
++                  const codeExecutionOutput = codeExecution_20250522OutputSchema.parse(output.value);
++                  anthropicContent.push({
++                    type: "code_execution_tool_result",
++                    tool_use_id: part.toolCallId,
++                    content: {
++                      type: codeExecutionOutput.type,
++                      stdout: codeExecutionOutput.stdout,
++                      stderr: codeExecutionOutput.stderr,
++                      return_code: codeExecutionOutput.return_code
++                    },
++                    cache_control: cacheControl
++                  });
++                  handledServerToolResult = true;
++                } else if (part.toolName === "web_fetch") {
 +                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
++                  if (output.type !== "json") {
++                    warnings.push({
++                      type: "other",
++                      message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
 +                    });
 +                    anthropicContent.push({
 +                      type: "web_fetch_tool_result",
@@ -39,18 +51,37 @@
 +                        error_code: errorCode
 +                      },
 +                      cache_control: cacheControl
-                     });
-                     handledServerToolResult = true;
-                   } else {
-@@ -710,10 +730,20 @@
-                   }
-                 }
-                 if (part.toolName === "web_search") {
++                    });
++                    handledServerToolResult = true;
++                  }
++                  const webFetchOutput = webFetch_20250910OutputSchema.parse(output.value);
++                  anthropicContent.push({
++                    type: "web_fetch_tool_result",
++                    tool_use_id: part.toolCallId,
++                    content: {
++                      type: "web_fetch_result",
++                      url: webFetchOutput.url,
++                      retrieved_at: webFetchOutput.retrievedAt,
++                      content: {
++                        type: "document",
++                        title: webFetchOutput.content.title,
++                        citations: webFetchOutput.content.citations,
++                        source: {
++                          type: webFetchOutput.content.source.type,
++                          media_type: webFetchOutput.content.source.mediaType,
++                          data: webFetchOutput.content.source.data
++                        }
++                      }
++                    },
++                    cache_control: cacheControl
++                  });
++                  handledServerToolResult = true;
++                } else if (part.toolName === "web_search") {
 +                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
++                  if (output.type !== "json") {
++                    warnings.push({
++                      type: "other",
++                      message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
 +                    });
 +                    anthropicContent.push({
 +                      type: "web_search_tool_result",
@@ -60,18 +91,50 @@
 +                        error_code: errorCode
 +                      },
 +                      cache_control: cacheControl
-                     });
-                     handledServerToolResult = true;
-                   } else {
-@@ -852,10 +882,20 @@
-               case "tool-result": {
-                 if (part.toolName === "code_execution") {
-                   const output = part.output;
++                    });
++                    handledServerToolResult = true;
++                  }
++                  const webSearchOutput = webSearch_20250305OutputSchema.parse(output.value);
++                  anthropicContent.push({
++                    type: "web_search_tool_result",
++                    tool_use_id: part.toolCallId,
++                    content: webSearchOutput.map((result) => ({
++                      url: result.url,
++                      title: result.title,
++                      page_age: result.pageAge,
++                      encrypted_content: result.encryptedContent,
++                      type: result.type
++                    })),
++                    cache_control: cacheControl
++                  });
++                  handledServerToolResult = true;
++                }
++                if (handledServerToolResult) {
++                  continue;
++                }
+                 let contentValue;
+                 switch (output.type) {
+                   case "content":
+@@ -2470,4 +2578,4 @@
+   anthropic,
+   createAnthropic
+ });
+-//# sourceMappingURL=index.js.map
+\ No newline at end of file
++//# sourceMappingURL=index.js.map
+--- a/node_modules/@ai-sdk/anthropic/dist/index.mjs	2025-10-10 23:31:46
++++ b/node_modules/@ai-sdk/anthropic/dist/index.mjs	2025-10-10 23:49:30
+@@ -592,6 +592,114 @@
+                 const isLastPart = i2 === content.length - 1;
+                 const cacheControl = (_d = getCacheControl(part.providerOptions)) != null ? _d : isLastPart ? getCacheControl(message.providerOptions) : void 0;
+                 const output = part.output;
++                let handledServerToolResult = false;
++                if (part.toolName === "code_execution") {
 +                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider executed tool result output type ${output.type} for tool ${part.toolName} is not supported`
++                  if (output.type !== "json") {
++                    warnings.push({
++                      type: "other",
++                      message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
 +                    });
 +                    anthropicContent.push({
 +                      type: "code_execution_tool_result",
@@ -81,18 +144,28 @@
 +                        error_code: errorCode
 +                      },
 +                      cache_control: cacheControl
-                     });
-                     break;
-                   }
-@@ -875,10 +915,20 @@
-                 }
-                 if (part.toolName === "web_fetch") {
-                   const output = part.output;
++                    });
++                    handledServerToolResult = true;
++                  }
++                  const codeExecutionOutput = codeExecution_20250522OutputSchema.parse(output.value);
++                  anthropicContent.push({
++                    type: "code_execution_tool_result",
++                    tool_use_id: part.toolCallId,
++                    content: {
++                      type: codeExecutionOutput.type,
++                      stdout: codeExecutionOutput.stdout,
++                      stderr: codeExecutionOutput.stderr,
++                      return_code: codeExecutionOutput.return_code
++                    },
++                    cache_control: cacheControl
++                  });
++                  handledServerToolResult = true;
++                } else if (part.toolName === "web_fetch") {
 +                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider executed tool result output type ${output.type} for tool ${part.toolName} is not supported`
++                  if (output.type !== "json") {
++                    warnings.push({
++                      type: "other",
++                      message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
 +                    });
 +                    anthropicContent.push({
 +                      type: "web_fetch_tool_result",
@@ -102,18 +175,37 @@
 +                        error_code: errorCode
 +                      },
 +                      cache_control: cacheControl
-                     });
-                     break;
-                   }
-@@ -909,10 +959,20 @@
-                 }
-                 if (part.toolName === "web_search") {
-                   const output = part.output;
++                    });
++                    handledServerToolResult = true;
++                  }
++                  const webFetchOutput = webFetch_20250910OutputSchema.parse(output.value);
++                  anthropicContent.push({
++                    type: "web_fetch_tool_result",
++                    tool_use_id: part.toolCallId,
++                    content: {
++                      type: "web_fetch_result",
++                      url: webFetchOutput.url,
++                      retrieved_at: webFetchOutput.retrievedAt,
++                      content: {
++                        type: "document",
++                        title: webFetchOutput.content.title,
++                        citations: webFetchOutput.content.citations,
++                        source: {
++                          type: webFetchOutput.content.source.type,
++                          media_type: webFetchOutput.content.source.mediaType,
++                          data: webFetchOutput.content.source.data
++                        }
++                      }
++                    },
++                    cache_control: cacheControl
++                  });
++                  handledServerToolResult = true;
++                } else if (part.toolName === "web_search") {
 +                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider executed tool result output type ${output.type} for tool ${part.toolName} is not supported`
++                  if (output.type !== "json") {
++                    warnings.push({
++                      type: "other",
++                      message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
 +                    });
 +                    anthropicContent.push({
 +                      type: "web_search_tool_result",
@@ -123,20 +215,50 @@
 +                        error_code: errorCode
 +                      },
 +                      cache_control: cacheControl
-                     });
-                     break;
-                   }
---- a/node_modules/@ai-sdk/anthropic/dist/index.mjs
-+++ b/node_modules/@ai-sdk/anthropic/dist/index.mjs
-@@ -634,10 +634,20 @@
-                 }
-                 let handledServerToolResult = false;
-                 if (part.toolName === "code_execution") {
++                    });
++                    handledServerToolResult = true;
++                  }
++                  const webSearchOutput = webSearch_20250305OutputSchema.parse(output.value);
++                  anthropicContent.push({
++                    type: "web_search_tool_result",
++                    tool_use_id: part.toolCallId,
++                    content: webSearchOutput.map((result) => ({
++                      url: result.url,
++                      title: result.title,
++                      page_age: result.pageAge,
++                      encrypted_content: result.encryptedContent,
++                      type: result.type
++                    })),
++                    cache_control: cacheControl
++                  });
++                  handledServerToolResult = true;
++                }
++                if (handledServerToolResult) {
++                  continue;
++                }
+                 let contentValue;
+                 switch (output.type) {
+                   case "content":
+@@ -2452,4 +2560,4 @@
+   anthropic,
+   createAnthropic
+ };
+-//# sourceMappingURL=index.mjs.map
+\ No newline at end of file
++//# sourceMappingURL=index.mjs.map
+--- a/node_modules/@ai-sdk/anthropic/dist/internal/index.js	2025-10-10 23:31:46
++++ b/node_modules/@ai-sdk/anthropic/dist/internal/index.js	2025-10-10 23:49:46
+@@ -602,6 +602,114 @@
+                 const isLastPart = i2 === content.length - 1;
+                 const cacheControl = (_d = getCacheControl(part.providerOptions)) != null ? _d : isLastPart ? getCacheControl(message.providerOptions) : void 0;
+                 const output = part.output;
++                let handledServerToolResult = false;
++                if (part.toolName === "code_execution") {
 +                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
++                  if (output.type !== "json") {
++                    warnings.push({
++                      type: "other",
++                      message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
 +                    });
 +                    anthropicContent.push({
 +                      type: "code_execution_tool_result",
@@ -146,18 +268,28 @@
 +                        error_code: errorCode
 +                      },
 +                      cache_control: cacheControl
-                     });
-                     handledServerToolResult = true;
-                   } else {
-@@ -659,10 +669,20 @@
-                   }
-                 }
-                 if (part.toolName === "web_fetch") {
++                    });
++                    handledServerToolResult = true;
++                  }
++                  const codeExecutionOutput = codeExecution_20250522OutputSchema.parse(output.value);
++                  anthropicContent.push({
++                    type: "code_execution_tool_result",
++                    tool_use_id: part.toolCallId,
++                    content: {
++                      type: codeExecutionOutput.type,
++                      stdout: codeExecutionOutput.stdout,
++                      stderr: codeExecutionOutput.stderr,
++                      return_code: codeExecutionOutput.return_code
++                    },
++                    cache_control: cacheControl
++                  });
++                  handledServerToolResult = true;
++                } else if (part.toolName === "web_fetch") {
 +                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
++                  if (output.type !== "json") {
++                    warnings.push({
++                      type: "other",
++                      message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
 +                    });
 +                    anthropicContent.push({
 +                      type: "web_fetch_tool_result",
@@ -167,18 +299,37 @@
 +                        error_code: errorCode
 +                      },
 +                      cache_control: cacheControl
-                     });
-                     handledServerToolResult = true;
-                   } else {
-@@ -693,10 +713,20 @@
-                   }
-                 }
-                 if (part.toolName === "web_search") {
++                    });
++                    handledServerToolResult = true;
++                  }
++                  const webFetchOutput = webFetch_20250910OutputSchema.parse(output.value);
++                  anthropicContent.push({
++                    type: "web_fetch_tool_result",
++                    tool_use_id: part.toolCallId,
++                    content: {
++                      type: "web_fetch_result",
++                      url: webFetchOutput.url,
++                      retrieved_at: webFetchOutput.retrievedAt,
++                      content: {
++                        type: "document",
++                        title: webFetchOutput.content.title,
++                        citations: webFetchOutput.content.citations,
++                        source: {
++                          type: webFetchOutput.content.source.type,
++                          media_type: webFetchOutput.content.source.mediaType,
++                          data: webFetchOutput.content.source.data
++                        }
++                      }
++                    },
++                    cache_control: cacheControl
++                  });
++                  handledServerToolResult = true;
++                } else if (part.toolName === "web_search") {
 +                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
++                  if (output.type !== "json") {
++                    warnings.push({
++                      type: "other",
++                      message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
 +                    });
 +                    anthropicContent.push({
 +                      type: "web_search_tool_result",
@@ -188,18 +339,50 @@
 +                        error_code: errorCode
 +                      },
 +                      cache_control: cacheControl
-                     });
-                     handledServerToolResult = true;
-                   } else {
-@@ -835,10 +865,20 @@
-               case "tool-result": {
-                 if (part.toolName === "code_execution") {
-                   const output = part.output;
++                    });
++                    handledServerToolResult = true;
++                  }
++                  const webSearchOutput = webSearch_20250305OutputSchema.parse(output.value);
++                  anthropicContent.push({
++                    type: "web_search_tool_result",
++                    tool_use_id: part.toolCallId,
++                    content: webSearchOutput.map((result) => ({
++                      url: result.url,
++                      title: result.title,
++                      page_age: result.pageAge,
++                      encrypted_content: result.encryptedContent,
++                      type: result.type
++                    })),
++                    cache_control: cacheControl
++                  });
++                  handledServerToolResult = true;
++                }
++                if (handledServerToolResult) {
++                  continue;
++                }
+                 let contentValue;
+                 switch (output.type) {
+                   case "content":
+@@ -2412,4 +2520,4 @@
+   anthropicTools,
+   prepareTools
+ });
+-//# sourceMappingURL=index.js.map
+\ No newline at end of file
++//# sourceMappingURL=index.js.map
+--- a/node_modules/@ai-sdk/anthropic/dist/internal/index.mjs	2025-10-10 23:31:46
++++ b/node_modules/@ai-sdk/anthropic/dist/internal/index.mjs	2025-10-10 23:50:01
+@@ -578,6 +578,114 @@
+                 const isLastPart = i2 === content.length - 1;
+                 const cacheControl = (_d = getCacheControl(part.providerOptions)) != null ? _d : isLastPart ? getCacheControl(message.providerOptions) : void 0;
+                 const output = part.output;
++                let handledServerToolResult = false;
++                if (part.toolName === "code_execution") {
 +                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider executed tool result output type ${output.type} for tool ${part.toolName} is not supported`
++                  if (output.type !== "json") {
++                    warnings.push({
++                      type: "other",
++                      message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
 +                    });
 +                    anthropicContent.push({
 +                      type: "code_execution_tool_result",
@@ -209,18 +392,28 @@
 +                        error_code: errorCode
 +                      },
 +                      cache_control: cacheControl
-                     });
-                     break;
-                   }
-@@ -858,10 +898,20 @@
-                 }
-                 if (part.toolName === "web_fetch") {
-                   const output = part.output;
++                    });
++                    handledServerToolResult = true;
++                  }
++                  const codeExecutionOutput = codeExecution_20250522OutputSchema.parse(output.value);
++                  anthropicContent.push({
++                    type: "code_execution_tool_result",
++                    tool_use_id: part.toolCallId,
++                    content: {
++                      type: codeExecutionOutput.type,
++                      stdout: codeExecutionOutput.stdout,
++                      stderr: codeExecutionOutput.stderr,
++                      return_code: codeExecutionOutput.return_code
++                    },
++                    cache_control: cacheControl
++                  });
++                  handledServerToolResult = true;
++                } else if (part.toolName === "web_fetch") {
 +                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider executed tool result output type ${output.type} for tool ${part.toolName} is not supported`
++                  if (output.type !== "json") {
++                    warnings.push({
++                      type: "other",
++                      message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
 +                    });
 +                    anthropicContent.push({
 +                      type: "web_fetch_tool_result",
@@ -230,18 +423,37 @@
 +                        error_code: errorCode
 +                      },
 +                      cache_control: cacheControl
-                     });
-                     break;
-                   }
-@@ -892,10 +942,20 @@
-                 }
-                 if (part.toolName === "web_search") {
-                   const output = part.output;
++                    });
++                    handledServerToolResult = true;
++                  }
++                  const webFetchOutput = webFetch_20250910OutputSchema.parse(output.value);
++                  anthropicContent.push({
++                    type: "web_fetch_tool_result",
++                    tool_use_id: part.toolCallId,
++                    content: {
++                      type: "web_fetch_result",
++                      url: webFetchOutput.url,
++                      retrieved_at: webFetchOutput.retrievedAt,
++                      content: {
++                        type: "document",
++                        title: webFetchOutput.content.title,
++                        citations: webFetchOutput.content.citations,
++                        source: {
++                          type: webFetchOutput.content.source.type,
++                          media_type: webFetchOutput.content.source.mediaType,
++                          data: webFetchOutput.content.source.data
++                        }
++                      }
++                    },
++                    cache_control: cacheControl
++                  });
++                  handledServerToolResult = true;
++                } else if (part.toolName === "web_search") {
 +                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider executed tool result output type ${output.type} for tool ${part.toolName} is not supported`
++                  if (output.type !== "json") {
++                    warnings.push({
++                      type: "other",
++                      message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
 +                    });
 +                    anthropicContent.push({
 +                      type: "web_search_tool_result",
@@ -251,262 +463,34 @@
 +                        error_code: errorCode
 +                      },
 +                      cache_control: cacheControl
-                     });
-                     break;
-                   }
---- a/node_modules/@ai-sdk/anthropic/dist/internal/index.js
-+++ b/node_modules/@ai-sdk/anthropic/dist/internal/index.js
-@@ -644,10 +644,20 @@
-                 }
-                 let handledServerToolResult = false;
-                 if (part.toolName === "code_execution") {
-+                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
 +                    });
-+                    anthropicContent.push({
-+                      type: "code_execution_tool_result",
-+                      tool_use_id: part.toolCallId,
-+                      content: {
-+                        type: "code_execution_tool_result_error",
-+                        error_code: errorCode
-+                      },
-+                      cache_control: cacheControl
-                     });
-                     handledServerToolResult = true;
-                   } else {
-@@ -669,10 +679,20 @@
-                   }
-                 }
-                 if (part.toolName === "web_fetch") {
-+                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
-+                    });
-+                    anthropicContent.push({
-+                      type: "web_fetch_tool_result",
-+                      tool_use_id: part.toolCallId,
-+                      content: {
-+                        type: "web_fetch_tool_result_error",
-+                        error_code: errorCode
-+                      },
-+                      cache_control: cacheControl
-                     });
-                     handledServerToolResult = true;
-                   } else {
-@@ -703,10 +723,20 @@
-                   }
-                 }
-                 if (part.toolName === "web_search") {
-+                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
-+                    });
-+                    anthropicContent.push({
-+                      type: "web_search_tool_result",
-+                      tool_use_id: part.toolCallId,
-+                      content: {
-+                        type: "web_search_tool_result_error",
-+                        error_code: errorCode
-+                      },
-+                      cache_control: cacheControl
-                     });
-                     handledServerToolResult = true;
-                   } else {
-@@ -845,10 +875,20 @@
-               case "tool-result": {
-                 if (part.toolName === "code_execution") {
-                   const output = part.output;
-+                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider executed tool result output type ${output.type} for tool ${part.toolName} is not supported`
-+                    });
-+                    anthropicContent.push({
-+                      type: "code_execution_tool_result",
-+                      tool_use_id: part.toolCallId,
-+                      content: {
-+                        type: "code_execution_tool_result_error",
-+                        error_code: errorCode
-+                      },
-+                      cache_control: cacheControl
-                     });
-                     break;
-                   }
-@@ -868,10 +908,20 @@
-                 }
-                 if (part.toolName === "web_fetch") {
-                   const output = part.output;
-+                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider executed tool result output type ${output.type} for tool ${part.toolName} is not supported`
-+                    });
-+                    anthropicContent.push({
-+                      type: "web_fetch_tool_result",
-+                      tool_use_id: part.toolCallId,
-+                      content: {
-+                        type: "web_fetch_tool_result_error",
-+                        error_code: errorCode
-+                      },
-+                      cache_control: cacheControl
-                     });
-                     break;
-                   }
-@@ -902,10 +952,20 @@
-                 }
-                 if (part.toolName === "web_search") {
-                   const output = part.output;
-+                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider executed tool result output type ${output.type} for tool ${part.toolName} is not supported`
-+                    });
-+                    anthropicContent.push({
-+                      type: "web_search_tool_result",
-+                      tool_use_id: part.toolCallId,
-+                      content: {
-+                        type: "web_search_tool_result_error",
-+                        error_code: errorCode
-+                      },
-+                      cache_control: cacheControl
-                     });
-                     break;
-                   }
---- a/node_modules/@ai-sdk/anthropic/dist/internal/index.mjs
-+++ b/node_modules/@ai-sdk/anthropic/dist/internal/index.mjs
-@@ -620,10 +620,20 @@
-                 }
-                 let handledServerToolResult = false;
-                 if (part.toolName === "code_execution") {
-+                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
-+                    });
-+                    anthropicContent.push({
-+                      type: "code_execution_tool_result",
-+                      tool_use_id: part.toolCallId,
-+                      content: {
-+                        type: "code_execution_tool_result_error",
-+                        error_code: errorCode
-+                      },
-+                      cache_control: cacheControl
-                     });
-                     handledServerToolResult = true;
-                   } else {
-@@ -645,10 +655,20 @@
-                   }
-                 }
-                 if (part.toolName === "web_fetch") {
-+                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
-+                    });
-+                    anthropicContent.push({
-+                      type: "web_fetch_tool_result",
-+                      tool_use_id: part.toolCallId,
-+                      content: {
-+                        type: "web_fetch_tool_result_error",
-+                        error_code: errorCode
-+                      },
-+                      cache_control: cacheControl
-                     });
-                     handledServerToolResult = true;
-                   } else {
-@@ -679,10 +699,20 @@
-                   }
-                 }
-                 if (part.toolName === "web_search") {
-+                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider tool result output type ${output.type} for tool ${part.toolName} is not supported`
-+                    });
-+                    anthropicContent.push({
-+                      type: "web_search_tool_result",
-+                      tool_use_id: part.toolCallId,
-+                      content: {
-+                        type: "web_search_tool_result_error",
-+                        error_code: errorCode
-+                      },
-+                      cache_control: cacheControl
-                     });
-                     handledServerToolResult = true;
-                   } else {
-@@ -821,10 +851,20 @@
-               case "tool-result": {
-                 if (part.toolName === "code_execution") {
-                   const output = part.output;
-+                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider executed tool result output type ${output.type} for tool ${part.toolName} is not supported`
-+                    });
-+                    anthropicContent.push({
-+                      type: "code_execution_tool_result",
-+                      tool_use_id: part.toolCallId,
-+                      content: {
-+                        type: "code_execution_tool_result_error",
-+                        error_code: errorCode
-+                      },
-+                      cache_control: cacheControl
-                     });
-                     break;
-                   }
-@@ -844,10 +884,20 @@
-                 }
-                 if (part.toolName === "web_fetch") {
-                   const output = part.output;
-+                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider executed tool result output type ${output.type} for tool ${part.toolName} is not supported`
-+                    });
-+                    anthropicContent.push({
-+                      type: "web_fetch_tool_result",
-+                      tool_use_id: part.toolCallId,
-+                      content: {
-+                        type: "web_fetch_tool_result_error",
-+                        error_code: errorCode
-+                      },
-+                      cache_control: cacheControl
-                     });
-                     break;
-                   }
-@@ -878,10 +928,20 @@
-                 }
-                 if (part.toolName === "web_search") {
-                   const output = part.output;
-+                  const errorCode = output.type === "error-text" || output.type === "error-json" ? "provider_error" : "invalid_output";
-                   if (output.type !== "json") {
-                     warnings.push({
-                       type: "other",
-                       message: `provider executed tool result output type ${output.type} for tool ${part.toolName} is not supported`
-+                    });
-+                    anthropicContent.push({
-+                      type: "web_search_tool_result",
-+                      tool_use_id: part.toolCallId,
-+                      content: {
-+                        type: "web_search_tool_result_error",
-+                        error_code: errorCode
-+                      },
-+                      cache_control: cacheControl
-                     });
-                     break;
-                   }
++                    handledServerToolResult = true;
++                  }
++                  const webSearchOutput = webSearch_20250305OutputSchema.parse(output.value);
++                  anthropicContent.push({
++                    type: "web_search_tool_result",
++                    tool_use_id: part.toolCallId,
++                    content: webSearchOutput.map((result) => ({
++                      url: result.url,
++                      title: result.title,
++                      page_age: result.pageAge,
++                      encrypted_content: result.encryptedContent,
++                      type: result.type
++                    })),
++                    cache_control: cacheControl
++                  });
++                  handledServerToolResult = true;
++                }
++                if (handledServerToolResult) {
++                  continue;
++                }
+                 let contentValue;
+                 switch (output.type) {
+                   case "content":
+@@ -2387,4 +2495,4 @@
+   anthropicTools,
+   prepareTools
+ };
+-//# sourceMappingURL=index.mjs.map
+\ No newline at end of file
++//# sourceMappingURL=index.mjs.map
