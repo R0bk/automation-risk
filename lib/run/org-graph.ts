@@ -133,7 +133,15 @@ function resolveRolesForNode(
     });
   }
 
-  return resolved;
+  // Order roles so the largest headcount entries appear first within each team.
+  return resolved.sort((roleA, roleB) => {
+    const headcountA = roleA.headcount ?? -1;
+    const headcountB = roleB.headcount ?? -1;
+    if (headcountA !== headcountB) {
+      return headcountB - headcountA;
+    }
+    return roleA.title.localeCompare(roleB.title, undefined, { sensitivity: "base" });
+  });
 }
 
 function createAggregationCalculator(

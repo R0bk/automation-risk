@@ -323,15 +323,24 @@ export function buildOrgFlowModel(
     const ownHeadcount = node.data.headcount ?? null;
 
     let totalHeadcount = node.aggregate.headcount ?? null;
-    if (hasChildHeadcount) {
-      const combined = (ownHeadcount ?? 0) + childHeadcountSum;
-      if (totalHeadcount == null || totalHeadcount < combined) {
-        totalHeadcount = combined;
+    // Previously we attempted to ensure the node's total headcount included both its own value
+    // and the sum of its children. In practice this doubled counts for datasets where parents
+    // already report totals that include their descendants, so we temporarily rely solely on the
+    // aggregated value. If we have no aggregate available, fall back to local data.
+    if (totalHeadcount == null) {
+      if (hasChildHeadcount) {
+        totalHeadcount = childHeadcountSum;
+      } else if (ownHeadcount != null) {
+        totalHeadcount = ownHeadcount;
       }
     }
-    if (totalHeadcount == null && ownHeadcount != null) {
-      totalHeadcount = ownHeadcount;
-    }
+    // Legacy additive fallback kept for debugging. Re-enable if we want to combine parent and child headcounts.
+    // if (hasChildHeadcount) {
+    //   const combined = (ownHeadcount ?? 0) + childHeadcountSum;
+    //   if (totalHeadcount == null || totalHeadcount < combined) {
+    //     totalHeadcount = combined;
+    //   }
+    // }
 
     const collapsibleRoleChildren =
       !collapseByLevel &&

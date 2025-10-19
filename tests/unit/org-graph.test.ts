@@ -106,7 +106,7 @@ test("buildOrgGraph indexes hierarchy and aggregates metrics", () => {
 
 test("org flow model focuses roles and computes layout", () => {
   const graph = buildOrgGraph(sampleReport);
-  const model = buildOrgFlowModel(graph, { maxRolesPerNode: 2 });
+  const model = buildOrgFlowModel(graph, { maxRolesPerNode: 20 });
   assert.equal(model.nodes.length, 1);
   const rootNode = model.nodes[0];
   assert.equal(rootNode.id, "root");

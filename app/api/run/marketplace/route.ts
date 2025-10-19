@@ -34,6 +34,7 @@ function parseInteger(
 
 export async function GET(request: Request) {
   try {
+    console.log("[/api/run/marketplace] GET invoked", { url: request.url });
     const { searchParams } = new URL(request.url);
     const limit = parseInteger(searchParams.get("limit"), DEFAULT_LIMIT, {
       min: 1,
@@ -45,13 +46,17 @@ export async function GET(request: Request) {
     });
 
     const { runs, hasMore } = await listMostViewedRuns({ limit, offset });
+    console.log("[/api/run/marketplace] query result", {
+      runCount: runs.length,
+      hasMore,
+    });
 
     const normalizedRuns: MarketplaceRun[] = runs.map((run) => ({
       runId: run.runId,
       slug: run.slug,
       displayName: run.displayName,
       status: run.status,
-      viewCount: run.viewCount ?? 0,
+      viewCount: run.viewCount ?? 1,
       updatedAt: run.updatedAt,
       hqCountry: run.hqCountry ?? null,
     }));

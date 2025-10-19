@@ -13,6 +13,11 @@ export const runRequestSchema = z.object({
     .optional(),
   refresh: z.boolean().optional(),
   chatId: z.string().uuid().optional(),
+  userApiKey: z
+    .string()
+    .trim()
+    .min(1)
+    .optional(),
   message: z
     .object({
       id: z.string().uuid(),

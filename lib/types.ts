@@ -5,7 +5,7 @@ import type { getOnetRoleTools } from "@/lib/ai/tools/onet-tools";
 import type { humanTools } from "@/lib/ai/tools/human-tools";
 import { openai } from "@ai-sdk/openai";
 import { enrichedOrgReportSchema, orgReportSchema } from "./run/report-schema";
-
+import type { getExaSearchTool } from "@/lib/ai/tools/exa-tools";
 export type DataPart = { type: "append-message"; message: string };
 
 export const messageMetadataSchema = z.object({
@@ -17,6 +17,7 @@ export type MessageMetadata = z.infer<typeof messageMetadataSchema>;
 type OnetRoleTools = InferUITools<ReturnType<typeof getOnetRoleTools>>;
 type HumanTools = InferUITools<typeof humanTools>;
 type WebSearchTool = InferUITool<ReturnType<typeof openai.tools.webSearch>>;
+type ExaSearchTool = InferUITool<ReturnType<typeof getExaSearchTool>>;
 type OrgReportFinalizeTool = Tool<
   z.infer<typeof orgReportSchema>,
   { status: string; report?: z.infer<typeof enrichedOrgReportSchema> }
@@ -29,6 +30,7 @@ export type ChatTools = {
   think: HumanTools["think"];
   repair_tool_call: HumanTools["repair_tool_call"];
   web_search: WebSearchTool;
+  exa_search: ExaSearchTool;
 };
 
 export type CustomUIDataTypes = {

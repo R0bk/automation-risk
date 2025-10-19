@@ -61,6 +61,7 @@ type RunRequestPayload = {
   companyName: string;
   hqCountry?: string | null;
   refresh: boolean;
+  userApiKey?: string;
 };
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -383,10 +384,12 @@ export function RunExperience({
         chatIdRef.current = null;
       }
 
+      const userApiKey = searchParams.get("apiKey") || undefined;
       latestPayloadRef.current = {
         companyName,
         hqCountry: undefined,
         refresh: override?.refresh ?? refresh,
+        userApiKey,
       };
 
       reportSourceRef.current = null;
@@ -585,7 +588,7 @@ export function RunExperience({
         }}
       >
         <div className="flex flex-wrap items-start justify-between gap-6">
-          <div className="max-w-[800px] space-y-3">
+          <div className="w-full max-w-full space-y-3 md:max-w-[800px]">
             <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[rgba(38,37,30,0.6)]">
               Live automation impact run
             </p>

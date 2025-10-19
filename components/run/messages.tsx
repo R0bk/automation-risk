@@ -24,7 +24,7 @@ const RunMessageList: React.FC<RunMessageListProps> = ({ messages, statusBar }) 
               key={message.id}
               className="flex flex-col items-center rounded-xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.75)] px-4 py-3 text-sm text-[rgba(38,37,30,0.72)] shadow-[0_6px_14px_rgba(34,28,20,0.08)]"
             >
-              <div className="max-w-[860px] justify-start">
+              <div className="w-full max-w-full justify-start sm:max-w-[860px]">
               {message.parts.map((part, index) => {
                 if (part.type === "text") {
                   return (
@@ -63,6 +63,7 @@ const RunMessageList: React.FC<RunMessageListProps> = ({ messages, statusBar }) 
 };
 
 export const GroupedMessages: React.FC<{ messages: ChatMessage[], statusBar?: React.ReactNode }> = ({ messages, statusBar }) => {
+  console.log("Messages", messages);
   const grouped = React.useMemo(() => messages.map(groupConsecutiveReasoningParts), [messages]);
   return <RunMessageList messages={grouped} statusBar={statusBar} />;
 };

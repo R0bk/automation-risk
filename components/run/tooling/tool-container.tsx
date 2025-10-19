@@ -20,7 +20,7 @@ const ToolContainer = ({
       animate={{ opacity: 1, height: "auto", ...(blur ? { filter: "blur(0px)" } : {}), transition: { duration: 0.4 } }}
       exit={{ opacity: 0, ...(blur ? { filter: "blur(4px)" } : {}), transition: { duration: 0.4 } }}
       className={clsx(
-        "text-ak-body-xxs w-full max-w-[860px] overflow-hidden rounded-md bg-gray-50/20 p-2 text-gray-800 dark:bg-neutral-900 dark:text-neutral-200",
+        "text-ak-body-xxs w-full max-w-full overflow-hidden rounded-md bg-gray-50/20 p-2 text-gray-800 dark:bg-neutral-900 dark:text-neutral-200 sm:max-w-[860px]",
         className,
       )}
     >

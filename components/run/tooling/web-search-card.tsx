@@ -133,31 +133,31 @@ const renderAction = (normalized: NormalizedAction | null, state: ToolState): Re
     case "search": {
       const verb = state === "output-available" ? "Searched" : state === "output-error" ? "Search" : "Searching";
       return (
-        <span>
-          {verb}
+        <>
+          <span className="shrink-0">{verb}</span>
           {formatHighlight(normalized.query)}
-        </span>
+        </>
       );
     }
     case "open":
       return (
-        <span>
-          Open page
+        <>
+          <span className="shrink-0">Open page</span>
           {formatHighlight(normalized.url)}
-        </span>
+        </>
       );
     case "find":
       return (
-        <span>
-          Find
+        <>
+          <span className="shrink-0">Find</span>
           {formatHighlight(normalized.pattern)}
           {normalized.url ? (
             <>
-              <span className="ml-1">in</span>
+              <span className="ml-1 shrink-0">in</span>
               {formatHighlight(normalized.url)}
             </>
           ) : null}
-        </span>
+        </>
       );
     default:
       return "Web search";
@@ -207,19 +207,19 @@ export function WebSearchCard({
 
   return (
     <ToolContainer toolState={state}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          <Globe className="m-0.5 size-3 min-w-3" />
-          <p className="ml-1 font-medium">{renderAction(normalizedAction, state)}</p>
+      <div className="flex items-center justify-between w-full gap-2">
+        <div className="flex items-center w-0 flex-1 min-w-0">
+          <Globe className="m-0.5 size-3 shrink-0" />
+          <p className="ml-1 font-medium w-0 flex-1 min-w-0">{renderAction(normalizedAction, state)}</p>
         </div>
         {statusLabel && (
-          <span className="ml-2 rounded-full bg-[rgba(38,37,30,0.08)] px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-[rgba(38,37,30,0.6)]">
+          <span className="shrink-0 rounded-full bg-[rgba(38,37,30,0.08)] px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-[rgba(38,37,30,0.6)]">
             {statusLabel}
           </span>
         )}
       </div>
       {showTitle && (
-        <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-[rgba(38,37,30,0.45)]">
+        <p className="mt-1 text-[10px] uppercase truncate inline-block tracking-[0.2em] text-[rgba(38,37,30,0.45)]">
           {title}
         </p>
       )}

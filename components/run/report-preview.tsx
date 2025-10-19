@@ -20,7 +20,7 @@ export function ReportPreview({ report }: ReportPreviewProps) {
 
   return (
     <section
-      className="rounded-[32px] border border-[rgba(38,37,30,0.1)] px-6 py-7 shadow-[0_26px_65px_rgba(34,28,20,0.14)] backdrop-blur-[18px]"
+      className="overflow-hidden rounded-[32px] border border-[rgba(38,37,30,0.1)] px-4 py-7 shadow-[0_26px_65px_rgba(34,28,20,0.14)] backdrop-blur-[18px] sm:px-6 lg:overflow-visible"
       style={{
         backgroundImage: "linear-gradient(150deg, rgba(244,243,239,0.95), rgba(236,234,228,0.9))",
       }}
@@ -47,9 +47,18 @@ export function ReportPreview({ report }: ReportPreviewProps) {
           {report.metadata.summary}
         </p>
       )}
-      {/* TODO: Dont do neg margin tricks for mobile */}
-      <div id="org-chart" className="-ml-[340px] -mr-[340px] mt-6 rounded-[32px] border bg-[rgba(244,243,239,0.96)] border-[rgba(38,37,30,0.1)] shadow-[0_26px_65px_rgba(34,28,20,0.14)] backdrop-blur-[18px] overflow-hidden"> {/* -mx-6 */}
-        <OrgFlowChart report={report} />
+      <div
+        id="org-chart"
+        className="mt-6 w-full
+        lg:-mx-[calc((100vw-100%)/2)] lg:w-screen"
+      >
+        <div
+          className="overflow-hidden rounded-[32px] border border-[rgba(38,37,30,0.1)] bg-[rgba(244,243,239,0.96)] shadow-[0_26px_65px_rgba(34,28,20,0.14)] backdrop-blur-[18px] 
+          w-full
+          lg:mx-auto lg:w-[min(100vw-4rem,1600px)] lg:max-w-[1600px] xl:w-[min(100vw-6rem,1800px)] xl:max-w-[1800px]"
+        >
+          <OrgFlowChart report={report} />
+        </div>
       </div>
 
       <div className="mt-6 grid gap-5 md:grid-cols-2">

@@ -15,6 +15,7 @@ import { z } from "zod";
 import { humanTools } from "@/lib/ai/tools/human-tools";
 import { getOnetRoleTools } from "@/lib/ai/tools/onet-tools";
 import { runSystemPrompt } from "@/lib/ai/run/prompts";
+import { useStreamDebugger } from "@/lib/debug/use-stream-debugger";
 import {
   createAnalysisRunWithBudget,
   getAnalysisRunById,
@@ -68,7 +69,7 @@ const openai = createOpenAI({
   ...(openaiBaseUrl ? { baseURL: openaiBaseUrl } : {}),
 });
 
-const anthropicProvider = createAnthropic({fetch: withEphemeralCacheControl()});
+const defaultAnthropicProvider = createAnthropic({fetch: withEphemeralCacheControl()});
 
 const openaiProviderOptions: OpenAIResponsesProviderOptions = {
   reasoningSummary: "detailed", // 'auto' for condensed or 'detailed' for comprehensive
@@ -104,7 +105,7 @@ export async function POST(request: Request) {
     return new ChatSDKError("bad_request:api", "Invalid JSON payload").toResponse();
   }
 
-  const { companyName, hqCountry, refresh, message } = body;
+  const { companyName, hqCountry, refresh, message, userApiKey } = body;
   const companySlug = slugifyCompanyName(companyName);
 
   const requestIp = getClientIp(request);
@@ -167,19 +168,24 @@ export async function POST(request: Request) {
     }
   }
 
-  const rateLimit = enforceRunRateLimit(requestIp);
-  
-  //TODO BEFORE PRODUCTION ---- TURN BACK ON
-  // if (!rateLimit.allowed) {
-  //   return NextResponse.json(
-  //     {
-  //       code: "rate_limit:run",
-  //       cause: "Too many new company runs from this network",
-  //       retryAfterMs: rateLimit.retryAfterMs,
-  //     },
-  //     { status: 429 }
-  //   );
-  // }
+  // Skip rate limiting and budget checks if user provides their own API key
+  const bypassLimits = !!userApiKey;
+
+  if (!bypassLimits) {
+    const rateLimit = enforceRunRateLimit(requestIp);
+
+    //TODO BEFORE PRODUCTION ---- TURN BACK ON
+    // if (!rateLimit.allowed) {
+    //   return NextResponse.json(
+    //     {
+    //       code: "rate_limit:run",
+    //       cause: "Too many new company runs from this network",
+    //       retryAfterMs: rateLimit.retryAfterMs,
+    //     },
+    //     { status: 429 }
+    //   );
+    // }
+  }
 
   const { run, company, chatId, remainingRuns } = await createAnalysisRunWithBudget({
     slug: companySlug,
@@ -187,6 +193,7 @@ export async function POST(request: Request) {
     hqCountry: hqCountry ?? null,
     inputQuery: companyName,
     model: "claude-4-5",
+    bypassBudget: bypassLimits,
   });
 
   await updateAnalysisRunStatus(run.id, "running");
@@ -269,6 +276,20 @@ export async function POST(request: Request) {
       })
     );
 
+  // Create Anthropic provider with user's API key if provided
+  const anthropicProvider = userApiKey
+    ? createAnthropic({
+        apiKey: userApiKey,
+        fetch: withEphemeralCacheControl(),
+      })
+    : defaultAnthropicProvider;
+
+  // Initialize stream debugger
+  const streamDebugger = useStreamDebugger({
+    companyName,
+    enabled: process.env.DEBUG_STREAM === "true",
+  });
+
   const uiStream = createUIMessageStream<ChatMessage>({
     execute: ({ writer }) => {
       let hasFinalized = false;
@@ -308,6 +329,7 @@ export async function POST(request: Request) {
         maxRetries: 3,
         providerOptions: { openai: openaiProviderOptions, anthropic: anthropicProviderOptions },
         experimental_transform: smoothStream(),
+        prepareStep: streamDebugger.prepareStep,
         experimental_repairToolCall: async ({ toolCall, inputSchema }) => {
           const prompt = [
             `The model tried to call the tool "${toolCall.toolName}" with the following arguments:`,
@@ -325,6 +347,7 @@ export async function POST(request: Request) {
         },
         onError: async ({ error }) => {
           console.error("/api/run stream error", error);
+          streamDebugger.onError?.({ error: error as Error });
           await finalizeRun("failed");
         },
         onFinish: async () => {

@@ -49,6 +49,7 @@ export function ToolRenderer({ part }: {part: ToolPart}): React.ReactNode {
         />
       );
     case "tool-web_search":
+    case "tool-exa_search":
       return (
         <WebSearchCard
           key={fallbackKey}

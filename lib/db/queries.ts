@@ -361,6 +361,7 @@ type CreateRunWithBudgetArgs = {
   hqCountry?: string | null;
   inputQuery: string;
   model: string;
+  bypassBudget?: boolean;
 };
 
 export async function createAnalysisRunWithBudget({
@@ -369,6 +370,7 @@ export async function createAnalysisRunWithBudget({
   hqCountry,
   inputQuery,
   model,
+  bypassBudget = false,
 }: CreateRunWithBudgetArgs) {
   const analystUser = await getOrCreateAnalystUser();
   const now = new Date();
@@ -388,7 +390,7 @@ export async function createAnalysisRunWithBudget({
       );
     }
 
-    if (budgetRow.remainingRuns <= 0) {
+    if (!bypassBudget && budgetRow.remainingRuns <= 0) {
       throw new ChatSDKError(
         "forbidden:budget_exhausted",
         "No remaining company runs"
@@ -465,19 +467,22 @@ export async function createAnalysisRunWithBudget({
       })
       .returning();
 
-    await tx
-      .update(globalBudget)
-      .set({
-        remainingRuns: budgetRow.remainingRuns - 1,
-        updatedAt: now,
-      })
-      .where(eq(globalBudget.key, COMPANY_BUDGET_KEY));
+    // Only decrement budget if not using user's API key
+    if (!bypassBudget) {
+      await tx
+        .update(globalBudget)
+        .set({
+          remainingRuns: budgetRow.remainingRuns - 1,
+          updatedAt: now,
+        })
+        .where(eq(globalBudget.key, COMPANY_BUDGET_KEY));
+    }
 
     return {
       run,
       company: companyRecord,
       chatId,
-      remainingRuns: budgetRow.remainingRuns - 1,
+      remainingRuns: bypassBudget ? budgetRow.remainingRuns : budgetRow.remainingRuns - 1,
     };
   });
 }

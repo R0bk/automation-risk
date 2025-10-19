@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn, slugifyCompanyName } from "@/lib/utils";
 import { useAutoWidthInput } from "./useAutoWidthInput";
+import { ApiKeyInput } from "./api-key-input";
 
 interface HeroProps {
   initialValue?: string;
@@ -18,6 +19,7 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
   const router = useRouter();
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState<string | null>(null);
+  const [apiKey, setApiKey] = useState("");
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -56,14 +58,18 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
       setError("Max 50 characters");
       return;
     }
-    if (disabled) {
+    if (disabled && !apiKey) {
       setError("Budget exhausted");
       return;
     }
 
     setError(null);
     const slug = slugifyCompanyName(trimmed);
-    router.push(`/run/${slug}?name=${encodeURIComponent(trimmed)}`);
+    const params = new URLSearchParams({ name: trimmed });
+    if (apiKey) {
+      params.set("apiKey", apiKey);
+    }
+    router.push(`/run/${slug}?${params.toString()}`);
   };
 
   const hasValue = value.trim().length > 0;
@@ -129,13 +135,16 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
         <div className="relative flex items-center gap-3 mt-10">
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[rgba(38,37,30,0.08)] to-transparent" />
         </div>
+
+        <ApiKeyInput disabled={disabled} onApiKeyChange={setApiKey} />
+
         <div className="mt-6 flex items-center justify-between gap-4 transition-all duration-200 ease-out">
           <Button
             onClick={handleSubmit}
-            disabled={disabled || !hasValue}
+            disabled={(disabled && !apiKey) || !hasValue}
             className={cn(
               "h-12 rounded-full px-7 text-xs font-semibold uppercase tracking-[0.24em] transition",
-              hasValue && !disabled
+              hasValue && (!disabled || apiKey)
                 ? "cursor-pointer bg-[linear-gradient(120deg,#f54e00,#ff9440)] text-white shadow-[0_20px_45px_rgba(245,78,0,0.35)] hover:shadow-[0_26px_60px_rgba(245,78,0,0.45)]"
                 : "cursor-default bg-[rgba(38,37,30,0.08)] text-[rgba(38,37,30,0.45)] shadow-none"
             )}

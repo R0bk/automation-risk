@@ -28,14 +28,25 @@ export default async function Page() {
   let marketplaceInitial: MarketplacePage | null = null;
 
   try {
+    const startTime = Date.now();
+    
     const [remainingRunsValue, trendingRows, mostViewed] = await Promise.all([
       getRemainingCompanyRuns(),
       listTrendingRuns(8),
       listMostViewedRuns({ limit: 12, offset: 0 }),
     ]);
 
+    const afterQueries = Date.now();
+    console.log("[page.tsx] Database queries completed", {
+      duration: afterQueries - startTime,
+      remainingRuns: remainingRunsValue,
+      trendingCount: trendingRows.length,
+      mostViewedCount: mostViewed.runs.length,
+    });
+
     remainingRuns = remainingRunsValue ?? null;
 
+    const beforeTrendingMap = Date.now();
     trending = trendingRows.map((entry) => ({
       runId: entry.runId,
       slug: entry.slug,
@@ -44,7 +55,9 @@ export default async function Page() {
       viewCount: Math.max(entry.viewCount ?? 1, 1),
       updatedAt: entry.updatedAt?.toString() ?? null,
     }));
+    const afterTrendingMap = Date.now();
 
+    const beforeMarketplaceMap = Date.now();
     marketplaceInitial = {
       runs: mostViewed.runs.map((run) => ({
         runId: run.runId,
@@ -62,6 +75,15 @@ export default async function Page() {
         hasMore: mostViewed.hasMore,
       },
     };
+    const afterMarketplaceMap = Date.now();
+
+    const totalTime = afterMarketplaceMap - startTime;
+    console.log("[page.tsx] Landing data processing completed", {
+      totalDuration: totalTime,
+      queryDuration: afterQueries - startTime,
+      trendingMapDuration: afterTrendingMap - beforeTrendingMap,
+      marketplaceMapDuration: afterMarketplaceMap - beforeMarketplaceMap,
+    });
   } catch (error) {
     console.warn("Failed to load landing data", error);
   }
