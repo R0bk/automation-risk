@@ -1,3 +1,5 @@
+import type { WorkforceImpactSnapshot } from "./workforce-impact";
+
 export interface MarketplaceRun {
   runId: string;
   slug: string | null;
@@ -6,6 +8,7 @@ export interface MarketplaceRun {
   viewCount: number;
   updatedAt: string | Date;
   hqCountry: string | null;
+  workforceMetric: WorkforceImpactSnapshot | null;
 }
 
 export interface MarketplacePage {

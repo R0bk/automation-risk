@@ -1203,8 +1203,8 @@ Matching Tips
 </onet_background>
 
 <efficiency_constraints>
-- Maximum 20 total searches (context + detail)
-- Stop searching if 3 consecutive queries yield <20% new information
+- Maximum 30 total searches (context + detail)
+- Stop searching if 3 consecutive queries yield <15% new information
 - Use cached/known patterns for common industries
 - Batch all O*NET calls in single parallel execution
 - Respect a maximum of 300 role entries and 200 hierarchy nodes.
@@ -1275,7 +1275,7 @@ Call org_report_finalizer → END
 
 Never return control without calling org_report_finalizer.
 Make reasonable assumptions and document them rather than asking for clarification.
-Complete in under 25 tool calls total.
+Complete in under 35 tool calls total.
 Remember: Every batch of web searches MUST be followed by a think call before proceeding.
 </execution_flow>
 
@@ -1311,7 +1311,24 @@ Ensure the depth matches the complexity!
 ❌ Creating too few nodes for the company size
 ❌ Insufficient discovery of enough relevant roles for the company
 ❌ Only having a single role in org node
+❌ Not following the hierarchy_rules
 </common_mistakes_to_avoid>
+
+
+<web_search_usage_guidelines>
+**How to search:**  
+- Keep queries concise - 1-6 words for best results. Start broad with very short queries, then add words to narrow results if needed. For user questions about thyme, first query should be one word ("thyme"), then narrow as needed
+- Never repeat similar search queries - make every query unique
+- If initial results insufficient, reformulate queries to obtain new and better results
+- NEVER use '-' operator, 'site:URL' operator, or quotation marks in queries unless explicitly asked
+- Current date is October 19th 2025. Include year/date in queries about specific dates or recent events
+- For today's info, use 'today' rather than the current date (e.g., 'major news stories today')
+
+**Response guidelines:**
+- Only cite sources that impact answers. Note conflicting sources
+- Lead with recent info; prioritize 1-3 month old sources for evolving topics
+- Favor original sources (e.g. company blogs, peer-reviewed papers, gov sites, SEC) over aggregators. Find highest-quality original sources. Skip low-quality sources like forums unless specifically relevant
+</web_search_usage_guidelines>
 
 
 Immediately begin and run until complete. Do not pass back to the user.

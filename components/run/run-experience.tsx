@@ -7,8 +7,14 @@ import { useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ChevronDown } from "lucide-react";
 import type { EnrichedOrgReport } from "@/lib/run/report-schema";
 import { enrichedOrgReportSchema, orgReportSchema } from "@/lib/run/report-schema";
+import {
+  computeWorkforceImpact,
+  parseWorkforceMetricData,
+  type WorkforceImpactSnapshot,
+} from "@/lib/run/workforce-impact";
 import { normaliseLegacyReport } from "@/lib/run/normalize-report";
 import { generateUUID, slugifyCompanyName } from "@/lib/utils";
 import type { ChatMessage } from "@/lib/types";
@@ -29,6 +35,7 @@ interface RunExperienceProps {
   initialReport?: EnrichedOrgReport | null;
   initialMessages?: ChatMessage[];
   initialRemainingRuns?: number | null;
+  initialWorkforceMetric?: WorkforceImpactSnapshot | null;
 }
 
 type RunSnapshot = {
@@ -46,6 +53,7 @@ interface RunStatusResponse {
   finalReportJson?: EnrichedOrgReport | null;
   chatId?: string;
   messages?: ChatMessage[];
+  metrics?: RunMetricPayload[];
   company?: {
     displayName?: string;
   };
@@ -64,6 +72,15 @@ type RunRequestPayload = {
   userApiKey?: string;
 };
 
+interface RunMetricPayload {
+  metricType: string;
+  label?: string;
+  headcount?: number | null;
+  automationShare?: number | null;
+  augmentationShare?: number | null;
+  data?: unknown;
+}
+
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export function RunExperience({
@@ -76,6 +93,7 @@ export function RunExperience({
   initialReport = null,
   initialMessages = [],
   initialRemainingRuns = null,
+  initialWorkforceMetric = null,
 }: RunExperienceProps) {
   const searchParams = useSearchParams();
 
@@ -87,11 +105,15 @@ export function RunExperience({
     companyName: initialName ?? undefined,
   }));
   const [report, setReport] = useState<EnrichedOrgReport | null>(initialReport);
+  const [storedWorkforceMetric, setStoredWorkforceMetric] = useState<WorkforceImpactSnapshot | null>(
+    initialWorkforceMetric ?? null
+  );
   const [isPolling, setIsPolling] = useState(false);
   const [chatIdState, setChatIdState] = useState<string | null>(initialChatId);
   const [initialChatMessages, setInitialChatMessages] = useState<ChatMessage[]>(
     initialMessages
   );
+  const [showScrollToLatest, setShowScrollToLatest] = useState(false);
 
   const latestPayloadRef = useRef<RunRequestPayload | null>(null);
   const chatIdRef = useRef<string | null>(initialChatId);
@@ -100,12 +122,31 @@ export function RunExperience({
     initialMessages.length > 0 ? initialMessages : null
   );
   const reportSourceRef = useRef<string | null>(null);
+  const narrativeScrollRef = useRef<HTMLDivElement | null>(null);
+  const shouldStickNarrativeRef = useRef(true);
 
   useEffect(() => {
     if (initialReport && !reportSourceRef.current) {
       reportSourceRef.current = "initial";
     }
   }, [initialReport]);
+
+  const applyWorkforceMetric = useCallback(
+    (metrics?: RunMetricPayload[] | null) => {
+      if (!metrics || metrics.length === 0) {
+        return;
+      }
+      const entry = metrics.find((item) => item.metricType === "workforce_score");
+      if (!entry) {
+        return;
+      }
+      const parsed = parseWorkforceMetricData(entry.data);
+      if (parsed) {
+        setStoredWorkforceMetric(parsed);
+      }
+    },
+    []
+  );
 
   const companyName = useMemo(() => {
     if (initialName && initialName.length > 0) {
@@ -152,12 +193,13 @@ export function RunExperience({
         messageCount: data.messages?.length ?? 0,
         data
       });
+      applyWorkforceMetric(data.metrics);
       return data;
     } catch (error) {
       console.warn("Failed to fetch run by slug", error);
       return null;
     }
-  }, [slug]);
+  }, [slug, applyWorkforceMetric]);
 
   const updateRemainingRuns = useCallback(async () => {
     try {
@@ -290,6 +332,7 @@ export function RunExperience({
           });
 
           applyTranscript({ chatId: data.chatId, messages: data.messages });
+          applyWorkforceMetric(data.metrics);
 
           if (data.status === "completed") {
             if (data.finalReportJson) {
@@ -331,7 +374,7 @@ export function RunExperience({
         setIsPolling(false);
       }
     },
-    [applyTranscript, fetchRunBySlug, parseReport, updateRemainingRuns]
+    [applyTranscript, applyWorkforceMetric, fetchRunBySlug, parseReport, updateRemainingRuns]
   );
   useEffect(() => {
     if (chatStatus === "submitted" || chatStatus === "streaming") {
@@ -454,6 +497,7 @@ export function RunExperience({
             messageCount: existing.messages?.length ?? 0,
           });
           applyTranscript({ chatId: existing.chatId, messages: existing.messages });
+          applyWorkforceMetric(existing.metrics);
 
           if (existing.status === "completed" && existing.finalReportJson) {
             console.log("Bootstrap: completed, trying to parse")
@@ -513,6 +557,7 @@ export function RunExperience({
     };
   }, [
     applyTranscript,
+    applyWorkforceMetric,
     companyName,
     fetchRunBySlug,
     initialName,
@@ -558,6 +603,44 @@ export function RunExperience({
   console.log(snapshot)
   console.log(report)
 
+  useEffect(() => {
+    const container = narrativeScrollRef.current;
+    if (!container) {
+      return;
+    }
+
+    const handleScroll = () => {
+      const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+      const isNearBottom = distanceFromBottom <= 64;
+      shouldStickNarrativeRef.current = isNearBottom;
+      const hasOverflow = container.scrollHeight > container.clientHeight + 8;
+      setShowScrollToLatest((prev) => {
+        const next = !isNearBottom && hasOverflow;
+        return prev === next ? prev : next;
+      });
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+    };
+  }, [snapshot.status, messages.length]);
+
+  useEffect(() => {
+    const container = narrativeScrollRef.current;
+    if (!container || !shouldStickNarrativeRef.current) {
+      return;
+    }
+
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: isStreaming ? "smooth" : "auto",
+    });
+    setShowScrollToLatest(false);
+  }, [messages, isStreaming]);
+
   const setReportFromTool = useCallback(
     (next: EnrichedOrgReport, sourceId?: string | null) => {
       if (sourceId && reportSourceRef.current === sourceId) {
@@ -569,6 +652,92 @@ export function RunExperience({
     [setReport]
   );
 
+  const computedWorkforceImpact = useMemo<WorkforceImpactSnapshot | null>(() => {
+    if (!report) return null;
+    const base = computeWorkforceImpact(report);
+    if (!base) return null;
+    return { ...base };
+  }, [report]);
+
+  const resolvedWorkforceImpact = useMemo<WorkforceImpactSnapshot | null>(() => {
+    if (storedWorkforceMetric) {
+      const hasSignal =
+        (storedWorkforceMetric.automationComponent ?? 0) > 0 ||
+        (storedWorkforceMetric.augmentationComponent ?? 0) > 0 ||
+        (storedWorkforceMetric.coverageComponent ?? 0) > 0;
+
+      if (hasSignal) {
+        return storedWorkforceMetric;
+      }
+    }
+
+    return computedWorkforceImpact;
+  }, [computedWorkforceImpact, storedWorkforceMetric]);
+
+  useEffect(() => {
+    if (report) {
+      const aggregations = report.aggregations ?? [];
+      const bucketWithShares =
+        aggregations
+          .flatMap((agg) => agg.buckets ?? [])
+          .find(
+            (bucket) =>
+              (typeof bucket.automationShare === "number" && Number.isFinite(bucket.automationShare)) ||
+              (typeof bucket.augmentationShare === "number" && Number.isFinite(bucket.augmentationShare))
+          ) ?? null;
+
+      const nodeWithShares =
+        report.hierarchy.find(
+          (node) =>
+            (typeof node.automationShare === "number" && Number.isFinite(node.automationShare)) ||
+            (typeof node.augmentationShare === "number" && Number.isFinite(node.augmentationShare))
+        ) ?? null;
+
+      console.debug("[RunExperience] report share sample", {
+        bucketWithShares,
+        nodeWithShares: nodeWithShares
+          ? {
+              id: nodeWithShares.id,
+              name: nodeWithShares.name,
+              headcount: nodeWithShares.headcount,
+              automationShare: nodeWithShares.automationShare,
+              augmentationShare: nodeWithShares.augmentationShare,
+            }
+          : null,
+      });
+    }
+  }, [report]);
+
+  useEffect(() => {
+    if (computedWorkforceImpact) {
+      console.debug("[RunExperience] computed workforce impact", {
+        score: computedWorkforceImpact.score,
+        automationComponent: computedWorkforceImpact.automationComponent,
+        augmentationComponent: computedWorkforceImpact.augmentationComponent,
+        coverageComponent: computedWorkforceImpact.coverageComponent,
+        totalHeadcount: computedWorkforceImpact.totalHeadcount,
+        automationImpact: computedWorkforceImpact.automationImpact,
+        augmentationImpact: computedWorkforceImpact.augmentationImpact,
+        coverageHeadcount: computedWorkforceImpact.coverageHeadcount,
+      });
+    }
+  }, [computedWorkforceImpact]);
+
+  useEffect(() => {
+    if (resolvedWorkforceImpact) {
+      console.debug("[RunExperience] workforce impact", {
+        score: resolvedWorkforceImpact.score,
+        automationComponent: resolvedWorkforceImpact.automationComponent,
+        augmentationComponent: resolvedWorkforceImpact.augmentationComponent,
+        coverageComponent: resolvedWorkforceImpact.coverageComponent,
+        totalHeadcount: resolvedWorkforceImpact.totalHeadcount,
+        automationImpact: resolvedWorkforceImpact.automationImpact,
+        augmentationImpact: resolvedWorkforceImpact.augmentationImpact,
+        coverageHeadcount: resolvedWorkforceImpact.coverageHeadcount,
+      });
+    }
+  }, [resolvedWorkforceImpact]);
+
   const reportProviderValue = useMemo(
     () => ({
       report,
@@ -576,6 +745,15 @@ export function RunExperience({
     }),
     [report, setReportFromTool]
   );
+
+  const formatPercent = useCallback((value: number | null | undefined) => {
+    if (value == null || Number.isNaN(value)) {
+      return "—";
+    }
+    return `${Math.round(value * 100)}%`;
+  }, []);
+
+  const showRunMeta = snapshot.status !== "completed";
 
   return (
     <ReportStateProvider value={reportProviderValue}>
@@ -587,8 +765,8 @@ export function RunExperience({
           backgroundImage: "linear-gradient(150deg, rgba(244,243,239,0.96), rgba(235,233,227,0.9))",
         }}
       >
-        <div className="flex flex-wrap items-start justify-between gap-6">
-          <div className="w-full max-w-full space-y-3 md:max-w-[800px]">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
+          <div className="w-full max-w-full space-y-4 lg:basis-2/3 lg:pr-10">
             <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[rgba(38,37,30,0.6)]">
               Live automation impact run
             </p>
@@ -602,22 +780,62 @@ export function RunExperience({
               While these are indicative projections rather than precise measurements, they're grounded in real-world data: task-level usage patterns from Claude interactions analyzed in Anthropic's Economic Index.
             </p>
           </div>
-          <div className="flex flex-col items-end gap-3 text-right">
-            {snapshot.remainingRuns != null && (
+          {resolvedWorkforceImpact && (
+            <div className="relative flex w-full max-w-[400px] flex-col items-start gap-4 text-[#26251e] lg:basis-1/3 lg:items-end lg:text-right">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[rgba(38,37,30,0.58)]">
+                Workforce impact score
+              </span>
+              <div className="relative flex w-full flex-col items-start gap-3 lg:items-end">
+                <div className="relative w-full overflow-visible">
+                  <span className="pointer-events-none block text-[clamp(120px,10vw,180px)] font-semibold leading-[0.8] text-[rgba(38,37,30,0.08)]">
+                    {resolvedWorkforceImpact.score.toFixed(1)}
+                  </span>
+                  <span className="absolute inset-0 flex items-end justify-between gap-4 px-1 pb-1 text-[clamp(52px,5vw,68px)] font-semibold leading-none text-[#26251e] lg:justify-end">
+                    <span className="whitespace-nowrap">{resolvedWorkforceImpact.score.toFixed(1)}</span>
+                    <span className="text-2xl font-semibold text-[rgba(38,37,30,0.55)]">/10</span>
+                  </span>
+                </div>
+                <ul className="flex flex-col gap-2 text-xs text-[rgba(38,37,30,0.75)] lg:items-end">
+                  <li className="inline-flex items-baseline gap-2 uppercase tracking-[0.18em]">
+                    <span className="font-semibold text-[rgba(38,37,30,0.6)]">Automation</span>
+                    <span className="font-mono text-sm text-[#cf2d56]">
+                      {formatPercent(resolvedWorkforceImpact.automationComponent)}
+                    </span>
+                  </li>
+                  <li className="inline-flex items-baseline gap-2 uppercase tracking-[0.18em]">
+                    <span className="font-semibold text-[rgba(38,37,30,0.6)]">Augmentation</span>
+                    <span className="font-mono text-sm text-[#2d6fce]">
+                      {formatPercent(resolvedWorkforceImpact.augmentationComponent)}
+                    </span>
+                  </li>
+                  <li className="inline-flex items-baseline gap-2 uppercase tracking-[0.18em]">
+                    <span className="font-semibold text-[rgba(38,37,30,0.6)]">Coverage</span>
+                    <span className="font-mono text-sm text-[rgba(38,37,30,0.75)]">
+                      {formatPercent(resolvedWorkforceImpact.coverageComponent)}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          )}
+          {showRunMeta && (
+            <div className="flex flex-col items-end gap-2 text-right lg:ml-6">
+              {snapshot.remainingRuns != null && (
+                <Badge
+                  variant="outline"
+                  className="border-[rgba(38,37,30,0.12)] bg-[rgba(38,37,30,0.06)] px-4 py-2 text-[11px] font-medium uppercase tracking-[0.28em] text-[rgba(38,37,30,0.65)]"
+                >
+                  {snapshot.remainingRuns} runs left
+                </Badge>
+              )}
               <Badge
                 variant="outline"
-                className="border-[rgba(38,37,30,0.12)] bg-[rgba(38,37,30,0.06)] px-4 py-2 text-[11px] font-medium uppercase tracking-[0.28em] text-[rgba(38,37,30,0.65)]"
+                className="border-transparent bg-[rgba(245,78,0,0.08)] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-[#f54e00]"
               >
-                {snapshot.remainingRuns} runs left
+                {statusDisplay.label}
               </Badge>
-            )}
-            <Badge
-              variant="outline"
-              className="border-transparent bg-[rgba(245,78,0,0.08)] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-[#f54e00]"
-            >
-              {statusDisplay.label}
-            </Badge>
-          </div>
+            </div>
+          )}
         </div>
         {snapshot.error && (
           <div className="mt-5 rounded-xl border border-[#cf2d5633] bg-[#cf2d5614] px-4 py-3 text-sm text-[#cf2d56]">
@@ -630,7 +848,7 @@ export function RunExperience({
             {snapshot.status === "completed" && report ? (
           <>
             <div className="flex flex-col gap-5">
-              <ReportPreview report={report} />
+              <ReportPreview report={report} impact={resolvedWorkforceImpact} />
             </div>
 
             <div
@@ -647,11 +865,37 @@ export function RunExperience({
                   Analyst narrative
                 </h2>
               </div>
-              <div className="mt-4 min-h-[220px] space-y-4 text-sm leading-7 text-[rgba(38,37,30,0.72)]">
-                {messages.length > 0 ? (
-                  <GroupedMessages messages={messages} statusBar={<StatusBar isLoading={isLoading} isStreaming={isStreaming} />} />
-                ) : (
-                  <Skeleton className="h-28 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />
+              <div className="mt-4 relative">
+                <div
+                  ref={narrativeScrollRef}
+                  className="min-h-[220px] max-h-[520px] overflow-y-auto pr-2 text-sm leading-7 text-[rgba(38,37,30,0.72)]"
+                >
+                  {messages.length > 0 ? (
+                    <GroupedMessages messages={messages} />
+                  ) : (
+                    <Skeleton className="h-28 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />
+                  )}
+                </div>
+                <div className="pointer-events-none absolute left-0 right-0 -top-5 z-20 flex justify-center">
+                  <div className="relative">
+                    <StatusBar isLoading={isLoading} isStreaming={isStreaming} />
+                  </div>
+                </div>
+                {showScrollToLatest && (
+                  <button
+                    type="button"
+                    aria-label="Scroll to latest analyst updates"
+                    onClick={() => {
+                      const container = narrativeScrollRef.current;
+                      if (!container) return;
+                      container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
+                      shouldStickNarrativeRef.current = true;
+                      setShowScrollToLatest(false);
+                    }}
+                    className="absolute bottom-4 right-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(38,37,30,0.14)] bg-white text-[rgba(38,37,30,0.72)] shadow-[0_12px_28px_rgba(34,28,20,0.18)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgba(34,28,20,0.22)] focus:outline-none focus:ring-2 focus:ring-[#f54e00]/50 focus:ring-offset-1"
+                  >
+                    <ChevronDown size={18} strokeWidth={2} />
+                  </button>
                 )}
               </div>
             </div>
@@ -671,11 +915,37 @@ export function RunExperience({
               >
                 Analyst narrative
               </h2>
-              <div className="mt-4 min-h-[220px] space-y-4 text-sm leading-7 text-[rgba(38,37,30,0.72)]">
-                {messages.length > 0 ? (
-                  <GroupedMessages messages={messages} statusBar={<StatusBar isLoading={isLoading} isStreaming={isStreaming} />} />
-                ) : (
-                  <Skeleton className="h-28 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />
+              <div className="mt-4 relative">
+                <div
+                  ref={narrativeScrollRef}
+                  className="min-h-[220px] max-h-[520px] overflow-y-auto pr-2 text-sm leading-7 text-[rgba(38,37,30,0.72)]"
+                >
+                  {messages.length > 0 ? (
+                    <GroupedMessages messages={messages} />
+                  ) : (
+                    <Skeleton className="h-28 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />
+                  )}
+                </div>
+                <div className="pointer-events-none absolute left-0 right-0 -top-5 z-20 flex justify-center">
+                  <div className="relative">
+                    <StatusBar isLoading={isLoading} isStreaming={isStreaming} />
+                  </div>
+                </div>
+                {showScrollToLatest && (
+                  <button
+                    type="button"
+                    aria-label="Scroll to latest analyst updates"
+                    onClick={() => {
+                      const container = narrativeScrollRef.current;
+                      if (!container) return;
+                      container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
+                      shouldStickNarrativeRef.current = true;
+                      setShowScrollToLatest(false);
+                    }}
+                    className="absolute bottom-4 right-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(38,37,30,0.14)] bg-white text-[rgba(38,37,30,0.72)] shadow-[0_12px_28px_rgba(34,28,20,0.18)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgba(34,28,20,0.22)] focus:outline-none focus:ring-2 focus:ring-[#f54e00]/50 focus:ring-offset-1"
+                  >
+                    <ChevronDown size={18} strokeWidth={2} />
+                  </button>
                 )}
               </div>
             </div>
@@ -683,7 +953,7 @@ export function RunExperience({
             <div className="flex flex-col gap-5">
               {report && (
                 <>
-                  <ReportPreview report={report} />
+                  <ReportPreview report={report} impact={resolvedWorkforceImpact} />
                   <div id="org-chart">
                     <OrgFlowChart report={report} />
                   </div>

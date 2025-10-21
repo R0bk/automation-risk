@@ -1,16 +1,11 @@
 import "server-only";
 
-import {
-  asc,
-  desc,
-  eq,
-  ilike,
-  sql,
-} from "drizzle-orm";
+import { and, asc, desc, eq, ilike, isNotNull, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { ChatSDKError } from "../errors";
 import { generateUUID } from "../utils";
+import { parseWorkforceMetricData } from "../run/workforce-impact";
 import {
   chat,
   company,
@@ -265,8 +260,10 @@ export async function getRunPageDataBySlug(slug: string) {
 
       let latestRunRecord: AnalysisRunRecord | null = null;
       let messagesForRun: typeof message.$inferSelect[] = [];
+      let metricsForRun: typeof runMetric.$inferSelect[] = [];
       let latestRunDurationMs = 0;
       let messagesDurationMs = 0;
+      let metricsDurationMs = 0;
 
       if (companyRecord) {
         const beforeRun = Date.now();
@@ -289,6 +286,15 @@ export async function getRunPageDataBySlug(slug: string) {
             .orderBy(asc(message.createdAt));
           messagesDurationMs = Date.now() - beforeMessages;
         }
+
+        if (latestRun) {
+          const beforeMetrics = Date.now();
+          metricsForRun = await tx
+            .select()
+            .from(runMetric)
+            .where(eq(runMetric.runId, latestRun.id));
+          metricsDurationMs = Date.now() - beforeMetrics;
+        }
       }
 
       const durationMs = Date.now() - startedAt;
@@ -297,6 +303,7 @@ export async function getRunPageDataBySlug(slug: string) {
         companyMs: afterCompanyMs,
         latestRunMs: latestRunDurationMs,
         messagesMs: messagesDurationMs,
+        metricsMs: metricsDurationMs,
         messageCount: messagesForRun.length,
         totalMs: durationMs,
       });
@@ -306,6 +313,7 @@ export async function getRunPageDataBySlug(slug: string) {
         remainingRuns: remainingRunsValue,
         latestRun: latestRunRecord,
         messages: messagesForRun,
+        metrics: metricsForRun,
       };
     });
   } catch (_error) {
@@ -596,14 +604,32 @@ export async function listTrendingRuns(limit: number) {
 export async function listMostViewedRuns({
   limit,
   offset,
+  searchTerm,
+  sortBy = "views",
 }: {
   limit: number;
   offset: number;
+  searchTerm?: string;
+  sortBy?: "views" | "impact";
 }) {
   try {
     const effectiveLimit = Math.max(limit, 0);
     const effectiveOffset = Math.max(offset, 0);
     const popularityScore = sql<number>`COALESCE(${runPopularity.viewCount}, 0)`;
+    const impactScoreExpr = sql<number>`CAST(${runMetric.data}->>'score' AS double precision)`;
+
+    const trimmedSearch = searchTerm?.trim() ?? "";
+    const conditions = [eq(analysisRun.status, "completed")];
+
+    if (trimmedSearch.length > 0) {
+      const pattern = `%${trimmedSearch}%`;
+      conditions.push(
+        or(ilike(company.displayName, pattern), ilike(company.slug, pattern))
+      );
+    }
+
+    const whereClause =
+      conditions.length === 1 ? conditions[0] : and(...conditions);
 
     const rows = await db
       .select({
@@ -614,16 +640,39 @@ export async function listMostViewedRuns({
         displayName: company.displayName,
         hqCountry: company.hqCountry,
         viewCount: runPopularity.viewCount,
+        impactScore: impactScoreExpr,
+        workforceMetricData: runMetric.data,
       })
       .from(analysisRun)
       .leftJoin(company, eq(analysisRun.companyId, company.id))
       .leftJoin(runPopularity, eq(runPopularity.runId, analysisRun.id))
-      .where(eq(analysisRun.status, "completed"))
-      .orderBy(desc(popularityScore), desc(analysisRun.updatedAt))
+      .leftJoin(
+        runMetric,
+        and(eq(runMetric.runId, analysisRun.id), eq(runMetric.metricType, "workforce_score"))
+      )
+      .where(whereClause)
+      .orderBy(
+        sortBy === "impact"
+          ? desc(sql`COALESCE(${impactScoreExpr}, -1)`)
+          : desc(popularityScore),
+        desc(analysisRun.updatedAt)
+      )
       .limit(effectiveLimit + 1)
       .offset(effectiveOffset);
 
-    const runs = effectiveLimit === 0 ? [] : rows.slice(0, effectiveLimit);
+    const runs =
+      effectiveLimit === 0
+        ? []
+        : rows.slice(0, effectiveLimit).map((row) => ({
+            runId: row.runId,
+            status: row.status,
+            updatedAt: row.updatedAt,
+            slug: row.slug,
+            displayName: row.displayName,
+            hqCountry: row.hqCountry,
+            viewCount: row.viewCount,
+            workforceMetric: parseWorkforceMetricData(row.workforceMetricData),
+          }));
     const hasMore = rows.length > effectiveLimit;
 
     return {
@@ -658,6 +707,55 @@ export async function saveRunMetrics(values: RunMetricInsert[]) {
     throw new ChatSDKError(
       "bad_request:database",
       "Failed to save run metrics"
+    );
+  }
+}
+
+export async function getRunMetricsByRunId(runId: string) {
+  try {
+    return await db
+      .select()
+      .from(runMetric)
+      .where(eq(runMetric.runId, runId));
+  } catch (_error) {
+    throw new ChatSDKError(
+      "bad_request:database",
+      "Failed to load run metrics"
+    );
+  }
+}
+
+export async function listCompletedRunsWithReports() {
+  try {
+    return await db
+      .select({
+        runId: analysisRun.id,
+        companyId: analysisRun.companyId,
+        finalReportJson: analysisRun.finalReportJson,
+        updatedAt: analysisRun.updatedAt,
+      })
+      .from(analysisRun)
+      .where(and(eq(analysisRun.status, "completed"), isNotNull(analysisRun.finalReportJson)));
+  } catch (_error) {
+    throw new ChatSDKError(
+      "bad_request:database",
+      "Failed to list completed runs with reports"
+    );
+  }
+}
+
+export async function replaceRunMetrics(metricType: string, values: RunMetricInsert[]) {
+  try {
+    await db.transaction(async (tx) => {
+      await tx.delete(runMetric).where(eq(runMetric.metricType, metricType));
+      if (values.length > 0) {
+        await tx.insert(runMetric).values(values);
+      }
+    });
+  } catch (_error) {
+    throw new ChatSDKError(
+      "bad_request:database",
+      "Failed to replace run metrics"
     );
   }
 }

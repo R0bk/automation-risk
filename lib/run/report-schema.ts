@@ -209,8 +209,8 @@ export const enrichedOrgReportSchema = z.object({
     workforceEstimate: z.number().int().nonnegative().nullable().optional(),
     sources: z.array(enrichedReportSourceSchema).max(100).default([]),
   }),
-  hierarchy: z.array(enrichedOrgNodeSchema).max(400),
-  roles: z.array(enrichedOrgRoleSchema).max(400).default([]),
+  hierarchy: z.array(enrichedOrgNodeSchema).max(600),
+  roles: z.array(enrichedOrgRoleSchema).max(600).default([]),
   aggregations: z.array(enrichedAggregationSchema).max(120).optional().default([]),
   visualizationHints: z
     .object({

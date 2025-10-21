@@ -198,6 +198,31 @@ function buildRoleFromSources(code: string, jobRole: JobRole | null, catalogRole
   const automationShare = catalogAutomationShare;
   const augmentationShare = catalogAugmentationShare;
 
+  const catalogTaskCounts =
+    catalogMetrics &&
+    (catalogMetrics.automationTasks > 0 ||
+      catalogMetrics.augmentationTasks > 0 ||
+      catalogMetrics.manualTasks > 0 ||
+      catalogMetrics.taskCount > 0)
+      ? (() => {
+          const automationTasks = Math.max(0, Math.trunc(catalogMetrics.automationTasks ?? 0));
+          const augmentationTasks = Math.max(0, Math.trunc(catalogMetrics.augmentationTasks ?? 0));
+          const manualTasks = Math.max(0, Math.trunc(catalogMetrics.manualTasks ?? 0));
+          const declaredTotal = Math.max(0, Math.trunc(catalogMetrics.taskCount ?? 0));
+          const derivedTotal = automationTasks + augmentationTasks + manualTasks;
+          const total = Math.max(declaredTotal, derivedTotal);
+          if (total === 0) {
+            return undefined;
+          }
+          return {
+            automation: automationTasks,
+            augmentation: augmentationTasks,
+            manual: manualTasks,
+            total,
+          };
+        })() ?? undefined
+      : undefined;
+
   const manualShare =
     automationShare == null && augmentationShare == null
       ? null
@@ -220,6 +245,7 @@ function buildRoleFromSources(code: string, jobRole: JobRole | null, catalogRole
     headcount: null,
     automationShare,
     augmentationShare,
+    taskMixCounts: catalogTaskCounts,
     taskMixShares,
   };
 }

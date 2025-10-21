@@ -4,6 +4,7 @@ import { RunExperience } from "@/components/run/run-experience";
 import { SiteFooter } from "@/components/site-footer";
 import { getRunPageDataBySlug } from "@/lib/db/queries";
 import { enrichedOrgReportSchema, type EnrichedOrgReport } from "@/lib/run/report-schema";
+import { parseWorkforceMetricData, type WorkforceImpactSnapshot } from "@/lib/run/workforce-impact";
 import type { ChatMessage } from "@/lib/types";
 import { convertToUIMessages } from "@/lib/utils";
 
@@ -28,8 +29,10 @@ export default async function RunPage({ params, searchParams }: RunPageProps) {
 
   let fallbackDisplayName: string | undefined;
 
+  let initialWorkforceMetric: WorkforceImpactSnapshot | null = null;
+
   try {
-    const { company, remainingRuns, latestRun, messages } = await getRunPageDataBySlug(slug);
+    const { company, remainingRuns, latestRun, messages, metrics } = await getRunPageDataBySlug(slug);
 
     initialRemainingRuns = remainingRuns ?? null;
 
@@ -50,6 +53,16 @@ export default async function RunPage({ params, searchParams }: RunPageProps) {
         if (latestRun.finalReportJson && latestRun.status === "completed") {
           const parsedReport = enrichedOrgReportSchema.safeParse(latestRun.finalReportJson);
           initialReport = parsedReport.success ? parsedReport.data : null;
+        }
+      }
+
+      if (latestRun?.id) {
+        const scoreMetric = metrics.find((entry) => entry.metricType === "workforce_score");
+        if (scoreMetric?.data) {
+          const parsedMetric = parseWorkforceMetricData(scoreMetric.data);
+          if (parsedMetric) {
+            initialWorkforceMetric = parsedMetric;
+          }
         }
       }
 
@@ -110,10 +123,11 @@ export default async function RunPage({ params, searchParams }: RunPageProps) {
           initialStatus={initialStatus}
           initialReport={initialReport}
           initialMessages={initialMessages}
-          initialRemainingRuns={initialRemainingRuns}
-          refresh={refresh}
-          slug={slug}
-        />
+        initialRemainingRuns={initialRemainingRuns}
+        initialWorkforceMetric={initialWorkforceMetric}
+        refresh={refresh}
+        slug={slug}
+      />
       </div>
 
       <SiteFooter navLinks={footerLinks} />

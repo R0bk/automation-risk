@@ -351,7 +351,7 @@ export const getOnetRoleTools = () => {
         roles: z
           .array(z.string().trim().min(1, "Role name cannot be empty"))
           .min(1, "Provide at least one role")
-          .describe("List of O*NET L1 role names to analyze at a high level"),
+          .describe("List of O*NET L1 role names to analyze at a high level. Only include role name e.g. First-Line Supervisors of Food Preparation and Serving Workers. Do not include the O*NET code."),
       }),
       execute: async ({ roles }) => {
         const seen = new Set<string>();

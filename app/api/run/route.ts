@@ -26,6 +26,7 @@ import {
   listTrendingRuns,
   recordRunPopularity,
   saveMessages,
+  getRunMetricsByRunId,
   updateAnalysisRunResult,
   updateAnalysisRunStatus,
 } from "@/lib/db/queries";
@@ -544,6 +545,16 @@ export async function GET(request: Request) {
     });
   }
 
+  let metricsPayload: Awaited<ReturnType<typeof getRunMetricsByRunId>> = [];
+  try {
+    metricsPayload = await getRunMetricsByRunId(runRecord.id);
+  } catch (error) {
+    console.warn("Failed to load run metrics", {
+      runId: runRecord.id,
+      error,
+    });
+  }
+
   console.log("[/api/run] GET response payload", {
     runId: runRecord.id,
     chatId: runRecord.chatId,
@@ -557,5 +568,6 @@ export async function GET(request: Request) {
     finalReportJson: runRecord.finalReportJson,
     chatId: runRecord.chatId,
     messages: messagesPayload,
+    metrics: metricsPayload,
   });
 }

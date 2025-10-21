@@ -34,7 +34,8 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
     }
   }, []);
 
-  const disabled = remainingRuns != null && remainingRuns <= 0;
+  const isBudgetExhausted = remainingRuns != null && remainingRuns <= 0;
+  const companyInputDisabled = isBudgetExhausted && !apiKey;
 
   const helperText = (() => {
     if (remainingRuns == null) return "";
@@ -58,7 +59,7 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
       setError("Max 50 characters");
       return;
     }
-    if (disabled && !apiKey) {
+    if (isBudgetExhausted && !apiKey) {
       setError("Budget exhausted");
       return;
     }
@@ -117,7 +118,7 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
             maxLength={MAX_LENGTH}
             placeholder="..."
             aria-label="Company name"
-            disabled={disabled}
+            disabled={companyInputDisabled}
             autoComplete="off"
             className={cn(
               "relative mx-2 ml-4 inline-flex items-center rounded-md border-b border-[rgba(245,78,0,0.2)] bg-transparent px-2 py-0 text-[#f54e00cc] outline-none transition focus:border-[#f54e00] focus:shadow-[0_0_0_6px_rgba(245,78,0,0.12)] disabled:cursor-not-allowed disabled:opacity-60",
@@ -136,15 +137,15 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[rgba(38,37,30,0.08)] to-transparent" />
         </div>
 
-        <ApiKeyInput disabled={disabled} onApiKeyChange={setApiKey} />
+        <ApiKeyInput disabled={isBudgetExhausted} onApiKeyChange={setApiKey} />
 
         <div className="mt-6 flex items-center justify-between gap-4 transition-all duration-200 ease-out">
           <Button
             onClick={handleSubmit}
-            disabled={(disabled && !apiKey) || !hasValue}
+            disabled={(isBudgetExhausted && !apiKey) || !hasValue}
             className={cn(
               "h-12 rounded-full px-7 text-xs font-semibold uppercase tracking-[0.24em] transition",
-              hasValue && (!disabled || apiKey)
+              hasValue && (!isBudgetExhausted || apiKey)
                 ? "cursor-pointer bg-[linear-gradient(120deg,#f54e00,#ff9440)] text-white shadow-[0_20px_45px_rgba(245,78,0,0.35)] hover:shadow-[0_26px_60px_rgba(245,78,0,0.45)]"
                 : "cursor-default bg-[rgba(38,37,30,0.08)] text-[rgba(38,37,30,0.45)] shadow-none"
             )}

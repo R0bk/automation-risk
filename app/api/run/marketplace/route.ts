@@ -45,7 +45,17 @@ export async function GET(request: Request) {
       max: Number.MAX_SAFE_INTEGER,
     });
 
-    const { runs, hasMore } = await listMostViewedRuns({ limit, offset });
+    const sortParam = searchParams.get("sort");
+    const sortBy = sortParam === "impact" ? "impact" : "views";
+    const rawQuery = searchParams.get("query");
+    const searchTerm = rawQuery && rawQuery.trim().length > 0 ? rawQuery.trim() : undefined;
+
+    const { runs, hasMore } = await listMostViewedRuns({
+      limit,
+      offset,
+      sortBy,
+      searchTerm,
+    });
     console.log("[/api/run/marketplace] query result", {
       runCount: runs.length,
       hasMore,
@@ -59,6 +69,7 @@ export async function GET(request: Request) {
       viewCount: run.viewCount ?? 1,
       updatedAt: run.updatedAt,
       hqCountry: run.hqCountry ?? null,
+      workforceMetric: run.workforceMetric ?? null,
     }));
 
     const nextOffset = hasMore ? offset + normalizedRuns.length : null;
