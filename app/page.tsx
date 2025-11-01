@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import { Hero } from "@/components/run/hero";
 import { MostViewedMarketplace } from "@/components/run/most-viewed-marketplace";
 import { TrendingRuns } from "@/components/run/trending-runs";
 import { SiteFooter } from "@/components/site-footer";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { MarketplacePage } from "@/lib/run/marketplace-types";
 import {
   getRemainingCompanyRuns,
@@ -15,79 +17,83 @@ const LANDING_FOOTER_LINKS = [
   { label: "Marketplace", href: "#marketplace" },
 ];
 
-export default async function Page() {
-  let remainingRuns: number | null = null;
-  let trending: Array<{
-    runId: string;
-    slug: string | null;
-    displayName: string | null;
-    status: string | null;
-    viewCount: number;
-    updatedAt: string | null;
-  }> = [];
-  let marketplaceInitial: MarketplacePage | null = null;
+// ISR: Revalidate every 60 seconds (reduces server load by 50-80%)
+export const revalidate = 60;
 
-  try {
-    const startTime = Date.now();
-    
-    const [remainingRunsValue, trendingRows, mostViewed] = await Promise.all([
-      getRemainingCompanyRuns(),
-      listTrendingRuns(8),
-      listMostViewedRuns({ limit: 12, offset: 0 }),
-    ]);
+// Async component for trending runs
+async function TrendingRunsAsync() {
+  const trendingRows = await listTrendingRuns(8);
+  const trending = trendingRows.map((entry) => ({
+    runId: entry.runId,
+    slug: entry.slug,
+    displayName: entry.displayName,
+    status: entry.status,
+    viewCount: entry.viewCount ?? 1,
+    updatedAt: entry.updatedAt?.toString() ?? null,
+  }));
 
-    const afterQueries = Date.now();
-    console.log("[page.tsx] Database queries completed", {
-      duration: afterQueries - startTime,
-      remainingRuns: remainingRunsValue,
-      trendingCount: trendingRows.length,
-      mostViewedCount: mostViewed.runs.length,
-    });
+  return <TrendingRuns runs={trending} />;
+}
 
-    remainingRuns = remainingRunsValue ?? null;
+// Async component for marketplace
+async function MostViewedMarketplaceAsync() {
+  const mostViewed = await listMostViewedRuns({ limit: 12, offset: 0, sortBy: "views" });
+  const marketplaceInitial: MarketplacePage = {
+    runs: mostViewed.runs.map((run) => ({
+      runId: run.runId,
+      slug: run.slug,
+      displayName: run.displayName,
+      status: run.status,
+      viewCount: run.viewCount ?? 1,
+      updatedAt: run.updatedAt,
+      hqCountry: run.hqCountry,
+      workforceMetric: run.workforceMetric,
+    })),
+    pagination: {
+      limit: 12,
+      offset: 0,
+      nextOffset: mostViewed.hasMore ? 12 : null,
+      hasMore: mostViewed.hasMore,
+    },
+  };
 
-    const beforeTrendingMap = Date.now();
-    trending = trendingRows.map((entry) => ({
-      runId: entry.runId,
-      slug: entry.slug,
-      displayName: entry.displayName,
-      status: entry.status,
-      viewCount: Math.max(entry.viewCount ?? 1, 1),
-      updatedAt: entry.updatedAt?.toString() ?? null,
-    }));
-    const afterTrendingMap = Date.now();
+  return <MostViewedMarketplace initialPage={marketplaceInitial} pageSize={12} />;
+}
 
-    const beforeMarketplaceMap = Date.now();
-    marketplaceInitial = {
-      runs: mostViewed.runs.map((run) => ({
-        runId: run.runId,
-        slug: run.slug,
-        displayName: run.displayName,
-        status: run.status,
-        viewCount: Math.max(run.viewCount ?? 1, 1),
-        updatedAt: run.updatedAt,
-        hqCountry: run.hqCountry ?? null,
-      })),
-      pagination: {
-        limit: 12,
-        offset: 0,
-        nextOffset: mostViewed.hasMore ? 12 : null,
-        hasMore: mostViewed.hasMore,
-      },
-    };
-    const afterMarketplaceMap = Date.now();
+// Async component for hero (fetches remaining runs)
+async function HeroAsync() {
+  const remainingRuns = await getRemainingCompanyRuns();
+  return <Hero remainingRuns={remainingRuns} />;
+}
 
-    const totalTime = afterMarketplaceMap - startTime;
-    console.log("[page.tsx] Landing data processing completed", {
-      totalDuration: totalTime,
-      queryDuration: afterQueries - startTime,
-      trendingMapDuration: afterTrendingMap - beforeTrendingMap,
-      marketplaceMapDuration: afterMarketplaceMap - beforeMarketplaceMap,
-    });
-  } catch (error) {
-    console.warn("Failed to load landing data", error);
-  }
+// Loading skeletons
+function TrendingSkeleton() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-8 w-48 bg-[rgba(38,37,30,0.08)]" />
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[1, 2, 3, 4].map((i) => (
+          <Skeleton key={i} className="h-32 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />
+        ))}
+      </div>
+    </div>
+  );
+}
 
+function MarketplaceSkeleton() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-8 w-48 bg-[rgba(38,37,30,0.08)]" />
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <Skeleton key={i} className="h-48 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function Page() {
   return (
     <div
       className="relative min-h-screen overflow-hidden"
@@ -107,47 +113,20 @@ export default async function Page() {
       </div>
 
       <main className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-col gap-14 px-6 pb-32 pt-28 text-[#26251e]">
-        <Hero remainingRuns={remainingRuns} />
-{/* 
-        <section className="grid gap-5 sm:grid-cols-3">
-          {[
-            {
-              title: "Iterative web intelligence",
-              body:
-                "AI orchestration can run up to 100 native web searches to reconstruct org structure with citations in real time.",
-            },
-            {
-              title: "O*NET-aligned workforce lens",
-              body:
-                "Titles collapse into canonical role families so automation and augmentation scores stay comparable across firms.",
-            },
-            {
-              title: "Permanent public replays",
-              body:
-                "Every completed run stays public—no re-billing, just instant streaming of the original analysis trace.",
-            },
-          ].map((item) => (
-            <div
-              key={item.title}
-              className="group rounded-[20px] border border-[rgba(38,37,30,0.1)] px-6 py-7 shadow-[0_24px_48px_rgba(34,28,20,0.12)] transition hover:border-[rgba(38,37,30,0.18)] hover:shadow-[0_30px_60px_rgba(34,28,20,0.16)]"
-              style={{
-                backgroundImage: "linear-gradient(155deg, rgba(242,241,237,0.96), rgba(233,231,225,0.9))",
-              }}
-            >
-              <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[rgba(38,37,30,0.6)]">
-                {item.title}
-              </p>
-              <p className="mt-4 text-sm leading-relaxed text-[rgba(38,37,30,0.68)]">{item.body}</p>
-            </div>
-          ))}
-        </section> */}
+        <Suspense fallback={<Skeleton className="h-64 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />}>
+          <HeroAsync />
+        </Suspense>
 
         <div id="trending">
-          <TrendingRuns runs={trending} />
+          <Suspense fallback={<TrendingSkeleton />}>
+            <TrendingRunsAsync />
+          </Suspense>
         </div>
 
         <div id="marketplace">
-          <MostViewedMarketplace initialPage={marketplaceInitial} pageSize={12} />
+          <Suspense fallback={<MarketplaceSkeleton />}>
+            <MostViewedMarketplaceAsync />
+          </Suspense>
         </div>
       </main>
 

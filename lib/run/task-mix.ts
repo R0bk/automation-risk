@@ -48,7 +48,7 @@ function getCatalogRole(role: EnrichedOrgRole): OnetCatalogRole | null {
 
   const code = role.onetCode?.trim();
   if (code && cachedLookup?.has(code)) {
-    return cachedLookup.get(code) ?? null;
+    return cachedLookup.get(code) || null;
   }
 
   const normalized = role.normalizedTitle?.trim().toLowerCase();
@@ -56,7 +56,7 @@ function getCatalogRole(role: EnrichedOrgRole): OnetCatalogRole | null {
     return null;
   }
 
-  return cachedNormalizedLookup?.get(normalized) ?? null;
+  return cachedNormalizedLookup?.get(normalized) || null;
 }
 
 export function deriveTaskMixCounts(role: EnrichedOrgRole | undefined | null): TaskMixCounts {
@@ -149,9 +149,9 @@ export function deriveTaskMixShares(role: EnrichedOrgRole | undefined | null): T
 
   if (role.taskMixShares) {
     return {
-      automation: role.taskMixShares.automation ?? null,
-      augmentation: role.taskMixShares.augmentation ?? null,
-      manual: role.taskMixShares.manual ?? null,
+      automation: role.taskMixShares.automation,
+      augmentation: role.taskMixShares.augmentation,
+      manual: role.taskMixShares.manual,
     };
   }
 

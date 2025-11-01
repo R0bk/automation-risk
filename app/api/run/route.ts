@@ -3,7 +3,6 @@ import { createOpenAI, OpenAIResponsesProviderOptions } from "@ai-sdk/openai";
 import { createAnthropic, AnthropicProviderOptions, anthropic } from "@ai-sdk/anthropic";
 import {
   JsonToSseTransformStream,
-  ToolSet,
   createUIMessageStream,
   smoothStream,
   stepCountIs,
@@ -24,7 +23,6 @@ import {
   getMessagesByChatId,
   getRemainingCompanyRuns,
   listTrendingRuns,
-  recordRunPopularity,
   saveMessages,
   getRunMetricsByRunId,
   updateAnalysisRunResult,
@@ -70,6 +68,12 @@ const openai = createOpenAI({
   ...(openaiBaseUrl ? { baseURL: openaiBaseUrl } : {}),
 });
 
+const openrouter = createOpenAI({
+  baseURL: process.env.OPENROUTER_API,
+  apiKey: process.env.OPENROUTER_API_KEY,
+  fetch: createLongTimeoutFetch(THIRTY_MINUTES_IN_MS),
+});
+
 const defaultAnthropicProvider = createAnthropic({fetch: withEphemeralCacheControl()});
 
 const openaiProviderOptions: OpenAIResponsesProviderOptions = {
@@ -106,7 +110,7 @@ export async function POST(request: Request) {
     return new ChatSDKError("bad_request:api", "Invalid JSON payload").toResponse();
   }
 
-  const { companyName, hqCountry, refresh, message, userApiKey } = body;
+  const { companyName, hqCountry, industry, refresh, message, userApiKey } = body;
   const companySlug = slugifyCompanyName(companyName);
 
   const requestIp = getClientIp(request);
@@ -192,6 +196,7 @@ export async function POST(request: Request) {
     slug: companySlug,
     displayName: companyName,
     hqCountry: hqCountry ?? null,
+    industry: industry ?? null,
     inputQuery: companyName,
     model: "claude-4-5",
     bypassBudget: bypassLimits,
@@ -264,7 +269,7 @@ export async function POST(request: Request) {
     ...humanTools,
     ...onetTools,
     org_report_finalizer: orgReportCollector,
-  } as ToolSet;
+  };
 
   const stopAfterFinalReport: StopCondition<typeof tools> = ({ steps }) =>
     steps.some((step) =>
@@ -282,8 +287,8 @@ export async function POST(request: Request) {
     ? createAnthropic({
         apiKey: userApiKey,
         fetch: withEphemeralCacheControl(),
-      })
-    : defaultAnthropicProvider;
+      })("claude-sonnet-4-5")
+    : openrouter.chat("bedrock.anthropic.claude-sonnet-4-5");
 
   // Initialize stream debugger
   const streamDebugger = useStreamDebugger({
@@ -317,7 +322,7 @@ export async function POST(request: Request) {
       };
 
       const result = streamText({
-        model: anthropicProvider("claude-sonnet-4-5"), //openai("gpt-5-mini"),
+        model: anthropicProvider, //openai("gpt-5-mini"),
         system: runSystemPrompt({
           companyName,
           companySlug,
@@ -467,6 +472,10 @@ export async function GET(request: Request) {
         runId: cached.runId,
         finalReportJson: cached.report,
         chatId: cached.chatId,
+      }, {
+        headers: {
+          "Cache-Control": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
+        },
       });
     }
   }
@@ -479,6 +488,10 @@ export async function GET(request: Request) {
         runId: cached.runId,
         finalReportJson: cached.report,
         chatId: cached.chatId,
+      }, {
+        headers: {
+          "Cache-Control": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
+        },
       });
     }
   }
@@ -501,9 +514,14 @@ export async function GET(request: Request) {
   }
 
   if (runRecord.status !== "completed") {
+    // Non-completed runs (running/pending): no cache
     return NextResponse.json({
       status: runRecord.status,
       runId: runRecord.id,
+    }, {
+      headers: {
+        "Cache-Control": "private, no-cache, no-store, must-revalidate",
+      },
     });
   }
 
@@ -511,8 +529,6 @@ export async function GET(request: Request) {
     runId: runRecord.id,
     chatId: runRecord.chatId,
   });
-
-  await recordRunPopularity(runRecord.id).catch(() => undefined);
 
   if (runRecord.finalReportJson) {
     const parsed = enrichedOrgReportSchema.safeParse(runRecord.finalReportJson);
@@ -562,6 +578,26 @@ export async function GET(request: Request) {
     isArray: Array.isArray(messagesPayload),
   });
 
+  // Status-based cache headers for optimal CDN performance
+  const headers = new Headers();
+
+  if (runRecord.status === "completed") {
+    // Completed runs are immutable: aggressive CDN caching
+    // max-age=3600 (1 hour browser cache)
+    // s-maxage=3600 (1 hour CDN cache)
+    // stale-while-revalidate=86400 (24 hours stale grace period)
+    headers.set("Cache-Control", "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400");
+  } else if (runRecord.status === "failed") {
+    // Failed runs are static until retry: medium caching
+    // max-age=600 (10 min browser cache)
+    // s-maxage=600 (10 min CDN cache)
+    // stale-while-revalidate=3600 (1 hour stale grace period)
+    headers.set("Cache-Control", "public, max-age=600, s-maxage=600, stale-while-revalidate=3600");
+  } else {
+    // Running/pending runs change frequently: no cache
+    headers.set("Cache-Control", "private, no-cache, no-store, must-revalidate");
+  }
+
   return NextResponse.json({
     status: "completed",
     runId: runRecord.id,
@@ -569,5 +605,5 @@ export async function GET(request: Request) {
     chatId: runRecord.chatId,
     messages: messagesPayload,
     metrics: metricsPayload,
-  });
+  }, { headers });
 }

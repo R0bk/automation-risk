@@ -80,8 +80,8 @@ export async function POST() {
       metricType: "workforce_score",
       label: "Workforce Impact Score",
       headcount: Math.round(item.totalHeadcount),
-      automationShare: roundedAutomation,
-      augmentationShare: roundedAugmentation,
+      automationShare: roundedAutomation.toString(),
+      augmentationShare: roundedAugmentation.toString(),
       data: {
         score: item.score,
         totalHeadcount: item.totalHeadcount,

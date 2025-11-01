@@ -28,7 +28,6 @@ import { ReportStateProvider } from "./report-context";
 interface RunExperienceProps {
   slug: string;
   initialName?: string | null;
-  refresh?: boolean;
   initialChatId?: string | null;
   initialRunId?: string | null;
   initialStatus?: RunSnapshot["status"];
@@ -39,7 +38,7 @@ interface RunExperienceProps {
 }
 
 type RunSnapshot = {
-  status: "idle" | "running" | "replay" | "completed" | "failed";
+  status: "idle" | "running" | "replay" | "completed" | "failed" | "pending";
   runId?: string;
   chatId?: string;
   remainingRuns?: number | null;
@@ -86,25 +85,25 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export function RunExperience({
   slug,
   initialName,
-  refresh = false,
-  initialChatId = null,
-  initialRunId = null,
+  initialChatId,
+  initialRunId,
   initialStatus = "idle",
-  initialReport = null,
+  initialReport,
   initialMessages = [],
-  initialRemainingRuns = null,
-  initialWorkforceMetric = null,
+  initialRemainingRuns,
+  initialWorkforceMetric,
 }: RunExperienceProps) {
   const searchParams = useSearchParams();
+  const refresh = searchParams.get("refresh") === "1";
 
   const [snapshot, setSnapshot] = useState<RunSnapshot>(() => ({
     status: initialStatus,
     runId: initialRunId ?? undefined,
     chatId: initialChatId ?? undefined,
-    remainingRuns: initialRemainingRuns ?? null,
+    remainingRuns: initialRemainingRuns,
     companyName: initialName ?? undefined,
   }));
-  const [report, setReport] = useState<EnrichedOrgReport | null>(initialReport);
+  const [report, setReport] = useState<EnrichedOrgReport | null>(initialReport ?? null);
   const [storedWorkforceMetric, setStoredWorkforceMetric] = useState<WorkforceImpactSnapshot | null>(
     initialWorkforceMetric ?? null
   );
@@ -161,13 +160,10 @@ export function RunExperience({
 
   const parseReport = useCallback((input: unknown): EnrichedOrgReport | null => {
     if (!input) return null;
-    console.log("Parse report:", input)
     const enriched = enrichedOrgReportSchema.safeParse(input);
-    console.log("Enriched:", enriched)
     if (enriched.success) {
       return enriched.data;
     }
-    console.log("failed to enrich sucessfully")
     const normalized = normaliseLegacyReport(input);
     const normalizedEnriched = enrichedOrgReportSchema.safeParse(normalized);
     if (normalizedEnriched.success) {
@@ -187,12 +183,6 @@ export function RunExperience({
         return null;
       }
       const data = (await response.json()) as RunStatusResponse;
-      console.log("[RunExperience] fetchRunBySlug", {
-        status: data.status,
-        chatId: data.chatId,
-        messageCount: data.messages?.length ?? 0,
-        data
-      });
       applyWorkforceMetric(data.metrics);
       return data;
     } catch (error) {
@@ -258,7 +248,6 @@ export function RunExperience({
           return;
         }
         const latest = await fetchRunBySlug();
-        console.log("Latest", latest)
         if (latest?.runId || latest?.chatId) {
           setSnapshot((prev) => ({
             ...prev,
@@ -296,11 +285,6 @@ export function RunExperience({
         );
 
       if (messages && messages.length > 0) {
-        console.log("[RunExperience] applyTranscript received", {
-          chatId,
-          messageCount: messages.length,
-          ids: messages.map((message) => message.id),
-        });
         pendingTranscriptRef.current = messages;
         if (hasRenderableAssistant(messages)) {
           setInitialChatMessages(messages);
@@ -322,14 +306,7 @@ export function RunExperience({
         let backoff = 2000;
         for (let attempt = 0; attempt < 10; attempt++) {
           const data = await fetchRunBySlug();
-          console.log("Data", data)
           if (!data) break;
-
-          console.log("[RunExperience] pollRun fetch", {
-            status: data.status,
-            chatId: data.chatId,
-            messageCount: data.messages?.length ?? 0,
-          });
 
           applyTranscript({ chatId: data.chatId, messages: data.messages });
           applyWorkforceMetric(data.metrics);
@@ -394,21 +371,11 @@ export function RunExperience({
   }, [chatIdState]);
 
   useEffect(() => {
-    console.log("[RunExperience] chatId state", chatIdState);
-    console.log("[RunExperience] messages length", messages.length);
-  }, [chatIdState, messages.length]);
-
-  useEffect(() => {
     if (!chatIdState) {
       return;
     }
 
     if (pendingTranscriptRef.current && pendingTranscriptRef.current.length > 0) {
-      console.log("[RunExperience] rehydrating transcript after chatId change", {
-        chatId: chatIdState,
-        count: pendingTranscriptRef.current.length,
-        ids: pendingTranscriptRef.current.map((message) => message.id),
-      });
       setMessages(pendingTranscriptRef.current);
       pendingTranscriptRef.current = null;
     }
@@ -486,56 +453,80 @@ export function RunExperience({
       }
 
       if (!refresh) {
-        const existing = await fetchRunBySlug();
-        console.log("Bootstrap:", existing)
-        if (cancelled) return;
+        // Use server-provided initial data instead of redundant fetch
+        // This eliminates the 200ms+ double-fetch penalty
 
-        if (existing) {
-          console.log("[RunExperience] bootstrap existing status", {
-            status: existing.status,
-            chatId: existing.chatId,
-            messageCount: existing.messages?.length ?? 0,
-          });
-          applyTranscript({ chatId: existing.chatId, messages: existing.messages });
-          applyWorkforceMetric(existing.metrics);
+        if (initialStatus === "completed" && initialReport) {
+          // Already have complete data from server, no need to fetch
+          bootstrappedRef.current = true;
+          return;
+        }
 
-          if (existing.status === "completed" && existing.finalReportJson) {
-            console.log("Bootstrap: completed, trying to parse")
-            const parsed = parseReport(existing.finalReportJson);
-            if (parsed) {
-              setReport(parsed);
-              reportSourceRef.current = "api";
+        if (initialStatus === "running" || initialStatus === "pending") {
+          // Server told us it's running, start polling immediately
+          bootstrappedRef.current = true;
+          setSnapshot((prev) => ({
+            ...prev,
+            status: initialStatus,
+            runId: initialRunId ?? prev.runId,
+            chatId: initialChatId ?? prev.chatId,
+          }));
+          await pollRunUntilComplete();
+          return;
+        }
+
+        if (initialStatus === "failed") {
+          // Server told us it failed, use that state
+          bootstrappedRef.current = true;
+          return;
+        }
+
+        // Only fetch if we don't have initial data from server
+        // (e.g., first visit to a company page with no runs yet)
+        if (!initialRunId) {
+          const existing = await fetchRunBySlug();
+          if (cancelled) return;
+
+          if (existing) {
+            applyTranscript({ chatId: existing.chatId, messages: existing.messages });
+            applyWorkforceMetric(existing.metrics);
+
+            if (existing.status === "completed" && existing.finalReportJson) {
+              const parsed = parseReport(existing.finalReportJson);
+              if (parsed) {
+                setReport(parsed);
+                reportSourceRef.current = "api";
+              }
+              bootstrappedRef.current = true;
+              setSnapshot((prev) => ({
+                ...prev,
+                status: "completed",
+                runId: existing.runId,
+                chatId: existing.chatId ?? prev.chatId,
+                remainingRuns: existing.remainingRuns ?? prev.remainingRuns ?? null,
+                companyName: existing.company?.displayName ?? companyName,
+              }));
+              return;
             }
-            bootstrappedRef.current = true;
-            setSnapshot((prev) => ({
-              ...prev,
-              status: "completed",
-              runId: existing.runId,
-              chatId: existing.chatId ?? prev.chatId,
-              remainingRuns: existing.remainingRuns ?? prev.remainingRuns ?? null,
-              companyName: existing.company?.displayName ?? companyName,
-            }));
-            return;
-          }
 
-          if (existing.status === "running" || existing.status === "pending") {
-            bootstrappedRef.current = true;
-            setSnapshot((prev) => ({
-              ...prev,
-              status: existing.status as RunSnapshot["status"],
-              runId: existing.runId,
-              chatId: existing.chatId ?? prev.chatId,
-              remainingRuns: existing.remainingRuns ?? prev.remainingRuns ?? null,
-              companyName: existing.company?.displayName ?? companyName,
-            }));
-            await pollRunUntilComplete();
-            return;
-          }
+            if (existing.status === "running" || existing.status === "pending") {
+              bootstrappedRef.current = true;
+              setSnapshot((prev) => ({
+                ...prev,
+                status: existing.status as RunSnapshot["status"],
+                runId: existing.runId,
+                chatId: existing.chatId ?? prev.chatId,
+                remainingRuns: existing.remainingRuns ?? prev.remainingRuns ?? null,
+                companyName: existing.company?.displayName ?? companyName,
+              }));
+              await pollRunUntilComplete();
+              return;
+            }
 
-          // If we got a completed run but without a final report/messages, treat it as hydrated.
-          if (existing.status === "completed") {
-            bootstrappedRef.current = true;
-            return;
+            if (existing.status === "completed") {
+              bootstrappedRef.current = true;
+              return;
+            }
           }
         }
       }
@@ -574,6 +565,13 @@ export function RunExperience({
     }
   }, [chatError, snapshot.status]);
 
+  // Record view count
+  useEffect(() => {
+    if (snapshot.runId && snapshot.status === "completed") {
+      navigator.sendBeacon(`/api/run/${snapshot.runId}/view`, "{}");
+    }
+  }, [snapshot.runId, snapshot.status]);
+
   const statusDisplay = useMemo(() => {
     if (snapshot.status === "failed") {
       return { label: "Failed", tone: "red" } as const;
@@ -600,8 +598,6 @@ export function RunExperience({
 
   const isLoading = chatStatus === "submitted" || chatStatus === "streaming";
   const isStreaming = chatStatus === "streaming";
-  console.log(snapshot)
-  console.log(report)
 
   useEffect(() => {
     const container = narrativeScrollRef.current;

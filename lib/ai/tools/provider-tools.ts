@@ -1,12 +1,13 @@
 import { anthropic } from "@ai-sdk/anthropic";
 import { openai } from "@ai-sdk/openai";
+import type { ToolSet } from "ai";
 
 import { getExaSearchTool } from "./exa-tools";
 
 const useAnthropic = true;
 const exaApiKey = process.env.EXA_API_KEY ?? "";
 
-export const providerWebTools = exaApiKey
+export const providerWebTools: ToolSet = exaApiKey
   ? {
       exa_search: getExaSearchTool({ exaApiKey }),
     }

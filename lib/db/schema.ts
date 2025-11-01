@@ -2,6 +2,7 @@ import type { InferSelectModel } from "drizzle-orm";
 import {
   boolean,
   foreignKey,
+  index,
   integer,
   json,
   jsonb,
@@ -48,6 +49,7 @@ export const company = pgTable(
     slug: varchar("slug", { length: 128 }).notNull(),
     displayName: varchar("displayName", { length: 256 }).notNull(),
     hqCountry: varchar("hqCountry", { length: 64 }),
+    industry: varchar("industry", { length: 128 }),
     lastRunAt: timestamp("lastRunAt"),
   },
   (table) => ({
@@ -73,7 +75,11 @@ export const analysisRun = pgTable("AnalysisRun", {
   inputQuery: text("inputQuery").notNull(),
   model: varchar("model", { length: 64 }).notNull(),
   finalReportJson: jsonb("finalReportJson"),
-});
+}, (table) => ({
+  companyCreatedIdx: index("AnalysisRun_companyId_createdAt_idx").on(table.companyId, table.createdAt.desc()),
+  statusIdx: index("AnalysisRun_status_idx").on(table.status),
+  chatIdIdx: index("AnalysisRun_chatId_idx").on(table.chatId),
+}));
 
 export type AnalysisRun = InferSelectModel<typeof analysisRun>;
 
@@ -104,7 +110,9 @@ export const runRoleSnapshot = pgTable("RunRoleSnapshot", {
   automationShare: numeric("automationShare", { precision: 6, scale: 3 }),
   augmentationShare: numeric("augmentationShare", { precision: 6, scale: 3 }),
   data: jsonb("data"),
-});
+}, (table) => ({
+  runIdIdx: index("RunRoleSnapshot_runId_idx").on(table.runId),
+}));
 
 export type RunRoleSnapshot = InferSelectModel<typeof runRoleSnapshot>;
 
@@ -119,7 +127,10 @@ export const runMetric = pgTable("RunMetric", {
   automationShare: numeric("automationShare", { precision: 6, scale: 3 }),
   augmentationShare: numeric("augmentationShare", { precision: 6, scale: 3 }),
   data: jsonb("data"),
-});
+}, (table) => ({
+  runIdIdx: index("RunMetric_runId_idx").on(table.runId),
+  metricTypeIdx: index("RunMetric_metricType_idx").on(table.metricType),
+}));
 
 export type RunMetric = InferSelectModel<typeof runMetric>;
 
@@ -129,7 +140,9 @@ export const runPopularity = pgTable("RunPopularity", {
     .references(() => analysisRun.id),
   viewCount: integer("viewCount").notNull().default(0),
   lastViewedAt: timestamp("lastViewedAt"),
-});
+}, (table) => ({
+  lastViewedIdx: index("RunPopularity_lastViewedAt_idx").on(table.lastViewedAt.desc()),
+}));
 
 export type RunPopularity = InferSelectModel<typeof runPopularity>;
 
@@ -150,7 +163,9 @@ export const message = pgTable("Message_v2", {
   parts: json("parts").notNull(),
   attachments: json("attachments").notNull(),
   createdAt: timestamp("createdAt").notNull(),
-});
+}, (table) => ({
+  chatIdCreatedIdx: index("Message_v2_chatId_createdAt_idx").on(table.chatId, table.createdAt),
+}));
 
 export type DBMessage = InferSelectModel<typeof message>;
 

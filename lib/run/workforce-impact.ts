@@ -213,7 +213,7 @@ export function collectAggregationImpacts(report: EnrichedOrgReport): Aggregatio
         augmentationShare,
         manualShare,
         impact,
-        notes: bucket.notes ?? undefined,
+        notes: bucket.notes,
       });
     }
   }
@@ -261,7 +261,7 @@ export function collectRoleImpacts(report: EnrichedOrgReport): RoleImpact[] {
       if (!dominant.id || dominant.headcount <= 0) continue;
 
       const key = dominant.id.trim().toLowerCase();
-      const role = roleByCode.get(key) ?? null;
+      const role = roleByCode.get(key) || null;
       if (role == null) console.warn("[workforce-impact:role-not-found]", {
         key,
         roleByCode,

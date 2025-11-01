@@ -11,6 +11,11 @@ export const runRequestSchema = z.object({
     .trim()
     .max(80, "Headquarters country must be 80 characters or fewer")
     .optional(),
+  industry: z
+    .string()
+    .trim()
+    .max(128, "Industry must be 128 characters or fewer")
+    .optional(),
   refresh: z.boolean().optional(),
   chatId: z.string().uuid().optional(),
   userApiKey: z

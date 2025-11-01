@@ -33,12 +33,77 @@ Automation Risk Explorer is a focused experience for running and replaying AI-dr
 | `pnpm start` | Serve the production build. |
 | `pnpm test:unit` | Execute the current unit test suite (e.g. slugify utilities). |
 | `pnpm db:migrate` | Run the Drizzle migration script (`lib/db/migrate.ts`). |
+| ``curl -X POST http://localhost:3000/api/run/benchmark`` | Recompute and persist workforce impact scores for marketplace cards. |
+
+## Run Maintenance
+| Command | Description |
+| --- | --- |
+| `pnpm run runs:ls` | Dump every recorded run (newest first); add `--limit` or `--slug` flags as needed. |
+| `pnpm tsx scripts/run-maintenance.ts list --slug acme-co` | Show the most recent runs for a given company slug (or omit `--slug` to see the global feed). |
+| `pnpm tsx scripts/run-maintenance.ts delete --slug acme-co --keep-latest 1 --older-than-days 30` | Purge every run for `acme-co` except the newest one that is less than 30 days old. Add `--dry-run` first to preview. |
+| `pnpm tsx scripts/run-maintenance.ts rename --slug acme-co --name "Acme Corporation"` | Rename the company display title (and refresh all associated chat titles); add `--new-slug` to move the route. |
+| `pnpm tsx scripts/run-maintenance.ts rename --run-id <uuid> --name "Acme – April Run"` | Retitle a single run transcript; append `--update-company` if you also want the company display name to follow the new title. |
+
+All maintenance commands use `POSTGRES_URL` from `.env.local`, so load that environment before invoking them.
 
 ## Project Notes
 - Next.js App Router powers both the run UI and the API surface.
 - Transcripts are stored via the `Chat` + `Message_v2` tables; analysis runs reference these chat IDs for replay.
 - Rate limiting and budget enforcement happen inside `app/api/run/route.ts` before any expensive tool calls execute.
 - The UI lives under `components/run/*`, with `run-experience.tsx` coordinating the stream.
+
+## Methodology
+
+Automation Risk Explorer employs a novel approach to workforce automation analysis by combining:
+
+1. **O*NET Occupation Mapping**: Maps company job roles to standardized O*NET occupation codes (6-digit SOC codes covering ~1,000 occupations)
+2. **AI-Powered Research**: Uses large language models with web search capabilities to gather organizational structure and headcount data
+3. **Anthropic Task Analysis**: Integrates Anthropic's published automation/augmentation task usage data to compute per-role impact scores
+4. **Hierarchical Organization Modeling**: Generates adaptive organizational hierarchies (2-5 levels) based on company size with headcount distribution estimates
+5. **Streaming Analysis Pipeline**: Real-time SSE streaming with tool calls, reasoning traces, and incremental report building
+
+The system produces structured reports containing:
+- Complete organizational hierarchy with dominant roles per node
+- Automation/augmentation shares per occupation (0.0-1.0 scale)
+- Task mix breakdowns (automation tasks, augmentation tasks, manual tasks)
+- Aggregated workforce impact metrics across departments and functions
+
+## Dataset
+
+This repository includes analysis scripts for generating workforce automation assessments for:
+- **Top 250 S&P 500 companies** by market capitalization
+- **Top 100 global companies** outside the S&P 500 (including major firms from China, Japan, Europe, India, South Korea, and other regions)
+
+Total coverage: **350+ major global companies** across all industries.
+
+## Citation
+
+If you use this work, data, or methodology in your research, please cite:
+
+```bibtex
+@software{kopel2025automationrisk,
+  author       = {Kopel, Rob},
+  title        = {Automation Risk Explorer: AI-Driven Workforce Automation Analysis Platform},
+  year         = {2025},
+  publisher    = {GitHub},
+  url          = {https://github.com/rkopel001/automation-risk},
+  note         = {Workforce automation analysis platform using O*NET occupation codes with AI-powered organizational mapping}
+}
+```
+
+For dataset citations:
+```bibtex
+@dataset{kopel2025globalworkforce,
+  author       = {Kopel, Rob},
+  title        = {Global Workforce Automation Analysis Dataset: S\&P 500 + Major International Companies},
+  year         = {2025},
+  publisher    = {GitHub},
+  url          = {https://github.com/rkopel001/automation-risk},
+  note         = {Automation and augmentation impact assessments for 350+ major global companies using O*NET occupation framework}
+}
+```
+
+See [CITATION.cff](CITATION.cff) for machine-readable citation metadata.
 
 ## Deployment
 Deploy like any other Next.js app: ensure migrations have run in your target environment, set the environment variables above, and run `pnpm build && pnpm start`. The project is Vercel-ready, but any Node.js host that can supply the required environment variables and Postgres connectivity will work.

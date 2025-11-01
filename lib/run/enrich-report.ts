@@ -30,12 +30,12 @@ function getCatalogRoleFor(jobRole: JobRole): OnetCatalogRole | null {
   }
 
   if (catalogLookup?.has(jobRole.onetCode)) {
-    return catalogLookup.get(jobRole.onetCode) ?? null;
+    return catalogLookup.get(jobRole.onetCode) || null;
   }
 
   const normalized = jobRole.normalizedTitle?.trim().toLowerCase();
   if (normalized && catalogNormalizedLookup?.has(normalized)) {
-    return catalogNormalizedLookup.get(normalized) ?? null;
+    return catalogNormalizedLookup.get(normalized) || null;
   }
 
   return null;
@@ -53,7 +53,7 @@ function ensureCatalogLookups() {
 
 function getCatalogRoleByCode(code: string): OnetCatalogRole | null {
   ensureCatalogLookups();
-  return catalogLookup?.get(code) ?? null;
+  return catalogLookup?.get(code) || null;
 }
 
 function toShare(value: unknown): number | null {
@@ -184,7 +184,7 @@ function shareFromCounts(count: number | null | undefined, total: number | null 
 function buildRoleFromSources(code: string, jobRole: JobRole | null, catalogRole: OnetCatalogRole | null): EnrichedOrgRole {
   const title = jobRole?.title ?? catalogRole?.title ?? code;
   const normalizedTitle = jobRole?.normalizedTitle ?? catalogRole?.normalizedTitle ?? title.trim().toLowerCase();
-  const parentCluster = jobRole?.parentCluster ?? catalogRole?.parentCluster ?? undefined;
+  const parentCluster = jobRole?.parentCluster ?? catalogRole?.parentCluster;
 
   const catalogMetrics = catalogRole?.metrics;
 
@@ -220,7 +220,7 @@ function buildRoleFromSources(code: string, jobRole: JobRole | null, catalogRole
             manual: manualTasks,
             total,
           };
-        })() ?? undefined
+        })()
       : undefined;
 
   const manualShare =

@@ -77,7 +77,7 @@ export async function findJobRoleByCode(code: string): Promise<JobRole | null> {
       .where(eq(jobRole.onetCode, trimmed))
       .limit(1);
 
-    return role ?? null;
+    return role || null;
   } catch (_error) {
     throw new ChatSDKError(
       "bad_request:database",
@@ -122,7 +122,7 @@ export async function findJobRoleByNormalizedTitle(title: string): Promise<JobRo
       .where(eq(jobRole.normalizedTitle, normalized))
       .limit(1);
 
-    return role ?? null;
+    return role || null;
   } catch (_error) {
     throw new ChatSDKError(
       "bad_request:database",
@@ -183,9 +183,23 @@ export async function getCompanyBySlug(slug: string) {
       .where(eq(company.slug, slug))
       .limit(1);
 
-    return record ?? null;
+    return record || null;
   } catch (_error) {
     throw new ChatSDKError("bad_request:database", "Failed to get company");
+  }
+}
+
+export async function getAllCompanySlugs(): Promise<string[]> {
+  try {
+    const companies = await db
+      .select({ slug: company.slug })
+      .from(company)
+      .where(isNotNull(company.slug));
+
+    return companies.map((c) => c.slug).filter((slug): slug is string => Boolean(slug));
+  } catch (_error) {
+    console.warn("Failed to get all company slugs for static generation", _error);
+    return [];
   }
 }
 
@@ -198,7 +212,7 @@ export async function getLatestRunForCompany(companyId: string) {
       .orderBy(desc(analysisRun.createdAt))
       .limit(1);
 
-    return record ?? null;
+    return record || null;
   } catch (_error) {
     throw new ChatSDKError(
       "bad_request:database",
@@ -215,7 +229,7 @@ export async function getAnalysisRunById(id: string) {
       .where(eq(analysisRun.id, id))
       .limit(1);
 
-    return record ?? null;
+    return record || null;
   } catch (_error) {
     throw new ChatSDKError(
       "bad_request:database",
@@ -242,8 +256,7 @@ export async function getRemainingCompanyRuns() {
 export async function getRunPageDataBySlug(slug: string) {
   try {
     return await db.transaction(async (tx) => {
-      const startedAt = Date.now();
-
+      // Query 1: Get company + budget
       const [companyRow] = await tx
         .select({
           company,
@@ -253,7 +266,6 @@ export async function getRunPageDataBySlug(slug: string) {
         .leftJoin(globalBudget, eq(globalBudget.key, COMPANY_BUDGET_KEY))
         .where(eq(company.slug, slug))
         .limit(1);
-      const afterCompanyMs = Date.now() - startedAt;
 
       const companyRecord = companyRow?.company ?? null;
       const remainingRunsValue = companyRow?.remainingRuns ?? 0;
@@ -261,52 +273,39 @@ export async function getRunPageDataBySlug(slug: string) {
       let latestRunRecord: AnalysisRunRecord | null = null;
       let messagesForRun: typeof message.$inferSelect[] = [];
       let metricsForRun: typeof runMetric.$inferSelect[] = [];
-      let latestRunDurationMs = 0;
-      let messagesDurationMs = 0;
-      let metricsDurationMs = 0;
 
       if (companyRecord) {
-        const beforeRun = Date.now();
+        // Query 2: Get latest run
         const [latestRun] = await tx
           .select()
           .from(analysisRun)
           .where(eq(analysisRun.companyId, companyRecord.id))
           .orderBy(desc(analysisRun.createdAt))
           .limit(1);
-        latestRunDurationMs = Date.now() - beforeRun;
 
         latestRunRecord = latestRun ?? null;
 
-        if (latestRun?.chatId) {
-          const beforeMessages = Date.now();
-          messagesForRun = await tx
-            .select()
-            .from(message)
-            .where(eq(message.chatId, latestRun.chatId))
-            .orderBy(asc(message.createdAt));
-          messagesDurationMs = Date.now() - beforeMessages;
-        }
-
+        // Query 3 & 4: Fetch messages + metrics in PARALLEL (not sequential!)
+        // This is the key optimization - was sequential, now parallel
         if (latestRun) {
-          const beforeMetrics = Date.now();
-          metricsForRun = await tx
-            .select()
-            .from(runMetric)
-            .where(eq(runMetric.runId, latestRun.id));
-          metricsDurationMs = Date.now() - beforeMetrics;
+          const [messages, metrics] = await Promise.all([
+            latestRun.chatId
+              ? tx
+                  .select()
+                  .from(message)
+                  .where(eq(message.chatId, latestRun.chatId))
+                  .orderBy(asc(message.createdAt))
+              : Promise.resolve([]),
+            tx
+              .select()
+              .from(runMetric)
+              .where(eq(runMetric.runId, latestRun.id)),
+          ]);
+
+          messagesForRun = messages;
+          metricsForRun = metrics;
         }
       }
-
-      const durationMs = Date.now() - startedAt;
-      console.log("[getRunPageDataBySlug] timings", {
-        slug,
-        companyMs: afterCompanyMs,
-        latestRunMs: latestRunDurationMs,
-        messagesMs: messagesDurationMs,
-        metricsMs: metricsDurationMs,
-        messageCount: messagesForRun.length,
-        totalMs: durationMs,
-      });
 
       return {
         company: companyRecord,
@@ -367,6 +366,7 @@ type CreateRunWithBudgetArgs = {
   slug: string;
   displayName: string;
   hqCountry?: string | null;
+  industry?: string | null;
   inputQuery: string;
   model: string;
   bypassBudget?: boolean;
@@ -376,6 +376,7 @@ export async function createAnalysisRunWithBudget({
   slug,
   displayName,
   hqCountry,
+  industry,
   inputQuery,
   model,
   bypassBudget = false,
@@ -423,6 +424,7 @@ export async function createAnalysisRunWithBudget({
         .set({
           displayName,
           hqCountry: hqCountry ?? existingCompany.hqCountry,
+          industry: industry ?? existingCompany.industry,
           updatedAt: now,
           lastRunAt: now,
         })
@@ -432,6 +434,7 @@ export async function createAnalysisRunWithBudget({
         ...existingCompany,
         displayName,
         hqCountry: hqCountry ?? existingCompany.hqCountry,
+        industry: industry ?? existingCompany.industry,
         updatedAt: now,
         lastRunAt: now,
       };
@@ -442,6 +445,7 @@ export async function createAnalysisRunWithBudget({
           slug,
           displayName,
           hqCountry: hqCountry ?? null,
+          industry: industry ?? null,
           createdAt: now,
           updatedAt: now,
           lastRunAt: now,
@@ -623,9 +627,10 @@ export async function listMostViewedRuns({
 
     if (trimmedSearch.length > 0) {
       const pattern = `%${trimmedSearch}%`;
-      conditions.push(
-        or(ilike(company.displayName, pattern), ilike(company.slug, pattern))
-      );
+      const searchCondition = or(ilike(company.displayName, pattern), ilike(company.slug, pattern));
+      if (searchCondition) {
+        conditions.push(searchCondition);
+      }
     }
 
     const whereClause =

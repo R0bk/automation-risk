@@ -17,14 +17,15 @@
     "db:pull": "drizzle-kit pull",
     "db:check": "drizzle-kit check",
     "db:up": "drizzle-kit up",
-    "test": "export PLAYWRIGHT=True && pnpm exec playwright test"
+    "test": "export PLAYWRIGHT=True && pnpm exec playwright test",
+    "runs:ls": "pnpm tsx scripts/run-maintenance.ts ls"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^2.0.14",
     "@ai-sdk/gateway": "^1.0.30",
     "@ai-sdk/openai": "^2.0.38",
     "@ai-sdk/provider": "^2.0.0",
     "@ai-sdk/react": "^2.0.56",
-    "@ai-sdk/anthropic": "^2.0.14",
     "@ai-sdk/xai": "^2.0.23",
     "@codemirror/lang-javascript": "^6.2.2",
     "@codemirror/lang-python": "^6.1.6",
@@ -63,6 +64,7 @@
     "next": "15.3.0-canary.31",
     "next-themes": "^0.3.0",
     "orderedmap": "^2.1.1",
+    "p-limit": "^7.2.0",
     "papaparse": "^5.5.2",
     "postgres": "^3.4.4",
     "prosemirror-example-setup": "^1.2.3",

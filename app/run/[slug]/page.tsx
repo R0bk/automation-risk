@@ -1,92 +1,48 @@
+import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { RunExperience } from "@/components/run/run-experience";
 import { SiteFooter } from "@/components/site-footer";
-import { getRunPageDataBySlug } from "@/lib/db/queries";
-import { enrichedOrgReportSchema, type EnrichedOrgReport } from "@/lib/run/report-schema";
-import { parseWorkforceMetricData, type WorkforceImpactSnapshot } from "@/lib/run/workforce-impact";
-import type { ChatMessage } from "@/lib/types";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getAllCompanySlugs, getRunPageDataBySlug } from "@/lib/db/queries";
+import { enrichedOrgReportSchema } from "@/lib/run/report-schema";
+import { parseWorkforceMetricData } from "@/lib/run/workforce-impact";
 import { convertToUIMessages } from "@/lib/utils";
 
-type RunPageProps = {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<{ name?: string; refresh?: string }>;
+type RunPageProps = { params: Promise<{ slug: string }> };
+
+// Pre-render all existing company pages at build time
+export async function generateStaticParams() {
+  const slugs = await getAllCompanySlugs();
+  console.log(`[ISR] Pre-rendering ${slugs.length} company pages at build time`);
+  return slugs.map((slug) => ({ slug }));
 }
 
-export default async function RunPage({ params, searchParams }: RunPageProps) {
+// ISR: Revalidate every hour to keep pages fresh
+export const revalidate = 3600;
+
+// Allow new companies to be generated on-demand (not pre-rendered at build)
+export const dynamicParams = true;
+
+export default async function RunPage({ params }: RunPageProps) {
   const { slug } = await params;
-  const { name, refresh: refreshParam } = await searchParams;
 
-  const initialNameParam = name ?? undefined;
-  const refresh = refreshParam === "1";
+  const { company, remainingRuns, latestRun, messages, metrics } = await getRunPageDataBySlug(slug);
 
-  let initialChatId: string | null = null;
-  let initialRunId: string | null = null;
-  let initialStatus: "idle" | "running" | "replay" | "completed" | "failed" = "idle";
-  let initialReport: EnrichedOrgReport | null = null;
-  let initialMessages: ChatMessage[] = [];
-  let initialRemainingRuns: number | null = null;
+  const parsedReport = latestRun?.finalReportJson && latestRun.status === "completed"
+    ? enrichedOrgReportSchema.safeParse(latestRun.finalReportJson)
+    : null;
+  const initialReport = parsedReport?.success ? parsedReport.data : null;
+  const initialMessages = convertToUIMessages(messages);
+  const initialStatus = (latestRun?.status as "idle" | "running" | "replay" | "completed" | "failed") || "idle";
+  const initialRunId = latestRun?.id || null;
+  const initialChatId = latestRun?.chatId || null;
 
-  let fallbackDisplayName: string | undefined;
-
-  let initialWorkforceMetric: WorkforceImpactSnapshot | null = null;
-
-  try {
-    const { company, remainingRuns, latestRun, messages, metrics } = await getRunPageDataBySlug(slug);
-
-    initialRemainingRuns = remainingRuns ?? null;
-
-    if (company && !refresh) {
-      fallbackDisplayName = company.displayName ?? undefined;
-
-      if (latestRun) {
-        initialRunId = latestRun.id;
-        initialChatId = latestRun.chatId;
-        if (latestRun.status === "completed" || latestRun.status === "running") {
-          initialStatus = latestRun.status;
-        } else if (latestRun.status === "failed") {
-          initialStatus = "failed";
-        } else {
-          initialStatus = "idle";
-        }
-
-        if (latestRun.finalReportJson && latestRun.status === "completed") {
-          const parsedReport = enrichedOrgReportSchema.safeParse(latestRun.finalReportJson);
-          initialReport = parsedReport.success ? parsedReport.data : null;
-        }
-      }
-
-      if (latestRun?.id) {
-        const scoreMetric = metrics.find((entry) => entry.metricType === "workforce_score");
-        if (scoreMetric?.data) {
-          const parsedMetric = parseWorkforceMetricData(scoreMetric.data);
-          if (parsedMetric) {
-            initialWorkforceMetric = parsedMetric;
-          }
-        }
-      }
-
-      if (messages.length > 0) {
-        initialMessages = convertToUIMessages(messages);
-      }
-    }
-  } catch (error) {
-    console.warn("Failed to preload run experience", { slug, error });
-  }
-
-  const resolvedInitialName = initialNameParam ?? fallbackDisplayName;
-  const footerLinks = [
-    { label: "Main site", href: "/" },
-    { label: "Narrative", href: "#narrative" },
-    { label: "Org chart", href: "#org-chart" },
-  ];
+  const scoreMetric = latestRun && metrics.find((entry) => entry.metricType === "workforce_score");
+  const initialWorkforceMetric = scoreMetric?.data ? parseWorkforceMetricData(scoreMetric.data) : null;
 
   return (
-    <div
-      className="relative min-h-screen overflow-hidden"
-      id="top"
-      style={{ backgroundColor: "#f7f7f4" }}
-    >
+    <div className="relative min-h-screen overflow-hidden" id="top" style={{ backgroundColor: "#f7f7f4" }}>
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(245,78,0,0.08),_transparent_55%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,_rgba(31,138,101,0.08),_transparent_45%)]" />
@@ -110,27 +66,32 @@ export default async function RunPage({ params, searchParams }: RunPageProps) {
               Main Page
             </span>
           </Link>
-          {resolvedInitialName && (
+          {company?.displayName && (
             <span className="font-mono text-[rgba(38,37,30,0.45)]">
-              Viewing {resolvedInitialName}
+              Viewing {company.displayName}
             </span>
           )}
         </div>
-        <RunExperience
-          initialName={resolvedInitialName}
-          initialChatId={initialChatId}
-          initialRunId={initialRunId}
-          initialStatus={initialStatus}
-          initialReport={initialReport}
-          initialMessages={initialMessages}
-        initialRemainingRuns={initialRemainingRuns}
-        initialWorkforceMetric={initialWorkforceMetric}
-        refresh={refresh}
-        slug={slug}
-      />
+        <Suspense fallback={<Skeleton className="h-96 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />}>
+          <RunExperience
+            initialName={company?.displayName}
+            initialChatId={initialChatId}
+            initialRunId={initialRunId}
+            initialStatus={initialStatus}
+            initialReport={initialReport}
+            initialMessages={initialMessages}
+            initialRemainingRuns={remainingRuns}
+            initialWorkforceMetric={initialWorkforceMetric}
+            slug={slug}
+          />
+        </Suspense>
       </div>
 
-      <SiteFooter navLinks={footerLinks} />
+      <SiteFooter navLinks={[
+        { label: "Main site", href: "/" },
+        { label: "Narrative", href: "#narrative" },
+        { label: "Org chart", href: "#org-chart" },
+      ]} />
     </div>
   );
 }
