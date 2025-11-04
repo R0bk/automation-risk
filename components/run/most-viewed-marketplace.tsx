@@ -366,11 +366,6 @@ export function MostViewedMarketplace({
                     <div className="text-lg font-semibold leading-tight text-[#26251e]">
                       {title}
                     </div>
-                    {run.hqCountry ? (
-                      <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[rgba(38,37,30,0.45)]">
-                        <span className="rounded-full bg-[rgba(38,37,30,0.08)] px-3 py-1">{run.hqCountry}</span>
-                      </div>
-                    ) : null}
                   </div>
 
                   {score != null ? (
