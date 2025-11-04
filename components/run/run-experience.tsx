@@ -804,12 +804,6 @@ export function RunExperience({
                       {formatPercent(resolvedWorkforceImpact.augmentationComponent)}
                     </span>
                   </li>
-                  <li className="inline-flex items-baseline gap-2 uppercase tracking-[0.18em]">
-                    <span className="font-semibold text-[rgba(38,37,30,0.6)]">Coverage</span>
-                    <span className="font-mono text-sm text-[rgba(38,37,30,0.75)]">
-                      {formatPercent(resolvedWorkforceImpact.coverageComponent)}
-                    </span>
-                  </li>
                 </ul>
               </div>
             </div>
