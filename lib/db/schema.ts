@@ -146,6 +146,14 @@ export const runPopularity = pgTable("RunPopularity", {
 
 export type RunPopularity = InferSelectModel<typeof runPopularity>;
 
+export const analyticsSnapshot = pgTable("AnalyticsSnapshot", {
+  key: varchar("key", { length: 64 }).primaryKey().notNull(),
+  payload: jsonb("payload").notNull(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
+
+export type AnalyticsSnapshot = InferSelectModel<typeof analyticsSnapshot>;
+
 export const globalBudget = pgTable("GlobalBudget", {
   key: varchar("key", { length: 64 }).primaryKey().notNull(),
   remainingRuns: integer("remainingRuns").notNull(),

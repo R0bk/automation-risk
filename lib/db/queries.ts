@@ -17,6 +17,7 @@ import {
   runMetric,
   runPopularity,
   runRoleSnapshot,
+  analyticsSnapshot,
   globalBudget,
   type User,
   user,
@@ -250,6 +251,52 @@ export async function getRemainingCompanyRuns() {
   } catch (_error) {
     console.warn("Failed to read global budget counter", _error);
     return 0;
+  }
+}
+
+export async function getAnalyticsSnapshot(key: string) {
+  try {
+    const [record] = await db
+      .select()
+      .from(analyticsSnapshot)
+      .where(eq(analyticsSnapshot.key, key))
+      .limit(1);
+
+    return record ?? null;
+  } catch (_error) {
+    console.warn("[analytics] get snapshot failed", { key, error: _error });
+    return null;
+  }
+}
+
+export async function upsertAnalyticsSnapshot({
+  key,
+  payload,
+}: {
+  key: string;
+  payload: unknown;
+}) {
+  try {
+    const now = new Date();
+    const [record] = await db
+      .insert(analyticsSnapshot)
+      .values({
+        key,
+        payload,
+        updatedAt: now,
+      })
+      .onConflictDoUpdate({
+        target: analyticsSnapshot.key,
+        set: {
+          payload,
+          updatedAt: now,
+        },
+      })
+      .returning();
+
+    return record;
+  } catch (_error) {
+    throw new ChatSDKError("bad_request:database", "Failed to upsert analytics snapshot");
   }
 }
 

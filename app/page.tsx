@@ -10,6 +10,11 @@ import {
   listMostViewedRuns,
   listTrendingRuns,
 } from "@/lib/db/queries";
+import { ComparativeInsights } from "@/components/run/comparative-insights";
+import { loadComparativeInsights } from "@/lib/run/load-comparative-insights";
+import { Onboarding } from "@/components/run/onboarding";
+import { ExplainButton } from "@/components/run/test2";
+import { HelpMeUnderstandModalButton } from "@/components/run/test3";
 
 const LANDING_FOOTER_LINKS = [
   { label: "Home", href: "#top" },
@@ -66,6 +71,11 @@ async function HeroAsync() {
   return <Hero remainingRuns={remainingRuns} />;
 }
 
+async function ComparativeInsightsAsync() {
+  const { data, updatedAt } = await loadComparativeInsights();
+  return <ComparativeInsights analytics={data} updatedAt={updatedAt} />;
+}
+
 // Loading skeletons
 function TrendingSkeleton() {
   return (
@@ -93,6 +103,22 @@ function MarketplaceSkeleton() {
   );
 }
 
+function ComparativeInsightsSkeleton() {
+  return (
+    <div className="rounded-[28px] border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,250,0.75)] px-6 py-10 shadow-[0_28px_65px_rgba(31,29,18,0.12)] backdrop-blur-md sm:px-10">
+      <div className="space-y-4">
+        <Skeleton className="h-4 w-36 rounded-full bg-[rgba(38,37,30,0.08)]" />
+        <Skeleton className="h-6 w-2/3 rounded-full bg-[rgba(38,37,30,0.08)]" />
+        <div className="grid gap-4 lg:grid-cols-2">
+          {[1, 2, 3, 4].map((index) => (
+            <Skeleton key={index} className="h-40 w-full rounded-2xl bg-[rgba(38,37,30,0.08)]" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Page() {
   return (
     <div
@@ -115,6 +141,12 @@ export default function Page() {
       <main className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-col gap-14 px-6 pb-32 pt-28 text-[#26251e]">
         <Suspense fallback={<Skeleton className="h-64 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />}>
           <HeroAsync />
+        </Suspense>
+        <Onboarding />
+        <ExplainButton />
+        <HelpMeUnderstandModalButton/>
+        <Suspense fallback={<ComparativeInsightsSkeleton />}>
+          <ComparativeInsightsAsync />
         </Suspense>
 
         <div id="trending">
