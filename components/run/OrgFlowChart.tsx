@@ -258,7 +258,7 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
 
   return (
     <div className="relative h-[900px] w-full min-w-0">
-      <div className="pointer-events-auto absolute right-4 top-6 z-20 flex flex-col gap-2">
+      <div className="pointer-events-auto absolute right-4 top-4 z-20 flex flex-col gap-2">
         {LEVEL_OPTIONS.map((level) => {
           const disabled = level > maxGraphLevel;
           const isActive = maxVisibleLevel === level;
@@ -294,6 +294,7 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
         maxZoom={1.5}
         nodesDraggable={false}
         zoomOnScroll={false}
+        preventScrolling={false}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
       >
