@@ -173,6 +173,8 @@ const renderRoleCard = (role: RoleImpact) => {
 export function ReportPreview({ report, impact }: ReportPreviewProps) {
   const aggregationImpacts = collectAggregationImpacts(report);
   const roleImpacts = collectRoleImpacts(report);
+  const lastUpdatedLabel =
+    report.metadata.lastUpdatedIso ? new Date(report.metadata.lastUpdatedIso).toLocaleDateString() : "—";
 
   const sizableImpacts = aggregationImpacts.filter((item) => item.headcount >= MIN_HEADCOUNT_FOR_HIGHLIGHT);
   const baseHighlights = sizableImpacts.length > 0 ? sizableImpacts : aggregationImpacts;
@@ -305,7 +307,7 @@ const roleSpotlight = roleImpacts
         <div>
           <h2 className="text-lg font-semibold text-[#26251e]">Workforce impact breakdown</h2>
           <p className="text-[11px] uppercase tracking-[0.32em] text-[rgba(38,37,30,0.6)]">
-            Finalized via org_report_finalizer
+            Estimated via AI
           </p>
         </div>
         <div className="flex flex-col items-end gap-2 text-right">
@@ -329,10 +331,14 @@ const roleSpotlight = roleImpacts
         className="mt-7 w-full lg:-mx-[calc((100vw-100%)/2)] lg:w-screen"
       >
         <div
-          className="overflow-hidden rounded-[32px] border border-[rgba(38,37,30,0.1)] bg-[rgba(244,243,239,0.96)] shadow-[0_26px_65px_rgba(34,28,20,0.14)] backdrop-blur-[18px] 
+          className="relative overflow-hidden rounded-[32px] border border-[rgba(38,37,30,0.1)] bg-[rgba(244,243,239,0.96)] shadow-[0_26px_65px_rgba(34,28,20,0.14)] backdrop-blur-[18px] 
           w-full
           lg:mx-auto lg:w-[min(100vw-4rem,1600px)] lg:max-w-[1600px] xl:w-[min(100vw-6rem,1800px)] xl:max-w-[1800px]"
         >
+          <div className="absolute right-20 top-4 z-10 flex flex-wrap items-center gap-2 rounded-full border border-[rgba(38,37,30,0.18)] bg-white/75 px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-[rgba(38,37,30,0.6)] shadow-[0_10px_24px_rgba(34,28,20,0.04)] backdrop-blur-sm">
+            <span className="font-semibold text-[#26251e]">AI Estimate</span>
+            <span className="text-[rgba(38,37,30,0.52)]">{lastUpdatedLabel}</span>
+          </div>
           <OrgFlowChart report={report} />
         </div>
       </div>
