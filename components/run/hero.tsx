@@ -8,12 +8,17 @@ import { cn, slugifyCompanyName } from "@/lib/utils";
 import { useAutoWidthInput } from "./useAutoWidthInput";
 import { ApiKeyInput } from "./api-key-input";
 
+
 interface HeroProps {
   initialValue?: string;
   remainingRuns?: number | null;
 }
 
 const MAX_LENGTH = 50;
+const TYPEWRITER_TEXT = "Big Company";
+const TYPE_DELAY = 120;
+const ERASE_DELAY = 70;
+const HOLD_DELAY = 1400;
 
 export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
   const router = useRouter();
@@ -21,18 +26,79 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
   const [error, setError] = useState<string | null>(null);
   const [apiKey, setApiKey] = useState("");
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const hasUserInteractedRef = useRef(false);
+  const [isTypewriterActive, setIsTypewriterActive] = useState(() => initialValue.length === 0);
+  const [typewriterDirection, setTypewriterDirection] = useState<1 | -1>(1);
+  const typewriterTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
     setValue(initialValue);
+    if (initialValue.length > 0) {
+      setHasUserInteracted(true);
+      hasUserInteractedRef.current = true;
+      setIsTypewriterActive(false);
+    }
   }, [initialValue]);
 
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
-      const length = inputRef.current.value.length;
-      inputRef.current.setSelectionRange(length, length);
+      if (!hasUserInteractedRef.current) {
+        const length = inputRef.current.value.length;
+        inputRef.current.setSelectionRange(length, length);
+      }
     }
+  }, [hasUserInteracted]);
+
+  useEffect(() => {
+    return () => {
+      if (typewriterTimeoutRef.current) {
+        clearTimeout(typewriterTimeoutRef.current);
+      }
+    };
   }, []);
+
+  useEffect(() => {
+    if (!isTypewriterActive) {
+      if (typewriterTimeoutRef.current) {
+        clearTimeout(typewriterTimeoutRef.current);
+        typewriterTimeoutRef.current = null;
+      }
+      return;
+    }
+
+    if (typewriterTimeoutRef.current) {
+      clearTimeout(typewriterTimeoutRef.current);
+    }
+
+    const target = TYPEWRITER_TEXT;
+
+    if (typewriterDirection === 1 && value === target) {
+      typewriterTimeoutRef.current = setTimeout(() => {
+        setTypewriterDirection(-1);
+      }, HOLD_DELAY);
+      return;
+    }
+
+    if (typewriterDirection === -1 && value.length === 0) {
+      typewriterTimeoutRef.current = setTimeout(() => {
+        setTypewriterDirection(1);
+      }, HOLD_DELAY);
+      return;
+    }
+
+    const delay = typewriterDirection === 1 ? TYPE_DELAY : ERASE_DELAY;
+    typewriterTimeoutRef.current = setTimeout(() => {
+      const nextLength = Math.max(
+        0,
+        Math.min(target.length, value.length + typewriterDirection)
+      );
+      const nextValue = target.slice(0, nextLength);
+      setValue(nextValue);
+    }, delay);
+  }, [isTypewriterActive, typewriterDirection, value]);
 
   const isBudgetExhausted = remainingRuns != null && remainingRuns <= 0;
   const companyInputDisabled = isBudgetExhausted && !apiKey;
@@ -47,6 +113,9 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
   const updateValue = (next: string) => {
     const sanitized = next.replace(/\s+/g, " ").slice(0, MAX_LENGTH);
     setValue(sanitized);
+    if (error) {
+      setError(null);
+    }
   };
 
   const handleSubmit = () => {
@@ -73,7 +142,7 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
     router.push(`/run/${slug}?${params.toString()}`);
   };
 
-  const hasValue = value.trim().length > 0;
+  const hasTypedValue = hasUserInteracted ? value.trim().length > 0 : false;
   // const dynamicWidth = `${Math.max(hasValue ? value.length + 1 : 3, 3)}ch`;
   const { ref: autoRef, style: autoWidthStyle } = useAutoWidthInput<HTMLInputElement>({
     value,
@@ -108,8 +177,53 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
             type="text"
             inputMode="text"
             value={value}
-            onChange={(event) => updateValue(event.target.value)}
+            onFocus={() => {
+              if (!hasUserInteractedRef.current) {
+                requestAnimationFrame(() => inputRef.current?.select());
+              }
+            }}
+            onChange={(event) => {
+              const incoming = event.target.value;
+              if (!hasUserInteractedRef.current) {
+                hasUserInteractedRef.current = true;
+                setHasUserInteracted(true);
+                setIsTypewriterActive(false);
+                if (lastKeyRef.current === "Backspace" || lastKeyRef.current === "Delete") {
+                  updateValue("");
+                } else {
+                  const nextChar = incoming.slice(-1);
+                  updateValue(nextChar);
+                }
+                lastKeyRef.current = null;
+                return;
+              }
+              updateValue(incoming);
+              lastKeyRef.current = null;
+            }}
+            onPaste={(event) => {
+              hasUserInteractedRef.current = true;
+              setHasUserInteracted(true);
+              setIsTypewriterActive(false);
+              event.preventDefault();
+              updateValue(event.clipboardData.getData("text"));
+              lastKeyRef.current = null;
+            }}
             onKeyDown={(event) => {
+              const isPrintable = event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey;
+              const isEditingKey = isPrintable || event.key === "Backspace" || event.key === "Delete";
+
+              if (!hasUserInteractedRef.current && isEditingKey) {
+                setHasUserInteracted(true);
+                setIsTypewriterActive(false);
+                setTypewriterDirection(1);
+                setValue("");
+                lastKeyRef.current = event.key;
+              } else if (isEditingKey) {
+                lastKeyRef.current = event.key;
+              } else {
+                lastKeyRef.current = null;
+              }
+
               if (event.key === "Enter" && !event.shiftKey) {
                 event.preventDefault();
                 handleSubmit();
@@ -142,10 +256,10 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
         <div className="mt-6 flex items-center justify-between gap-4 transition-all duration-200 ease-out">
           <Button
             onClick={handleSubmit}
-            disabled={(isBudgetExhausted && !apiKey) || !hasValue}
+            disabled={(isBudgetExhausted && !apiKey) || !hasTypedValue}
             className={cn(
               "h-12 rounded-full px-7 text-xs font-semibold uppercase tracking-[0.24em] transition",
-              hasValue && (!isBudgetExhausted || apiKey)
+              hasTypedValue && (!isBudgetExhausted || apiKey)
                 ? "cursor-pointer bg-[linear-gradient(120deg,#f54e00,#ff9440)] text-white shadow-[0_20px_45px_rgba(245,78,0,0.35)] hover:shadow-[0_26px_60px_rgba(245,78,0,0.45)]"
                 : "cursor-default bg-[rgba(38,37,30,0.08)] text-[rgba(38,37,30,0.45)] shadow-none"
             )}
