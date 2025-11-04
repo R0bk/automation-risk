@@ -1,0 +1,142 @@
+Ticker,Name,Country,Industry
+MAG,Magna International,Canada,Automotive Parts
+RIVN,Rivian Automotive,United States,Electric Vehicles
+LCID,Lucid Group,United States,Electric Vehicles
+ALV.DE,Allianz,Germany,Insurance
+MUV2.DE,Munich Re,Germany,Insurance
+DB1.DE,Deutsche Bank,Germany,Banking
+CBK.DE,Commerzbank,Germany,Banking
+DTE.DE,Deutsche Telekom,Germany,Telecommunications
+VOD.L,Vodafone Group,UK,Telecommunications
+BT-A.L,BT Group,UK,Telecommunications
+SAB.L,SABMiller,UK,Beverages
+ABF.L,Associated British Foods,UK,Food Products
+SBRY.L,Sainsbury's,UK,Retail
+TSCO.L,Tesco,UK,Retail
+MKS.L,Marks & Spencer,UK,Retail
+BATS.L,British American Tobacco,UK,Tobacco
+IMB.L,Imperial Brands,UK,Tobacco
+AAL.L,Anglo American,UK,Mining
+GLEN.L,Glencore,Switzerland,Mining & Trading
+RB.L,Reckitt Benckiser,UK,Consumer Products
+PRU.L,Prudential,UK,Insurance
+LSEG.L,London Stock Exchange Group,UK,Financial Services
+III.L,3i Group,UK,Private Equity
+BA.L,BAE Systems,UK,Aerospace & Defense
+LLOY.L,Lloyds Banking Group,UK,Banking
+NWG.L,NatWest Group,UK,Banking
+AV.L,Aviva,UK,Insurance
+REL.L,RELX,UK,Information Services
+SU.PA,Schneider Electric,France,Industrial Equipment
+SGO.PA,Saint-Gobain,France,Materials
+AI.PA,Air Liquide,France,Chemicals
+CA.PA,Carrefour,France,Retail
+BN.PA,Danone,France,Food Products
+RNO.PA,Renault,France,Automotive Manufacturing
+STM.PA,STMicroelectronics,France,Semiconductors
+ATO.PA,Atos,France,IT Services
+CAP.PA,Capgemini,France,IT Services
+ORA.PA,Orange,France,Telecommunications
+VIV.PA,Vivendi,France,Media & Entertainment
+TEP.PA,Teleperformance,France,Business Services
+ENGI.PA,Engie,France,Utilities
+EDF.PA,Électricité de France,France,Utilities
+VIE.PA,Veolia Environnement,France,Environmental Services
+KER.PA,Kering,France,Luxury Goods
+PRTP.PA,Pernod Ricard,France,Beverages
+ITX.MC,Inditex,Spain,Retail
+IBE.MC,Iberdrola,Spain,Utilities
+TEF.MC,Telefónica,Spain,Telecommunications
+REP.MC,Repsol,Spain,Oil & Gas
+BBVA.MC,Banco Bilbao Vizcaya Argentaria,Spain,Banking
+ABE.MC,Abertis,Spain,Infrastructure
+FER.MC,Ferrovial,Spain,Construction & Infrastructure
+ACS.MC,ACS Group,Spain,Construction
+ENEL.MI,Enel,Italy,Utilities
+ENI.MI,Eni,Italy,Oil & Gas
+ISP.MI,Intesa Sanpaolo,Italy,Banking
+UCG.MI,UniCredit,Italy,Banking
+TIT.MI,Telecom Italia,Italy,Telecommunications
+STM.MI,STMicroelectronics,Italy,Semiconductors
+LUX.MI,Luxottica,Italy,Consumer Products
+RACE.MI,Ferrari,Italy,Automotive Manufacturing
+STLA,Stellantis,Netherlands,Automotive Manufacturing
+HEIA.AS,Heineken,Netherlands,Beverages
+PHIA.AS,Koninklijke Philips,Netherlands,Healthcare Equipment
+ABN.AS,ABN AMRO Bank,Netherlands,Banking
+AD.AS,Ahold Delhaize,Netherlands,Retail
+NN.AS,NN Group,Netherlands,Insurance
+AKZA.AS,Akzo Nobel,Netherlands,Chemicals
+WKL.AS,Wolters Kluwer,Netherlands,Information Services
+DSM.AS,Royal DSM,Netherlands,Nutrition & Materials
+ABBN.SW,ABB,Switzerland,Industrial Equipment
+GIVN.SW,Givaudan,Switzerland,Chemicals
+SREN.SW,Swiss Re,Switzerland,Insurance
+ZURN.SW,Zurich Insurance Group,Switzerland,Insurance
+LONN.SW,Lonza Group,Switzerland,Pharmaceuticals
+SGSN.SW,SGS,Switzerland,Business Services
+DSV.CO,DSV,Denmark,Logistics & Transportation
+CARL-B.CO,Carlsberg Group,Denmark,Beverages
+COLO-B.CO,Coloplast,Denmark,Medical Devices
+MAERSK-B.CO,A.P. Møller-Mærsk,Denmark,Logistics & Transportation
+ORSTED.CO,Ørsted,Denmark,Renewable Energy
+VOLV-B.ST,Volvo,Sweden,Automotive Manufacturing
+ERIC-B.ST,Ericsson,Sweden,Telecommunications Equipment
+ATCO-A.ST,Atlas Copco,Sweden,Industrial Equipment
+SAND.ST,Sandvik,Sweden,Industrial Equipment
+HM-B.ST,H&M,Sweden,Retail
+SEB-A.ST,Skandinaviska Enskilda Banken,Sweden,Banking
+SWED-A.ST,Swedbank,Sweden,Banking
+NOK.OL,Norsk Hydro,Norway,Materials
+EQNR.OL,Equinor,Norway,Oil & Gas
+TEL.OL,Telenor,Norway,Telecommunications
+6098.T,Recruit Holdings,Japan,Business Services
+4519.T,Chugai Pharmaceutical,Japan,Pharmaceuticals
+4568.T,Daiichi Sankyo,Japan,Pharmaceuticals
+4901.T,Fujifilm Holdings,Japan,Healthcare & Imaging
+9434.T,SoftBank,Japan,Telecommunications
+6954.T,Fanuc,Japan,Industrial Automation
+7741.T,HOYA,Japan,Healthcare Equipment
+8035.T,Tokyo Electron,Japan,Semiconductor Equipment
+6506.T,Yaskawa Electric,Japan,Industrial Automation
+4324.T,Dentsu Group,Japan,Advertising & Marketing
+035720.KS,Kakao,South Korea,Internet Services
+000270.KS,Kia,South Korea,Automotive Manufacturing
+051910.KS,LG Chem,South Korea,Chemicals
+066570.KS,LG Electronics,South Korea,Consumer Electronics
+028260.KS,Samsung C&T,South Korea,Conglomerate
+009150.KS,Samsung Electro-Mechanics,South Korea,Electronics Manufacturing
+1211.HK,BYD,China,Electric Vehicles & Batteries
+2382.HK,Sunny Optical Technology,China,Optical Components
+6618.HK,JD Health,China,Healthcare Services
+9999.HK,NetEase Cloud Music,China,Media & Entertainment
+0966.HK,China Pacific Insurance,China,Insurance
+1109.HK,China Resources Land,China,Real Estate
+2020.HK,Anta Sports,China,Sportswear & Apparel
+VALE,Vale,Brazil,Mining
+PETR4.SA,Petrobras,Brazil,Oil & Gas
+ITUB4.SA,Itaú Unibanco,Brazil,Banking
+BBDC4.SA,Banco Bradesco,Brazil,Banking
+ABEV3.SA,Ambev,Brazil,Beverages
+WEGE3.SA,WEG,Brazil,Industrial Equipment
+ICICIBANK.BO,ICICI Bank,India,Banking
+ITC.BO,ITC Limited,India,Conglomerate
+WIPRO.BO,Wipro,India,IT Services
+MARUTI.BO,Maruti Suzuki,India,Automotive Manufacturing
+HINDALCO.BO,Hindalco Industries,India,Metals
+TITAN.BO,Titan Company,India,Consumer Products
+BAJFINANCE.BO,Bajaj Finance,India,Financial Services
+LT.BO,Larsen & Toubro,India,Engineering & Construction
+HCLTECH.BO,HCL Technologies,India,IT Services
+ULTRACEMCO.BO,UltraTech Cement,India,Building Materials
+SPOT,Spotify,Sweden,Media Streaming
+ADYEN.AS,Adyen,Netherlands,Financial Technology
+WBD,Warner Bros. Discovery,United States,Media & Entertainment
+PARA,Paramount Global,United States,Media & Entertainment
+LULU,Lululemon Athletica,Canada,Sportswear & Apparel
+MCD,McDonald's,United States,Restaurants
+WBA,Walgreens Boots Alliance,United States,Retail Pharmacy
+DE,Deere & Company,United States,Agricultural Equipment
+GE,General Electric,United States,Industrial Conglomerate
+ELV,Elevance Health,United States,Healthcare Services
+BIIB,Biogen,United States,Biotechnology
