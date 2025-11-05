@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import HelpMeUnderstandModal from "@/components/run/onboarding";
-import type { ComparativeAnalytics, TopTaskMetric, CountryMetric } from "@/lib/run/comparative-analytics";
+import type { ComparativeAnalytics, TopTaskMetric, CountryMetric } from "@/lib/run/comparative-analytics-types";
 import { resolveIsoCode } from "@/lib/constants/countries";
 import { ComposableMap, Geographies, Geography, Graticule, Sphere } from "react-simple-maps";
 
