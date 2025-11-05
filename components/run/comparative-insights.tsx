@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
-import type { ComparativeAnalytics } from "@/lib/run/comparative-analytics";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+import HelpMeUnderstandModal from "@/components/run/onboarding";
+import type { ComparativeAnalytics, TopTaskMetric } from "@/lib/run/comparative-analytics";
 
 type ComparativeInsightsProps = {
   analytics: ComparativeAnalytics | null;
@@ -151,6 +153,40 @@ function ScoreBar({
   );
 }
 
+type TaskExposureBarProps = {
+  entry: TopTaskMetric;
+  className?: string;
+};
+
+function TaskExposureBar({ entry, className }: TaskExposureBarProps) {
+  const { totalExposure, automationExposure, augmentationExposure } = entry;
+  if (!totalExposure || totalExposure <= 0) {
+    return <div className={className} />;
+  }
+
+  const automationLabel =
+    automationExposure > 0 ? `${formatMillions(automationExposure)}M` : null;
+  const augmentationLabel =
+    augmentationExposure > 0 ? `${formatMillions(augmentationExposure)}M` : null;
+
+  return (
+    <div
+      className={`flex min-w-[220px] items-center justify-end gap-2 ${className ?? ""}`}
+    >
+      {automationLabel && (
+        <span className="text-[rgba(245,78,0,0.92)] text-[11px] font-bold">
+          {automationLabel}
+        </span>
+      )}
+      {augmentationLabel && (
+        <span className="text-[rgba(255,148,77,0.9)] text-[11px] font-bold">
+          {augmentationLabel}
+        </span>
+      )}
+    </div>
+  );
+}
+
 const formatExposurePercent = (
   value: number | null | undefined,
   fractionDigits = 0
@@ -170,6 +206,16 @@ const formatPercent = (value: number | null | undefined) => {
     return "—";
   }
   return `${Math.round(value * 100)}%`;
+};
+
+const peopleFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
+
+const formatMillions = (value: number) => {
+  if (!Number.isFinite(value) || value <= 0) {
+    return "0.0";
+  }
+  const millions = value / 1_000_000;
+  return (Math.round(millions * 10) / 10).toFixed(1);
 };
 
 const computeHeatmapStyle = (
@@ -208,6 +254,10 @@ const sortByImpact = <
 
 export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
   const hasData = Boolean(analytics && analytics.countries.length > 0);
+
+  const topTasks = (analytics?.topTasks ?? []) as TopTaskMetric[];
+  const hasTopTasks = topTasks.length > 0;
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
 
   const sortedCountries = sortByImpact(analytics?.countries ?? []);
   const sortedIndustries = sortByImpact(analytics?.industries ?? []);
@@ -364,42 +414,47 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
     analytics?.distributions.byIndustry.slice(0, 6) ?? [];
   const distributionsByCountry =
     analytics?.distributions.byCountry.slice(0, 6) ?? [];
+  const showDistributionSnapshots = false;
+  const companiesAnalysedCount = analytics?.coverage.companies ?? null;
+  const companiesAnalysedLabel = companiesAnalysedCount
+    ? `${companiesAnalysedCount.toLocaleString()} companies`
+    : "companies";
 
   return (
-    <section
-      aria-labelledby="comparative-insights-heading"
-      className="relative overflow-hidden rounded-[28px] border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,250,0.86)] px-6 py-10 shadow-[0_28px_65px_rgba(31,29,18,0.12)] backdrop-blur-md sm:px-10"
-    >
-      <div className="-z-10 pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(245,78,0,0.16),_rgba(245,78,0,0)_60%)]" />
-      <header className="flex flex-wrap items-start justify-between gap-6">
-        <div>
-          <p className="max-w-5xl text-[rgba(38,37,30,0.78)] text-lg leading-relaxed">
-            <span className="text-xl font-medium">Where is AI exposure the highest?</span> <br></br>Values show the
-            % share of roles already seeing{" "}
-            <span
-              className="font-semibold"
-              style={{ color: "hsl(22deg 96% 66%)" }}
-            >
-              AI Augmentation
-            </span>{" "}
-            or{" "}
-            <span
-              className="font-semibold"
-              style={{ color: "hsl(22deg 92% 48%)" }}
-            >
-              AI Automation
-            </span>
-            .
-          </p>
-        </div>
-        {analytics && (
-          <div className="flex flex-col items-end gap-2 text-right text-[rgba(38,37,30,0.55)] text-xs">
-            <span>
-              {analytics.coverage.companies} companies analysed
-            </span>
+    <>
+      <section
+        aria-labelledby="comparative-insights-heading"
+        className="relative overflow-hidden rounded-[28px] border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,250,0.86)] px-6 py-10 shadow-[0_28px_65px_rgba(31,29,18,0.12)] backdrop-blur-md sm:px-10"
+      >
+        <div className="-z-10 pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(245,78,0,0.16),_rgba(245,78,0,0)_60%)]" />
+        <header className="flex flex-wrap items-start justify-between gap-6">
+          <div>
+            <p className="max-w-5xl text-[rgba(38,37,30,0.78)] text-lg leading-relaxed">
+              <span className="text-xl font-medium">Where is AI exposure the highest?</span>{" "}
+              <br />
+              Values show the % share of roles already seeing{" "}
+              <span
+                className="font-semibold"
+                style={{ color: "hsl(22deg 96% 66%)" }}
+              >
+                AI Augmentation
+              </span>{" "}
+              or{" "}
+              <span
+                className="font-semibold"
+                style={{ color: "hsl(22deg 92% 48%)" }}
+              >
+                AI Automation
+              </span>
+              .
+            </p>
           </div>
-        )}
-      </header>
+          {analytics && (
+            <div className="flex flex-col items-end gap-2 text-right text-[rgba(38,37,30,0.55)] text-xs">
+              <span>{analytics.coverage.companies} companies analysed</span>
+            </div>
+          )}
+        </header>
 
       {hasData ? (
         <div className="mt-4 space-y-10">
@@ -610,55 +665,164 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
             )}
           </section>
 
-          <section
-            aria-label="Distribution snapshots"
-            className="grid gap-6 lg:grid-cols-2"
-          >
-            <div className="rounded-2xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.68)] p-6 shadow-[0_20px_40px_rgba(34,28,20,0.12)]">
-              <h3 className="font-semibold text-[11px] text-[rgba(38,37,30,0.6)] uppercase tracking-[0.28em]">
-                Score distribution · industries
-              </h3>
-              <ul className="mt-4 space-y-4 text-sm">
-                {distributionsByIndustry.map((entry) => (
-                  <li className="space-y-2" key={entry.key}>
-                    <div className="flex items-center justify-between text-[rgba(38,37,30,0.7)]">
-                      <span className="font-medium">{entry.label}</span>
-                      <span className="text-[rgba(38,37,30,0.55)] text-xs">
-                        {entry.runCount} runs
-                      </span>
-                    </div>
-                    <DistributionBar entry={entry} />
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="rounded-2xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.68)] p-6 shadow-[0_20px_40px_rgba(34,28,20,0.12)]">
-              <h3 className="font-semibold text-[11px] text-[rgba(38,37,30,0.6)] uppercase tracking-[0.28em]">
-                Score distribution · countries
-              </h3>
-              <ul className="mt-4 space-y-4 text-sm">
-                {distributionsByCountry.map((entry) => (
-                  <li className="space-y-2" key={entry.key}>
-                    <div className="flex items-center justify-between text-[rgba(38,37,30,0.7)]">
-                      <span className="font-medium">{entry.label}</span>
-                      <span className="text-[rgba(38,37,30,0.55)] text-xs">
-                        {entry.runCount} runs
-                      </span>
-                    </div>
-                    <DistributionBar entry={entry} />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
+          {hasTopTasks && (
+            <TooltipProvider>
+              <div className="mb-4">
+                <p className="max-w-6xl text-base leading-relaxed text-[rgba(38,37,30,0.78)]">
+                  Within the{" "}
+                  <span className="font-semibold text-[rgba(38,37,30,0.88)]">
+                    {companiesAnalysedLabel}
+                  </span>{" "}
+                  analysed, these{" "}
+                  <button
+                    type="button"
+                    onClick={() => setOnboardingOpen(true)}
+                    className="font-semibold text-[rgba(245,78,0,0.95)] underline decoration-[rgba(245,78,0,0.5)] underline-offset-4 transition-colors hover:text-[rgba(245,78,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f54e00]/35 focus-visible:ring-offset-1"
+                  >
+                    tasks
+                  </button>{" "}
+                  represent the highest headcount exposure to AI automation and augmentation.
+                </p>
+              </div>
+              <section
+                aria-label="Tasks seeing AI exposure"
+                className="rounded-2xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.7)] p-6 shadow-[0_20px_40px_rgba(34,28,20,0.12)]"
+              >
+                <ul className="space-y-5 text-sm">
+                  {topTasks.slice(0, 8).map((task, index) => {
+                    const rolePreview =
+                      task.sampleRoles.length > 3
+                        ? `${task.sampleRoles.slice(0, 3).join(", ")}…`
+                        : task.sampleRoles.join(", ");
+                    const rankLabel = (index + 1).toString();
+                    const topCompanies = task.topCompanies ?? [];
+                    const hasTopCompanies = topCompanies.length > 0;
+
+                    const rowContent = (
+                      <div className="flex w-full items-start gap-3">
+                        <span className="flex-shrink-0 pt-1 text-right text-base font-semibold tracking-[0.18em] text-[rgba(38,37,30,0.45)]">
+                          {rankLabel}
+                        </span>
+                        <div className="flex min-w-0 flex-1 flex-col">
+                          <div className="flex min-w-0 items-center justify-between gap-3">
+                            <span className="truncate text-[10px] text-[rgba(38,37,30,0.48)]">
+                              {rolePreview || "—"}
+                            </span>
+                            <span className="shrink-0 whitespace-nowrap text-[10px] text-[rgba(38,37,30,0.55)]">
+                              {Number.isFinite(task.totalExposure)
+                                ? `${peopleFormatter.format(Math.round(task.totalExposure))} headcount`
+                                : "—"}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between gap-3 text-xs text-[rgba(38,37,30,0.68)]">
+                            <div className="flex min-w-0 flex-1 items-center gap-2">
+                              <span className="truncate text-sm text-[#26251e]" title={task.task}>
+                                {task.task}
+                              </span>
+                            </div>
+                            <TaskExposureBar entry={task} className="flex justify-end" />
+                          </div>
+                        </div>
+                      </div>
+                    );
+
+                    if (!hasTopCompanies) {
+                      return (
+                        <li key={task.task} className="flex">
+                          {rowContent}
+                        </li>
+                      );
+                    }
+
+                    return (
+                      <li key={task.task} className="flex">
+                        <Tooltip>
+                          <TooltipTrigger asChild>{rowContent}</TooltipTrigger>
+                          <TooltipContent side="top" align="start">
+                            <div className="min-w-[220px] space-y-2">
+                              <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.18em] text-[rgba(38,37,30,0.55)]">
+                                <span>Top contributors</span>
+                                <span>{task.runCount} runs</span>
+                              </div>
+                              <ul className="space-y-1 text-xs text-[rgba(38,37,30,0.75)]">
+                                {topCompanies.map((company) => (
+                                  <li key={`${task.task}-${company.name}`} className="flex items-center justify-between gap-2">
+                                    <span className="truncate font-medium text-[#26251e]">{company.name}</span>
+                                    <span className="font-mono text-[rgba(38,37,30,0.6)]">
+                                      {Number.isFinite(company.exposure)
+                                        ? `${peopleFormatter.format(Math.round(company.exposure))} · ${formatPercent(company.share)}`
+                                        : "—"}
+                                    </span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            </TooltipProvider>
+          )}
+
+          {showDistributionSnapshots && (
+            <section
+              aria-label="Distribution snapshots"
+              className="grid gap-6 lg:grid-cols-2"
+            >
+              <div className="rounded-2xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.68)] p-6 shadow-[0_20px_40px_rgba(34,28,20,0.12)]">
+                <h3 className="font-semibold text-[11px] text-[rgba(38,37,30,0.6)] uppercase tracking-[0.28em]">
+                  Score distribution · industries
+                </h3>
+                <ul className="mt-4 space-y-4 text-sm">
+                  {distributionsByIndustry.map((entry) => (
+                    <li className="space-y-2" key={entry.key}>
+                      <div className="flex items-center justify-between text-[rgba(38,37,30,0.7)]">
+                        <span className="font-medium">{entry.label}</span>
+                        <span className="text-[rgba(38,37,30,0.55)] text-xs">
+                          {entry.runCount} runs
+                        </span>
+                      </div>
+                      <DistributionBar entry={entry} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="rounded-2xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.68)] p-6 shadow-[0_20px_40px_rgba(34,28,20,0.12)]">
+                <h3 className="font-semibold text-[11px] text-[rgba(38,37,30,0.6)] uppercase tracking-[0.28em]">
+                  Score distribution · countries
+                </h3>
+                <ul className="mt-4 space-y-4 text-sm">
+                  {distributionsByCountry.map((entry) => (
+                    <li className="space-y-2" key={entry.key}>
+                      <div className="flex items-center justify-between text-[rgba(38,37,30,0.7)]">
+                        <span className="font-medium">{entry.label}</span>
+                        <span className="text-[rgba(38,37,30,0.55)] text-xs">
+                          {entry.runCount} runs
+                        </span>
+                      </div>
+                      <DistributionBar entry={entry} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          )}
         </div>
       ) : (
         <div className="mt-8 rounded-2xl border border-[rgba(38,37,30,0.2)] border-dashed bg-[rgba(255,255,255,0.6)] px-6 py-10 text-center text-[rgba(38,37,30,0.6)] text-sm">
-          Comparative analytics will appear here after the first batch of
           completed runs is processed.
         </div>
       )}
-    </section>
+      </section>
+      <HelpMeUnderstandModal
+        open={onboardingOpen}
+        onClose={() => setOnboardingOpen(false)}
+        companyName="Comparative insights"
+      />
+    </>
   );
 }
 
