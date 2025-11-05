@@ -15,16 +15,6 @@ const DEFAULT_SHARES: TaskMixShares = {
 
 const USAGE_SEGMENT_TOTAL = 100;
 
-// function classifyTask(automation?: number | null, augmentation?: number | null): keyof TaskMixCounts {
-//   const auto = typeof automation === "number" ? automation : 0;
-//   const aug = typeof augmentation === "number" ? augmentation : 0;
-
-//   if (auto <= 0 && aug <= 0) {
-//     return "manual";
-//   }
-
-//   return auto >= aug ? "automation" : "augmentation";
-// }
 
 let cachedLookup: Map<string, OnetCatalogRole> | null = null;
 let cachedNormalizedLookup: Map<string, OnetCatalogRole> | null = null;
@@ -72,8 +62,6 @@ export function deriveTaskMixCounts(role: EnrichedOrgRole | undefined | null): T
     };
   }
 
-  // const tasks = role.topTasks ?? [];
-  // if (tasks.length === 0) {
   const catalogRole = getCatalogRole(role);
   if (catalogRole) {
     const {
@@ -120,26 +108,6 @@ export function deriveTaskMixCounts(role: EnrichedOrgRole | undefined | null): T
     });
   }
   return DEFAULT_COUNTS;
-  // }
-
-  // const counts = tasks.reduce<TaskMixCounts>((acc, task) => {
-  //   const bucket = classifyTask(task.automation, task.augmentation);
-  //   acc[bucket] += 1;
-  //   return acc;
-  // }, { automation: 0, augmentation: 0, manual: 0 });
-
-  // if (process.env.NODE_ENV !== "production") {
-  //   const total = counts.automation + counts.augmentation + counts.manual;
-  //   if (total === 0) {
-  //     console.debug("task-mix: zero totals despite tasks", {
-  //       title: role.title,
-  //       onetCode: role.onetCode,
-  //       topTasks: role.topTasks,
-  //     });
-  //   }
-  // }
-
-  // return counts;
 }
 
 export function deriveTaskMixShares(role: EnrichedOrgRole | undefined | null): TaskMixShares {
