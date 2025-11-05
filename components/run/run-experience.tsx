@@ -108,14 +108,14 @@ export function RunExperience({
     initialWorkforceMetric ?? null
   );
   const [isPolling, setIsPolling] = useState(false);
-  const [chatIdState, setChatIdState] = useState<string | null>(initialChatId);
+  const [chatIdState, setChatIdState] = useState<string | null>(initialChatId ?? null);
   const [initialChatMessages, setInitialChatMessages] = useState<ChatMessage[]>(
     initialMessages
   );
   const [showScrollToLatest, setShowScrollToLatest] = useState(false);
 
   const latestPayloadRef = useRef<RunRequestPayload | null>(null);
-  const chatIdRef = useRef<string | null>(initialChatId);
+  const chatIdRef = useRef<string | null>(initialChatId ?? null);
   const bootstrappedRef = useRef(false);
   const pendingTranscriptRef = useRef<ChatMessage[] | null>(
     initialMessages.length > 0 ? initialMessages : null
@@ -130,27 +130,8 @@ export function RunExperience({
     }
   }, [initialReport]);
 
-  const applyWorkforceMetric = useCallback(
-    (metrics?: RunMetricPayload[] | null) => {
-      if (!metrics || metrics.length === 0) {
-        return;
-      }
-      const entry = metrics.find((item) => item.metricType === "workforce_score");
-      if (!entry) {
-        return;
-      }
-      const parsed = parseWorkforceMetricData(entry.data);
-      if (parsed) {
-        setStoredWorkforceMetric(parsed);
-      }
-    },
-    []
-  );
-
   const companyName = useMemo(() => {
-    if (initialName && initialName.length > 0) {
-      return initialName;
-    }
+    if (initialName && initialName.length > 0) return initialName;
 
     const fromParam = searchParams.get("name");
     if (fromParam) return fromParam;
@@ -158,30 +139,38 @@ export function RunExperience({
     return slug.replace(/-/g, " ");
   }, [initialName, searchParams, slug]);
 
+  const applyWorkforceMetric = useCallback(
+    (metrics?: RunMetricPayload[] | null) => {
+      if (!metrics || metrics.length === 0) return;
+      const entry = metrics.find((item) => item.metricType === "workforce_score");
+      if (!entry) return;
+
+      const parsed = parseWorkforceMetricData(entry.data, {
+        companyName,
+        runId: snapshot.runId ?? initialRunId ?? null,
+        source: "run-experience",
+      });
+      if (parsed) setStoredWorkforceMetric(parsed);
+    },
+    [companyName, snapshot.runId, initialRunId]
+  );
+
   const parseReport = useCallback((input: unknown): EnrichedOrgReport | null => {
     if (!input) return null;
     const enriched = enrichedOrgReportSchema.safeParse(input);
-    if (enriched.success) {
-      return enriched.data;
-    }
+    if (enriched.success) return enriched.data;
     const normalized = normaliseLegacyReport(input);
     const normalizedEnriched = enrichedOrgReportSchema.safeParse(normalized);
-    if (normalizedEnriched.success) {
-      return normalizedEnriched.data;
-    }
+    if (normalizedEnriched.success) return normalizedEnriched.data;
     const base = orgReportSchema.safeParse(normalized);
-    if (base.success) {
-      console.warn("[RunExperience] Received base org report without enrichment; ignoring payload");
-    }
+    if (base.success) console.warn("[RunExperience] Received base org report without enrichment; ignoring payload");
     return null;
   }, []);
 
   const fetchRunBySlug = useCallback(async (): Promise<RunStatusResponse | null> => {
     try {
       const response = await fetch(`/api/run?slug=${slug}`, { cache: "no-store" });
-      if (!response.ok) {
-        return null;
-      }
+      if (!response.ok) return null;
       const data = (await response.json()) as RunStatusResponse;
       applyWorkforceMetric(data.metrics);
       return data;
@@ -779,16 +768,24 @@ export function RunExperience({
           {resolvedWorkforceImpact && (
             <div className="relative flex w-full max-w-[400px] flex-col items-start gap-4 text-[#26251e] lg:basis-1/3 lg:items-end lg:text-right">
               <span className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[rgba(38,37,30,0.58)]">
-                Workforce impact score
+                Potential workforce impact score
               </span>
               <div className="relative flex w-full flex-col items-start gap-3 lg:items-end">
                 <div className="relative w-full overflow-visible">
                   <span className="pointer-events-none block text-[clamp(120px,10vw,180px)] font-semibold leading-[0.8] text-[rgba(38,37,30,0.08)]">
-                    {resolvedWorkforceImpact.score.toFixed(1)}
+                    {(() => {
+                      const value = resolvedWorkforceImpact.score * 10;
+                      return value >= 10 ? Math.round(value).toString() : value.toFixed(1);
+                    })()}
                   </span>
                   <span className="absolute inset-0 flex items-end justify-between gap-4 px-1 pb-1 text-[clamp(52px,5vw,68px)] font-semibold leading-none text-[#26251e] lg:justify-end">
-                    <span className="whitespace-nowrap">{resolvedWorkforceImpact.score.toFixed(1)}</span>
-                    <span className="text-2xl font-semibold text-[rgba(38,37,30,0.55)]">/10</span>
+                    <span className="whitespace-nowrap">
+                      {(() => {
+                        const value = resolvedWorkforceImpact.score * 10;
+                        return value >= 10 ? `${Math.round(value)}%` : `${value.toFixed(1)}%`;
+                      })()}
+                    </span>
+                    {/* <span className="text-2xl font-semibold text-[rgba(38,37,30,0.55)]">/10</span> */}
                   </span>
                 </div>
                 <ul className="flex flex-col gap-2 text-xs text-[rgba(38,37,30,0.75)] lg:items-end">

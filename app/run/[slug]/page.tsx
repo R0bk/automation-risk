@@ -39,7 +39,13 @@ export default async function RunPage({ params }: RunPageProps) {
   const initialChatId = latestRun?.chatId || null;
 
   const scoreMetric = latestRun && metrics.find((entry) => entry.metricType === "workforce_score");
-  const initialWorkforceMetric = scoreMetric?.data ? parseWorkforceMetricData(scoreMetric.data) : null;
+  const initialWorkforceMetric = scoreMetric?.data
+    ? parseWorkforceMetricData(scoreMetric.data, {
+        companyName: company.displayName ?? company.slug ?? slug,
+        runId: latestRun?.id,
+        source: "run-page",
+      })
+    : null;
 
   return (
     <div className="relative min-h-screen overflow-hidden" id="top" style={{ backgroundColor: "#f7f7f4" }}>

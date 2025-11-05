@@ -2,7 +2,6 @@ import { z } from "zod";
 import { deriveTaskMixCounts } from "./task-mix";
 import type {
   EnrichedAggregation,
-  EnrichedOrgNode,
   EnrichedOrgReport,
   EnrichedOrgRole,
 } from "./report-schema";
@@ -16,10 +15,7 @@ type ImpactAccumulator = {
 
 const debugWorkforceImpact = process.env.NODE_ENV !== "production";
 
-function collectRoleStats(report: EnrichedOrgReport): ImpactAccumulator | null {
-  const roles = report.roles;
-  if (roles.length === 0) return null;
-
+export function buildRoleHeadcountMap(report: EnrichedOrgReport): Map<string, number> {
   const roleHeadcountFromNodes = new Map<string, number>();
   for (const node of report.hierarchy) {
     for (const entry of node.dominantRoles) {
@@ -27,6 +23,15 @@ function collectRoleStats(report: EnrichedOrgReport): ImpactAccumulator | null {
       roleHeadcountFromNodes.set(key, (roleHeadcountFromNodes.get(key) ?? 0) + entry.headcount);
     }
   }
+
+  return roleHeadcountFromNodes;
+}
+
+function collectRoleStats(report: EnrichedOrgReport): ImpactAccumulator | null {
+  const roles = report.roles;
+  if (roles.length === 0) return null;
+
+  const roleHeadcountFromNodes = buildRoleHeadcountMap(report);
 
   if (roleHeadcountFromNodes.size === 0) return null;
 
@@ -161,10 +166,25 @@ export const workforceMetricSchema = z
     }
   );
 
-export function parseWorkforceMetricData(data: unknown): WorkforceImpactSnapshot | null {
+type MetricParseContext = {
+  companyName?: string | null;
+  runId?: string | null;
+  source?: string;
+};
+
+export function parseWorkforceMetricData(
+  data: unknown,
+  context?: MetricParseContext
+): WorkforceImpactSnapshot | null {
   const result = workforceMetricSchema.safeParse(data);
   if (!result.success) {
-    console.debug("[workforce-impact:metric-parse-failed]", result.error.flatten().fieldErrors);
+    const fieldErrors = result.error.flatten().fieldErrors;
+    console.debug("[workforce-impact:metric-parse-failed]", {
+      companyName: context?.companyName ?? null,
+      runId: context?.runId ?? null,
+      source: context?.source ?? null,
+      fieldErrors,
+    });
     return null;
   }
   return result.data;
