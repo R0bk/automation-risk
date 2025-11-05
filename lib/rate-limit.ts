@@ -1,4 +1,4 @@
-const DEFAULT_LIMIT = Number(process.env.RUN_RATE_LIMIT ?? 3);
+const DEFAULT_LIMIT = Number(process.env.RUN_RATE_LIMIT ?? 10);
 const DEFAULT_WINDOW_MS = Number(process.env.RUN_RATE_LIMIT_WINDOW_MS ?? 1000 * 60 * 60);
 
 declare global {
