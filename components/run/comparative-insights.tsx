@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import HelpMeUnderstandModal from "@/components/run/onboarding";
-import type { ComparativeAnalytics, TopTaskMetric } from "@/lib/run/comparative-analytics";
+import type { ComparativeAnalytics, TopTaskMetric, CountryMetric } from "@/lib/run/comparative-analytics";
+import { resolveIsoCode } from "@/lib/constants/countries";
+import { ComposableMap, Geographies, Geography, Graticule, Sphere } from "react-simple-maps";
+
+const WORLD_GEO_URL = "/features.json";
 
 type ComparativeInsightsProps = {
   analytics: ComparativeAnalytics | null;
@@ -27,6 +31,7 @@ const barFillColor = (value: number | null | undefined) => {
 const AUTOMATION_BAR_COLOR = "hsl(22deg 92% 48%)";
 const AUGMENTATION_BAR_COLOR = "hsl(22deg 96% 66%)";
 const MIN_TRACK_PERCENT = 12;
+
 
 const computeStackedBarSegments = (
   score: number | null | undefined,
@@ -218,6 +223,196 @@ const formatMillions = (value: number) => {
   return (Math.round(millions * 10) / 10).toFixed(1);
 };
 
+type WorldExposureMapProps = {
+  countries: CountryMetric[];
+  variant?: "card" | "embedded";
+};
+
+function WorldExposureMap({ countries, variant = "card" }: WorldExposureMapProps) {
+  if (process.env.NODE_ENV !== "production") {
+    console.debug("[WorldExposureMap] countries", countries.map((country) => ({
+      iso: country.isoCode,
+      country: country.country,
+      runs: country.runCount,
+      score: country.averageScore,
+    })));
+  }
+
+  const normalizeIso = (geo: any): string => {
+    const iso2Candidate = (geo.properties?.ISO_A2_EH ?? geo.properties?.ISO_A2 ?? null) as string | null;
+    const iso2 = iso2Candidate ? iso2Candidate.toUpperCase() : null;
+    if (iso2 && iso2 !== "-99") {
+      return iso2;
+    }
+    const byName = resolveIsoCode((geo.properties?.name as string | null) ?? null);
+    if (byName) {
+      return byName.toUpperCase();
+    }
+    const iso3Candidate = (geo.properties?.ISO_A3 ?? null) as string | null;
+    if (iso3Candidate && iso3Candidate !== "-99") {
+      const iso3 = iso3Candidate.toUpperCase();
+      if (iso3.length === 3) {
+        const alias = resolveIsoCode(geo.properties?.ADMIN ?? geo.properties?.NAME ?? null);
+        if (alias) {
+          return alias.toUpperCase();
+        }
+      }
+    }
+    if (process.env.NODE_ENV !== "production") {
+      console.debug("[WorldExposureMap] missing ISO", {
+        iso2Candidate,
+        iso3Candidate,
+        name: geo.properties?.NAME,
+        admin: geo.properties?.ADMIN,
+        nameLong: geo.properties?.NAME_LONG,
+      });
+    }
+    return "";
+  };
+
+  const countryLookup = useMemo(() => {
+    const map = new Map<string, CountryMetric>();
+    for (const country of countries) {
+      const rawIso = country.isoCode?.toUpperCase();
+      const derivedIso = resolveIsoCode(country.country)?.toUpperCase() ?? null;
+      const iso = rawIso && rawIso !== "-99" ? rawIso : derivedIso;
+      if (!iso || iso === "-99") continue;
+      const existing = map.get(iso);
+      if (!existing || (existing.runCount ?? 0) < (country.runCount ?? 0)) {
+        map.set(iso, country);
+      }
+    }
+    return map;
+  }, [countries]);
+
+  if (countryLookup.size === 0) {
+    return null;
+  }
+
+  if (process.env.NODE_ENV !== "production") {
+    const sample = Array.from(countryLookup.entries())
+      .slice(0, 12)
+      .map(([iso, metric]) => ({ iso, country: metric.country, runs: metric.runCount, score: metric.averageScore }));
+    console.debug("[WorldExposureMap] sample country metrics", sample);
+  }
+
+  const scores = Array.from(countryLookup.values())
+    .map((metric) => clampScore(metric.averageScore))
+    .filter((value) => value > 0);
+  const minScore = scores.length > 0 ? Math.min(...scores) : null;
+  const maxScore = scores.length > 0 ? Math.max(...scores) : null;
+
+  const getFill = (iso: string) => {
+    const metric = countryLookup.get(iso);
+    if (!metric) {
+      return "rgba(38,37,30,0.08)";
+    }
+    const score = clampScore(metric.averageScore);
+    if (minScore == null || maxScore == null || maxScore <= minScore) {
+      return "hsl(22deg 78% 64%)";
+    }
+    const normalized = Math.min(1, Math.max(0, (score - minScore) / (maxScore - minScore)));
+    if (process.env.NODE_ENV !== "production") {
+      console.debug("[WorldExposureMap] color scale", { iso, score, normalized, minScore, maxScore });
+    }
+    const saturation = 70 + normalized * 25; // 70% -> 95%
+    const lightness = 80 - normalized * 38; // 80% -> 42%
+    return `hsl(22deg ${saturation}% ${lightness}%)`;
+  };
+
+  const getHoverFill = (iso: string) => {
+    const base = getFill(iso);
+    return base.replace(/(\d+\.\d+|\d+)%\)$/g, (match) => {
+      const value = parseFloat(match.replace("%", ""));
+      const adjusted = Math.max(35, value - 8);
+      return `${adjusted}%)`;
+    });
+  };
+
+  const getTooltip = (iso: string) => {
+    const metric = countryLookup.get(iso);
+    if (!metric) {
+      return null;
+    }
+    const score = clampScore(metric.averageScore);
+    return `${metric.country} · ${metric.runCount} runs · Avg score ${score.toFixed(1)}`;
+  };
+
+  const mapElement = (
+    <ComposableMap projectionConfig={{ scale: 170, center: [20, 0] }} width={720}  className="h-full w-full">
+      {/* <Sphere id="sphere" stroke="rgba(38,37,30,0.2)" strokeWidth={0.6} fill="none" /> */}
+      <Graticule stroke="rgba(38,37,30,0.12)" strokeWidth={0.35} />
+      <Geographies geography={WORLD_GEO_URL}>
+        {({ geographies }) =>
+          geographies.map((geo) => {
+            const iso = normalizeIso(geo);
+            const metric = iso ? countryLookup.get(iso) : null;
+            const tooltip = metric ? getTooltip(iso) : null;
+            const fill = metric ? getFill(iso) : "rgba(38,37,30,0.08)";
+            const hoverFill = metric ? getHoverFill(iso) : fill;
+            const strokeColor = "rgba(255,255,255,0.55)";
+            if (process.env.NODE_ENV !== "production") {
+              console.debug("[WorldExposureMap] geography", {
+                iso,
+                highlighted: Boolean(metric),
+                fill,
+                country: metric?.country,
+                runs: metric?.runCount,
+                score: metric?.averageScore,
+                name: geo.properties?.NAME,
+                nameLong: geo.properties?.NAME_LONG,
+              });
+            }
+            return (
+              <Geography
+                key={geo.rsmKey}
+                geography={geo}
+                fill={fill}
+                stroke={strokeColor}
+                strokeWidth={0.45}
+                style={{
+                  default: { outline: "none" },
+                  hover: { outline: "none", fill: hoverFill },
+                  pressed: { outline: "none", fill: hoverFill },
+                }}
+              >
+                {tooltip ? <title>{tooltip}</title> : null}
+              </Geography>
+            );
+          })
+        }
+      </Geographies>
+    </ComposableMap>
+  );
+
+  if (variant === "embedded") {
+    return (
+      <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.08)] bg-[rgba(38,37,30,0.02)]">
+        {mapElement}
+      </div>
+    );
+  }
+
+  return (
+    <section
+      aria-label="Global coverage map"
+      className="rounded-2xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.68)] p-6 shadow-[0_20px_40px_rgba(34,28,20,0.12)]"
+    >
+      <div className="flex items-center justify-between">
+        <h3 className="font-semibold text-[11px] uppercase tracking-[0.28em] text-[rgba(38,37,30,0.6)]">
+          Global coverage
+        </h3>
+        <span className="text-[rgba(38,37,30,0.45)] text-xs">
+          Fill = average score · tooltip = detail
+        </span>
+      </div>
+      <div className="mt-4 overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.08)] bg-[rgba(38,37,30,0.02)]">
+        {mapElement}
+      </div>
+    </section>
+  );
+}
+
 const computeHeatmapStyle = (
   score: number | null,
   minScore: number | null,
@@ -258,6 +453,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
   const topTasks = (analytics?.topTasks ?? []) as TopTaskMetric[];
   const hasTopTasks = topTasks.length > 0;
   const [onboardingOpen, setOnboardingOpen] = useState(false);
+  const [countryView, setCountryView] = useState<"list" | "world">("list");
 
   const sortedCountries = sortByImpact(analytics?.countries ?? []);
   const sortedIndustries = sortByImpact(analytics?.industries ?? []);
@@ -268,6 +464,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
     setShowAllIndustries(false);
     setShowAllCountries(false);
     setShowFullHeatmap(false);
+    setCountryView("list");
   }, [analytics]);
 
   const INDUSTRY_PREVIEW_COUNT = 5;
@@ -397,7 +594,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
     heatmapScores.length > 0 ? Math.min(...heatmapScores) : null;
   const heatmapMax =
     heatmapScores.length > 0 ? Math.max(...heatmapScores) : null;
-  const HEATMAP_PREVIEW_LIMIT = 8;
+  const HEATMAP_PREVIEW_LIMIT = 7;
   const heatmapCountries =
     showFullHeatmap || heatmapCountriesAll.length <= HEATMAP_PREVIEW_LIMIT
       ? heatmapCountriesAll
@@ -509,65 +706,94 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
             </div>
 
             <div className="rounded-2xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.68)] p-6 shadow-[0_20px_40px_rgba(34,28,20,0.12)]">
-              <div className="flex items-baseline justify-between gap-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <h3 className="font-semibold text-[11px] text-[rgba(38,37,30,0.6)] uppercase tracking-[0.28em]">
                   Countries
                 </h3>
-                <span className="text-[rgba(38,37,30,0.45)] text-xs">
-                  Avg share of roles (%)
-                </span>
+                <div className="inline-flex items-center -mt-1 gap-1 rounded-full border border-[rgba(38,37,30,0.16)] bg-white/70 p-[3px] text-[10px] font-semibold uppercase tracking-[0.16em] text-[rgba(38,37,30,0.55)]">
+                  <button
+                    type="button"
+                    onClick={() => setCountryView("list")}
+                    className={`rounded-full px-2 py-0.5 transition-colors duration-150 ${
+                      countryView === "list"
+                        ? "bg-[rgba(38,37,30,0.85)] text-white shadow-[0_6px_16px_rgba(38,37,30,0.22)]"
+                        : "text-[rgba(38,37,30,0.6)] hover:text-[rgba(38,37,30,0.8)]"
+                    }`}
+                    aria-pressed={countryView === "list"}
+                  >
+                    List
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCountryView("world")}
+                    className={`rounded-full px-2 py-0.5 transition-colors duration-150 ${
+                      countryView === "world"
+                        ? "bg-[rgba(38,37,30,0.85)] text-white shadow-[0_6px_16px_rgba(38,37,30,0.22)]"
+                        : "text-[rgba(38,37,30,0.6)] hover:text-[rgba(38,37,30,0.8)]"
+                    }`}
+                    aria-pressed={countryView === "world"}
+                  >
+                    World
+                  </button>
+                </div>
               </div>
-              <ul className="mt-4 space-y-2 text-sm">
-                {(showAllCountries || !countryHasToggle
-                  ? sortedCountries
-                  : countryPreviewTop
-                ).map(renderCountryRow)}
-                {!showAllCountries && countryHasToggle && (
-                  <li key="country-expand" className="flex justify-center py-2">
-                    <button
-                      type="button"
-                      onClick={() => setShowAllCountries(true)}
-                      aria-expanded={showAllCountries}
-                      className={toggleButtonClass}
-                    >
-                      <ChevronsUpDown className="h-3.5 w-3.5" strokeWidth={1.8} />
-                      Show all {sortedCountries.length}
-                    </button>
-                  </li>
-                )}
-                {!showAllCountries &&
-                  countryHasToggle &&
-                  countryCollapsedBottom.map(renderCountryRow)}
-                {showAllCountries && countryHasToggle && (
-                  <li key="country-collapse" className="flex justify-center py-2">
-                    <button
-                      type="button"
-                      onClick={() => setShowAllCountries(false)}
-                      aria-expanded={showAllCountries}
-                      className={toggleButtonClass}
-                    >
-                      <ChevronsUpDown className="h-3.5 w-3.5" strokeWidth={1.8} />
-                      Collapse list
-                    </button>
-                  </li>
-                )}
-              </ul>
+              {countryView === "list" ? (
+                <ul className="mt-4 space-y-2 text-sm">
+                  {(showAllCountries || !countryHasToggle
+                    ? sortedCountries
+                    : countryPreviewTop
+                  ).map(renderCountryRow)}
+                  {!showAllCountries && countryHasToggle && (
+                    <li key="country-expand" className="flex justify-center py-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowAllCountries(true)}
+                        aria-expanded={showAllCountries}
+                        className={toggleButtonClass}
+                      >
+                        <ChevronsUpDown className="h-3.5 w-3.5" strokeWidth={1.8} />
+                        Show all {sortedCountries.length}
+                      </button>
+                    </li>
+                  )}
+                  {!showAllCountries &&
+                    countryHasToggle &&
+                    countryCollapsedBottom.map(renderCountryRow)}
+                  {showAllCountries && countryHasToggle && (
+                    <li key="country-collapse" className="flex justify-center py-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowAllCountries(false)}
+                        aria-expanded={showAllCountries}
+                        className={toggleButtonClass}
+                      >
+                        <ChevronsUpDown className="h-3.5 w-3.5" strokeWidth={1.8} />
+                        Collapse list
+                      </button>
+                    </li>
+                  )}
+                </ul>
+              ) : (
+                <div className="mt-4">
+                  <WorldExposureMap countries={sortedCountriesByRuns} variant="embedded" />
+                </div>
+              )}
             </div>
           </section>
 
           <section
             aria-label="Country by industry heatmap"
-            className="rounded-2xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.7)] p-6 shadow-[0_20px_40px_rgba(34,28,20,0.12)]"
+            className="rounded-2xl border overflow-hidden border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.7)] p-0 shadow-[0_20px_40px_rgba(34,28,20,0.12)]"
           >
-            <div className="flex items-center justify-between">
+            {/* <div className="flex items-center justify-between">
               <h3 className="font-semibold text-[11px] text-[rgba(38,37,30,0.6)] uppercase tracking-[0.28em]">
                 Country × industry coverage
               </h3>
               <span className="text-[rgba(38,37,30,0.45)] text-xs">
                 Cell color = share of roles impacted · tooltip = details
               </span>
-            </div>
-            <div className="mt-4 overflow-x-auto">
+            </div> */}
+            <div className="overflow-x-scroll">
               <table className="min-w-full table-fixed border-separate border-spacing-0 text-[rgba(38,37,30,0.7)] text-xs">
                 <thead>
                   <tr>
@@ -602,7 +828,8 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
                         const heatmapStyle = computeHeatmapStyle(
                           score,
                           heatmapMin,
-                          heatmapMax
+                          10
+                          // heatmapMax
                         );
                         const isBottom =
                           rowIndex === heatmapCountries.length - 1;
@@ -638,7 +865,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
               </table>
             </div>
             {!showFullHeatmap && heatmapHasToggle && (
-              <div className="mt-4 flex justify-center">
+              <div className="-mt-9 mb-1.5 flex justify-center">
                 <button
                   type="button"
                   onClick={() => setShowFullHeatmap(true)}
@@ -820,7 +1047,6 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
       <HelpMeUnderstandModal
         open={onboardingOpen}
         onClose={() => setOnboardingOpen(false)}
-        companyName="Comparative insights"
       />
     </>
   );

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Onboarding } from "@/components/onboarding/Onboarding";
 import { cn, slugifyCompanyName } from "@/lib/utils";
 import { useAutoWidthInput } from "./useAutoWidthInput";
 import { ApiKeyInput } from "./api-key-input";
@@ -165,9 +166,13 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
       <div className="absolute -left-20 bottom-10 -z-10 h-60 w-60 rounded-full bg-[rgba(49,138,101,0.1)] blur-[130px]" />
 
       <div className="space-y-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[rgba(38,37,30,0.6)]">
-          Workforce Intelligence
-        </p>
+        <div className="flex flex-row items-center justify-between gap-2">
+
+          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[rgba(38,37,30,0.6)]">
+            Workforce Intelligence
+          </p>
+          <Onboarding />
+        </div>
         <div className="text-balance text-[clamp(42px,5vw,64px)] leading-[1.05] text-[#26251e]">
           <span className="font-light text-[#1f1d16]/85">
             What AI effect is
