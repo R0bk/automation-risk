@@ -15,16 +15,16 @@ const DEFAULT_SHARES: TaskMixShares = {
 
 const USAGE_SEGMENT_TOTAL = 100;
 
-function classifyTask(automation?: number | null, augmentation?: number | null): keyof TaskMixCounts {
-  const auto = typeof automation === "number" ? automation : 0;
-  const aug = typeof augmentation === "number" ? augmentation : 0;
+// function classifyTask(automation?: number | null, augmentation?: number | null): keyof TaskMixCounts {
+//   const auto = typeof automation === "number" ? automation : 0;
+//   const aug = typeof augmentation === "number" ? augmentation : 0;
 
-  if (auto <= 0 && aug <= 0) {
-    return "manual";
-  }
+//   if (auto <= 0 && aug <= 0) {
+//     return "manual";
+//   }
 
-  return auto >= aug ? "automation" : "augmentation";
-}
+//   return auto >= aug ? "automation" : "augmentation";
+// }
 
 let cachedLookup: Map<string, OnetCatalogRole> | null = null;
 let cachedNormalizedLookup: Map<string, OnetCatalogRole> | null = null;
@@ -72,74 +72,74 @@ export function deriveTaskMixCounts(role: EnrichedOrgRole | undefined | null): T
     };
   }
 
-  const tasks = role.topTasks ?? [];
-  if (tasks.length === 0) {
-    const catalogRole = getCatalogRole(role);
-    if (catalogRole) {
-      const {
-        automationTasks = 0,
-        augmentationTasks = 0,
-        manualTasks = 0,
-        taskCount = 0,
-      } = catalogRole.metrics;
+  // const tasks = role.topTasks ?? [];
+  // if (tasks.length === 0) {
+  const catalogRole = getCatalogRole(role);
+  if (catalogRole) {
+    const {
+      automationTasks = 0,
+      augmentationTasks = 0,
+      manualTasks = 0,
+      taskCount = 0,
+    } = catalogRole.metrics;
 
-      const counts: TaskMixCounts = {
-        automation: Math.max(0, Math.round(automationTasks ?? 0)),
-        augmentation: Math.max(0, Math.round(augmentationTasks ?? 0)),
-        manual: Math.max(0, Math.round(manualTasks ?? 0)),
-      };
+    const counts: TaskMixCounts = {
+      automation: Math.max(0, Math.round(automationTasks ?? 0)),
+      augmentation: Math.max(0, Math.round(augmentationTasks ?? 0)),
+      manual: Math.max(0, Math.round(manualTasks ?? 0)),
+    };
 
-      if (
-        counts.automation === 0 &&
-        counts.augmentation === 0 &&
-        counts.manual === 0 &&
-        taskCount > 0
-      ) {
-        const equalShare = Math.max(1, Math.round(taskCount / 3));
-        counts.automation = equalShare;
-        counts.augmentation = equalShare;
-        counts.manual = Math.max(0, taskCount - equalShare * 2);
-      }
-
-      if (process.env.NODE_ENV !== "production") {
-        console.debug("task-mix: using catalog fallback", {
-          title: role.title,
-          onetCode: role.onetCode,
-          counts,
-        });
-      }
-
-      return counts;
+    if (
+      counts.automation === 0 &&
+      counts.augmentation === 0 &&
+      counts.manual === 0 &&
+      taskCount > 0
+    ) {
+      const equalShare = Math.max(1, Math.round(taskCount / 3));
+      counts.automation = equalShare;
+      counts.augmentation = equalShare;
+      counts.manual = Math.max(0, taskCount - equalShare * 2);
     }
 
     if (process.env.NODE_ENV !== "production") {
-      console.debug("task-mix: role missing tasks", {
+      console.debug("task-mix: using catalog fallback", {
         title: role.title,
         onetCode: role.onetCode,
-        topTasks: role.topTasks,
+        counts,
       });
     }
-    return DEFAULT_COUNTS;
-  }
 
-  const counts = tasks.reduce<TaskMixCounts>((acc, task) => {
-    const bucket = classifyTask(task.automation, task.augmentation);
-    acc[bucket] += 1;
-    return acc;
-  }, { automation: 0, augmentation: 0, manual: 0 });
+    return counts;
+  }
 
   if (process.env.NODE_ENV !== "production") {
-    const total = counts.automation + counts.augmentation + counts.manual;
-    if (total === 0) {
-      console.debug("task-mix: zero totals despite tasks", {
-        title: role.title,
-        onetCode: role.onetCode,
-        topTasks: role.topTasks,
-      });
-    }
+    console.debug("task-mix: role missing tasks", {
+      title: role.title,
+      onetCode: role.onetCode,
+      topTasks: role.topTasks,
+    });
   }
+  return DEFAULT_COUNTS;
+  // }
 
-  return counts;
+  // const counts = tasks.reduce<TaskMixCounts>((acc, task) => {
+  //   const bucket = classifyTask(task.automation, task.augmentation);
+  //   acc[bucket] += 1;
+  //   return acc;
+  // }, { automation: 0, augmentation: 0, manual: 0 });
+
+  // if (process.env.NODE_ENV !== "production") {
+  //   const total = counts.automation + counts.augmentation + counts.manual;
+  //   if (total === 0) {
+  //     console.debug("task-mix: zero totals despite tasks", {
+  //       title: role.title,
+  //       onetCode: role.onetCode,
+  //       topTasks: role.topTasks,
+  //     });
+  //   }
+  // }
+
+  // return counts;
 }
 
 export function deriveTaskMixShares(role: EnrichedOrgRole | undefined | null): TaskMixShares {
@@ -149,9 +149,9 @@ export function deriveTaskMixShares(role: EnrichedOrgRole | undefined | null): T
 
   if (role.taskMixShares) {
     return {
-      automation: role.taskMixShares.automation,
-      augmentation: role.taskMixShares.augmentation,
-      manual: role.taskMixShares.manual,
+      automation: role.taskMixShares.automation ?? null,
+      augmentation: role.taskMixShares.augmentation ?? null,
+      manual: role.taskMixShares.manual ?? null,
     };
   }
 
