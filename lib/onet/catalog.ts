@@ -38,6 +38,16 @@ type OnetHierarchy = {
 
 type RoleCodeMap = Record<string, { code: string; title: string } | undefined>;
 
+export type CatalogTaskMetric = {
+  name: string;
+  normalizedWeight: number;
+  count: number;
+  automationShare: number;
+  augmentationShare: number;
+  manualShare: number;
+  metrics: Partial<Record<MetricKey, number>> | null;
+};
+
 type CatalogMetrics = {
   automationCount: number;
   augmentationCount: number;
@@ -49,6 +59,7 @@ type CatalogMetrics = {
   automationTasks: number;
   augmentationTasks: number;
   manualTasks: number;
+  tasks: CatalogTaskMetric[];
 };
 
 export interface OnetCatalogRole {
@@ -83,6 +94,22 @@ function round(value: number): number {
   return Number.parseFloat(value.toFixed(3));
 }
 
+function toShare(value: number): number {
+  if (!Number.isFinite(value) || value <= 0) {
+    return 0;
+  }
+  if (value <= 1) {
+    return value;
+  }
+  if (value <= 1000) {
+    const scaled = value / 100;
+    if (scaled <= 1) {
+      return scaled;
+    }
+  }
+  return 1;
+}
+
 function aggregateRoleMetrics(role: OnetRoleNode): CatalogMetrics {
   const workforceShare = getGlobalMetric(role, "pct");
   const tasks = role.children ?? [];
@@ -99,6 +126,7 @@ function aggregateRoleMetrics(role: OnetRoleNode): CatalogMetrics {
       automationTasks: 0,
       augmentationTasks: 0,
       manualTasks: tasks.length,
+      tasks: [],
     };
   }
 
@@ -117,6 +145,7 @@ function aggregateRoleMetrics(role: OnetRoleNode): CatalogMetrics {
   let automationTasks = 0;
   let augmentationTasks = 0;
   let manualTasks = 0;
+  const catalogTasks: CatalogTaskMetric[] = [];
 
   for (const task of tasks) {
     const taskWeight = getGlobalMetric(task, "pct");
@@ -124,11 +153,13 @@ function aggregateRoleMetrics(role: OnetRoleNode): CatalogMetrics {
       coverageAccumulator += taskWeight;
     }
 
+    const autoShare = toShare(getGlobalMetric(task, "automation_pct"));
+    const augShare = toShare(getGlobalMetric(task, "augmentation_pct"));
+    const manualShare = Math.max(0, 1 - autoShare - augShare);
+
     const taskCount = getGlobalMetric(task, "count");
     if (taskCount > 0) {
       totalCount += taskCount;
-      const autoShare = getGlobalMetric(task, "automation_pct");
-      const augShare = getGlobalMetric(task, "augmentation_pct");
       automationCount += taskCount * autoShare;
       augmentationCount += taskCount * augShare;
 
@@ -140,8 +171,6 @@ function aggregateRoleMetrics(role: OnetRoleNode): CatalogMetrics {
         augmentationTasks += 1;
       }
     } else {
-      const autoShare = getGlobalMetric(task, "automation_pct");
-      const augShare = getGlobalMetric(task, "augmentation_pct");
       if (autoShare <= 0 && augShare <= 0) {
         manualTasks += 1;
       } else if (autoShare >= augShare) {
@@ -151,7 +180,25 @@ function aggregateRoleMetrics(role: OnetRoleNode): CatalogMetrics {
       }
     }
 
-    const normalizedWeight = taskWeight > 0 ? taskWeight / workforceShare : 0;
+    const normalizedWeight = workforceShare > 0 && taskWeight > 0 ? taskWeight / workforceShare : 0;
+
+    const taskMetrics = METRIC_KEYS.reduce((acc, key) => {
+      const value = getGlobalMetric(task, key);
+      if (value !== 0) {
+        acc[key] = round(value);
+      }
+      return acc;
+    }, {} as Partial<Record<MetricKey, number>>);
+
+    catalogTasks.push({
+      name: task.cluster_name,
+      normalizedWeight,
+      count: taskCount,
+      automationShare: autoShare,
+      augmentationShare: augShare,
+      manualShare,
+      metrics: Object.keys(taskMetrics).length > 0 ? taskMetrics : null,
+    });
 
     if (normalizedWeight === 0) continue;
 
@@ -175,6 +222,7 @@ function aggregateRoleMetrics(role: OnetRoleNode): CatalogMetrics {
       automationTasks,
       augmentationTasks,
       manualTasks,
+      tasks: catalogTasks,
     };
   }
 
@@ -197,6 +245,7 @@ function aggregateRoleMetrics(role: OnetRoleNode): CatalogMetrics {
     automationTasks,
     augmentationTasks,
     manualTasks,
+    tasks: catalogTasks,
   };
 }
 

@@ -590,29 +590,23 @@ export async function recordRunPopularity(runId: string) {
   try {
     const now = new Date();
 
-    const updated = await db
-      .update(runPopularity)
-      .set({
-        viewCount: sql`${runPopularity.viewCount} + 1`,
-        lastViewedAt: now,
-      })
-      .where(eq(runPopularity.runId, runId))
-      .returning();
-
-    if (updated.length > 0) {
-      return updated[0];
-    }
-
-    const [inserted] = await db
+    const [upserted] = await db
       .insert(runPopularity)
       .values({
         runId,
         viewCount: 1,
         lastViewedAt: now,
       })
+      .onConflictDoUpdate({
+        target: runPopularity.runId,
+        set: {
+          viewCount: sql`${runPopularity.viewCount} + 1`,
+          lastViewedAt: now,
+        },
+      })
       .returning();
 
-    return inserted;
+    return upserted;
   } catch (_error) {
     throw new ChatSDKError(
       "bad_request:database",
@@ -723,7 +717,11 @@ export async function listMostViewedRuns({
             displayName: row.displayName,
             hqCountry: row.hqCountry,
             viewCount: row.viewCount,
-            workforceMetric: parseWorkforceMetricData(row.workforceMetricData),
+            workforceMetric: parseWorkforceMetricData(row.workforceMetricData, {
+              companyName: row.displayName ?? row.slug ?? null,
+              runId: row.runId,
+              source: "listMostViewedRuns",
+            }),
           }));
     const hasMore = rows.length > effectiveLimit;
 
