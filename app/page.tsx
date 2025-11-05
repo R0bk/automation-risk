@@ -12,9 +12,6 @@ import {
 } from "@/lib/db/queries";
 import { ComparativeInsights } from "@/components/run/comparative-insights";
 import { loadComparativeInsights } from "@/lib/run/load-comparative-insights";
-import { Onboarding } from "@/components/run/onboarding";
-import { ExplainButton } from "@/components/run/test2";
-import { HelpMeUnderstandModalButton } from "@/components/run/test3";
 
 const LANDING_FOOTER_LINKS = [
   { label: "Home", href: "#top" },
@@ -142,18 +139,17 @@ export default function Page() {
         <Suspense fallback={<Skeleton className="h-64 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />}>
           <HeroAsync />
         </Suspense>
-        <Onboarding />
-        <ExplainButton />
-        <HelpMeUnderstandModalButton/>
-        <Suspense fallback={<ComparativeInsightsSkeleton />}>
-          <ComparativeInsightsAsync />
-        </Suspense>
-
         <div id="trending">
           <Suspense fallback={<TrendingSkeleton />}>
             <TrendingRunsAsync />
           </Suspense>
         </div>
+
+        <Suspense fallback={<ComparativeInsightsSkeleton />}>
+          <ComparativeInsightsAsync />
+        </Suspense>
+
+
 
         <div id="marketplace">
           <Suspense fallback={<MarketplaceSkeleton />}>
