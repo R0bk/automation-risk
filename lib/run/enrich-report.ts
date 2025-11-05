@@ -241,7 +241,7 @@ function buildRoleFromSources(code: string, jobRole: JobRole | null, catalogRole
     onetCode: code,
     title,
     normalizedTitle: normalizedTitle || undefined,
-    parentCluster,
+    parentCluster: parentCluster || undefined,
     headcount: null,
     automationShare,
     augmentationShare,
