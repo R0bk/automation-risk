@@ -12,6 +12,7 @@ import {
 } from "@/lib/db/queries";
 import { ComparativeInsights } from "@/components/run/comparative-insights";
 import { loadComparativeInsights } from "@/lib/run/load-comparative-insights";
+import { FloatingOnboardingButton } from "@/components/onboarding/FloatingOnboardingButton";
 
 const LANDING_FOOTER_LINKS = [
   { label: "Home", href: "#top" },
@@ -135,7 +136,7 @@ export default function Page() {
         />
       </div>
 
-      <main className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-col gap-14 px-6 pb-32 pt-28 text-[#26251e]">
+      <main className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-col gap-14 px-6 pb-32 pt-8 lg:pt-28 text-[#26251e]">
         <Suspense fallback={<Skeleton className="h-64 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />}>
           <HeroAsync />
         </Suspense>
@@ -159,6 +160,7 @@ export default function Page() {
       </main>
 
       <SiteFooter navLinks={LANDING_FOOTER_LINKS} />
+      <FloatingOnboardingButton />
     </div>
   );
 }
