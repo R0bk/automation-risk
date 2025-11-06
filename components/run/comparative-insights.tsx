@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
-import HelpMeUnderstandModal from "@/components/run/onboarding";
+import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
 import type { ComparativeAnalytics, TopTaskMetric, CountryMetric } from "@/lib/run/comparative-analytics-types";
 import { resolveIsoCode } from "@/lib/constants/countries";
-import { ComposableMap, Geographies, Geography, Graticule, Sphere } from "react-simple-maps";
+import { ComposableMap, Geographies, Geography, Graticule } from "react-simple-maps";
 
 const WORLD_GEO_URL = "/features.json";
 
@@ -176,7 +176,7 @@ function TaskExposureBar({ entry, className }: TaskExposureBarProps) {
 
   return (
     <div
-      className={`flex min-w-[220px] items-center justify-end gap-2 ${className ?? ""}`}
+      className={`flex min-w-[100px] lg:min-w-[220px] items-center justify-end gap-2 ${className ?? ""}`}
     >
       {automationLabel && (
         <span className="text-[rgba(245,78,0,0.92)] text-[11px] font-bold">
@@ -448,11 +448,11 @@ const sortByImpact = <
   });
 
 export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
+  const { open: openOnboarding } = useOnboarding();
   const hasData = Boolean(analytics && analytics.countries.length > 0);
 
   const topTasks = (analytics?.topTasks ?? []) as TopTaskMetric[];
   const hasTopTasks = topTasks.length > 0;
-  const [onboardingOpen, setOnboardingOpen] = useState(false);
   const [countryView, setCountryView] = useState<"list" | "world">("list");
 
   const sortedCountries = sortByImpact(analytics?.countries ?? []);
@@ -621,10 +621,10 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
     <>
       <section
         aria-labelledby="comparative-insights-heading"
-        className="relative overflow-hidden rounded-[28px] border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,250,0.86)] px-6 py-10 shadow-[0_28px_65px_rgba(31,29,18,0.12)] backdrop-blur-md sm:px-10"
+        className="relative overflow-hidden rounded-[28px] border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,250,0.86)] p-1 pt-6 lg:p-10 shadow-[0_28px_65px_rgba(31,29,18,0.12)] backdrop-blur-md [-webkit-backdrop-filter:blur(12px)] "
       >
-        <div className="-z-10 pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(245,78,0,0.16),_rgba(245,78,0,0)_60%)]" />
-        <header className="flex flex-wrap items-start justify-between gap-6">
+        <div className="-z-10 pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(245,78,0,0.08),_rgba(245,78,0,0)_60%)] lg:bg-[radial-gradient(circle_at_top,_rgba(245,78,0,0.16),_rgba(245,78,0,0)_60%)]" />
+        <header className="flex flex-wrap items-start justify-between gap-6 px-5 lg:px-0">
           <div>
             <p className="max-w-5xl text-[rgba(38,37,30,0.78)] text-lg leading-relaxed">
               <span className="text-xl font-medium">Where is AI exposure the highest?</span>{" "}
@@ -662,7 +662,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
             <div className="rounded-2xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.68)] p-6 shadow-[0_20px_40px_rgba(34,28,20,0.12)]">
               <div className="flex items-baseline justify-between">
                 <h3 className="font-semibold text-[11px] text-[rgba(38,37,30,0.6)] uppercase tracking-[0.28em]">
-                  Industries
+                  By Industry
                 </h3>
                 <span className="text-[rgba(38,37,30,0.45)] text-xs">
                   Avg share of roles (%)
@@ -708,7 +708,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
             <div className="rounded-2xl border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,255,0.68)] p-6 shadow-[0_20px_40px_rgba(34,28,20,0.12)]">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <h3 className="font-semibold text-[11px] text-[rgba(38,37,30,0.6)] uppercase tracking-[0.28em]">
-                  Countries
+                  By Country
                 </h3>
                 <div className="inline-flex items-center -mt-1 gap-1 rounded-full border border-[rgba(38,37,30,0.16)] bg-white/70 p-[3px] text-[10px] font-semibold uppercase tracking-[0.16em] text-[rgba(38,37,30,0.55)]">
                   <button
@@ -895,7 +895,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
           {hasTopTasks && (
             <TooltipProvider>
               <div className="mb-4">
-                <p className="max-w-6xl text-base leading-relaxed text-[rgba(38,37,30,0.78)]">
+                <p className="max-w-6xl px-4 lg:px-0 text-base leading-relaxed text-[rgba(38,37,30,0.78)]">
                   Within the{" "}
                   <span className="font-semibold text-[rgba(38,37,30,0.88)]">
                     {companiesAnalysedLabel}
@@ -903,7 +903,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
                   analysed, these{" "}
                   <button
                     type="button"
-                    onClick={() => setOnboardingOpen(true)}
+                    onClick={() => openOnboarding()}
                     className="font-semibold text-[rgba(245,78,0,0.95)] underline decoration-[rgba(245,78,0,0.5)] underline-offset-4 transition-colors hover:text-[rgba(245,78,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f54e00]/35 focus-visible:ring-offset-1"
                   >
                     tasks
@@ -1044,10 +1044,6 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
         </div>
       )}
       </section>
-      <HelpMeUnderstandModal
-        open={onboardingOpen}
-        onClose={() => setOnboardingOpen(false)}
-      />
     </>
   );
 }
