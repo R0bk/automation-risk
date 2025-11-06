@@ -716,7 +716,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
                     onClick={() => setCountryView("list")}
                     className={`rounded-full px-2 py-0.5 transition-colors duration-150 ${
                       countryView === "list"
-                        ? "bg-[rgba(38,37,30,0.85)] text-white shadow-[0_6px_16px_rgba(38,37,30,0.22)]"
+                        ? "bg-[rgba(38,37,30,0.55)] text-white shadow-[0_6px_16px_rgba(38,37,30,0.22)]"
                         : "text-[rgba(38,37,30,0.6)] hover:text-[rgba(38,37,30,0.8)]"
                     }`}
                     aria-pressed={countryView === "list"}
@@ -728,7 +728,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
                     onClick={() => setCountryView("world")}
                     className={`rounded-full px-2 py-0.5 transition-colors duration-150 ${
                       countryView === "world"
-                        ? "bg-[rgba(38,37,30,0.85)] text-white shadow-[0_6px_16px_rgba(38,37,30,0.22)]"
+                        ? "bg-[rgba(38,37,30,0.55)] text-white shadow-[0_6px_16px_rgba(38,37,30,0.22)]"
                         : "text-[rgba(38,37,30,0.6)] hover:text-[rgba(38,37,30,0.8)]"
                     }`}
                     aria-pressed={countryView === "world"}

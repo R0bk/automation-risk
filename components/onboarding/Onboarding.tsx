@@ -52,6 +52,7 @@ export default function HelpMeUnderstandModal({
 }: Props) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showDelayedIntro, setShowDelayedIntro] = useState(false);
+  const [copiedCitation, setCopiedCitation] = useState(false);
   const isMobile = useIsMobile();
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
@@ -76,6 +77,7 @@ export default function HelpMeUnderstandModal({
     { title: "Economy View", subtitle: "Benchmarking across industries" },
     { title: "Try It Yourself", subtitle: "Jump into your company or region" },
     { title: "Reality Check", subtitle: "What AI replacement actually looks like" },
+    { title: "Credits", subtitle: "Sources, socials, and citations" },
     // { title: "Organizational View", subtitle: "Applying insights across your company" },
   ];
   const totalSlides = slides.length;
@@ -452,8 +454,169 @@ export default function HelpMeUnderstandModal({
           </div>
         </section>
       ),
+      (
+        <section
+          aria-label="Credits and acknowledgements"
+          className="flex h-full flex-col justify-start gap-8 px-4 py-8 text-neutral-800 md:items-center md:justify-center md:px-6 md:py-10"
+        >
+          <div className="mx-auto w-full max-w-4xl space-y-6">
+            <div className="space-y-3 text-center">
+              <h3 className="text-2xl font-semibold md:text-3xl">Thanks for exploring with me</h3>
+              <p className="mx-auto max-w-2xl text-sm text-neutral-600 md:text-base">
+                Follow along, dig further into the underlying data, or cite the work in your own research.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="rounded-2xl border border-neutral-200/70 bg-white/80 p-4 shadow-[0_14px_34px_rgba(31,25,15,0.08)]">
+                <h4 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-500">Stay connected</h4>
+                <p className="mt-3 text-sm text-neutral-600 md:text-base">
+                  See some more experiments or reach out and say hello if you're interested in similar interesting projects.
+                </p>
+                <div className="mt-4 flex items-center gap-4">
+                  <a
+                    href="https://x.com/_robkop_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full p-2 text-[#f54e00] transition hover:scale-110 hover:text-[#d63f00]"
+                    aria-label="Follow @_robkop on X"
+                  >
+                    <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M18 2.01l-6.65 7.58L18.676 18H15l-4.7-5.5L6 18H2l6.96-7.95L2.39 2H6l4.23 5L14 2h4z" />
+                    </svg>
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/robert-kopel/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full p-2 text-[#f54e00] transition hover:scale-110 hover:text-[#d63f00]"
+                    aria-label="Connect with Robert Kopel on LinkedIn"
+                  >
+                    <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        d="M17.668 1H2.332C1.595 1 1 1.595 1 2.332v15.336C1 18.405 1.595 19 2.332 19h15.336c.737 0 1.332-.595 1.332-1.332V2.332C19 1.595 18.405 1 17.668 1zM6.333 16.333H4V7.333h2.333v9zm-1.166-10.24c-.746 0-1.333-.604-1.333-1.351 0-.748.587-1.351 1.333-1.351s1.333.603 1.333 1.351c0 .747-.587 1.351-1.333 1.351zM16 16.333h-2.333v-4.72c0-1.127-.404-1.897-1.414-1.897-.771 0-1.231.519-1.434 1.021-.074.18-.092.43-.092.681v4.915H8.394s.031-7.972 0-8.8H10.84v1.247c.31-.479.865-1.159 2.104-1.159 1.536 0 2.698 1.003 2.698 3.158v5.554z"
+                      />
+                    </svg>
+                  </a>
+                  <a
+                    href="https://github.com/R0bk"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full p-2 text-[#f54e00] transition hover:scale-110 hover:text-[#d63f00]"
+                    aria-label="View R0bk on GitHub"
+                  >
+                    <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+              <div className="rounded-2xl border border-neutral-200/70 bg-white/80 p-4 shadow-[0_14px_34px_rgba(31,25,15,0.08)]">
+                <h4 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-500">Data foundations</h4>
+                <ul className="mt-4 space-y-4 text-sm leading-relaxed md:text-base">
+                  <li>
+                    Built on{" "}
+                    <a
+                      href="https://www.anthropic.com/economic-futures"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-medium text-[#f54e00] hover:underline"
+                    >
+                      Anthropic&apos;s Economic Index
+                    </a>{" "}
+                    — task-level AI usage telemetry.
+                  </li>
+                  <li>
+                    Occupation taxonomy from the{" "}
+                    <a
+                      href="https://www.onetcenter.org/database.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-medium text-[#f54e00] hover:underline"
+                    >
+                      O*NET 28.0 Database
+                    </a>{" "}
+                    (U.S. Department of Labor / National Center for O*NET Development).
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-[2fr,1fr]">
+              <div className="rounded-2xl border border-neutral-200/70 bg-white/85 p-4 shadow-[0_14px_34px_rgba(31,25,15,0.08)]">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h4 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-500">Citation</h4>
+                    <p className="mt-2 text-sm text-neutral-700 md:text-base">
+                      Kopel, R. (2025). <span className="italic">Automation Risk Explorer.</span> Retrieved from{" "}
+                      <a
+                        href="https://automation-risk.vercel.app"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium text-[#f54e00] hover:underline"
+                      >
+                        https://automation-risk.vercel.app
+                      </a>
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const citation =
+                        "Kopel, R. (2025). Automation Risk Explorer. https://automation-risk.vercel.app";
+                      if (typeof navigator !== "undefined" && navigator.clipboard) {
+                        navigator.clipboard
+                          .writeText(citation)
+                          .then(() => {
+                            setCopiedCitation(true);
+                            setTimeout(() => setCopiedCitation(false), 2000);
+                          })
+                          .catch(() => {});
+                      }
+                    }}
+                    className="flex items-center gap-2 rounded-full border border-neutral-300/80 px-3 py-1.5 text-xs font-medium text-neutral-600 transition hover:border-[#f54e00] hover:text-[#f54e00]"
+                  >
+                    <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path d="M6 2a2 2 0 00-2 2v8.5a3.5 3.5 0 003.5 3.5H14a2 2 0 002-2v-8.5A3.5 3.5 0 0012.5 2H6z" />
+                      <path d="M4.75 15.5a.75.75 0 111.5 0A2.75 2.75 0 009 18.25h4a.75.75 0 010 1.5H9A4.25 4.25 0 014.75 15.5z" />
+                    </svg>
+                    {copiedCitation ? "Copied" : "Copy"}
+                  </button>
+                </div>
+                <div className="mt-3 text-sm">
+                  <a
+                    href="https://automation-risk.vercel.app/docs/methodology"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-[#f54e00] hover:underline"
+                  >
+                    Read the full methodology →
+                  </a>
+                </div>
+              </div>
+              <div className="flex flex-col justify-between gap-3 rounded-2xl border border-neutral-200/70 bg-white/90 p-4 shadow-[0_14px_34px_rgba(31,25,15,0.08)]">
+                <div>
+                  <h4 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-500">Next steps</h4>
+                  <p className="mt-2 text-sm text-neutral-600 md:text-base">
+                    Ready to explore your org? Spin up a run or jump back to the hero.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleJumpToHero}
+                  className="inline-flex items-center justify-center rounded-full bg-[#26251e] px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white transition hover:bg-[#1b1914]"
+                >
+                  Start a new run
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      ),
     ],
-    [goToNextSlide, handleJumpToComparative, handleJumpToHero, showDelayedIntro]
+    [copiedCitation, goToNextSlide, handleJumpToComparative, handleJumpToHero, showDelayedIntro]
   );
 
   if (!open) return null;

@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { RunExperience } from "@/components/run/run-experience";
+import { OnboardingTrigger } from "@/components/onboarding/OnboardingTrigger";
 import { SiteFooter } from "@/components/site-footer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getAllCompanySlugs, getRunPageDataBySlug } from "@/lib/db/queries";
@@ -72,11 +73,7 @@ export default async function RunPage({ params }: RunPageProps) {
               Main Page
             </span>
           </Link>
-          {company?.displayName && (
-            <span className="font-mono text-[rgba(38,37,30,0.45)]">
-              Viewing {company.displayName}
-            </span>
-          )}
+          <OnboardingTrigger />
         </div>
         <Suspense fallback={<Skeleton className="h-96 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />}>
           <RunExperience
