@@ -1,9 +1,14 @@
 # Automation Risk Explorer
 
-Automation Risk Explorer is a focused experience for running and replaying AI-driven automation-risk assessments for named companies. A single `/api/run` endpoint orchestrates an agent with Exa web search, O*NET mappings, and Anthropic automation/augmentation overlays to generate enriched organisational reports. Completed runs are cached, surfaced on the landing page, and gated by a global budgeting system so the experience remains fast and predictable for anonymous visitors.
 
 <!-- Screenshot placeholder - add project screenshot here -->
-![Automation Risk Explorer](screenshot.png)
+[![Automation Risk Explorer](preview.png)](https://github.com/user-attachments/assets/86d2f832-5b90-4220-8757-1876a1d1ee92)
+
+## Live Demo
+[Access Here](http://automationrisk.app)
+
+Automation Risk Explorer is a focused experience for running and replaying AI-driven automation-risk assessments for named companies. A single `/api/run` endpoint orchestrates an agent with Exa web search, O*NET mappings, and Anthropic automation/augmentation overlays to generate enriched organisational reports. Completed runs are cached, surfaced on the landing page, and gated by a global budgeting system so the experience remains fast and predictable for anonymous visitors.
+
 
 ## Key Capabilities
 - Launch new company assessments with AI-assisted O*NET enrichment in one round-trip.
@@ -120,7 +125,7 @@ For dataset citations:
   year         = {2025},
   publisher    = {GitHub},
   url          = {https://github.com/R0bk/automation-risk},
-  note         = {Automation and augmentation impact assessments for 350+ major global companies using O*NET occupation framework}
+  note         = {Automation and augmentation impact assessments for 1,000+ major global companies using O*NET occupation framework}
 }
 ```
 
