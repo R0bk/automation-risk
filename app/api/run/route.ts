@@ -14,7 +14,6 @@ import { z } from "zod";
 import { humanTools } from "@/lib/ai/tools/human-tools";
 import { getOnetRoleTools } from "@/lib/ai/tools/onet-tools";
 import { runSystemPrompt } from "@/lib/ai/run/prompts";
-// import { useStreamDebugger } from "@/lib/debug/use-stream-debugger";
 import {
   createAnalysisRunWithBudget,
   getAnalysisRunById,
@@ -290,11 +289,6 @@ export async function POST(request: Request) {
       })("claude-sonnet-4-5")
     : defaultAnthropicProvider("claude-sonnet-4-5");//openrouter.chat("bedrock.anthropic.claude-sonnet-4-5");
 
-  // Initialize stream debugger
-  // const streamDebugger = useStreamDebugger({
-  //   companyName,
-  //   enabled: process.env.DEBUG_STREAM === "true",
-  // });
 
   const uiStream = createUIMessageStream<ChatMessage>({
     execute: ({ writer }) => {
@@ -335,7 +329,6 @@ export async function POST(request: Request) {
         maxRetries: 3,
         providerOptions: { openai: openaiProviderOptions, anthropic: anthropicProviderOptions },
         experimental_transform: smoothStream(),
-        // prepareStep: streamDebugger.prepareStep,
         experimental_repairToolCall: async ({ toolCall, inputSchema }) => {
           const prompt = [
             `The model tried to call the tool "${toolCall.toolName}" with the following arguments:`,
@@ -353,7 +346,6 @@ export async function POST(request: Request) {
         },
         onError: async ({ error }) => {
           console.error("/api/run stream error", error);
-          // streamDebugger.onError?.({ error: error as Error });
           await finalizeRun("failed");
         },
         onFinish: async () => {

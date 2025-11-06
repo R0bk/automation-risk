@@ -163,7 +163,9 @@ export function RunExperience({
     const normalizedEnriched = enrichedOrgReportSchema.safeParse(normalized);
     if (normalizedEnriched.success) return normalizedEnriched.data;
     const base = orgReportSchema.safeParse(normalized);
-    if (base.success) console.warn("[RunExperience] Received base org report without enrichment; ignoring payload");
+    if (base.success) {
+      // Base org report received without enrichment; ignoring payload
+    }
     return null;
   }, []);
 
@@ -175,7 +177,7 @@ export function RunExperience({
       applyWorkforceMetric(data.metrics);
       return data;
     } catch (error) {
-      console.warn("Failed to fetch run by slug", error);
+      // Failed to fetch run by slug
       return null;
     }
   }, [slug, applyWorkforceMetric]);
@@ -187,7 +189,7 @@ export function RunExperience({
       const data = (await response.json()) as RunSummaryResponse;
       setSnapshot((prev) => ({ ...prev, remainingRuns: data.remainingRuns ?? prev.remainingRuns ?? null }));
     } catch (error) {
-      console.warn("Unable to refresh remaining run budget", error);
+      // Unable to refresh remaining run budget
     }
   }, []);
 
@@ -415,7 +417,7 @@ export function RunExperience({
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : "Run failed";
-        console.error("[RunExperience] sendMessage failed", error);
+        // SendMessage failed
         setSnapshot({ status: "failed", error: message });
       }
     },
@@ -549,7 +551,7 @@ export function RunExperience({
 
   useEffect(() => {
     if (chatError && snapshot.status !== "failed") {
-      console.error("[RunExperience] chat error observed", chatError);
+      // Chat error observed
       setSnapshot((prev) => ({ ...prev, status: "failed", error: chatError.message }));
     }
   }, [chatError, snapshot.status]);
@@ -658,70 +660,6 @@ export function RunExperience({
 
     return computedWorkforceImpact;
   }, [computedWorkforceImpact, storedWorkforceMetric]);
-
-  useEffect(() => {
-    if (report) {
-      const aggregations = report.aggregations ?? [];
-      const bucketWithShares =
-        aggregations
-          .flatMap((agg) => agg.buckets ?? [])
-          .find(
-            (bucket) =>
-              (typeof bucket.automationShare === "number" && Number.isFinite(bucket.automationShare)) ||
-              (typeof bucket.augmentationShare === "number" && Number.isFinite(bucket.augmentationShare))
-          ) ?? null;
-
-      const nodeWithShares =
-        report.hierarchy.find(
-          (node) =>
-            (typeof node.automationShare === "number" && Number.isFinite(node.automationShare)) ||
-            (typeof node.augmentationShare === "number" && Number.isFinite(node.augmentationShare))
-        ) ?? null;
-
-      console.debug("[RunExperience] report share sample", {
-        bucketWithShares,
-        nodeWithShares: nodeWithShares
-          ? {
-              id: nodeWithShares.id,
-              name: nodeWithShares.name,
-              headcount: nodeWithShares.headcount,
-              automationShare: nodeWithShares.automationShare,
-              augmentationShare: nodeWithShares.augmentationShare,
-            }
-          : null,
-      });
-    }
-  }, [report]);
-
-  useEffect(() => {
-    if (computedWorkforceImpact) {
-      console.debug("[RunExperience] computed workforce impact", {
-        score: computedWorkforceImpact.score,
-        automationComponent: computedWorkforceImpact.automationComponent,
-        augmentationComponent: computedWorkforceImpact.augmentationComponent,
-        coverageComponent: computedWorkforceImpact.coverageComponent,
-        totalHeadcount: computedWorkforceImpact.totalHeadcount,
-        automationImpact: computedWorkforceImpact.automationImpact,
-        augmentationImpact: computedWorkforceImpact.augmentationImpact,
-        coverageHeadcount: computedWorkforceImpact.coverageHeadcount,
-      });
-    }
-  }, [computedWorkforceImpact]);
-
-  useEffect(() => {
-    if (resolvedWorkforceImpact) {
-      console.debug("[RunExperience] workforce impact", {
-        score: resolvedWorkforceImpact.score,
-        automationComponent: resolvedWorkforceImpact.automationComponent,
-        augmentationComponent: resolvedWorkforceImpact.augmentationComponent,
-        coverageComponent: resolvedWorkforceImpact.coverageComponent,
-        totalHeadcount: resolvedWorkforceImpact.totalHeadcount,
-        automationImpact: resolvedWorkforceImpact.automationImpact,
-        augmentationImpact: resolvedWorkforceImpact.augmentationImpact,
-        coverageHeadcount: resolvedWorkforceImpact.coverageHeadcount,
-      });
-    }
-  }, [resolvedWorkforceImpact]);
 
   const reportProviderValue = useMemo(
     () => ({

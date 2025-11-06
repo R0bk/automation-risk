@@ -550,14 +550,26 @@ export default function HelpMeUnderstandModal({
                   <div>
                     <h4 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-500">Citation</h4>
                     <p className="mt-2 text-sm text-neutral-700 md:text-base">
-                      Kopel, R. (2025). <span className="italic">Automation Risk Explorer.</span> Retrieved from{" "}
+                      Kopel, R. (2025). <span className="italic">Automation Risk Explorer.</span>
+                      <br />
+                      App:{" "}
                       <a
-                        href="https://automation-risk.vercel.app"
+                        href="https://automationrisk.app"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="font-medium text-[#f54e00] hover:underline"
                       >
-                        https://automation-risk.vercel.app
+                        https://automationrisk.app
+                      </a>
+                      <br />
+                      GitHub:{" "}
+                      <a
+                        href="https://github.com/R0bk/automation-risk"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium text-[#f54e00] hover:underline"
+                      >
+                        https://github.com/R0bk/automation-risk
                       </a>
                     </p>
                   </div>
@@ -565,7 +577,7 @@ export default function HelpMeUnderstandModal({
                     type="button"
                     onClick={() => {
                       const citation =
-                        "Kopel, R. (2025). Automation Risk Explorer. https://automation-risk.vercel.app";
+                        "Kopel, R. (2025). Automation Risk Explorer. App: https://automationrisk.app, GitHub: https://github.com/R0bk/automation-risk";
                       if (typeof navigator !== "undefined" && navigator.clipboard) {
                         navigator.clipboard
                           .writeText(citation)

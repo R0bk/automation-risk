@@ -63,7 +63,7 @@ const RunMessageList: React.FC<RunMessageListProps> = ({ messages, statusBar }) 
 };
 
 export const GroupedMessages: React.FC<{ messages: ChatMessage[], statusBar?: React.ReactNode }> = ({ messages, statusBar }) => {
-  console.log("Messages", messages);
+  // Messages data available for debugging
   const grouped = React.useMemo(() => messages.map(groupConsecutiveReasoningParts), [messages]);
   return <RunMessageList messages={grouped} statusBar={statusBar} />;
 };

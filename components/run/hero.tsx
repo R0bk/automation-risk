@@ -34,6 +34,7 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
   const [typewriterDirection, setTypewriterDirection] = useState<1 | -1>(1);
   const typewriterTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastKeyRef = useRef<string | null>(null);
+  const cycleCountRef = useRef(0);
 
   useEffect(() => {
     setValue(initialValue);
@@ -85,6 +86,11 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
     }
 
     if (typewriterDirection === -1 && value.length === 0) {
+      cycleCountRef.current += 1;
+      if (cycleCountRef.current >= 2) {
+        setIsTypewriterActive(false);
+        return;
+      }
       typewriterTimeoutRef.current = setTimeout(() => {
         setTypewriterDirection(1);
       }, HOLD_DELAY);

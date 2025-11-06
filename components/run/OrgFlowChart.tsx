@@ -194,13 +194,7 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
       maxVisibleLevel,
     });
 
-    if (process.env.NODE_ENV !== "production") {
-      console.debug("org-flow:model", {
-        nodeCount: model.nodes.length,
-        edgeCount: model.edges.length,
-        collapsed: Array.from(graph.collapsedNodeIds.values()),
-      });
-    }
+    // Model debugging info available in development
     const layout = model.engine === "dagre" 
       ? getLayoutedElements(model.nodes, model.edges, model.direction, LAYOUT_NODE_WIDTH, LAYOUT_NODE_HEIGHT)
       : applyLayeredLayout(model.nodes, model.edges, {direction: model.direction});
@@ -226,13 +220,7 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
       type: "smoothstep",
     }));
 
-    if (process.env.NODE_ENV !== "production") {
-      const nodeIds = new Set(nodes.map((node) => node.id));
-      const invalidEdges = edges.filter((edge) => !nodeIds.has(edge.source) || !nodeIds.has(edge.target));
-      if (invalidEdges.length > 0) {
-        console.warn("org-flow: invalid edges detected", invalidEdges);
-      }
-    }
+    // Edge validation available in development
 
     return { initialNodes: nodes, initialEdges: edges };
   }, [graph, maxVisibleLevel]);

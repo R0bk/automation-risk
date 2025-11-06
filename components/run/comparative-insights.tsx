@@ -229,14 +229,7 @@ type WorldExposureMapProps = {
 };
 
 function WorldExposureMap({ countries, variant = "card" }: WorldExposureMapProps) {
-  if (process.env.NODE_ENV !== "production") {
-    console.debug("[WorldExposureMap] countries", countries.map((country) => ({
-      iso: country.isoCode,
-      country: country.country,
-      runs: country.runCount,
-      score: country.averageScore,
-    })));
-  }
+  // Countries data available for debugging
 
   const normalizeIso = (geo: any): string => {
     const iso2Candidate = (geo.properties?.ISO_A2_EH ?? geo.properties?.ISO_A2 ?? null) as string | null;
@@ -258,15 +251,7 @@ function WorldExposureMap({ countries, variant = "card" }: WorldExposureMapProps
         }
       }
     }
-    if (process.env.NODE_ENV !== "production") {
-      console.debug("[WorldExposureMap] missing ISO", {
-        iso2Candidate,
-        iso3Candidate,
-        name: geo.properties?.NAME,
-        admin: geo.properties?.ADMIN,
-        nameLong: geo.properties?.NAME_LONG,
-      });
-    }
+    // Missing ISO code for country
     return "";
   };
 
@@ -289,12 +274,7 @@ function WorldExposureMap({ countries, variant = "card" }: WorldExposureMapProps
     return null;
   }
 
-  if (process.env.NODE_ENV !== "production") {
-    const sample = Array.from(countryLookup.entries())
-      .slice(0, 12)
-      .map(([iso, metric]) => ({ iso, country: metric.country, runs: metric.runCount, score: metric.averageScore }));
-    console.debug("[WorldExposureMap] sample country metrics", sample);
-  }
+  // Sample country metrics available
 
   const scores = Array.from(countryLookup.values())
     .map((metric) => clampScore(metric.averageScore))
@@ -312,9 +292,7 @@ function WorldExposureMap({ countries, variant = "card" }: WorldExposureMapProps
       return "hsl(22deg 78% 64%)";
     }
     const normalized = Math.min(1, Math.max(0, (score - minScore) / (maxScore - minScore)));
-    if (process.env.NODE_ENV !== "production") {
-      console.debug("[WorldExposureMap] color scale", { iso, score, normalized, minScore, maxScore });
-    }
+    // Color scale debugging available
     const saturation = 70 + normalized * 25; // 70% -> 95%
     const lightness = 80 - normalized * 38; // 80% -> 42%
     return `hsl(22deg ${saturation}% ${lightness}%)`;
@@ -351,18 +329,7 @@ function WorldExposureMap({ countries, variant = "card" }: WorldExposureMapProps
             const fill = metric ? getFill(iso) : "rgba(38,37,30,0.08)";
             const hoverFill = metric ? getHoverFill(iso) : fill;
             const strokeColor = "rgba(255,255,255,0.55)";
-            if (process.env.NODE_ENV !== "production") {
-              console.debug("[WorldExposureMap] geography", {
-                iso,
-                highlighted: Boolean(metric),
-                fill,
-                country: metric?.country,
-                runs: metric?.runCount,
-                score: metric?.averageScore,
-                name: geo.properties?.NAME,
-                nameLong: geo.properties?.NAME_LONG,
-              });
-            }
+            // Geography debugging available
             return (
               <Geography
                 key={geo.rsmKey}
