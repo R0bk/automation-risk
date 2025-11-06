@@ -33,7 +33,7 @@ export function TrendingRuns({ runs }: TrendingRunsProps) {
             backgroundImage: "linear-gradient(135deg, rgba(244,243,239,0.96), rgba(236,234,228,0.92))",
           }}
         />
-        <div className="relative overflow-x-auto px-4 py-6">
+        <div className="relative overflow-x-auto rounded-[20px] px-4 py-6">
           <div className="flex gap-5">
             {(runs && runs.length > 0 ? runs : placeholderRuns).map((run) => {
               const slug = run.slug ?? run.runId;

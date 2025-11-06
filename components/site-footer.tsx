@@ -74,7 +74,7 @@ export function SiteFooter({ navLinks }: SiteFooterProps) {
         }}
       >
         <div className="mx-auto max-w-[1000px] px-6 py-12">
-          <div className="rounded-[24px] border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,252,0.8)] px-8 py-10 shadow-[0_24px_60px_rgba(38,37,30,0.12)] backdrop-blur-sm">
+          <div className="rounded-[24px] border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,252,0.8)] px-8 py-10 shadow-[0_24px_60px_rgba(38,37,30,0.12)] backdrop-blur-sm [-webkit-backdrop-filter:blur(4px)]">
             <div className="grid gap-10 md:grid-cols-3">
               <div className="space-y-5">
                 <h3 className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[rgba(38,37,30,0.55)]">

@@ -745,7 +745,7 @@ export function RunExperience({
       <TaskMixViewProvider>
         <div className="space-y-10">
       <header
-        className="rounded-[20px] border border-[rgba(38,37,30,0.1)] px-7 py-8 shadow-[0_28px_70px_rgba(34,28,20,0.14)] backdrop-blur-[20px]"
+        className="rounded-[20px] border border-[rgba(38,37,30,0.1)] px-7 py-8 shadow-[0_28px_70px_rgba(34,28,20,0.14)] backdrop-blur-[20px] [-webkit-backdrop-filter:blur(20px)]"
         style={{
           backgroundImage: "linear-gradient(150deg, rgba(244,243,239,0.96), rgba(235,233,227,0.9))",
         }}
@@ -839,7 +839,7 @@ export function RunExperience({
             </div>
 
             <div
-              className="flex flex-col relative rounded-[20px] border border-[rgba(38,37,30,0.1)] px-5 py-6 shadow-[0_16px_40px_rgba(34,28,20,0.12)] backdrop-blur-[18px]"
+              className="flex flex-col relative rounded-[20px] border border-[rgba(38,37,30,0.1)] px-5 py-6 shadow-[0_16px_40px_rgba(34,28,20,0.12)] backdrop-blur-[18px] [-webkit-backdrop-filter:blur(18px)]"
               style={{
                 backgroundImage: "linear-gradient(160deg, rgba(244,243,239,0.95), rgba(236,234,228,0.9))",
               }}
@@ -890,7 +890,7 @@ export function RunExperience({
         ) : (
           <>
             <div
-              className="relative rounded-[20px] border border-[rgba(38,37,30,0.1)] px-5 py-6 shadow-[0_16px_40px_rgba(34,28,20,0.12)] backdrop-blur-[18px]"
+              className="relative rounded-[20px] border border-[rgba(38,37,30,0.1)] px-5 py-6 shadow-[0_16px_40px_rgba(34,28,20,0.12)] backdrop-blur-[18px] [-webkit-backdrop-filter:blur(18px)]"
               style={{
                 backgroundImage: "linear-gradient(160deg, rgba(244,243,239,0.95), rgba(236,234,228,0.9))",
               }}

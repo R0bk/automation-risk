@@ -272,7 +272,7 @@ export function OrgFlowChart({ report }: OrgFlowChartProps) {
               aria-pressed={isActive}
               className={clsx(
                 "min-w-[56px] rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] transition",
-                "backdrop-blur-[14px] shadow-[0_18px_40px_rgba(34,28,20,0.12)]",
+                "backdrop-blur-[14px] [-webkit-backdrop-filter:blur(14px)] shadow-[0_18px_40px_rgba(34,28,20,0.12)]",
                 "text-[rgba(38,37,30,0.68)] border-[rgba(38,37,30,0.14)] bg-[rgba(244,242,236,0.48)]",
                 "hover:border-[rgba(38,37,30,0.24)] hover:bg-[rgba(254,252,247,0.72)]",
                 isActive &&

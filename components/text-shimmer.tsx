@@ -32,6 +32,7 @@ function TextShimmerComponent({ children, className, duration = 2, spread = 2 }:
       className={cn(
         "shimmer-text",
         "relative inline-block bg-[length:250%_100%,auto] bg-clip-text",
+        "[-webkit-text-fill-color:transparent]",
         "text-transparent [--base-color:#a1a1aa] [--base-gradient-color:#000]",
         "[background-repeat:no-repeat,padding-box] [--bg:linear-gradient(90deg,#0000_calc(50%-var(--spread)),var(--base-gradient-color),#0000_calc(50%+var(--spread)))]",
         // Comment out until we have proper dark mode support
