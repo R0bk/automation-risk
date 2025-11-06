@@ -1,10 +1,11 @@
 export const COUNTRY_GROUP_ALIASES: Record<string, string> = {
   Bermuda: "United States",
   "France/Italy": "France",
-  "Hong Kong": "Greater China",
+  "Hong Kong": "China",
+  "China / Hong Kong": "China",
+  "Greater China": "China",
   "Ireland (legal domicile), United States (operational HQ in Pennsylvania)":
     "United States",
-  China: "Greater China",
   UK: "United Kingdom",
   "U.K.": "United Kingdom",
   "Great Britain": "United Kingdom",

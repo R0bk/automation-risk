@@ -12,7 +12,7 @@ export const COUNTRY_NAME_TO_ISO2: Record<string, string> = {
   "Cayman Islands": "KY",
   Chile: "CL",
   China: "CN",
-  "China / Hong Kong": "HK",
+  "China / Hong Kong": "CN",
   "Greater China": "CN",
   Colombia: "CO",
   Croatia: "HR",

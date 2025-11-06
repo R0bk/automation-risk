@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { 
   WorkforceBreakdownDiagram,
@@ -8,10 +8,12 @@ import {
   TaskClassificationDiagram,
   RoleImpactDiagram,
   OrgResearchDiagram,
-  MiniFlow,
-  MiniOrg
+  MiniFlow
 } from "./Diagrams";
 import { RealityCheckSlide } from "./RealityCheck";
+import useEmblaCarousel from "embla-carousel-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 /**
  * Drop-in modal for "Help me understand" onboarding.
@@ -39,7 +41,7 @@ interface Props {
   };
 }
 
-const QUESTION_1 = "People talk \"AI mass replacement\" - so... where is it?";
+const QUESTION_1 = "People talk \"AI mass replacement\" - but... where is it?";
 const QUESTION_2 = "If it's here, what does it mean for my role, my team, my company?";
 const QUESTION_3 = "What industries and countries should I look to - who wins, who loses?";
 
@@ -50,6 +52,13 @@ export default function HelpMeUnderstandModal({
 }: Props) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showDelayedIntro, setShowDelayedIntro] = useState(false);
+  const isMobile = useIsMobile();
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "start",
+    loop: false,
+    skipSnaps: false,
+    dragFree: false,
+  });
 
   const titleId = "hmu-title";
   const dialogRef = useRef<HTMLDivElement | null>(null);
@@ -123,6 +132,26 @@ export default function HelpMeUnderstandModal({
     return () => window.clearTimeout(t);
   }, [open, currentSlide]);
 
+  // Sync mobile carousel state with Embla
+  useEffect(() => {
+    if (!emblaApi || !isMobile) return;
+    const onSelect = () => {
+      setCurrentSlide(emblaApi.selectedScrollSnap());
+    };
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+    onSelect();
+    return () => {
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
+    };
+  }, [emblaApi, isMobile]);
+
+  useEffect(() => {
+    if (!emblaApi || !isMobile) return;
+    emblaApi.scrollTo(currentSlide, true);
+  }, [currentSlide, emblaApi, isMobile]);
+
   // Manage open/close side-effects and keyboard navigation
   useEffect(() => {
     if (!open) return;
@@ -162,6 +191,271 @@ export default function HelpMeUnderstandModal({
     };
   }, [open, onClose, goToNextSlide, goToPrevSlide]);
 
+  const slideSections = useMemo(
+    () => [
+      (
+        <section
+          aria-label="Three questions"
+          className="flex h-full flex-col items-center justify-center gap-6 px-3 py-8 text-center md:px-0 md:py-0"
+        >
+          <div className="w-full max-w-2xl space-y-6">
+            <h3 className="text-3xl font-medium leading-tight text-neutral-800 md:text-4xl">
+              Let me ask you
+            </h3>
+            <h3 className="text-lg font-medium leading-tight text-neutral-800 md:text-xl">
+              some questions I've been stuck on
+            </h3>
+            <div className="space-y-4">
+              <HookCard title={QUESTION_1} />
+              <HookCard title={QUESTION_2} />
+              <HookCard title={QUESTION_3} />
+            </div>
+            <h3
+              className={cn(
+                "text-base font-medium text-neutral-800 transition-opacity duration-700 md:text-lg",
+                showDelayedIntro ? "opacity-100" : "opacity-0"
+              )}
+            >
+              This project is exploring some early answers
+            </h3>
+          </div>
+        </section>
+      ),
+      (
+        <section
+          aria-label="Breaking down workforce"
+          className="flex h-full flex-col justify-start gap-6 px-3 py-8 md:items-center md:justify-center md:px-4 md:py-6"
+        >
+          <div className="mx-auto w-full max-w-3xl md:max-w-5xl">
+            <h3 className="mb-4 text-2xl font-semibold text-center text-neutral-800 md:text-3xl">
+              To figure these out, we need to break down what is a workforce?
+            </h3>
+            <div
+              className="w-full overflow-hidden rounded-xl p-4"
+              style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(34,28,20,0.08)" }}
+            >
+              <WorkforceBreakdownDiagram />
+            </div>
+          </div>
+        </section>
+      ),
+      (
+        <section
+          aria-label="Breaking down roles to tasks"
+          className="flex h-full flex-col justify-start gap-6 px-3 py-8 md:items-center md:justify-center md:px-4 md:py-6"
+        >
+          <div className="mx-auto w-full max-w-3xl md:max-w-5xl">
+            <h3 className="mb-4 text-2xl font-semibold text-center text-neutral-800 md:text-3xl">
+              And we need to break down roles into individual tasks
+            </h3>
+            <div
+              className="w-full overflow-hidden rounded-xl p-4"
+              style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(34,28,20,0.08)" }}
+            >
+              <RoleToTasksDiagram />
+            </div>
+          </div>
+        </section>
+      ),
+      (
+        <section
+          aria-label="AI usage detection"
+          className="flex h-full flex-col justify-start gap-6 px-3 py-8 md:items-center md:justify-center md:px-4 md:py-6"
+        >
+          <div className="mx-auto w-full max-w-3xl md:max-w-5xl space-y-6">
+            <h3 className="text-2xl font-semibold text-center text-neutral-800 md:text-3xl">
+              Which lets us identify if{" "}
+              <DefinitionHover
+                accent="#f59e60"
+                title="Anthropic Economic Index Corpus"
+                description="We ground usage estimates in Anthropic’s 1M+ AI chat conversations, each aligned to an O*NET task, so we see how copilots are actually applied."
+                bullets={[
+                  "Coverage: 1,000,000+ de-identified Anthropic chat transcripts mapped to task IDs.",
+                  "Granularity: task frequencies roll up to roles, departments, and industries without guesswork.",
+                ]}
+              >
+                AI
+              </DefinitionHover>{" "}
+              is being used for those tasks
+            </h3>
+            <div
+              className="w-full overflow-hidden rounded-xl p-4"
+              style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(34,28,20,0.08)" }}
+            >
+              <AIUsageDiagram />
+            </div>
+          </div>
+        </section>
+      ),
+      (
+        <section
+          aria-label="Task classification"
+          className="flex h-full flex-col justify-start gap-6 px-3 py-8 md:items-center md:justify-center md:px-4 md:py-6"
+        >
+          <div className="mx-auto w-full max-w-3xl md:max-w-5xl space-y-6">
+            <h3 className="text-2xl font-semibold text-center text-neutral-800 md:text-3xl">
+              And classify if AI is{" "}
+              <DefinitionHover
+                accent="rgb(252, 146, 85)"
+                title="Augmentation"
+                description="Augmentation focuses on collaborative interaction patterns"
+                bullets={[
+                  "Learning: Users ask Claude for information or explanations about various topics",
+                  "Task Iteration: Users iterate on tasks collaboratively with Claude",
+                  "Validation: Users validate the accuracy of Claude's responses",
+                ]}
+              >
+                Augmenting
+              </DefinitionHover>{" "}
+              or{" "}
+              <DefinitionHover
+                accent="#cf2d56"
+                title="Automation"
+                description="Automation encompasses interaction patterns focused on task completion."
+                bullets={[
+                  "Directive: Users give Claude a task and it completes it with minimal back-and-forth",
+                  "Feedback Loops: Users automate tasks and provide feedback to Claude as needed",
+                ]}
+              >
+                Automating
+              </DefinitionHover>{" "}
+              those tasks
+            </h3>
+            <div
+              className="w-full overflow-hidden rounded-xl p-4"
+              style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(34,28,20,0.08)" }}
+            >
+              <TaskClassificationDiagram />
+            </div>
+          </div>
+        </section>
+      ),
+      (
+        <section
+          aria-label="Role impact"
+          className="flex h-full flex-col justify-start gap-6 px-3 py-8 md:items-center md:justify-center md:px-4 md:py-6"
+        >
+          <div className="mx-auto w-full max-w-3xl md:max-w-5xl space-y-6">
+            <h3 className="text-2xl font-semibold text-center text-neutral-800 md:text-3xl">
+              Giving us an overview of the impact on any role
+            </h3>
+            <div
+              className="w-full overflow-hidden rounded-xl p-4"
+              style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(34,28,20,0.08)" }}
+            >
+              <RoleImpactDiagram />
+            </div>
+          </div>
+        </section>
+      ),
+      (
+        <section
+          aria-label="Org research and headcount estimation"
+          className="flex h-full flex-col justify-start gap-6 px-3 py-8 md:items-center md:justify-center md:px-4 md:py-6"
+        >
+          <div className="mx-auto w-full max-w-3xl md:max-w-5xl space-y-6">
+            <h3 className="text-2xl font-semibold text-center text-neutral-800 md:text-3xl">
+              Which we project onto teams and companies by using AI to{" "}
+              <DefinitionHover
+                accent="rgb(34, 28, 20)"
+                title="Research and Estimate"
+                description="We task AI with stitching public filings, job boards, and social graphs to infer teams and reporting lines. That lets us map automation and augmentation exposure to real org units-bottom up, function by function, and across peer companies."
+                bullets={[]}
+              >
+                research and estimate
+              </DefinitionHover>{" "}
+              org charts with headcounts
+            </h3>
+            <div
+              className="w-full overflow-hidden rounded-xl p-4"
+              style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(34,28,20,0.08)" }}
+            >
+              <OrgResearchDiagram />
+            </div>
+          </div>
+        </section>
+      ),
+      (
+        <section
+          aria-label="Org to economy benchmarking"
+          className="flex h-full flex-col justify-start gap-6 px-3 py-8 md:items-center md:justify-center md:px-4 md:py-6"
+        >
+          <div className="mx-auto w-full max-w-3xl space-y-6 text-center text-neutral-800 md:max-w-5xl">
+            <h3 className="text-2xl font-semibold md:text-3xl">
+              Then we benchmark exposure across peers, sectors, and countries
+            </h3>
+            <div
+              className="rounded-xl p-4"
+              style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(34,28,20,0.08)" }}
+            >
+              <MiniFlow />
+              <div className="mt-4 grid gap-3 text-sm text-neutral-800 md:grid-cols-3">
+                <TinyStat label="Peer benchmarking" value="1,000+ firms" hint="public runs & research set" />
+                <TinyStat label="Sector rollups" value="40+ industries" hint="industry comparisons" />
+                <TinyStat label="Country slices" value="50+ countries" hint="policy targeting" />
+              </div>
+            </div>
+            <p className="mx-auto max-w-3xl text-sm text-neutral-700 md:text-base">
+              Exposure scores stay tied back to the task evidence beneath them, so readers can explore the chain from company to county.
+            </p>
+          </div>
+        </section>
+      ),
+      (
+        <section
+          aria-label="Try it yourself"
+          className="flex h-full flex-col justify-center gap-8 px-4 py-8 text-left text-neutral-800 md:items-center md:py-6"
+        >
+          <div className="mx-auto w-full max-w-xl space-y-6 md:text-center">
+            <h3 className="text-xl font-semibold text-neutral-900 md:text-2xl">
+              Ready to see what this means for your company and teams?
+            </h3>
+            <p className="text-base text-neutral-700 md:text-lg">
+              Start by{" "}
+              <button
+                type="button"
+                onClick={handleJumpToHero}
+                className="inline-flex items-center gap-1 font-semibold text-neutral-900 underline decoration-neutral-400 underline-offset-4 transition hover:text-neutral-700"
+              >
+                running your own company analysis
+              </button>{" "}
+              or seeing how{" "}
+              <button
+                type="button"
+                onClick={handleJumpToComparative}
+                className="inline-flex items-center gap-1 font-semibold text-neutral-900 underline decoration-neutral-400 underline-offset-4 transition hover:text-neutral-700"
+              >
+                your sector or country is shifting
+              </button>
+              .
+            </p>
+            <p className="text-base text-neutral-700 md:text-lg">
+              Want my quick read on those three original questions before you poke around?{" "}
+              <button
+                type="button"
+                onClick={goToNextSlide}
+                className="inline-flex items-center gap-1 font-semibold text-neutral-900 underline decoration-neutral-400 underline-offset-4 transition hover:text-neutral-700"
+              >
+                Show me →
+              </button>
+            </p>
+          </div>
+        </section>
+      ),
+      (
+        <section
+          aria-label="AI replacement reality check"
+          className="flex h-full flex-col justify-start px-2 py-6 md:items-center md:justify-center md:px-4 md:py-8"
+        >
+          <div className="mx-auto w-full max-w-5xl">
+            <RealityCheckSlide />
+          </div>
+        </section>
+      ),
+    ],
+    [goToNextSlide, handleJumpToComparative, handleJumpToHero, showDelayedIntro]
+  );
+
   if (!open) return null;
 
   const container = typeof document !== "undefined" ? document.body : null;
@@ -169,7 +463,10 @@ export default function HelpMeUnderstandModal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[1000] flex items-center justify-center"
+      className={cn(
+        "fixed inset-0 z-[1000] flex items-center justify-center",
+        isMobile && "items-center"
+      )}
       aria-labelledby={titleId}
       aria-modal="true"
       role="dialog"
@@ -185,7 +482,10 @@ export default function HelpMeUnderstandModal({
     >
       <div
         ref={dialogRef}
-        className="mx-4 w-full max-w-3xl rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.25)] outline-none"
+        className={cn(
+          "mx-4 w-full max-w-3xl rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.25)] outline-none",
+          isMobile && "mx-2 h-[calc(100vh-6rem)] max-w-none overflow-hidden rounded-[28px]"
+        )}
         style={{
           background:
             "linear-gradient(155deg, rgba(246,245,241,0.95), rgba(237,235,229,0.92))",
@@ -193,7 +493,12 @@ export default function HelpMeUnderstandModal({
         }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between gap-4 px-6 pt-5 border-b border-neutral-200/50 pb-4">
+        <div
+          className={cn(
+            "flex items-center justify-between gap-4 border-b border-neutral-200/50 px-6 pb-4 pt-5",
+            isMobile && "px-4 pb-0 pt-4"
+          )}
+        >
           <div>
             {/* <h2 id={titleId} className="text-lg font-medium tracking-tight text-neutral-600">
               Help me understand
@@ -201,7 +506,10 @@ export default function HelpMeUnderstandModal({
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-200/60 focus:outline-none focus:ring-2 focus:ring-black/20"
+            className={cn(
+              "rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-200/60 focus:outline-none focus:ring-2 focus:ring-black/20",
+              isMobile && "h-10 w-10 rounded-full px-0 py-0 text-base"
+            )}
             aria-label="Close help"
           >
             ✕
@@ -209,320 +517,145 @@ export default function HelpMeUnderstandModal({
         </div>
 
         {/* Progress Indicators */}
-        <div className="px-6 pt-0 -mt-12 pb-2">
-          {/* <div className="text-center mb-3"> */}
-            {/* <h3 className="text-base font-semibold text-neutral-900">{slides[currentSlide].title}</h3> */}
-            {/* <p className="text-xs text-neutral-600 mt-1">{slides[currentSlide].subtitle}</p> */}
-          {/* </div> */}
-          <div className="flex items-center justify-center gap-2">
-            {slides.map((slide, i) => (
-              <div key={i} className="group relative">
-                <button
-                  onClick={() => goToSlide(i)}
-                  className={`h-2 rounded-full transition-all ${
-                    i === currentSlide
-                      ? "w-8 bg-neutral-900"
-                      : "w-2 bg-neutral-300 hover:bg-neutral-400"
-                  }`}
-                  aria-label={`Go to ${slide.title}`}
-                />
-                {/* Tooltip on hover */}
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                  <div className="bg-neutral-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
-                    {slide.title}
+        {!isMobile && (
+          <div className="px-6 pt-0 -mt-12 pb-2">
+            <div className="flex items-center justify-center gap-2">
+              {slides.map((slide, i) => (
+                <div key={i} className="group relative">
+                  <button
+                    onClick={() => goToSlide(i)}
+                    className={cn(
+                      "h-2 rounded-full transition-all",
+                      i === currentSlide ? "w-8 bg-neutral-900" : "w-2 bg-neutral-300 hover:bg-neutral-400"
+                    )}
+                    aria-label={`Go to ${slide.title}`}
+                  />
+                  <div className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 transition-opacity group-hover:opacity-100">
+                    <div className="whitespace-nowrap rounded bg-neutral-900 px-2 py-1 text-xs text-white">
+                      {slide.title}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Body - Carousel Content */}
-        <div className="px-6 pb-4 overflow-hidden min-h-[400px] md:min-h-[480px]">
-          <div
-            className="transition-transform duration-300 ease-in-out"
-            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-          >
-            <div className="flex min-h-[380px] md:min-h-[460px]">
-              {/* Slide 1: Three Questions */}
-              <div className="w-full flex-shrink-0 px-1">
-                <section aria-label="Three questions" className="flex items-center justify-center min-h-[380px] md:min-h-[460px] h-full">
-                  <div>
-                    <h3 className="mb-6 text-4xl font-medium text-center leading-4 text-neutral-800" >
-                      Let me ask you
-                    </h3>
-                    <h3 className="mb-6 font-medium text-center leading-4 text-neutral-800">
-                      some questions I've been stuck on
-                    </h3>
-                    <div className="space-y-4 max-w-4xl mx-auto">
-                      <HookCard title={QUESTION_1} />
-                      <HookCard title={QUESTION_2} />
-                      <HookCard title={QUESTION_3} />
-                    </div>
-                    <h3 className={`mt-16 text-lg font-medium text-center text-neutral-800 transition-opacity duration-700 ${showDelayedIntro ? "opacity-100" : "opacity-0"}`}>
-                      This project is exploring some early answers
-                    </h3>
-                  </div>
-                </section>
-              </div>
-
-              {/* Slide 2: Breaking It Down */}
-              <div className="w-full flex-shrink-0 px-1">
-                <section aria-label="Breaking down workforce" className="flex flex-col items-center justify-center min-h-[380px] md:min-h-[460px] py-4 h-full">
-                  <div className="w-full max-w-5xl">
-                    <h3 className="mb-4 text-2xl font-semibold text-center text-neutral-800">
-                      To figure these out, we need to break down what is a workforce?
-                    </h3>
-                    <div className="w-full overflow-hidden rounded-xl p-4" style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(34,28,20,0.08)" }}>
-                      <WorkforceBreakdownDiagram />
-                    </div>
-                  </div>
-                </section>
-              </div>
-
-              {/* Slide 3: Roles to Tasks */}
-              <div className="w-full flex-shrink-0 px-1">
-                <section aria-label="Breaking down roles to tasks" className="flex flex-col items-center justify-center min-h-[380px] md:min-h-[460px] py-4 h-full">
-                  <div className="w-full max-w-5xl">
-                    <h3 className="mb-4 text-2xl font-semibold text-center text-neutral-800">
-                      And we need to break down roles into individual tasks
-                    </h3>
-                    <div className="w-full overflow-hidden rounded-xl p-4" style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(34,28,20,0.08)" }}>
-                      <RoleToTasksDiagram />
-                    </div>
-                  </div>
-                </section>
-              </div>
-
-              {/* Slide 4: AI Detection */}
-              <div className="w-full flex-shrink-0 px-1">
-                    <section aria-label="AI usage detection" className="flex flex-col items-center justify-center min-h-[380px] md:min-h-[460px] py-4 h-full">
-                  <div className="w-full max-w-5xl">
-                    <h3 className="mb-4 text-2xl font-semibold text-center text-neutral-800">
-                      Which lets us identify if{" "}
-                      <DefinitionHover
-                        accent="#6366f1"
-                        title="Anthropic Economic Index Corpus"
-                        description="We ground usage estimates in Anthropic’s 1M+ AI chat conversations, each aligned to an O*NET task, so we see how copilots are actually applied."
-                        bullets={[
-                          "Coverage: 1,000,000+ de-identified Anthropic chat transcripts mapped to task IDs.",
-                          "Granularity: task frequencies roll up to roles, departments, and industries without guesswork.",
-                        ]}
-                      >
-                        AI
-                      </DefinitionHover>{" "}
-                      is being used for those tasks
-                    </h3>
-                    <div className="w-full overflow-hidden rounded-xl p-4" style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(34,28,20,0.08)" }}>
-                      <AIUsageDiagram />
-                    </div>
-                  </div>
-                </section>
-              </div>
-
-              {/* Slide 5: Task Classification + Definitions */}
-              <div className="w-full flex-shrink-0 px-1">
-                <section aria-label="Task classification" className="flex flex-col items-center justify-center min-h-[380px] md:min-h-[460px] py-4 h-full">
-                  <div className="w-full max-w-5xl space-y-5">
-                    <h3 className="mb-4 text-2xl font-semibold text-center text-neutral-800">
-                      And classify if AI is{" "}
-                      <DefinitionHover
-                        accent="rgb(252, 146, 85)"
-                        title="Augmentation"
-                        description="Augmentation focuses on collaborative interaction patterns"
-                        bullets={[
-                          "Learning: Users ask Claude for information or explanations about various topics",
-                          "Task Iteration: Users iterate on tasks collaboratively with Claude",
-                          "Validation: Users validate the accuracy of Claude's responses",
-                        ]}
-                      >
-                        Augmenting
-                      </DefinitionHover>{" "}
-                      or{" "}
-                      <DefinitionHover
-                        accent="#cf2d56"
-                        title="Automation"
-                        description="Automation encompasses interaction patterns focused on task completion."
-                        bullets={[
-                          "Directive: Users give Claude a task and it completes it with minimal back-and-forth",
-                          "Feedback Loops: Users automate tasks and provide feedback to Claude as needed",
-                        ]}
-                      >
-                        Automating
-                      </DefinitionHover>{" "}
-                      those tasks
-                    </h3>
-                    <div className="w-full overflow-hidden rounded-xl p-4 mb-5" style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(34,28,20,0.08)" }}>
-                      <TaskClassificationDiagram />
-                    </div>
-                  </div>
-                </section>
-              </div>
-
-              {/* Slide 6: Role Impact */}
-              <div className="w-full flex-shrink-0 px-1">
-                <section aria-label="Role impact" className="flex flex-col items-center justify-center min-h-[380px] md:min-h-[460px] py-4 h-full">
-                  <div className="w-full max-w-5xl">
-                    <h3 className="mb-4 text-2xl font-semibold text-center text-neutral-800">
-                      Giving us an overview of the impact on any role
-                    </h3>
-                    <div className="w-full overflow-hidden rounded-xl p-4" style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(34,28,20,0.08)" }}>
-                      <RoleImpactDiagram />
-                    </div>
-                  </div>
-                </section>
-              </div>
-
-              {/* Slide 7: Org Research */}
-              <div className="w-full flex-shrink-0 px-1">
-                <section aria-label="Org research and headcount estimation" className="flex flex-col items-center justify-center min-h-[380px] md:min-h-[460px] py-4 h-full">
-                  <div className="w-full max-w-5xl space-y-5">
-                    <h3 className="text-2xl font-semibold text-center text-neutral-800">
-                      Which we project onto teams and companies; by using AI to{" "}
-                      <DefinitionHover
-                        accent="rgb(34, 28, 20)"
-                        title="Research and Estimate"
-                        description="We task AI with stitching public filings, job boards, and social graphs to infer teams and reporting lines. That lets us map automation and augmentation exposure to real org units-bottom up, function by function, and across peer companies."
-                        bullets={[]}
-                      >
-                        research and estimate
-                      </DefinitionHover>{" "}
-                      org charts with headcounts
-                    </h3>
-                    <div
-                      className="w-full overflow-hidden rounded-xl p-4"
-                      style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(34,28,20,0.08)" }}
-                    >
-                      <OrgResearchDiagram />
-                    </div>
-                  </div>
-                </section>
-              </div>
-
-              {/* Slide 8: From Org to Economy */}
-              <div className="w-full flex-shrink-0 px-1">
-                <section aria-label="Org to economy benchmarking" className="flex flex-col items-center justify-center min-h-[380px] md:min-h-[460px] py-4 h-full">
-                  <div className="w-full max-w-5xl space-y-5">
-                    <h3 className="text-2xl font-semibold text-center text-neutral-800">
-                      Then we benchmark exposure across peers, sectors, and countries
-                    </h3>
-                    <div
-                      className="rounded-xl p-4"
-                      style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(34,28,20,0.08)" }}
-                    >
-                      <MiniFlow />
-                      <div className="mt-4 grid gap-3 md:grid-cols-3 text-sm text-neutral-800">
-                        <TinyStat label="Peer benchmarking" value="1,000+ firms" hint="public runs & research set" />
-                        <TinyStat label="Sector rollups" value="40+ industries" hint="industry comparisons" />
-                        <TinyStat label="Country slices" value="50+ countries" hint="policy targeting" />
-                      </div>
-                    </div>
-                    <p className="mx-auto max-w-3xl text-center text-sm text-neutral-700">
-                      Exposure scores stay tied back to the task evidence beneath them, so readers can explore the chain from company to county.
-                    </p>
-                  </div>
-              </section>
-            </div>
-
-              {/* Slide 9: Try It Yourself */}
-              <div className="w-full flex-shrink-0 px-1">
-                <section aria-label="Try it yourself" className="flex flex-col items-center justify-center min-h-[380px] md:min-h-[460px] py-6 h-full">
-                  <div className="w-full max-w-lg space-y-8 text-neutral-800 text-left">
-                    <h3 className="text-xl font-semibold text-neutral-900 md:text-2xl">Ready to see what this means for your company and teams?</h3>
-                    <p className="max-w-3xl text-base text-neutral-700">
-                      Start by{" "}
-                      <button
-                        type="button"
-                        onClick={handleJumpToHero}
-                        className="inline-flex items-center gap-1 font-semibold text-neutral-900 underline decoration-neutral-400 underline-offset-4 transition hover:text-neutral-700"
-                      >
-                        running your own company analysis
-                      </button>{" "}
-                      or seeing how {" "}
-                      <button
-                        type="button"
-                        onClick={handleJumpToComparative}
-                        className="inline-flex items-center gap-1 font-semibold text-neutral-900 underline decoration-neutral-400 underline-offset-4 transition hover:text-neutral-700"
-                      >
-                        your sector or country is shifting
-                      </button>
-                      .
-                    </p>
-                    <p className="text-base text-neutral-700">
-                      Want my quick read on those three original questions before you poke around?{" "}
-                      <button
-                        type="button"
-                        onClick={goToNextSlide}
-                        className="inline-flex items-center gap-1 font-semibold text-neutral-900 underline decoration-neutral-400 underline-offset-4 transition hover:text-neutral-700"
-                      >
-                        Show me →
-                      </button>
-                    </p>
-                  </div>
-                </section>
-              </div>
-
-              {/* Slide 10: Reality Check */}
-              <div className="w-full flex-shrink-0 px-1">
-                <section aria-label="AI replacement reality check" className="flex flex-col items-center justify-center min-h-[380px] md:min-h-[460px] pt-4 h-full">
-                  <div className="w-full max-w-5xl">
-                    <RealityCheckSlide />
-                  </div>
-                </section>
-              </div>
-
-              {/* Slide 11: Organizational Application */}
-              {/* <div className="w-full flex-shrink-0 px-1">
-                <section aria-label="Organizational application" className="flex flex-col items-center justify-center min-h-[380px] md:min-h-[460px] py-4 h-full">
-                  <div className="w-full max-w-5xl space-y-5">
-                    <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-800">
-                      Apply it to the org chart
-                    </h3>
-                    <Card>
-                      <p className="text-sm text-neutral-800">
-                        We project task exposure onto departments and roles. Bars show automation (red), augmentation (orange), and manual (neutral).
-                      </p>
-                      <MiniOrg />
-                      <p className="mt-2 text-xs text-neutral-600">
-                        Toggle depth in the main app (level 1–4) for different levels of detail.
-                      </p>
-                    </Card>
-                  </div>
-                </section>
-              </div> */}
-
+              ))}
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Navigation Controls */}
-        <div className="flex items-center justify-between px-6 pb-5 pt-2 border-t border-neutral-200/50">
-          <button
-            onClick={goToPrevSlide}
-            disabled={currentSlide === 0}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition ${
-              currentSlide === 0
-                ? "text-neutral-400 cursor-not-allowed"
-                : "text-neutral-700 hover:bg-neutral-200/60"
-            } focus:outline-none focus:ring-2 focus:ring-black/20`}
-            aria-label="Previous slide"
-          >
-            <kbd className="px-1.5 py-0.5 text-xs rounded border border-neutral-300 bg-white">←</kbd> Previous
-          </button>
+        {isMobile ? (
+          <div className="flex h-full flex-col">
+            <div className="flex-1 overflow-hidden">
+              <div ref={emblaRef} className="h-full w-full overflow-hidden">
+                <div className="flex h-full">
+                  {slideSections.map((section, index) => (
+                    <div
+                      key={index}
+                      className="flex h-full min-w-0 flex-shrink-0 basis-full flex-col overflow-y-auto px-4 pb-0 pt-0"
+                    >
+                      {section}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="border-t border-neutral-200/70 bg-white/70 px-4 py-4 pb-18 shadow-[0_-8px_24px_rgba(31,25,15,0.02)] backdrop-blur">
+              <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">
+                <span>{slides[currentSlide]?.title}</span>
+                <span>
+                  {currentSlide + 1} / {totalSlides}
+                </span>
+              </div>
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={goToPrevSlide}
+                  disabled={currentSlide === 0}
+                  className={cn(
+                    "flex h-10 flex-1 items-center justify-center rounded-full text-sm font-medium transition",
+                    currentSlide === 0
+                      ? "cursor-not-allowed bg-neutral-200/70 text-neutral-400"
+                      : "bg-neutral-900 text-white hover:bg-neutral-800"
+                  )}
+                >
+                  Back
+                </button>
+                <div className="flex items-center justify-center gap-2">
+                  {slides.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => goToSlide(i)}
+                      className={cn(
+                        "h-2 rounded-full transition-all",
+                        i === currentSlide ? "w-6 bg-neutral-900" : "w-2 bg-neutral-300"
+                      )}
+                      aria-label={`Go to slide ${i + 1}`}
+                    />
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={goToNextSlide}
+                  disabled={currentSlide === totalSlides - 1}
+                  className={cn(
+                    "flex h-10 flex-1 items-center justify-center rounded-full text-sm font-medium transition",
+                    currentSlide === totalSlides - 1
+                      ? "cursor-not-allowed bg-neutral-200/70 text-neutral-400"
+                      : "bg-[#e87038] text-white hover:bg-[#e04800]"
+                  )}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="px-6 pb-4 overflow-hidden min-h-[400px] md:min-h-[480px]">
+              <div
+                className="transition-transform duration-300 ease-in-out"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                <div className="flex min-h-[380px] md:min-h-[460px]">
+                  {slideSections.map((section, index) => (
+                    <div key={index} className="w-full flex-shrink-0 px-1">
+                      {section}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
 
-          <button
-            onClick={goToNextSlide}
-            disabled={currentSlide === totalSlides - 1}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition ${
-              currentSlide === totalSlides - 1
-                ? "text-neutral-400 cursor-not-allowed"
-                : "text-neutral-700 hover:bg-neutral-200/60"
-            } focus:outline-none focus:ring-2 focus:ring-black/20`}
-            aria-label="Next slide"
-          >
-             Next <kbd className="px-1.5 py-0.5 text-xs rounded border border-neutral-300 bg-white">→</kbd>
-          </button>
-        </div>
+            <div className="flex items-center justify-between border-t border-neutral-200/50 px-6 pb-5 pt-2">
+              <button
+                onClick={goToPrevSlide}
+                disabled={currentSlide === 0}
+                className={cn(
+                  "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-black/20",
+                  currentSlide === 0
+                    ? "cursor-not-allowed text-neutral-400"
+                    : "text-neutral-700 hover:bg-neutral-200/60"
+                )}
+                aria-label="Previous slide"
+              >
+                <kbd className="rounded border border-neutral-300 bg-white px-1.5 py-0.5 text-xs">←</kbd> Previous
+              </button>
+
+              <button
+                onClick={goToNextSlide}
+                disabled={currentSlide === totalSlides - 1}
+                className={cn(
+                  "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-black/20",
+                  currentSlide === totalSlides - 1
+                    ? "cursor-not-allowed text-neutral-400"
+                    : "text-neutral-700 hover:bg-neutral-200/60"
+                )}
+                aria-label="Next slide"
+              >
+                Next <kbd className="rounded border border-neutral-300 bg-white px-1.5 py-0.5 text-xs">→</kbd>
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>,
     container
@@ -654,7 +787,7 @@ export const Onboarding = () => {
     <>
       <button
         onClick={() => setOnboardingOpen(true)}
-        className="inline-flex items-center gap-2 rounded-lg bg-white/20 px-3 py-1.5 text-sm ring-1 ring-black/5 hover:bg-white/60 transition-all"
+        className="inline-flex items-center gap-2 rounded-lg bg-white/20 px-3 py-1.5 text-sm ring-1 ring-black/5 transition-all hover:bg-white/60"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none" />
@@ -669,4 +802,4 @@ export const Onboarding = () => {
       />
     </>
   );
-}
+};
