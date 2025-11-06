@@ -1,11 +1,11 @@
 export function WorkforceBreakdownDiagram() {
   return (
-    <svg viewBox="0 0 1400 380" className="w-full h-auto max-w-4xl mx-auto">
+    <svg viewBox="0 0 1200 380" className="mx-auto h-auto w-full max-w-4xl">
       {/* Main workforce container */}
       <rect
         x="10"
         y="40"
-        width="1380"
+        width="1180"
         height="310"
         rx="16"
         fill="none"
@@ -15,9 +15,9 @@ export function WorkforceBreakdownDiagram() {
 
       {/* Workforce label */}
       <text
-        x="700"
-        y="100"
-        fontSize="32"
+        x="600"
+        y="105"
+        fontSize="36"
         fill="currentColor"
         textAnchor="middle"
         className="font-semibold text-neutral-900"
@@ -25,9 +25,9 @@ export function WorkforceBreakdownDiagram() {
         Workforce
       </text>
       <text 
-        x="700"
-        y="145"
-        fontSize="28"
+        x="600"
+        y="150"
+        fontSize="30"
         fill="currentColor"
         textAnchor="middle"
         className="font-medium text-neutral-600"
@@ -39,87 +39,99 @@ export function WorkforceBreakdownDiagram() {
       <g className="text-neutral-700">
         {/* Role 1 */}
         <rect
-          x="120"
+          x="90"
           y="180"
-          width="240"
-          height="120"
+          width="320"
+          height="140"
           rx="12"
           fill="#ffffff"
           stroke="rgba(34,28,20,0.25)"
           strokeWidth="1.4"
         />
-        <text
-          x="240"
-          y="250"
-          fontSize="24"
-          fill="currentColor"
-          textAnchor="middle"
-        >
-          Role
-        </text>
+        <g>
+          <text
+            x="250"
+            y="245"
+            fontSize="26"
+            fill="currentColor"
+            textAnchor="middle"
+          >
+            Role
+          </text>
+          <text
+            x="250"
+            y="280"
+            fontSize="20"
+            fill="rgba(34,28,20,0.6)"
+            textAnchor="middle"
+          >
+            e.g. Cashiers
+          </text>
+        </g>
 
-        {/* Role 2 */}
+        {/* Role 2 (center) */}
         <rect
           x="440"
           y="180"
-          width="240"
-          height="120"
+          width="320"
+          height="140"
           rx="12"
           fill="#ffffff"
           stroke="rgba(34,28,20,0.25)"
           strokeWidth="1.4"
         />
-        <text
-          x="560"
-          y="250"
-          fontSize="24"
-          fill="currentColor"
-          textAnchor="middle"
-        >
-          Role
-        </text>
+        <g>
+          <text
+            x="600"
+            y="245"
+            fontSize="26"
+            fill="currentColor"
+            textAnchor="middle"
+          >
+            Role
+          </text>
+          <text
+            x="600"
+            y="280"
+            fontSize="20"
+            fill="rgba(34,28,20,0.6)"
+            textAnchor="middle"
+          >
+            e.g. Actuaries
+          </text>
+        </g>
 
         {/* Role 3 */}
         <rect
-          x="760"
+          x="790"
           y="180"
-          width="240"
-          height="120"
+          width="320"
+          height="140"
           rx="12"
           fill="#ffffff"
           stroke="rgba(34,28,20,0.25)"
           strokeWidth="1.4"
         />
-        <text
-          x="880"
-          y="250"
-          fontSize="24"
-          fill="currentColor"
-          textAnchor="middle"
-        >
-          Role
-        </text>
-
-        {/* Role 4 */}
-        <rect
-          x="1080"
-          y="180"
-          width="240"
-          height="120"
-          rx="12"
-          fill="#ffffff"
-          stroke="rgba(34,28,20,0.25)"
-          strokeWidth="1.4"
-        />
-        <text
-          x="1200"
-          y="250"
-          fontSize="24"
-          fill="currentColor"
-          textAnchor="middle"
-        >
-          Role
-        </text>
+        <g>
+          <text
+            x="950"
+            y="245"
+            fontSize="26"
+            fill="currentColor"
+            textAnchor="middle"
+          >
+            Role
+          </text>
+          <text
+            x="950"
+            y="280"
+            fontSize="20"
+            fill="rgba(34,28,20,0.6)"
+            textAnchor="middle"
+          >
+            e.g. Nannies
+          </text>
+        </g>
       </g>
 
     </svg>
@@ -166,7 +178,7 @@ export function RoleToTasksDiagram() {
       </text>
       <text
         x="480"
-        y="125"
+        y="122"
         fontSize="20"
         fill="currentColor"
         textAnchor="middle"
@@ -226,12 +238,21 @@ export function RoleToTasksDiagram() {
         />
         <text
           x="180"
-          y="310"
-          fontSize="24"
+          y="292"
+          fontSize="18"
           fill="currentColor"
           textAnchor="middle"
         >
           Task
+        </text>
+        <text
+          x="180"
+          y="318"
+          fontSize="16"
+          fill="rgba(34,28,20,0.6)"
+          textAnchor="middle"
+        >
+          Issue receipts, refunds
         </text>
 
         {/* Task 2 */}
@@ -247,12 +268,21 @@ export function RoleToTasksDiagram() {
         />
         <text
           x="480"
-          y="310"
-          fontSize="24"
+          y="292"
+          fontSize="18"
           fill="currentColor"
           textAnchor="middle"
         >
           Task
+        </text>
+        <text
+          x="480"
+          y="318"
+          fontSize="16"
+          fill="rgba(34,28,20,0.6)"
+          textAnchor="middle"
+        >
+          Greet customers entering
         </text>
 
         {/* Task 3 */}
@@ -268,12 +298,21 @@ export function RoleToTasksDiagram() {
         />
         <text
           x="780"
-          y="310"
-          fontSize="24"
+          y="292"
+          fontSize="18"
           fill="currentColor"
           textAnchor="middle"
         >
           Task
+        </text>
+        <text
+          x="780"
+          y="318"
+          fontSize="16"
+          fill="rgba(34,28,20,0.6)"
+          textAnchor="middle"
+        >
+          Answer incoming calls
         </text>
       </g>
     </svg>
@@ -326,7 +365,7 @@ export function AIUsageDiagram() {
         textAnchor="middle"
         className="text-neutral-600"
       >
-        (e.g. Claude, ChatGPT)
+        e.g. Claude, ChatGPT
       </text>
 
       {/* Left side - Chat boxes */}
