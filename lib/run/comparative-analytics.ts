@@ -181,6 +181,13 @@ export function buildComparativeAnalytics(
   >();
   const taskAccumulator = new Map<string, TaskAccumulator>();
 
+  // Track global metrics
+  const globalMetrics = {
+    totalHeadcount: 0,
+    weightedScoreSum: 0,
+    weightSum: 0,
+  };
+
   for (const run of runs) {
     const metric = run.workforceMetric;
     if (!metric) {
@@ -192,6 +199,15 @@ export function buildComparativeAnalytics(
     const augmentation = metric.augmentationComponent ?? null;
     const headcount = metric.totalHeadcount ?? null;
     const weight = headcount != null && headcount > 0 ? headcount : null;
+
+    // Accumulate global metrics
+    if (headcount && headcount > 0) {
+      globalMetrics.totalHeadcount += headcount;
+      if (weight && score && Number.isFinite(score)) {
+        globalMetrics.weightedScoreSum += score * weight;
+        globalMetrics.weightSum += weight;
+      }
+    }
 
     const countryLabel = normalizeCountryLabel(run.hqCountry);
     const countryCode = resolveIsoCode(countryLabel);
@@ -556,6 +572,10 @@ export function buildComparativeAnalytics(
     coverage: {
       companies: new Set(runs.map((run) => run.companyId)).size,
       runs: runs.length,
+      totalHeadcount: Math.round(globalMetrics.totalHeadcount),
+      averageExposure: globalMetrics.weightSum > 0
+        ? globalMetrics.weightedScoreSum / globalMetrics.weightSum
+        : 0,
     },
     countries: countryMetrics,
     industries: industryMetrics,

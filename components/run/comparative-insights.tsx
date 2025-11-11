@@ -591,7 +591,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
         className="relative overflow-hidden rounded-[28px] border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,250,0.86)] p-1 pt-6 lg:p-10 shadow-[0_28px_65px_rgba(31,29,18,0.12)] backdrop-blur-md [-webkit-backdrop-filter:blur(12px)] "
       >
         <div className="-z-10 pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(245,78,0,0.08),_rgba(245,78,0,0)_60%)] lg:bg-[radial-gradient(circle_at_top,_rgba(245,78,0,0.16),_rgba(245,78,0,0)_60%)]" />
-        <header className="flex flex-wrap items-start justify-between gap-6 px-5 lg:px-0">
+        <header className="flex flex-wrap justify-end items-start lg:justify-between gap-0 lg:gap-6 px-5 lg:px-0">
           <div>
             <p className="max-w-5xl text-[rgba(38,37,30,0.78)] text-lg leading-relaxed">
               <span className="text-xl font-medium">Where is AI exposure the highest?</span>{" "}
@@ -614,8 +614,11 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
             </p>
           </div>
           {analytics && (
-            <div className="flex flex-col items-end gap-2 text-right text-[rgba(38,37,30,0.55)] text-xs">
-              <span>{analytics.coverage.companies} companies analysed</span>
+            <div className="flex flex-col items-end gap-1 text-right text-[rgba(38,37,30,0.55)] text-xs">
+              <span>{analytics.coverage.companies.toLocaleString()} companies, {(analytics.coverage.totalHeadcount / 1000000).toFixed(1)}M employees</span>
+              {analytics.coverage.averageExposure > 0 && (
+                <span>{(analytics.coverage.averageExposure * 10).toFixed(1)}% avg AI exposure</span>
+              )}
             </div>
           )}
         </header>

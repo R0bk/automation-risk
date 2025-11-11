@@ -261,7 +261,7 @@ export function Hero({ initialValue = "", remainingRuns }: HeroProps) {
             style={inputResponsiveStyle}
           />
           <span className="block font-light text-[#1f1d16]/85 mt-3 sm:mt-4">
-            likely seeing across their workforce?
+            exposed to across their workforce?
           </span>
         </div>
 

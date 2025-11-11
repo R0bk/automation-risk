@@ -71,6 +71,8 @@ export type ComparativeAnalyticsPayload = {
   coverage: {
     companies: number;
     runs: number;
+    totalHeadcount: number;
+    averageExposure: number;
   };
   countries: CountryMetric[];
   industries: IndustryMetric[];
@@ -87,6 +89,8 @@ export const comparativeAnalyticsSchema = z.object({
   coverage: z.object({
     companies: z.number(),
     runs: z.number(),
+    totalHeadcount: z.number(),
+    averageExposure: z.number(),
   }),
   countries: z.array(
     z.object({

@@ -538,8 +538,7 @@ export default function HelpMeUnderstandModal({
                       className="font-medium text-[#f54e00] hover:underline"
                     >
                       O*NET 28.0 Database
-                    </a>{" "}
-                    (U.S. Department of Labor / National Center for O*NET Development).
+                    </a>
                   </li>
                 </ul>
               </div>
