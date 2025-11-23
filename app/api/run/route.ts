@@ -43,6 +43,18 @@ import { generateUUID } from "@/lib/utils";
 import { providerWebTools } from "@/lib/ai/tools/provider-tools";
 import { withEphemeralCacheControl } from "@/lib/http/cache";
 import type { ChatMessage } from "@/lib/types";
+import { revalidatePath } from "next/cache";
+import leoProfanity from "leo-profanity";
+
+// Initialize profanity filter once (library-backed to reduce false positives)
+const profanityFilter = (() => {
+  const filter = leoProfanity;
+  filter.clearList();
+  filter.loadDictionary("en");
+  // Allow common benign terms that collide with substrings
+  filter.removeWords("assistant", "assurance", "class", "classic", "passion");
+  return filter;
+})();
 
 export const runtime = "nodejs";
 export const maxDuration = 240;
@@ -110,6 +122,14 @@ export async function POST(request: Request) {
   }
 
   const { companyName, hqCountry, industry, refresh, message, userApiKey } = body;
+  const normalizedName = companyName.trim();
+  const slugCandidate = slugifyCompanyName(companyName);
+  if (profanityFilter.check(normalizedName) || profanityFilter.check(slugCandidate)) {
+    return NextResponse.json(
+      { code: "bad_request:blocked_company_name", cause: "Please submit a real company name." },
+      { status: 400 }
+    );
+  }
   const companySlug = slugifyCompanyName(companyName);
 
   const requestIp = getClientIp(request);
@@ -231,6 +251,14 @@ export async function POST(request: Request) {
 
   let finalReport: EnrichedOrgReport | null = null;
   let earlyFinalized = false;
+  let revalidated = false;
+
+  const revalidateRunPage = () => {
+    if (revalidated) return;
+    // Refresh the run detail route after we write the final report
+    revalidatePath(`/run/${company.slug}`);
+    revalidated = true;
+  };
 
   const persistCompletedRun = async () => {
     if (!finalReport) return;
@@ -239,6 +267,7 @@ export async function POST(request: Request) {
       status: "completed",
       finalReportJson: finalReport,
     });
+    revalidateRunPage();
 
     setRunCache({
       runId: run.id,

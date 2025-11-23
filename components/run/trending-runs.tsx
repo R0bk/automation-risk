@@ -10,7 +10,7 @@ interface TrendingRun {
 }
 
 interface TrendingRunsProps {
-  runs: TrendingRun[];
+  runs: TrendingRun[]; 
 }
 
 export function TrendingRuns({ runs }: TrendingRunsProps) {
@@ -64,6 +64,7 @@ export function TrendingRuns({ runs }: TrendingRunsProps) {
                 <Link
                   key={run.runId}
                   href={`/run/${slug}`}
+                  prefetch={false}
                   className="group min-w-[260px] rounded-[18px] border border-[rgba(38,37,30,0.1)] px-5 py-6 shadow-[0_20px_48px_rgba(34,28,20,0.14)] transition hover:border-[rgba(38,37,30,0.18)] hover:shadow-[0_26px_58px_rgba(34,28,20,0.18)]"
                   style={{
                     backgroundImage: "linear-gradient(150deg, rgba(242,241,237,0.94), rgba(235,233,227,0.88))",

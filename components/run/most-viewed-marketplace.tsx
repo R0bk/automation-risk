@@ -342,6 +342,7 @@ export function MostViewedMarketplace({
             <Link
               key={run.runId}
               href={`/run/${slugOrId}`}
+              prefetch={false}
               className="group relative flex h-full flex-col overflow-hidden rounded-[20px] border border-[rgba(38,37,30,0.1)] bg-[rgba(241,240,236,0.85)] px-6 py-6 shadow-[0_20px_40px_rgba(34,28,20,0.12)] transition hover:border-[rgba(38,37,30,0.2)] hover:shadow-[0_26px_54px_rgba(34,28,20,0.16)]"
             >
               {score != null ? (

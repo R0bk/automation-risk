@@ -19,8 +19,8 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
-// ISR: Revalidate every hour to keep pages fresh
-export const revalidate = 3600;
+// ISR: Use a long window; freshness is handled via on-demand revalidation when runs complete
+export const revalidate = 86400;
 
 // Allow new companies to be generated on-demand (not pre-rendered at build)
 export const dynamicParams = true;
@@ -67,6 +67,7 @@ export default async function RunPage({ params }: RunPageProps) {
             aria-label="Back to main page"
             className="group inline-flex h-9 items-center justify-center rounded-full border border-transparent bg-transparent px-3 text-[rgba(38,37,30,0.55)] transition-all duration-200 hover:border-[rgba(38,37,30,0.18)] hover:bg-[rgba(255,255,252,0.75)] hover:text-[#f54e00]"
             href="/"
+            prefetch={false}
           >
             <ArrowLeft className="h-4 w-4" aria-hidden />
             <span className="ml-2 text-[10px] uppercase tracking-[0.32em] text-[rgba(38,37,30,0.42)] transition-colors duration-200 group-hover:text-[#f54e00]">

@@ -29,7 +29,10 @@
         "noMagicNumbers": "off",
 
         /* Needs more work to fix */
-        "noNestedTernary": "off"
+        "noNestedTernary": "off",
+
+        /* Allow single-line statements without blocks */
+        "useBlockStatements": "off"
       },
       "nursery": {
         /* Too many false positives */
