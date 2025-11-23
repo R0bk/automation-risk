@@ -52,7 +52,7 @@ const profanityFilter = (() => {
   filter.clearList();
   filter.loadDictionary("en");
   // Allow common benign terms that collide with substrings
-  filter.removeWords("assistant", "assurance", "class", "classic", "passion");
+  filter.remove(["assistant", "assurance", "class", "classic", "passion"]);
   return filter;
 })();
 
