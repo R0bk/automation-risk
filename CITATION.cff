@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this software or dataset in your research, please cite it using the metadata from this file."
+type: software
+title: "Automation Risk Explorer: AI-Driven Workforce Automation Analysis Platform"
+authors:
+  - family-names: Kopel
+    given-names: Rob
+    # orcid: https://orcid.org/0000-0000-0000-0000  # TBD
+version: 1.0.0
+date-released: 2025-10-20
+url: "https://github.com/R0bk/automation-risk"
+repository-code: "https://github.com/R0bk/automation-risk"
+license: MIT
+keywords:
+  - automation
+  - workforce-analysis
+  - o-net
+  - ai
+  - organizational-analysis
+  - labor-economics
+  - machine-learning
+  - large-language-models
+abstract: >
+  Automation Risk Explorer is an AI-driven workforce automation analysis tool that
+  generates organizational reports mapping job roles to O*NET occupation codes with
+  AI-powered automation and augmentation impact assessments. The system streams real-time
+  analysis results - combining O*NET occupation mapping, AI-powered organizational research
+  with web search, Anthropic's task analysis data, and adaptive hierarchical organization
+  modeling to produce comprehensive workforce impact reports.

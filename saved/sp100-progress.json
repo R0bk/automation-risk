@@ -1183,10 +1183,10 @@
     "slug": "caterpillar",
     "ticker": "CAT",
     "companyName": "Caterpillar",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-19T15:00:03.085Z",
-    "error": "fetch failed"
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-04T11:16:27.265Z",
+    "runId": "afcf1cb6-0fea-414e-b85f-1cc99fed79be"
   },
   "philip-morris-international": {
     "slug": "philip-morris-international",
@@ -1227,10 +1227,10 @@
     "slug": "mcdonalds",
     "ticker": "MCD",
     "companyName": "McDonald's",
-    "status": "failed",
-    "attempts": 2,
-    "updatedAt": "2025-10-25T13:43:31.231Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:13:42.815Z",
+    "runId": "c2232665-8cd4-4736-9d66-ed3dc50769ad"
   },
   "merck": {
     "slug": "merck",
@@ -1263,19 +1263,19 @@
     "slug": "pepsico",
     "ticker": "PEP",
     "companyName": "PepsiCo",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-19T15:00:03.095Z",
-    "error": "fetch failed"
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:23:39.334Z",
+    "runId": "514a4a17-8a55-449c-8108-ea1fcc8c87cd"
   },
   "thermo-fisher-scientific": {
     "slug": "thermo-fisher-scientific",
     "ticker": "TMO",
     "companyName": "Thermo Fisher Scientific",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-19T15:00:03.096Z",
-    "error": "fetch failed"
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-03T00:32:14.801Z",
+    "runId": "aad15e53-d440-4a94-8036-3886e793725d"
   },
   "servicenow": {
     "slug": "servicenow",
@@ -1468,10 +1468,10 @@
     "slug": "danaher",
     "ticker": "DHR",
     "companyName": "Danaher",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-19T15:00:03.122Z",
-    "error": "fetch failed"
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-03T00:29:31.742Z",
+    "runId": "b357120c-0100-447f-b614-e8c87c2391ee"
   },
   "honeywell-international": {
     "slug": "honeywell-international",
@@ -1495,10 +1495,10 @@
     "slug": "comcast",
     "ticker": "CMCSA",
     "companyName": "Comcast",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-19T15:00:03.126Z",
-    "error": "fetch failed"
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-03T00:32:37.425Z",
+    "runId": "b6ce5692-79a4-40e5-8b00-36c762170598"
   },
   "altria-group": {
     "slug": "altria-group",
@@ -1522,10 +1522,10 @@
     "slug": "southern-company",
     "ticker": "SO",
     "companyName": "Southern Company",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-19T15:00:03.130Z",
-    "error": "fetch failed"
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-04T11:15:39.763Z",
+    "runId": "7da60614-8dcc-486a-85df-70e47ad007cf"
   },
   "lockheed-martin": {
     "slug": "lockheed-martin",
@@ -1594,10 +1594,10 @@
     "slug": "mondelez-international",
     "ticker": "MDLZ",
     "companyName": "Mondelez International",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-19T15:00:03.140Z",
-    "error": "fetch failed"
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:24:01.247Z",
+    "runId": "9861162c-cb58-4df5-a7b9-82069f0681b3"
   },
   "bank-of-new-york-mellon": {
     "slug": "bank-of-new-york-mellon",
@@ -4222,9 +4222,10 @@
     "slug": "dell-technologies",
     "ticker": "DELL",
     "companyName": "Dell Technologies",
-    "status": "running",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:12:49.700Z"
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-03T00:29:47.427Z",
+    "runId": "4a9c0255-b5a4-4fcb-8784-a41c88b859ea"
   },
   "hewlett-packard-enterprise": {
     "slug": "hewlett-packard-enterprise",
@@ -4238,9 +4239,10 @@
     "slug": "workday",
     "ticker": "WDAY",
     "companyName": "Workday",
-    "status": "running",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:12:49.702Z"
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-04T11:16:17.225Z",
+    "runId": "fd89fda6-812e-4f8c-894e-874fd6dc2afe"
   },
   "atlassian": {
     "slug": "atlassian",
@@ -4294,9 +4296,10 @@
     "slug": "airbnb",
     "ticker": "ABNB",
     "companyName": "Airbnb",
-    "status": "running",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:12:49.712Z"
+    "status": "failed",
+    "attempts": 2,
+    "updatedAt": "2025-11-04T11:28:28.186Z",
+    "error": "Timed out waiting for airbnb"
   },
   "expedia-group": {
     "slug": "expedia-group",
@@ -4400,19 +4403,19 @@
     "slug": "sabmiller",
     "ticker": "SAB.L",
     "companyName": "SABMiller",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:30:45.469Z",
-    "error": "Run sabmiller failed"
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:58:08.415Z",
+    "runId": "4eb611cb-6dec-4d0a-b233-ef970ec98808"
   },
   "associated-british-foods": {
     "slug": "associated-british-foods",
     "ticker": "ABF.L",
     "companyName": "Associated British Foods",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:46:03.755Z",
-    "error": "Timed out waiting for associated-british-foods"
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:03:34.607Z",
+    "runId": "1f081af4-d7a6-4634-8a90-1d31d01cdb07"
   },
   "sainsburys": {
     "slug": "sainsburys",
@@ -4742,10 +4745,10 @@
     "slug": "repsol",
     "ticker": "REP.MC",
     "companyName": "Repsol",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:39:30.022Z",
-    "error": "Run repsol failed"
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:59:19.681Z",
+    "runId": "ded39b47-99df-4357-aadb-47a46e7a6875"
   },
   "banco-bilbao-vizcaya-argentaria": {
     "slug": "banco-bilbao-vizcaya-argentaria",
@@ -4850,10 +4853,10 @@
     "slug": "stellantis",
     "ticker": "STLA",
     "companyName": "Stellantis",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T14:01:16.921Z",
-    "error": "Timed out waiting for stellantis"
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:59:06.151Z",
+    "runId": "f11a6b0b-081b-4dc6-bdbc-9bd113287476"
   },
   "heineken": {
     "slug": "heineken",
@@ -4886,675 +4889,5220 @@
     "slug": "ahold-delhaize",
     "ticker": "AD.AS",
     "companyName": "Ahold Delhaize",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:42:53.617Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:58:12.472Z",
+    "runId": "5ddd95e9-8b2e-440c-a841-933d16da089e"
   },
   "nn-group": {
     "slug": "nn-group",
     "ticker": "NN.AS",
     "companyName": "NN Group",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:42:55.285Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:57:40.486Z",
+    "runId": "544808a3-1f75-4fbc-a228-27bfd5627bdb"
   },
   "akzo-nobel": {
     "slug": "akzo-nobel",
     "ticker": "AKZA.AS",
     "companyName": "Akzo Nobel",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:42:56.958Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:57:37.890Z",
+    "runId": "a43df698-081c-4554-b099-fa987c8b3db4"
   },
   "wolters-kluwer": {
     "slug": "wolters-kluwer",
     "ticker": "WKL.AS",
     "companyName": "Wolters Kluwer",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:42:58.628Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:58:28.928Z",
+    "runId": "99c8c9a2-c3f8-42cb-81ef-ae946f32c190"
   },
   "royal-dsm": {
     "slug": "royal-dsm",
     "ticker": "DSM.AS",
     "companyName": "Royal DSM",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:00.305Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:57:50.043Z",
+    "runId": "0cf7d5d5-93c8-457c-abd0-8c5e5b2c7bf6"
   },
   "abb": {
     "slug": "abb",
     "ticker": "ABBN.SW",
     "companyName": "ABB",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:01.976Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:58:31.706Z",
+    "runId": "6518000d-5ac3-4c7e-8c64-86349202af76"
   },
   "givaudan": {
     "slug": "givaudan",
     "ticker": "GIVN.SW",
     "companyName": "Givaudan",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:03.714Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:58:43.116Z",
+    "runId": "b0ed13ac-6e8e-45bc-bdcf-e6c4ead7fca6"
   },
   "swiss-re": {
     "slug": "swiss-re",
     "ticker": "SREN.SW",
     "companyName": "Swiss Re",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:04.425Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:57:50.481Z",
+    "runId": "0636a512-1142-4ab0-a6d6-3d7fc188997f"
   },
   "zurich-insurance-group": {
     "slug": "zurich-insurance-group",
     "ticker": "ZURN.SW",
     "companyName": "Zurich Insurance Group",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:05.388Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:58:20.704Z",
+    "runId": "bbb80c6a-3fd4-495a-832d-e1c1f4fadcd7"
   },
   "lonza-group": {
     "slug": "lonza-group",
     "ticker": "LONN.SW",
     "companyName": "Lonza Group",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:06.120Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:58:04.343Z",
+    "runId": "8c82f8ca-93e9-4250-958c-6885ac5a8935"
   },
   "sgs": {
     "slug": "sgs",
     "ticker": "SGSN.SW",
     "companyName": "SGS",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:07.061Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:56:53.970Z",
+    "runId": "ffdf98c3-078e-491e-bf09-2c91e690d402"
   },
   "dsv": {
     "slug": "dsv",
     "ticker": "DSV.CO",
     "companyName": "DSV",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:07.802Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:58:10.179Z",
+    "runId": "b577dcac-778f-40d0-bceb-9c2304b77b36"
   },
   "carlsberg-group": {
     "slug": "carlsberg-group",
     "ticker": "CARL-B.CO",
     "companyName": "Carlsberg Group",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:08.749Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:57:20.782Z",
+    "runId": "a15ac7c0-519a-4ab2-8a36-26e6b0598061"
   },
   "coloplast": {
     "slug": "coloplast",
     "ticker": "COLO-B.CO",
     "companyName": "Coloplast",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:09.401Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:59:04.011Z",
+    "runId": "ffe2d7f5-46c3-42fa-81e6-6437f5f6fadf"
   },
   "ap-mller-mrsk": {
     "slug": "ap-mller-mrsk",
     "ticker": "MAERSK-B.CO",
     "companyName": "A.P. Møller-Mærsk",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:09.609Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:58:24.859Z",
+    "runId": "268d5b24-f570-4865-8acb-ac711f01e281"
   },
   "rsted": {
     "slug": "rsted",
     "ticker": "ORSTED.CO",
     "companyName": "Ørsted",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:10.421Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T13:58:04.974Z",
+    "runId": "68f73a8f-9892-4270-88a2-398c362783a8"
   },
   "volvo": {
     "slug": "volvo",
     "ticker": "VOLV-B.ST",
     "companyName": "Volvo",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:11.073Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:03:40.122Z",
+    "runId": "5018f633-35da-452f-9247-488691e0b04f"
   },
   "ericsson": {
     "slug": "ericsson",
     "ticker": "ERIC-B.ST",
     "companyName": "Ericsson",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:11.281Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:02:02.259Z",
+    "runId": "f8b90752-f134-4e1f-a1f8-771a902ed4f4"
   },
   "atlas-copco": {
     "slug": "atlas-copco",
     "ticker": "ATCO-A.ST",
     "companyName": "Atlas Copco",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:12.130Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:02:20.693Z",
+    "runId": "1717e7b3-b2f3-440c-b7d4-e8bb32e51412"
   },
   "sandvik": {
     "slug": "sandvik",
     "ticker": "SAND.ST",
     "companyName": "Sandvik",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:12.752Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:03:23.555Z",
+    "runId": "bc0ba557-cc5a-4427-975e-e9b55b9f8114"
   },
   "hm": {
     "slug": "hm",
     "ticker": "HM-B.ST",
     "companyName": "H&M",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:12.965Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:02:17.673Z",
+    "runId": "2f07b5dd-88fb-4723-b72c-8e707ced0520"
   },
   "skandinaviska-enskilda-banken": {
     "slug": "skandinaviska-enskilda-banken",
     "ticker": "SEB-A.ST",
     "companyName": "Skandinaviska Enskilda Banken",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:13.857Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:02:51.631Z",
+    "runId": "15ff6d81-8d7d-449a-8e4e-3ae33a593f5d"
   },
   "swedbank": {
     "slug": "swedbank",
     "ticker": "SWED-A.ST",
     "companyName": "Swedbank",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:14.068Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:03:10.705Z",
+    "runId": "6c53de55-00f2-40a2-a15d-c777e5419724"
   },
   "norsk-hydro": {
     "slug": "norsk-hydro",
     "ticker": "NOK.OL",
     "companyName": "Norsk Hydro",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:14.421Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:05:24.565Z",
+    "runId": "a1195635-ede7-42bd-8c80-64f51fdd3b80"
   },
   "equinor": {
     "slug": "equinor",
     "ticker": "EQNR.OL",
     "companyName": "Equinor",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:14.636Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:04:04.049Z",
+    "runId": "54a4b2c5-f48b-4100-9b9f-121a3aff7651"
   },
   "telenor": {
     "slug": "telenor",
     "ticker": "TEL.OL",
     "companyName": "Telenor",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:15.526Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:03:32.564Z",
+    "runId": "791fe896-6412-43e1-a483-f3e0ee2a252e"
   },
   "recruit-holdings": {
     "slug": "recruit-holdings",
     "ticker": "6098.T",
     "companyName": "Recruit Holdings",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:15.740Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:02:56.527Z",
+    "runId": "af86600d-2da3-4141-b588-8dbf1a9ee13e"
   },
   "chugai-pharmaceutical": {
     "slug": "chugai-pharmaceutical",
     "ticker": "4519.T",
     "companyName": "Chugai Pharmaceutical",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:16.102Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:02:57.380Z",
+    "runId": "a62f2246-5912-4f4b-aa4d-1f934bcccda7"
   },
   "daiichi-sankyo": {
     "slug": "daiichi-sankyo",
     "ticker": "4568.T",
     "companyName": "Daiichi Sankyo",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:16.315Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:04:48.127Z",
+    "runId": "d0d747dc-f995-41b0-b93b-74a4a668da8a"
   },
   "fujifilm-holdings": {
     "slug": "fujifilm-holdings",
     "ticker": "4901.T",
     "companyName": "Fujifilm Holdings",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:17.721Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:05:00.996Z",
+    "runId": "7e2be8c5-8293-40a0-8281-394cc2f2eb39"
   },
   "softbank": {
     "slug": "softbank",
     "ticker": "9434.T",
     "companyName": "SoftBank",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:17.410Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:03:50.916Z",
+    "runId": "2ef7a2da-7877-4e2a-9e05-b5a8f5ea4804"
   },
   "fanuc": {
     "slug": "fanuc",
     "ticker": "6954.T",
     "companyName": "Fanuc",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:17.933Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:04:50.358Z",
+    "runId": "1239a633-04ed-4eca-bf77-5e0acf3d8487"
   },
   "hoya": {
     "slug": "hoya",
     "ticker": "7741.T",
     "companyName": "Hoya",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:18.142Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:03:41.182Z",
+    "runId": "9a3a94d3-6386-4e92-9480-fb77209a167e"
   },
   "tokyo-electron": {
     "slug": "tokyo-electron",
     "ticker": "8035.T",
     "companyName": "Tokyo Electron",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:18.823Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:03:41.829Z",
+    "runId": "44643d39-93b0-400c-9007-bcf9984e6de0"
   },
   "yaskawa-electric": {
     "slug": "yaskawa-electric",
     "ticker": "6506.T",
     "companyName": "Yaskawa Electric",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:19.085Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:03:44.388Z",
+    "runId": "3be98b8d-a3c0-4bc9-9787-d54edc0af26d"
   },
   "dentsu-group": {
     "slug": "dentsu-group",
     "ticker": "4324.T",
     "companyName": "Dentsu Group",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:19.398Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:06:17.570Z",
+    "runId": "ee924ba3-269b-4591-8637-50878655a1d5"
   },
   "kakao": {
     "slug": "kakao",
     "ticker": "035720.KS",
     "companyName": "Kakao",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:19.616Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:07:39.299Z",
+    "runId": "c8410639-0e70-4311-9d2d-243bb608b984"
   },
   "kia": {
     "slug": "kia",
     "ticker": "000270.KS",
     "companyName": "Kia",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:19.830Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:08:33.729Z",
+    "runId": "206dbbc4-0268-4f1e-add5-82fa88348d08"
   },
   "lg-chem": {
     "slug": "lg-chem",
     "ticker": "051910.KS",
     "companyName": "LG Chem",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:20.503Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:08:36.704Z",
+    "runId": "94efff7e-f33a-47c7-a843-b832fe3a1dcb"
   },
   "lg-electronics": {
     "slug": "lg-electronics",
     "ticker": "066570.KS",
     "companyName": "LG Electronics",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:20.761Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:07:52.971Z",
+    "runId": "518ecb2b-f9a6-4594-8ca0-4a6791a99944"
   },
   "samsung-ct": {
     "slug": "samsung-ct",
     "ticker": "028260.KS",
     "companyName": "Samsung C&T",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:21.066Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-02T14:08:01.925Z",
+    "runId": "fb855a41-60eb-4802-8b53-3b3212061214"
   },
   "samsung-electro-mechanics": {
     "slug": "samsung-electro-mechanics",
     "ticker": "009150.KS",
     "companyName": "Samsung Electro-Mechanics",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:21.314Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:08:30.825Z",
+    "runId": "ae8b0652-a852-4e45-a2fc-fbf3942c7a10"
   },
   "byd": {
     "slug": "byd",
     "ticker": "1211.HK",
     "companyName": "BYD",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:21.527Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:08:42.674Z",
+    "runId": "381459f5-1db5-4e6f-9662-344b820bc81e"
   },
   "sunny-optical-technology": {
     "slug": "sunny-optical-technology",
     "ticker": "2382.HK",
     "companyName": "Sunny Optical Technology",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:22.181Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:08:09.610Z",
+    "runId": "85e01e35-1fdb-461f-95fe-6c9734f6264b"
   },
   "jd-health": {
     "slug": "jd-health",
     "ticker": "6618.HK",
     "companyName": "JD Health",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:22.446Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:07:53.563Z",
+    "runId": "a79c7ad6-adba-4efa-b6ee-2e65777a5eb1"
   },
   "netease-cloud-music": {
     "slug": "netease-cloud-music",
     "ticker": "9999.HK",
     "companyName": "NetEase Cloud Music",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:22.794Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:07:23.390Z",
+    "runId": "29206ecc-5f79-484a-aedc-d51ac4ca81f1"
   },
   "china-pacific-insurance": {
     "slug": "china-pacific-insurance",
     "ticker": "0966.HK",
     "companyName": "China Pacific Insurance",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:23.003Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:09:30.434Z",
+    "runId": "c0344abb-b0dd-4f0d-92c0-aaf5f92c41e3"
   },
   "china-resources-land": {
     "slug": "china-resources-land",
     "ticker": "1109.HK",
     "companyName": "China Resources Land",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:23.216Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:08:33.567Z",
+    "runId": "0be7e82d-d91b-496f-8209-e9c6a7a73d4c"
   },
   "anta-sports": {
     "slug": "anta-sports",
     "ticker": "2020.HK",
     "companyName": "Anta Sports",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:23.854Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:08:35.107Z",
+    "runId": "6a38dae5-280d-4298-aede-d2c56b56932a"
   },
   "vale": {
     "slug": "vale",
     "ticker": "VALE",
     "companyName": "Vale",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:24.160Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:09:38.907Z",
+    "runId": "14e8c700-e5dc-4cb7-8bdf-3a34204ac0f7"
   },
   "petrobras": {
     "slug": "petrobras",
     "ticker": "PETR4.SA",
     "companyName": "Petrobras",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:24.489Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:09:09.417Z",
+    "runId": "4e7f153b-39a0-46fd-b758-24ae4d29ff38"
   },
   "itau-unibanco": {
     "slug": "itau-unibanco",
     "ticker": "ITUB4.SA",
     "companyName": "Itaú Unibanco",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:24.698Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:09:25.294Z",
+    "runId": "0a8a31e6-bdff-48c1-b59b-a9aa844bff9a"
   },
   "banco-bradesco": {
     "slug": "banco-bradesco",
     "ticker": "BBDC4.SA",
     "companyName": "Banco Bradesco",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:24.906Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:10:26.619Z",
+    "runId": "56154b47-3422-4b57-8a70-b6271d81bd1d"
   },
   "ambev": {
     "slug": "ambev",
     "ticker": "ABEV3.SA",
     "companyName": "Ambev",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:25.532Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:09:49.540Z",
+    "runId": "a141af33-f56b-4f54-9b0e-9047e332f8aa"
   },
   "weg": {
     "slug": "weg",
     "ticker": "WEGE3.SA",
     "companyName": "WEG",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:25.840Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:11:17.750Z",
+    "runId": "9a6d3e91-62aa-455c-8c12-7c2d9b30a70a"
   },
   "icici-bank": {
     "slug": "icici-bank",
     "ticker": "ICICIBANK.BO",
     "companyName": "ICICI Bank",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:26.168Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:11:29.674Z",
+    "runId": "ee26a454-abb1-4f90-b9ae-a65ecf5deaf1"
   },
   "itc-limited": {
     "slug": "itc-limited",
     "ticker": "ITC.BO",
     "companyName": "ITC Limited",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:26.380Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:12:05.587Z",
+    "runId": "b7b2a88f-0cbe-44ff-8094-ae13f4439a9e"
   },
   "wipro": {
     "slug": "wipro",
     "ticker": "WIPRO.BO",
     "companyName": "Wipro",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:26.592Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:18:21.702Z",
+    "runId": "05dc8950-23a1-472f-96c4-2d51cde1890d"
   },
   "maruti-suzuki": {
     "slug": "maruti-suzuki",
     "ticker": "MARUTI.BO",
     "companyName": "Maruti Suzuki",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:27.219Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:13:04.575Z",
+    "runId": "984d6f97-0929-4043-9ba9-be4b88e1c7f2"
   },
   "hindalco-industries": {
     "slug": "hindalco-industries",
     "ticker": "HINDALCO.BO",
     "companyName": "Hindalco Industries",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:27.523Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:13:37.100Z",
+    "runId": "0065ab3a-dcd1-40af-bed8-42e6ddb661aa"
   },
   "titan-company": {
     "slug": "titan-company",
     "ticker": "TITAN.BO",
     "companyName": "Titan Company",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:27.864Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:13:13.546Z",
+    "runId": "f1265972-7887-46fc-822c-78e97937f98b"
   },
   "bajaj-finance": {
     "slug": "bajaj-finance",
     "ticker": "BAJFINANCE.BO",
     "companyName": "Bajaj Finance",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:28.076Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:12:12.778Z",
+    "runId": "7782211b-f97b-410b-b60d-cce6586d79d8"
   },
   "larsen-toubro": {
     "slug": "larsen-toubro",
     "ticker": "LT.BO",
     "companyName": "Larsen & Toubro",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:28.284Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:14:53.354Z",
+    "runId": "3694a02e-df49-4dad-b723-e5a42ab3f049"
   },
   "hcl-technologies": {
     "slug": "hcl-technologies",
     "ticker": "HCLTECH.BO",
     "companyName": "HCL Technologies",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:28.896Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:14:20.271Z",
+    "runId": "7883e65a-ffea-486e-b755-170e9ac4c471"
   },
   "ultratech-cement": {
     "slug": "ultratech-cement",
     "ticker": "ULTRACEMCO.BO",
     "companyName": "UltraTech Cement",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:29.212Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:14:06.076Z",
+    "runId": "9fa38ec4-43db-4afa-8232-42a6620a9867"
   },
   "spotify": {
     "slug": "spotify",
     "ticker": "SPOT",
     "companyName": "Spotify",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:29.545Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:13:10.875Z",
+    "runId": "f97daf02-daba-4d31-905b-8fbb5d021313"
   },
   "adyen": {
     "slug": "adyen",
     "ticker": "ADYEN.AS",
     "companyName": "Adyen",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:29.754Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:12:52.726Z",
+    "runId": "46d97e5d-9b2a-49a2-8cde-e1cf48b2621e"
   },
   "warner-bros-discovery": {
     "slug": "warner-bros-discovery",
     "ticker": "WBD",
     "companyName": "Warner Bros. Discovery",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:29.967Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:14:35.606Z",
+    "runId": "785f80e8-fe32-40b9-b912-15de9676edea"
   },
   "paramount-global": {
     "slug": "paramount-global",
     "ticker": "PARA",
     "companyName": "Paramount Global",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:30.571Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:14:50.547Z",
+    "runId": "56bd987c-e1d6-4371-91eb-c4b4c2f50623"
   },
   "lululemon-athletica": {
     "slug": "lululemon-athletica",
     "ticker": "LULU",
     "companyName": "Lululemon Athletica",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:30.887Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:15:17.882Z",
+    "runId": "9e9faca0-bfaa-4df3-9754-650c2d8d6b3e"
   },
   "walgreens-boots-alliance": {
     "slug": "walgreens-boots-alliance",
     "ticker": "WBA",
     "companyName": "Walgreens Boots Alliance",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:31.444Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:16:21.405Z",
+    "runId": "9b83d8a8-e661-45fc-86cc-6a301c8402e7"
   },
   "deere-company": {
     "slug": "deere-company",
     "ticker": "DE",
     "companyName": "Deere & Company",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:31.673Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:15:54.803Z",
+    "runId": "5af60615-affd-4ad1-8632-57a70525ae21"
   },
   "general-electric": {
     "slug": "general-electric",
     "ticker": "GE",
     "companyName": "General Electric",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:32.249Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:16:03.550Z",
+    "runId": "527269c9-e4d2-44cb-9860-f4f000d73e3a"
   },
   "elevance-health": {
     "slug": "elevance-health",
     "ticker": "ELV",
     "companyName": "Elevance Health",
-    "status": "failed",
-    "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:32.559Z",
-    "error": "Failed to start run (500): "
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:15:42.891Z",
+    "runId": "b90c3d9c-5d21-4377-b2fc-7f61145e80b2"
   },
   "biogen": {
     "slug": "biogen",
     "ticker": "BIIB",
     "companyName": "Biogen",
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-02T14:16:54.858Z",
+    "runId": "05023b7d-2379-47e2-a7e4-090361b316eb"
+  },
+  "saudi-basic-industries": {
+    "slug": "saudi-basic-industries",
+    "ticker": "2010.SR",
+    "companyName": "Saudi Basic Industries",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:17:37.084Z",
+    "runId": "908b229a-8b9c-4c3d-89b7-4a22ad4a48cc"
+  },
+  "first-abu-dhabi-bank": {
+    "slug": "first-abu-dhabi-bank",
+    "ticker": "FAB.AE",
+    "companyName": "First Abu Dhabi Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:19:07.592Z",
+    "runId": "4c0be8be-ed3a-4096-ac9a-5844d8af83bf"
+  },
+  "saudi-telecom-company": {
+    "slug": "saudi-telecom-company",
+    "ticker": "7010.SR",
+    "companyName": "Saudi Telecom Company",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:18:13.528Z",
+    "runId": "b8ab5182-88ef-456f-a92d-7baea26f73ae"
+  },
+  "saudi-electricity-company": {
+    "slug": "saudi-electricity-company",
+    "ticker": "5110.SR",
+    "companyName": "Saudi Electricity Company",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:18:50.818Z",
+    "runId": "64c2a8df-f944-4b5b-8f16-d3171f603c0b"
+  },
+  "adnoc-distribution": {
+    "slug": "adnoc-distribution",
+    "ticker": "ADNOCDIST.AE",
+    "companyName": "ADNOC Distribution",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:18:25.176Z",
+    "runId": "3914c404-ff85-42a9-92e3-58920f1bd3e1"
+  },
+  "mtn-group": {
+    "slug": "mtn-group",
+    "ticker": "MTN.JO",
+    "companyName": "MTN Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:19:31.998Z",
+    "runId": "f377818e-9b69-44dd-bcdb-5f070a2f3682"
+  },
+  "vodacom-group": {
+    "slug": "vodacom-group",
+    "ticker": "VOD.JO",
+    "companyName": "Vodacom Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:18:29.255Z",
+    "runId": "cbef12e5-4410-4820-a612-08a4cff8ccc6"
+  },
+  "standard-bank-group": {
+    "slug": "standard-bank-group",
+    "ticker": "SBK.JO",
+    "companyName": "Standard Bank Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:18:56.086Z",
+    "runId": "74bafa7a-70c2-454b-8370-615e6b5d816d"
+  },
+  "firstrand": {
+    "slug": "firstrand",
+    "ticker": "FSR.JO",
+    "companyName": "FirstRand",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:18:56.089Z",
+    "runId": "3cfd1213-565a-4fe4-811a-110aa706bb11"
+  },
+  "shoprite-holdings": {
+    "slug": "shoprite-holdings",
+    "ticker": "SHP.JO",
+    "companyName": "Shoprite Holdings",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:21:19.536Z",
+    "runId": "c8da1939-d40f-4143-9877-ea136a93bfa9"
+  },
+  "qatar-national-bank": {
+    "slug": "qatar-national-bank",
+    "ticker": "QNBK.QA",
+    "companyName": "Qatar National Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:19:02.015Z",
+    "runId": "1a8fcdcc-66c2-498d-8167-54dec5531005"
+  },
+  "aia-group": {
+    "slug": "aia-group",
+    "ticker": "1299.HK",
+    "companyName": "AIA Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:19:16.757Z",
+    "runId": "61a99ab7-dd8c-4df3-914d-95d1b6df9fcc"
+  },
+  "cathay-pacific-airways": {
+    "slug": "cathay-pacific-airways",
+    "ticker": "0293.HK",
+    "companyName": "Cathay Pacific Airways",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:19:45.032Z",
+    "runId": "a6bfb82f-fae2-4566-89f3-09a35c0b5164"
+  },
+  "hon-hai-precision-industry": {
+    "slug": "hon-hai-precision-industry",
+    "ticker": "2317.TW",
+    "companyName": "Hon Hai Precision Industry",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:22:17.811Z",
+    "runId": "ee32b8df-4135-43c7-9910-07fb1b7126d0"
+  },
+  "pegatron": {
+    "slug": "pegatron",
+    "ticker": "4938.TW",
+    "companyName": "Pegatron",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:20:47.419Z",
+    "runId": "ff345f2b-c59a-4c41-b265-fdd8fd0f65ad"
+  },
+  "alibaba-health-information-technology": {
+    "slug": "alibaba-health-information-technology",
+    "ticker": "0241.HK",
+    "companyName": "Alibaba Health Information Technology",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:20:08.713Z",
+    "runId": "30ebac04-72b7-4002-b2f1-2cf96aae98c7"
+  },
+  "china-resources-power": {
+    "slug": "china-resources-power",
+    "ticker": "0836.HK",
+    "companyName": "China Resources Power",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:20:22.664Z",
+    "runId": "55dabd64-5526-4e2c-847d-8427d1d5a7c4"
+  },
+  "clp-holdings": {
+    "slug": "clp-holdings",
+    "ticker": "0002.HK",
+    "companyName": "CLP Holdings",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:20:54.779Z",
+    "runId": "8cfa9268-1701-4ff0-a08a-fc089c74ea4e"
+  },
+  "far-eastone-telecommunications": {
+    "slug": "far-eastone-telecommunications",
+    "ticker": "4904.TW",
+    "companyName": "Far EasTone Telecommunications",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:21:31.807Z",
+    "runId": "f373c745-9195-4bd0-bf08-ec5e170e03b9"
+  },
+  "cathay-financial-holding": {
+    "slug": "cathay-financial-holding",
+    "ticker": "2882.TW",
+    "companyName": "Cathay Financial Holding",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:22:14.005Z",
+    "runId": "1ab2ac9e-385c-4dee-87d3-119bb19dd970"
+  },
+  "sun-hung-kai-properties": {
+    "slug": "sun-hung-kai-properties",
+    "ticker": "0016.HK",
+    "companyName": "Sun Hung Kai Properties",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:22:38.083Z",
+    "runId": "a1affcfc-f74e-4625-b21f-6938a1a83e6e"
+  },
+  "tyson-foods": {
+    "slug": "tyson-foods",
+    "ticker": "TSN",
+    "companyName": "Tyson Foods",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:22:50.824Z",
+    "runId": "9d43ca02-d130-4ad0-9532-d073089bda13"
+  },
+  "kerry-group": {
+    "slug": "kerry-group",
+    "ticker": "KRZ.IR",
+    "companyName": "Kerry Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:23:15.692Z",
+    "runId": "769792b9-fcb5-4aff-8e44-88842cff50c8"
+  },
+  "amazoncom": {
+    "slug": "amazoncom",
+    "ticker": "AMZN",
+    "companyName": "Amazon.com",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:25:16.227Z",
+    "runId": "4c25e89a-38b7-4d4f-9922-028c26e188b4"
+  },
+  "mercadolibre": {
+    "slug": "mercadolibre",
+    "ticker": "MELI",
+    "companyName": "MercadoLibre",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:24:07.563Z",
+    "runId": "fcde04c1-7db0-4389-bf38-d520f5a70c49"
+  },
+  "sea-limited": {
+    "slug": "sea-limited",
+    "ticker": "SE",
+    "companyName": "Sea Limited",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:29:17.021Z",
+    "runId": "9ee99ec0-b6ac-41fa-b45a-0af65c27f326"
+  },
+  "coupang": {
+    "slug": "coupang",
+    "ticker": "CPNG",
+    "companyName": "Coupang",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:23:49.823Z",
+    "runId": "26d32760-a441-4478-8606-1460064ed5ec"
+  },
+  "allegroeu": {
+    "slug": "allegroeu",
+    "ticker": "ALE.PL",
+    "companyName": "Allegro.eu",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:25:10.175Z",
+    "runId": "d9df2381-ed10-498a-9734-58207581a470"
+  },
+  "zalando": {
+    "slug": "zalando",
+    "ticker": "ZAL.DE",
+    "companyName": "Zalando",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:24:40.767Z",
+    "runId": "2f1f55a0-c787-4b6e-887b-c27639bc9bc8"
+  },
+  "prada": {
+    "slug": "prada",
+    "ticker": "1913.HK",
+    "companyName": "Prada",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:25:21.049Z",
+    "runId": "23fa2f6b-411f-4bcb-a156-62dd88229c96"
+  },
+  "estee-lauder-companies": {
+    "slug": "estee-lauder-companies",
+    "ticker": "EL",
+    "companyName": "Estee Lauder Companies",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:26:16.816Z",
+    "runId": "a669053f-3551-4c38-bbc4-97ae1fedce6f"
+  },
+  "swatch-group": {
+    "slug": "swatch-group",
+    "ticker": "UHR.SW",
+    "companyName": "Swatch Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:26:12.565Z",
+    "runId": "61dc0b9c-6227-46ba-8463-7f663bc7521b"
+  },
+  "burberry-group": {
+    "slug": "burberry-group",
+    "ticker": "BRBY.L",
+    "companyName": "Burberry Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:25:12.838Z",
+    "runId": "a9b24a5f-19d1-4e04-8923-4db9cd1219d1"
+  },
+  "deutsche-post-dhl": {
+    "slug": "deutsche-post-dhl",
+    "ticker": "DPW.DE",
+    "companyName": "Deutsche Post DHL",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:27:23.987Z",
+    "runId": "79377ae4-b4e4-4053-8c1a-29584e2db931"
+  },
+  "kuehne-nagel-international": {
+    "slug": "kuehne-nagel-international",
+    "ticker": "KNIN.SW",
+    "companyName": "Kuehne + Nagel International",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:27:13.217Z",
+    "runId": "720933aa-1237-4573-abc4-19a915b2907c"
+  },
+  "singapore-airlines": {
+    "slug": "singapore-airlines",
+    "ticker": "C6L.SI",
+    "companyName": "Singapore Airlines",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:26:14.211Z",
+    "runId": "ac614e92-41ba-415a-8f05-e58188097c67"
+  },
+  "siemens-healthineers": {
+    "slug": "siemens-healthineers",
+    "ticker": "SHL.DE",
+    "companyName": "Siemens Healthineers",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:28:27.674Z",
+    "runId": "af0c8d21-28cd-449b-ac0e-73f4ae37a46e"
+  },
+  "basf": {
+    "slug": "basf",
+    "ticker": "BAS.DE",
+    "companyName": "Basf",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:29:07.002Z",
+    "runId": "8bd3bafe-d9c2-42f4-94dc-1ab54057fca4"
+  },
+  "bayer": {
+    "slug": "bayer",
+    "ticker": "BAYN.DE",
+    "companyName": "Bayer",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:27:55.625Z",
+    "runId": "1da5d220-ef63-4c1e-8c9f-72935aae393a"
+  },
+  "adidas": {
+    "slug": "adidas",
+    "ticker": "ADS.DE",
+    "companyName": "Adidas",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:28:17.625Z",
+    "runId": "fc1fc638-7e43-496e-bf42-5e9234883a86"
+  },
+  "porsche-ag": {
+    "slug": "porsche-ag",
+    "ticker": "P911.DE",
+    "companyName": "Porsche AG",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:29:20.998Z",
+    "runId": "f4198aaa-9519-4127-962f-fc1d422450f4"
+  },
+  "infineon-technologies": {
+    "slug": "infineon-technologies",
+    "ticker": "IFX.DE",
+    "companyName": "Infineon Technologies",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:28:51.469Z",
+    "runId": "b3a59ae9-ca43-4c2c-bb2a-caa8012898cc"
+  },
+  "henkel": {
+    "slug": "henkel",
+    "ticker": "HEN3.DE",
+    "companyName": "Henkel",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:29:13.594Z",
+    "runId": "c3309893-c946-4978-a5a3-5300ab70e4a3"
+  },
+  "fresenius-medical-care": {
+    "slug": "fresenius-medical-care",
+    "ticker": "FME.DE",
+    "companyName": "Fresenius Medical Care",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:30:19.252Z",
+    "runId": "16340a70-2d67-43e2-96b4-50fa9fa5ceaf"
+  },
+  "lufthansa": {
+    "slug": "lufthansa",
+    "ticker": "LHA.DE",
+    "companyName": "Lufthansa",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:29:44.679Z",
+    "runId": "a3bdc29e-1905-4f8f-bb1c-b42fc5b9a4f3"
+  },
+  "bank-of-montreal": {
+    "slug": "bank-of-montreal",
+    "ticker": "BMO",
+    "companyName": "Bank of Montreal",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:29:36.302Z",
+    "runId": "86916019-e1a6-4e61-8dd9-115fb55e9cfc"
+  },
+  "bank-of-nova-scotia": {
+    "slug": "bank-of-nova-scotia",
+    "ticker": "BNS",
+    "companyName": "Bank of Nova Scotia",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:30:59.905Z",
+    "runId": "67ee32c1-1c1e-4cd9-ace5-4a849bebfc93"
+  },
+  "canadian-imperial-bank-of-commerce": {
+    "slug": "canadian-imperial-bank-of-commerce",
+    "ticker": "CM",
+    "companyName": "Canadian Imperial Bank of Commerce",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:30:55.371Z",
+    "runId": "dd0f5608-f33f-4d9d-96fb-1341c2eb4c63"
+  },
+  "manulife-financial": {
+    "slug": "manulife-financial",
+    "ticker": "MFC",
+    "companyName": "Manulife Financial",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:30:33.422Z",
+    "runId": "37e7ece1-0b66-4c03-8684-5fc100c8d2b7"
+  },
+  "sun-life-financial": {
+    "slug": "sun-life-financial",
+    "ticker": "SLF",
+    "companyName": "Sun Life Financial",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:30:27.723Z",
+    "runId": "08853ab0-4f9e-4783-95c1-10506f03bffd"
+  },
+  "canadian-national-railway": {
+    "slug": "canadian-national-railway",
+    "ticker": "CNR.TO",
+    "companyName": "Canadian National Railway",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:31:01.592Z",
+    "runId": "6f7f8915-6deb-4faa-ba8b-9384559b3601"
+  },
+  "canadian-pacific-kansas-city": {
+    "slug": "canadian-pacific-kansas-city",
+    "ticker": "CP.TO",
+    "companyName": "Canadian Pacific Kansas City",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:30:35.043Z",
+    "runId": "081152d9-d28b-44ac-bb52-e68a823b7ff0"
+  },
+  "enbridge": {
+    "slug": "enbridge",
+    "ticker": "ENB",
+    "companyName": "Enbridge",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:33:05.029Z",
+    "runId": "a9e83184-c95c-460d-804c-b0807dbf0620"
+  },
+  "suncor-energy": {
+    "slug": "suncor-energy",
+    "ticker": "SU",
+    "companyName": "Suncor Energy",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:32:18.768Z",
+    "runId": "1434d653-867d-4fd9-9476-17a98a23de14"
+  },
+  "nutrien": {
+    "slug": "nutrien",
+    "ticker": "NTR",
+    "companyName": "Nutrien",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:32:30.354Z",
+    "runId": "7b0f0520-1f14-467a-b565-7fb8e5dfee36"
+  },
+  "brookfield-corporation": {
+    "slug": "brookfield-corporation",
+    "ticker": "BN",
+    "companyName": "Brookfield Corporation",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:33:20.101Z",
+    "runId": "f4ae5c2f-13d3-4825-b3a1-cf9e057cbddd"
+  },
+  "thomson-reuters": {
+    "slug": "thomson-reuters",
+    "ticker": "TRI",
+    "companyName": "Thomson Reuters",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:33:18.430Z",
+    "runId": "0169c158-e352-4cb2-b4fe-b84a0f39fc98"
+  },
+  "state-bank-of-india": {
+    "slug": "state-bank-of-india",
+    "ticker": "SBIN.NS",
+    "companyName": "State Bank of India",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:34:39.734Z",
+    "runId": "82e2301f-98cf-421e-a685-b22430f5ef5d"
+  },
+  "hindustan-unilever": {
+    "slug": "hindustan-unilever",
+    "ticker": "HINDUNILVR.NS",
+    "companyName": "Hindustan Unilever",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:33:40.360Z",
+    "runId": "a540e01d-63aa-49e9-bf44-61d2f6d4f612"
+  },
+  "tata-motors": {
+    "slug": "tata-motors",
+    "ticker": "TATAMOTORS.NS",
+    "companyName": "Tata Motors",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:36:28.121Z",
+    "runId": "5738a223-c021-40cc-aa7b-9050dbbaad72"
+  },
+  "adani-green-energy": {
+    "slug": "adani-green-energy",
+    "ticker": "ADANIGREEN.NS",
+    "companyName": "Adani Green Energy",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:32:59.128Z",
+    "runId": "faae7827-ce9f-44c4-8862-d52e9b25c323"
+  },
+  "ryanair-holdings": {
+    "slug": "ryanair-holdings",
+    "ticker": "RYA.IR",
+    "companyName": "Ryanair Holdings",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:33:35.163Z",
+    "runId": "2354f509-cf08-472f-98a2-de7cbb8ca97b"
+  },
+  "crh-plc": {
+    "slug": "crh-plc",
+    "ticker": "CRH",
+    "companyName": "CRH plc",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:34:51.121Z",
+    "runId": "57e4e527-a2ce-49ea-99e9-365d71851241"
+  },
+  "flutter-entertainment": {
+    "slug": "flutter-entertainment",
+    "ticker": "FLTR.L",
+    "companyName": "Flutter Entertainment",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T14:35:22.749Z",
+    "runId": "99b298cc-e545-4d95-be8d-869019201c57"
+  },
+  "orlen": {
+    "slug": "orlen",
+    "ticker": "PKN.PL",
+    "companyName": "Orlen",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T23:56:15.848Z",
+    "runId": "15db131e-9dfa-4af4-9f60-11daa22b8dc3"
+  },
+  "pko-bank-polski": {
+    "slug": "pko-bank-polski",
+    "ticker": "PKO.PL",
+    "companyName": "PKO Bank Polski",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T23:55:32.056Z",
+    "runId": "9b2ea7b9-4e8a-425a-847d-d6d1f211d40c"
+  },
+  "pzu": {
+    "slug": "pzu",
+    "ticker": "PZU.PL",
+    "companyName": "PZU",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T23:55:24.656Z",
+    "runId": "b100095b-7b3d-4aa9-9107-e4d8133717a9"
+  },
+  "kghm-polska-miedz": {
+    "slug": "kghm-polska-miedz",
+    "ticker": "KGH.PL",
+    "companyName": "KGHM Polska Miedz",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T23:56:09.033Z",
+    "runId": "5c54dc17-f041-48fd-8913-6b2f61221c95"
+  },
+  "naspers": {
+    "slug": "naspers",
+    "ticker": "NPN.JO",
+    "companyName": "Naspers",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T23:55:43.645Z",
+    "runId": "18f7cfe1-a774-41b1-b691-0a25c5e26c4f"
+  },
+  "sasol": {
+    "slug": "sasol",
+    "ticker": "SOL.JO",
+    "companyName": "Sasol",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T23:55:49.528Z",
+    "runId": "fc8d5624-79ac-4dea-aae0-ec22ab854fbf"
+  },
+  "anglogold-ashanti": {
+    "slug": "anglogold-ashanti",
+    "ticker": "ANG.JO",
+    "companyName": "AngloGold Ashanti",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T23:55:19.031Z",
+    "runId": "9e4f19d8-d42c-4fd5-a7e4-4eb994733b56"
+  },
+  "impala-platinum": {
+    "slug": "impala-platinum",
+    "ticker": "IMP.JO",
+    "companyName": "Impala Platinum",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T23:55:12.825Z",
+    "runId": "0f04b012-115f-49b4-87c5-3131997dbe3b"
+  },
+  "capitec-bank": {
+    "slug": "capitec-bank",
+    "ticker": "CPI.JO",
+    "companyName": "Capitec Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T23:55:07.067Z",
+    "runId": "00a96d5c-4a8f-4e31-b761-4218d1fbe5c3"
+  },
+  "investor-ab": {
+    "slug": "investor-ab",
+    "ticker": "INVE-B.ST",
+    "companyName": "Investor AB",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T23:57:01.840Z",
+    "runId": "4eccfe51-a939-4920-9c0b-c51131cb0511"
+  },
+  "essity": {
+    "slug": "essity",
+    "ticker": "ESSITY-B.ST",
+    "companyName": "Essity",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T23:57:46.252Z",
+    "runId": "312fe7e0-8b8c-4b1a-931a-1eab8fdd678c"
+  },
+  "assa-abloy": {
+    "slug": "assa-abloy",
+    "ticker": "ASSA-B.ST",
+    "companyName": "Assa Abloy",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T23:56:58.890Z",
+    "runId": "c6f50aa1-b985-4be1-b262-f7896528b118"
+  },
+  "telia-company": {
+    "slug": "telia-company",
+    "ticker": "TELIA.ST",
+    "companyName": "Telia Company",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-02T23:55:46.753Z",
+    "runId": "eca4c2ff-8ff1-43a1-aa81-32f2f25c180b"
+  },
+  "hp-inc": {
+    "slug": "hp-inc",
+    "ticker": "HPQ",
+    "companyName": "HP Inc.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:29:15.826Z",
+    "runId": "6096257a-5aa8-452f-a99d-a8fa387f72e7"
+  },
+  "ge-healthcare": {
+    "slug": "ge-healthcare",
+    "ticker": "GEHC",
+    "companyName": "GE HealthCare",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:30:14.131Z",
+    "runId": "d531a522-7947-48d6-82a0-5ac4191f13a3"
+  },
+  "illumina": {
+    "slug": "illumina",
+    "ticker": "ILMN",
+    "companyName": "Illumina",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:30:45.000Z",
+    "runId": "14a61c0a-f36b-425f-9f8e-d11970e700c3"
+  },
+  "qatar-islamic-bank": {
+    "slug": "qatar-islamic-bank",
+    "ticker": "QIBK.QA",
+    "companyName": "Qatar Islamic Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:29:04.010Z",
+    "runId": "13519b19-0cde-4039-a958-15036a06dce8"
+  },
+  "qatar-electricity-water": {
+    "slug": "qatar-electricity-water",
+    "ticker": "QEWC.QA",
+    "companyName": "Qatar Electricity & Water",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:29:47.857Z",
+    "runId": "4267413e-c3f3-4fae-887f-2556854c13c5"
+  },
+  "qatar-gas-transport": {
+    "slug": "qatar-gas-transport",
+    "ticker": "QGTS.QA",
+    "companyName": "Qatar Gas Transport",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:29:13.023Z",
+    "runId": "142431dd-69a6-420c-800b-672bb057bcdf"
+  },
+  "e": {
+    "slug": "e",
+    "ticker": "EAND.AE",
+    "companyName": "e&",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:30:13.519Z",
+    "runId": "b05e2f31-d56a-46a6-a6ac-496ffb851bda"
+  },
+  "ad-ports-group": {
+    "slug": "ad-ports-group",
+    "ticker": "ADPORTS.AE",
+    "companyName": "AD Ports Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:30:41.978Z",
+    "runId": "35a27a72-b217-4004-8406-3040b01c144e"
+  },
+  "emirates-nbd": {
+    "slug": "emirates-nbd",
+    "ticker": "EMIRATESNBD.DU",
+    "companyName": "Emirates NBD",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:30:32.960Z",
+    "runId": "260466cf-8461-4b7a-b73f-9142570a6df9"
+  },
+  "emaar-properties": {
+    "slug": "emaar-properties",
+    "ticker": "EMAAR.DU",
+    "companyName": "Emaar Properties",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:29:38.516Z",
+    "runId": "962dae6a-bfef-428b-ab92-fdbcdcc004e6"
+  },
+  "du-emirates-integrated-telecommunications": {
+    "slug": "du-emirates-integrated-telecommunications",
+    "ticker": "DU.DU",
+    "companyName": "du (Emirates Integrated Telecommunications)",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:29:09.308Z",
+    "runId": "081e062c-6a54-4544-9e14-2b5f3fd45131"
+  },
+  "grupo-financiero-galicia": {
+    "slug": "grupo-financiero-galicia",
+    "ticker": "GGAL",
+    "companyName": "Grupo Financiero Galicia",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:30:03.008Z",
+    "runId": "2de12844-4b03-4609-a63b-55adf323f95a"
+  },
+  "ypf": {
+    "slug": "ypf",
+    "ticker": "YPF",
+    "companyName": "YPF",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:29:49.899Z",
+    "runId": "7a630a28-7811-4ebd-acff-852edebd0347"
+  },
+  "banco-bbva-argentina": {
+    "slug": "banco-bbva-argentina",
+    "ticker": "BBAR",
+    "companyName": "Banco BBVA Argentina",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:29:21.802Z",
+    "runId": "4bd12446-a29d-45be-a74e-8065e47b2f59"
+  },
+  "dbs-group": {
+    "slug": "dbs-group",
+    "ticker": "D05.SI",
+    "companyName": "DBS Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:29:32.324Z",
+    "runId": "ef0d642e-3cc7-477b-905d-70d247626d03"
+  },
+  "oversea-chinese-banking": {
+    "slug": "oversea-chinese-banking",
+    "ticker": "O39.SI",
+    "companyName": "Oversea-Chinese Banking",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:30:37.068Z",
+    "runId": "b2b1353c-59ae-4996-bd5e-5e14c78985ce"
+  },
+  "united-overseas-bank": {
+    "slug": "united-overseas-bank",
+    "ticker": "U11.SI",
+    "companyName": "United Overseas Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:34:34.421Z",
+    "runId": "617cb5ad-6791-4635-baac-5adf0b383d79"
+  },
+  "singtel": {
+    "slug": "singtel",
+    "ticker": "Z74.SI",
+    "companyName": "Singtel",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:33:28.767Z",
+    "runId": "8628fa0d-3d12-46f9-ae68-1379c1e2b569"
+  },
+  "sage-group": {
+    "slug": "sage-group",
+    "ticker": "SGE.L",
+    "companyName": "Sage Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:32:46.870Z",
+    "runId": "553bf4a4-f928-40a4-9a6a-0ccb088830fa"
+  },
+  "auto-trader-group": {
+    "slug": "auto-trader-group",
+    "ticker": "AUTO.L",
+    "companyName": "Auto Trader Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:32:59.795Z",
+    "runId": "7e43a3dd-e6a5-4859-9a37-fdf9a8fcb6bf"
+  },
+  "itv-plc": {
+    "slug": "itv-plc",
+    "ticker": "ITV.L",
+    "companyName": "ITV plc",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:34:45.772Z",
+    "runId": "f4357e21-250c-4f02-a77a-c289e4c0ba40"
+  },
+  "entain": {
+    "slug": "entain",
+    "ticker": "ENT.L",
+    "companyName": "Entain",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:34:15.246Z",
+    "runId": "4a5e8f3c-8a29-460a-bf86-723ddf48d5d1"
+  },
+  "fluor-corporation": {
+    "slug": "fluor-corporation",
+    "ticker": "FLR",
+    "companyName": "Fluor Corporation",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:52:42.341Z",
+    "runId": "21a717af-5af9-4b0f-bb05-feaf74278361"
+  },
+  "jacobs-solutions": {
+    "slug": "jacobs-solutions",
+    "ticker": "J",
+    "companyName": "Jacobs Solutions",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:52:56.537Z",
+    "runId": "8dd5d126-cc43-479e-a0f6-be02c357782e"
+  },
+  "vinci": {
+    "slug": "vinci",
+    "ticker": "DG.PA",
+    "companyName": "Vinci",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:53:39.983Z",
+    "runId": "555ae531-e4a6-4e01-b092-60f358b8e659"
+  },
+  "cnh-industrial": {
+    "slug": "cnh-industrial",
+    "ticker": "CNHI",
+    "companyName": "CNH Industrial",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:53:18.823Z",
+    "runId": "a57e9d43-6278-4161-9f84-824b12412366"
+  },
+  "agco-corporation": {
+    "slug": "agco-corporation",
+    "ticker": "AGCO",
+    "companyName": "AGCO Corporation",
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-03T01:30:56.194Z",
+    "runId": "072b4c7e-5cc0-4477-b5ae-cf8c2eca16b6"
+  },
+  "kubota": {
+    "slug": "kubota",
+    "ticker": "6326.T",
+    "companyName": "Kubota",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T00:52:26.684Z",
+    "runId": "29eff802-3aba-46ba-90d0-0f61d48b4996"
+  },
+  "america-movil": {
+    "slug": "america-movil",
+    "ticker": "AMXL.MX",
+    "companyName": "America Movil",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:30:11.190Z",
+    "runId": "2842ea4d-35e8-4580-be39-e0cb918a755f"
+  },
+  "grupo-bimbo": {
+    "slug": "grupo-bimbo",
+    "ticker": "BIMBOA.MX",
+    "companyName": "Grupo Bimbo",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:31:36.019Z",
+    "runId": "26a06bfe-b012-4efe-be15-4c9ef1cc269c"
+  },
+  "fomento-economico-mexicano": {
+    "slug": "fomento-economico-mexicano",
+    "ticker": "FMX",
+    "companyName": "Fomento Economico Mexicano",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:31:06.712Z",
+    "runId": "3e5f5e00-396a-4632-85f7-cb1d26edd2d0"
+  },
+  "grupo-aeroportuario-del-sureste": {
+    "slug": "grupo-aeroportuario-del-sureste",
+    "ticker": "ASR",
+    "companyName": "Grupo Aeroportuario del Sureste",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:28:58.864Z",
+    "runId": "b5a71a90-f33a-4d79-84c9-ac4884caa21f"
+  },
+  "dnb-bank": {
+    "slug": "dnb-bank",
+    "ticker": "DNB.OL",
+    "companyName": "DNB Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:31:02.587Z",
+    "runId": "e4e4f86a-a11b-48e7-b0a9-8c7b1650652f"
+  },
+  "yara-international": {
+    "slug": "yara-international",
+    "ticker": "YAR.OL",
+    "companyName": "Yara International",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:30:28.208Z",
+    "runId": "e8df5405-866f-485e-b74e-88e37a3a0074"
+  },
+  "nokia": {
+    "slug": "nokia",
+    "ticker": "NOKIA.HE",
+    "companyName": "Nokia",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:29:12.918Z",
+    "runId": "9905766a-bc28-45bc-8101-60de106407de"
+  },
+  "kone": {
+    "slug": "kone",
+    "ticker": "KNEBV.HE",
+    "companyName": "Kone",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:31:31.627Z",
+    "runId": "dfee42c2-bb04-4f10-8e86-35d4bc8e674e"
+  },
+  "fortum": {
+    "slug": "fortum",
+    "ticker": "FORTUM.HE",
+    "companyName": "Fortum",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:30:57.708Z",
+    "runId": "d158ad2a-231b-47bd-8849-70cc169d52ab"
+  },
+  "anheuser-busch-inbev": {
+    "slug": "anheuser-busch-inbev",
+    "ticker": "ABI.BR",
+    "companyName": "Anheuser-Busch InBev",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:32:12.071Z",
+    "runId": "329d0462-9c4f-4280-ba1e-f8ce2cec1508"
+  },
+  "kbc-group": {
+    "slug": "kbc-group",
+    "ticker": "KBC.BR",
+    "companyName": "KBC Group",
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-03T01:58:23.280Z",
+    "runId": "ebe75e6e-122d-40a6-936b-62baa0348ef5"
+  },
+  "solvay": {
+    "slug": "solvay",
+    "ticker": "SOLB.BR",
+    "companyName": "Solvay",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:30:41.285Z",
+    "runId": "2194f8f2-d313-414d-94c8-01a556b11206"
+  },
+  "omv": {
+    "slug": "omv",
+    "ticker": "OMV.VI",
+    "companyName": "OMV",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:29:40.950Z",
+    "runId": "c49507c2-95bc-45a4-80ad-3cebd42b8949"
+  },
+  "erste-group-bank": {
+    "slug": "erste-group-bank",
+    "ticker": "EBS.VI",
+    "companyName": "Erste Group Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:30:38.577Z",
+    "runId": "33ea4d78-bb57-4b6c-adfb-7ce4f0fa506d"
+  },
+  "voestalpine": {
+    "slug": "voestalpine",
+    "ticker": "VOE.VI",
+    "companyName": "Voestalpine",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:34:47.967Z",
+    "runId": "2360ea7d-c7ce-4f48-bdec-067db2bc3783"
+  },
+  "energias-de-portugal": {
+    "slug": "energias-de-portugal",
+    "ticker": "EDP.LS",
+    "companyName": "Energias de Portugal",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:29:10.614Z",
+    "runId": "0776c667-fa63-4210-a1b4-d0afa0694b95"
+  },
+  "galp-energia": {
+    "slug": "galp-energia",
+    "ticker": "GALP.LS",
+    "companyName": "Galp Energia",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:31:08.413Z",
+    "runId": "a93d28b4-d662-4eec-982d-aaa940fe7ac7"
+  },
+  "jeronimo-martins": {
+    "slug": "jeronimo-martins",
+    "ticker": "JMT.LS",
+    "companyName": "Jeronimo Martins",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:30:49.941Z",
+    "runId": "2a487697-e846-475f-9833-7361b37e447e"
+  },
+  "koc-holding": {
+    "slug": "koc-holding",
+    "ticker": "KCHOL.IS",
+    "companyName": "Koc Holding",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:32:30.078Z",
+    "runId": "a8480cae-e962-420b-ae0b-feb7b95c5f32"
+  },
+  "turkcell": {
+    "slug": "turkcell",
+    "ticker": "TCELL.IS",
+    "companyName": "Turkcell",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:32:36.337Z",
+    "runId": "7a64fa82-17e9-4046-b853-6341f53b009f"
+  },
+  "turkish-airlines": {
+    "slug": "turkish-airlines",
+    "ticker": "THYAO.IS",
+    "companyName": "Turkish Airlines",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:34:17.186Z",
+    "runId": "4a17e953-7706-407c-9793-4551085a6ef5"
+  },
+  "akbank": {
+    "slug": "akbank",
+    "ticker": "AKBNK.IS",
+    "companyName": "Akbank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:33:52.158Z",
+    "runId": "f32aedc0-b3ca-4a27-8e1a-8f08e838fcec"
+  },
+  "teva-pharmaceutical-industries": {
+    "slug": "teva-pharmaceutical-industries",
+    "ticker": "TEVA",
+    "companyName": "Teva Pharmaceutical Industries",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:34:51.770Z",
+    "runId": "1cab787b-f7aa-4197-bf4c-d634d44ae847"
+  },
+  "check-point-software-technologies": {
+    "slug": "check-point-software-technologies",
+    "ticker": "CHKP",
+    "companyName": "Check Point Software Technologies",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:33:35.712Z",
+    "runId": "813d1047-b254-43c1-8861-d163ad8cba8c"
+  },
+  "nice-ltd": {
+    "slug": "nice-ltd",
+    "ticker": "NICE",
+    "companyName": "NICE Ltd.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:34:57.141Z",
+    "runId": "b8635555-acd7-40e4-b159-5f841150cdfe"
+  },
+  "bank-leumi": {
+    "slug": "bank-leumi",
+    "ticker": "LUMI.TA",
+    "companyName": "Bank Leumi",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:34:42.760Z",
+    "runId": "cc01c540-114b-4798-9276-d069c8de98ff"
+  },
+  "petronas-chemicals": {
+    "slug": "petronas-chemicals",
+    "ticker": "PCHEM.KL",
+    "companyName": "Petronas Chemicals",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:35:55.280Z",
+    "runId": "17e4e4f6-66a9-49b1-81b9-cd573e0f54f7"
+  },
+  "tenaga-nasional": {
+    "slug": "tenaga-nasional",
+    "ticker": "TENAGA.KL",
+    "companyName": "Tenaga Nasional",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:36:12.639Z",
+    "runId": "746757f1-4f51-49dc-a242-b4ac4b0e5e12"
+  },
+  "maybank": {
+    "slug": "maybank",
+    "ticker": "MAYBANK.KL",
+    "companyName": "Maybank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:35:21.369Z",
+    "runId": "ee2b94c0-2db2-4e2b-9f95-3477277766e1"
+  },
+  "axiata-group": {
+    "slug": "axiata-group",
+    "ticker": "AXIATA.KL",
+    "companyName": "Axiata Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:35:38.768Z",
+    "runId": "07355298-6ab6-4886-910c-306f9be0f544"
+  },
+  "ptt-public-company": {
+    "slug": "ptt-public-company",
+    "ticker": "PTT.BK",
+    "companyName": "PTT Public Company",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:35:59.825Z",
+    "runId": "fe580745-f55f-4a4b-9de9-767b449d29be"
+  },
+  "cp-all": {
+    "slug": "cp-all",
+    "ticker": "CPALL.BK",
+    "companyName": "CP All",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:35:30.113Z",
+    "runId": "0a5194f6-d4e5-4f5f-a565-8c46fd563642"
+  },
+  "siam-commercial-bank": {
+    "slug": "siam-commercial-bank",
+    "ticker": "SCB.BK",
+    "companyName": "Siam Commercial Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:36:12.296Z",
+    "runId": "ae0b7174-eb0f-4030-a154-a2a66803d112"
+  },
+  "advanced-info-service": {
+    "slug": "advanced-info-service",
+    "ticker": "ADVANC.BK",
+    "companyName": "Advanced Info Service",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:35:51.980Z",
+    "runId": "92c6adb0-0efa-4dbf-ab01-e1d8b03c90d1"
+  },
+  "pldt": {
+    "slug": "pldt",
+    "ticker": "TEL.PS",
+    "companyName": "Pldt",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:36:02.669Z",
+    "runId": "29c63f4e-527a-428e-bc0e-3405d14a5d74"
+  },
+  "sm-investments": {
+    "slug": "sm-investments",
+    "ticker": "SM.PS",
+    "companyName": "SM Investments",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:36:43.365Z",
+    "runId": "4df0984d-9254-472d-8db3-f8163bf838e9"
+  },
+  "ayala-corporation": {
+    "slug": "ayala-corporation",
+    "ticker": "AC.PS",
+    "companyName": "Ayala Corporation",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:37:35.530Z",
+    "runId": "5b456feb-66cb-4be3-9472-5f56c0048a12"
+  },
+  "bdo-unibank": {
+    "slug": "bdo-unibank",
+    "ticker": "BDO.PS",
+    "companyName": "BDO Unibank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:37:55.401Z",
+    "runId": "875acb5c-0f9b-4b00-b9ac-b550f255b1c9"
+  },
+  "bank-central-asia": {
+    "slug": "bank-central-asia",
+    "ticker": "BBCA.JK",
+    "companyName": "Bank Central Asia",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:36:51.200Z",
+    "runId": "67cbb736-1e49-4036-86d4-25c8659abaee"
+  },
+  "telkom-indonesia": {
+    "slug": "telkom-indonesia",
+    "ticker": "TLKM.JK",
+    "companyName": "Telkom Indonesia",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:38:17.600Z",
+    "runId": "f8222b2e-855e-4777-90b8-3c96d1df2177"
+  },
+  "astra-international": {
+    "slug": "astra-international",
+    "ticker": "ASII.JK",
+    "companyName": "Astra International",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:41:19.768Z",
+    "runId": "3c6f0e23-3257-48d1-b207-8334c5e86e45"
+  },
+  "goto-group": {
+    "slug": "goto-group",
+    "ticker": "GOTO.JK",
+    "companyName": "GoTo Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:37:54.367Z",
+    "runId": "2539f728-07fe-4b24-b2c2-33cbe4c3b16a"
+  },
+  "fonterra-co-operative-group": {
+    "slug": "fonterra-co-operative-group",
+    "ticker": "FSF.NZ",
+    "companyName": "Fonterra Co-operative Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:40:09.539Z",
+    "runId": "0b227e6a-f558-4eb2-a24c-3c587dd9c7ad"
+  },
+  "spark-new-zealand": {
+    "slug": "spark-new-zealand",
+    "ticker": "SPK.NZ",
+    "companyName": "Spark New Zealand",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:39:18.301Z",
+    "runId": "4e804800-23a1-402a-bf69-3d8008f3ce58"
+  },
+  "fisher-paykel-healthcare": {
+    "slug": "fisher-paykel-healthcare",
+    "ticker": "FPH.NZ",
+    "companyName": "Fisher & Paykel Healthcare",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:40:26.738Z",
+    "runId": "63031709-1981-4737-b1f9-1ced5ccdec10"
+  },
+  "air-new-zealand": {
+    "slug": "air-new-zealand",
+    "ticker": "AIR.NZ",
+    "companyName": "Air New Zealand",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:39:57.384Z",
+    "runId": "9488f0fc-812c-4f70-b32b-7166ffc339c1"
+  },
+  "enel-chile": {
+    "slug": "enel-chile",
+    "ticker": "ENIC",
+    "companyName": "Enel Chile",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:39:57.471Z",
+    "runId": "b9eb8fcd-da71-42f0-a22e-5d04efa6e6aa"
+  },
+  "sqm": {
+    "slug": "sqm",
+    "ticker": "SQM",
+    "companyName": "SQM",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:40:12.099Z",
+    "runId": "befb5771-63bd-444f-bfd9-357a522b22ac"
+  },
+  "banco-de-chile": {
+    "slug": "banco-de-chile",
+    "ticker": "BCH",
+    "companyName": "Banco de Chile",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:41:49.168Z",
+    "runId": "c4e9a2b5-f410-4630-a3f0-d3077ca9eb2c"
+  },
+  "cencosud": {
+    "slug": "cencosud",
+    "ticker": "CNCO",
+    "companyName": "Cencosud",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:41:43.744Z",
+    "runId": "60e61e38-3579-4644-9692-ec1e11bf5e64"
+  },
+  "aib-group": {
+    "slug": "aib-group",
+    "ticker": "AIBG.IR",
+    "companyName": "AIB Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:59:38.161Z",
+    "runId": "89783deb-31c1-4c2f-b758-4fdebacfc61c"
+  },
+  "bank-of-ireland": {
+    "slug": "bank-of-ireland",
+    "ticker": "BIRG.IR",
+    "companyName": "Bank of Ireland",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:58:36.310Z",
+    "runId": "59e753af-6fa0-4545-a95d-089e1bd3db47"
+  },
+  "smurfit-kappa": {
+    "slug": "smurfit-kappa",
+    "ticker": "SKG.L",
+    "companyName": "Smurfit Kappa",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:59:28.555Z",
+    "runId": "5df09b26-5ebe-4635-9d1c-b8865048c73e"
+  },
+  "kingspan-group": {
+    "slug": "kingspan-group",
+    "ticker": "KSP.IR",
+    "companyName": "Kingspan Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:57:26.039Z",
+    "runId": "9e9a094d-b92e-4ce6-bab7-3713cc530851"
+  },
+  "glanbia": {
+    "slug": "glanbia",
+    "ticker": "GL9.IR",
+    "companyName": "Glanbia",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:57:29.569Z",
+    "runId": "d2f29a16-9b1a-4188-8eb8-12d1982b1b3b"
+  },
+  "dcc-plc": {
+    "slug": "dcc-plc",
+    "ticker": "DCC.L",
+    "companyName": "DCC plc",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:57:53.337Z",
+    "runId": "dc5eeb19-0b14-4fc8-8fc1-eebf0b20d5cd"
+  },
+  "elbit-systems": {
+    "slug": "elbit-systems",
+    "ticker": "ESLT",
+    "companyName": "Elbit Systems",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:59:45.976Z",
+    "runId": "86d97217-847b-4b00-be1e-31f775e22c74"
+  },
+  "icl-group": {
+    "slug": "icl-group",
+    "ticker": "ICL",
+    "companyName": "ICL Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:57:36.178Z",
+    "runId": "a3633ff1-0a4b-411b-8913-3021ad131c1f"
+  },
+  "mizrahi-tefahot-bank": {
+    "slug": "mizrahi-tefahot-bank",
+    "ticker": "MZTF.TA",
+    "companyName": "Mizrahi Tefahot Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:55:59.481Z",
+    "runId": "05f30d31-95bb-47a9-bae8-75716bc7eccd"
+  },
+  "amdocs": {
+    "slug": "amdocs",
+    "ticker": "DOX",
+    "companyName": "Amdocs",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:56:55.701Z",
+    "runId": "d7b8bf58-a904-4004-ae77-d25fe21b000e"
+  },
+  "neste": {
+    "slug": "neste",
+    "ticker": "NESTE.HE",
+    "companyName": "Neste",
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-03T02:52:23.661Z",
+    "runId": "64c4f792-59a6-4a07-8f94-5cf98672d7fc"
+  },
+  "upm-kymmene": {
+    "slug": "upm-kymmene",
+    "ticker": "UPM.HE",
+    "companyName": "UPM-Kymmene",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:57:43.961Z",
+    "runId": "9d0d96cb-f0dd-4473-8700-60347915b73f"
+  },
+  "stora-enso": {
+    "slug": "stora-enso",
+    "ticker": "STERV.HE",
+    "companyName": "Stora Enso",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:59:37.827Z",
+    "runId": "8050f1fe-8d96-4f96-89d1-c947dabce298"
+  },
+  "sampo": {
+    "slug": "sampo",
+    "ticker": "SAMPO.HE",
+    "companyName": "Sampo",
+    "status": "completed",
+    "attempts": 3,
+    "updatedAt": "2025-11-04T11:04:22.671Z",
+    "runId": "fccad50b-bfff-4791-92c1-674e3959d3d2"
+  },
+  "elisa": {
+    "slug": "elisa",
+    "ticker": "ELISA.HE",
+    "companyName": "Elisa",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:56:52.999Z",
+    "runId": "81b29162-4ba9-490a-b874-3560939eb2ad"
+  },
+  "kesko": {
+    "slug": "kesko",
+    "ticker": "KESKOB.HE",
+    "companyName": "Kesko",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:58:10.939Z",
+    "runId": "034de91c-f709-43ef-bebd-71241b2bfd35"
+  },
+  "metso": {
+    "slug": "metso",
+    "ticker": "METSO.HE",
+    "companyName": "Metso",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:58:53.050Z",
+    "runId": "7b6e72ea-10df-4777-b744-f4d1d079c1a3"
+  },
+  "valmet": {
+    "slug": "valmet",
+    "ticker": "VALMT.HE",
+    "companyName": "Valmet",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:57:41.254Z",
+    "runId": "3f1f8657-5ba0-4ace-9761-7476172965ac"
+  },
+  "keppel-corporation": {
+    "slug": "keppel-corporation",
+    "ticker": "BN4.SI",
+    "companyName": "Keppel Corporation",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:58:08.164Z",
+    "runId": "fd4ad468-cdf7-4535-a204-13b87eaed9a4"
+  },
+  "capitaland-investment": {
+    "slug": "capitaland-investment",
+    "ticker": "9CI.SI",
+    "companyName": "CapitaLand Investment",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:59:13.977Z",
+    "runId": "3cd0043e-f38d-41db-896b-057e4a7ef3b2"
+  },
+  "wilmar-international": {
+    "slug": "wilmar-international",
+    "ticker": "F34.SI",
+    "companyName": "Wilmar International",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:00:13.351Z",
+    "runId": "b1452e36-77b3-4318-a67b-82b6c703d5bd"
+  },
+  "st-engineering": {
+    "slug": "st-engineering",
+    "ticker": "S63.SI",
+    "companyName": "ST Engineering",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:02:31.179Z",
+    "runId": "2f2f51f7-d7fc-4cbe-8445-d1e04057237a"
+  },
+  "comfortdelgro": {
+    "slug": "comfortdelgro",
+    "ticker": "C52.SI",
+    "companyName": "ComfortDelGro",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:01:56.163Z",
+    "runId": "fb215eb5-ab5f-4350-9f74-bac5a9780c90"
+  },
+  "mapletree-logistics-trust": {
+    "slug": "mapletree-logistics-trust",
+    "ticker": "M44U.SI",
+    "companyName": "Mapletree Logistics Trust",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T01:59:58.109Z",
+    "runId": "3c290200-0d2b-40b9-ab7c-67717f71ca90"
+  },
+  "sembcorp-industries": {
+    "slug": "sembcorp-industries",
+    "ticker": "U96.SI",
+    "companyName": "Sembcorp Industries",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:01:47.635Z",
+    "runId": "99554976-4710-48fb-95e3-08280d3f6174"
+  },
+  "sats": {
+    "slug": "sats",
+    "ticker": "S58.SI",
+    "companyName": "Sats",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:02:12.164Z",
+    "runId": "3975fbc8-c733-41e8-b624-fe79781df1ff"
+  },
+  "abu-dhabi-commercial-bank": {
+    "slug": "abu-dhabi-commercial-bank",
+    "ticker": "ADCB.AE",
+    "companyName": "Abu Dhabi Commercial Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:04:21.470Z",
+    "runId": "53681b7f-798d-49f2-a705-8e5f22a135cd"
+  },
+  "dubai-islamic-bank": {
+    "slug": "dubai-islamic-bank",
+    "ticker": "DIB.DU",
+    "companyName": "Dubai Islamic Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:02:06.299Z",
+    "runId": "a1834318-da49-4798-9a37-e53719da690c"
+  },
+  "aldar-properties": {
+    "slug": "aldar-properties",
+    "ticker": "ALDAR.AE",
+    "companyName": "Aldar Properties",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:04:40.703Z",
+    "runId": "9d8f7816-37d8-41fa-b86a-3a1e5688bc09"
+  },
+  "abu-dhabi-national-energy-company": {
+    "slug": "abu-dhabi-national-energy-company",
+    "ticker": "TAQA.AE",
+    "companyName": "Abu Dhabi National Energy Company",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:02:19.357Z",
+    "runId": "098ddcde-4964-4dbe-9e2c-a5783f6785fb"
+  },
+  "dubai-electricity-water-authority": {
+    "slug": "dubai-electricity-water-authority",
+    "ticker": "DEWA.DU",
+    "companyName": "Dubai Electricity & Water Authority",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:03:58.711Z",
+    "runId": "25132a85-49cf-4652-b68a-5b990f5f0418"
+  },
+  "ooredoo": {
+    "slug": "ooredoo",
+    "ticker": "ORDS.QA",
+    "companyName": "Ooredoo",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:02:56.303Z",
+    "runId": "87f2072d-638d-4608-a1f8-95d12c77ddd1"
+  },
+  "industries-qatar": {
+    "slug": "industries-qatar",
+    "ticker": "IQCD.QA",
+    "companyName": "Industries Qatar",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:03:12.775Z",
+    "runId": "080a0640-5a4f-4871-8095-1fd98975267b"
+  },
+  "masraf-al-rayan": {
+    "slug": "masraf-al-rayan",
+    "ticker": "MARK.QA",
+    "companyName": "Masraf Al Rayan",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:05:50.922Z",
+    "runId": "58c8edbc-57cf-448c-8bf1-5bc3ca55c136"
+  },
+  "commercial-bank-of-qatar": {
+    "slug": "commercial-bank-of-qatar",
+    "ticker": "CBQK.QA",
+    "companyName": "Commercial Bank of Qatar",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:04:25.471Z",
+    "runId": "f60fb7b7-e44f-4548-9387-670a6ddd2451"
+  },
+  "qatar-fuel": {
+    "slug": "qatar-fuel",
+    "ticker": "QFLS.QA",
+    "companyName": "Qatar Fuel",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:03:29.162Z",
+    "runId": "3d39e0f9-5a9a-4500-a0f7-fb3540887549"
+  },
+  "qatar-insurance": {
+    "slug": "qatar-insurance",
+    "ticker": "QATI.QA",
+    "companyName": "Qatar Insurance",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:03:24.491Z",
+    "runId": "d9b12899-229a-4e38-b443-2a9ac1f97deb"
+  },
+  "industria-de-diseno-textil": {
+    "slug": "industria-de-diseno-textil",
+    "ticker": "ITX.MC",
+    "companyName": "Industria de Diseno Textil",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:04:52.314Z",
+    "runId": "f7f97ea6-fda0-4eff-b81c-7c202f269d22"
+  },
+  "bbva": {
+    "slug": "bbva",
+    "ticker": "BBVA",
+    "companyName": "Bbva",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:04:36.088Z",
+    "runId": "278acbc6-6424-49f9-9834-991062c2dada"
+  },
+  "aena": {
+    "slug": "aena",
+    "ticker": "AENA.MC",
+    "companyName": "Aena",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:05:29.235Z",
+    "runId": "1662ea39-78f5-4dbe-87ab-aa459a9dd679"
+  },
+  "amadeus-it-group": {
+    "slug": "amadeus-it-group",
+    "ticker": "AMS.MC",
+    "companyName": "Amadeus IT Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:04:47.978Z",
+    "runId": "8ff0cf4c-a8e4-48c2-b0a2-55b396fa7841"
+  },
+  "acciona": {
+    "slug": "acciona",
+    "ticker": "ANA.MC",
+    "companyName": "Acciona",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:05:51.178Z",
+    "runId": "d3c0abd3-4601-41a1-87f6-5b978133c84b"
+  },
+  "public-bank": {
+    "slug": "public-bank",
+    "ticker": "PUBM.KL",
+    "companyName": "Public Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:07:07.990Z",
+    "runId": "fac5f03b-7a38-4e40-aa95-af340abf8157"
+  },
+  "cimb-group": {
+    "slug": "cimb-group",
+    "ticker": "CIMB.KL",
+    "companyName": "CIMB Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:07:27.710Z",
+    "runId": "dbed2656-0cea-42b9-84aa-88365cc23b3f"
+  },
+  "genting": {
+    "slug": "genting",
+    "ticker": "GENT.KL",
+    "companyName": "Genting",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:06:56.325Z",
+    "runId": "e5dac043-9593-4c83-a6a9-6c4e323c940e"
+  },
+  "sime-darby": {
+    "slug": "sime-darby",
+    "ticker": "SIME.KL",
+    "companyName": "Sime Darby",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:06:38.512Z",
+    "runId": "b1457fd4-886b-4616-9ad5-87c45b1e214e"
+  },
+  "petronas-gas": {
+    "slug": "petronas-gas",
+    "ticker": "PETGAS.KL",
+    "companyName": "Petronas Gas",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:06:28.260Z",
+    "runId": "f1a7ff22-2ed6-4e38-ba2d-b4481e919130"
+  },
+  "top-glove": {
+    "slug": "top-glove",
+    "ticker": "TOPG.KL",
+    "companyName": "Top Glove",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:06:58.422Z",
+    "runId": "3b5c8bfa-7b6e-4612-9f7e-82d4913be7c8"
+  },
+  "maxis": {
+    "slug": "maxis",
+    "ticker": "MAXIS.KL",
+    "companyName": "Maxis",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:06:58.325Z",
+    "runId": "128dcb2c-a86d-495c-86aa-1c8408c2af59"
+  },
+  "hong-leong-bank": {
+    "slug": "hong-leong-bank",
+    "ticker": "HLBK.KL",
+    "companyName": "Hong Leong Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:08:27.029Z",
+    "runId": "adf1a1d4-01d8-4e6c-b34b-d75eeaae1548"
+  },
+  "ihh-healthcare": {
+    "slug": "ihh-healthcare",
+    "ticker": "IHH.KL",
+    "companyName": "IHH Healthcare",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:07:57.619Z",
+    "runId": "e69156cc-7ad5-4fc1-bede-984454608328"
+  },
+  "bangkok-bank": {
+    "slug": "bangkok-bank",
+    "ticker": "BBL.BK",
+    "companyName": "Bangkok Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:08:29.866Z",
+    "runId": "a4d47cc3-5451-49b3-bd14-fca5fe48b70f"
+  },
+  "kasikornbank": {
+    "slug": "kasikornbank",
+    "ticker": "KBANK.BK",
+    "companyName": "Kasikornbank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:07:59.501Z",
+    "runId": "57099e5f-e758-4095-b7af-9b05d998c063"
+  },
+  "ptt-exploration-production": {
+    "slug": "ptt-exploration-production",
+    "ticker": "PTTEP.BK",
+    "companyName": "PTT Exploration & Production",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:08:53.564Z",
+    "runId": "dce43f2a-1fcb-4232-a732-00a8937b3bdc"
+  },
+  "thai-beverage": {
+    "slug": "thai-beverage",
+    "ticker": "THBEV.SI",
+    "companyName": "Thai Beverage",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:09:22.134Z",
+    "runId": "0e415c5b-97a1-4b03-9357-7b3810a2262c"
+  },
+  "bangkok-expressway-and-metro": {
+    "slug": "bangkok-expressway-and-metro",
+    "ticker": "BEM.BK",
+    "companyName": "Bangkok Expressway and Metro",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:09:20.352Z",
+    "runId": "7818fb32-f4fe-431d-af01-8971831d7da8"
+  },
+  "gulf-energy-development": {
+    "slug": "gulf-energy-development",
+    "ticker": "GULF.BK",
+    "companyName": "Gulf Energy Development",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:09:19.456Z",
+    "runId": "61142745-0b57-404b-8338-2d535852f789"
+  },
+  "central-pattana": {
+    "slug": "central-pattana",
+    "ticker": "CPN.BK",
+    "companyName": "Central Pattana",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:09:08.555Z",
+    "runId": "58d21aeb-d5bc-4964-b589-9d70b7114fc9"
+  },
+  "telecom-argentina": {
+    "slug": "telecom-argentina",
+    "ticker": "TEO",
+    "companyName": "Telecom Argentina",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:10:35.376Z",
+    "runId": "c861517d-fefa-4b29-8098-03d3971723b9"
+  },
+  "banco-macro": {
+    "slug": "banco-macro",
+    "ticker": "BMA",
+    "companyName": "Banco Macro",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:10:01.961Z",
+    "runId": "c59ff2cc-0f29-4713-b1cb-57650673d0c4"
+  },
+  "pampa-energia": {
+    "slug": "pampa-energia",
+    "ticker": "PAM",
+    "companyName": "Pampa Energia",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:10:11.821Z",
+    "runId": "815aa211-3e47-43a6-8e72-7c13af0759da"
+  },
+  "ternium": {
+    "slug": "ternium",
+    "ticker": "TX",
+    "companyName": "Ternium",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:11:02.179Z",
+    "runId": "82640f45-aa5a-4bec-9cea-6e23980516ab"
+  },
+  "globant": {
+    "slug": "globant",
+    "ticker": "GLOB",
+    "companyName": "Globant",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:10:49.299Z",
+    "runId": "05266ef7-2fe8-4bc3-ac1e-0c33d7b0cb04"
+  },
+  "despegar": {
+    "slug": "despegar",
+    "ticker": "DESP",
+    "companyName": "Despegar",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:11:28.734Z",
+    "runId": "1b3534e5-3cf0-4efa-ad2f-670c17ba976c"
+  },
+  "navigator-company": {
+    "slug": "navigator-company",
+    "ticker": "NVG.LS",
+    "companyName": "Navigator Company",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:12:29.176Z",
+    "runId": "340715dc-b758-4dd3-a3e2-5fb9ad99f73f"
+  },
+  "ren": {
+    "slug": "ren",
+    "ticker": "RENE.LS",
+    "companyName": "REN",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:10:44.475Z",
+    "runId": "59c31aef-17f5-44fc-af18-75d9db89a876"
+  },
+  "sonae": {
+    "slug": "sonae",
+    "ticker": "SON.LS",
+    "companyName": "Sonae",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:12:08.856Z",
+    "runId": "ef937329-acec-454f-b4e8-5a05fc903694"
+  },
+  "banco-comercial-portugues": {
+    "slug": "banco-comercial-portugues",
+    "ticker": "BCP.LS",
+    "companyName": "Banco Comercial Portugues",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:12:04.217Z",
+    "runId": "933d98dd-e148-43e6-8ecf-9dc36041c967"
+  },
+  "edp-renovaveis": {
+    "slug": "edp-renovaveis",
+    "ticker": "EDPR.LS",
+    "companyName": "EDP Renovaveis",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:12:06.856Z",
+    "runId": "d1e842c6-882f-45b5-9f1f-74a41b565c46"
+  },
+  "globe-telecom": {
+    "slug": "globe-telecom",
+    "ticker": "GLO.PS",
+    "companyName": "Globe Telecom",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:13:06.383Z",
+    "runId": "59253602-1d62-4b01-a6bd-1040ee24ef2d"
+  },
+  "jollibee-foods": {
+    "slug": "jollibee-foods",
+    "ticker": "JFC.PS",
+    "companyName": "Jollibee Foods",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:12:45.819Z",
+    "runId": "13406223-2b41-40ee-896c-6c8ef96f2ba5"
+  },
+  "aboitiz-equity-ventures": {
+    "slug": "aboitiz-equity-ventures",
+    "ticker": "AEV.PS",
+    "companyName": "Aboitiz Equity Ventures",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:14:00.150Z",
+    "runId": "261d11f9-06ea-40da-ad62-644dcfadcf05"
+  },
+  "bank-of-the-philippine-islands": {
+    "slug": "bank-of-the-philippine-islands",
+    "ticker": "BPI.PS",
+    "companyName": "Bank of the Philippine Islands",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:13:44.277Z",
+    "runId": "22cd0c2b-e3de-42f5-a12c-5a538dee478b"
+  },
+  "san-miguel-corporation": {
+    "slug": "san-miguel-corporation",
+    "ticker": "SMC.PS",
+    "companyName": "San Miguel Corporation",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:15:18.019Z",
+    "runId": "4943eb3d-6ce3-4a9a-905e-7dae2ac1798d"
+  },
+  "manila-electric-company": {
+    "slug": "manila-electric-company",
+    "ticker": "MER.PS",
+    "companyName": "Manila Electric Company",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:14:14.574Z",
+    "runId": "051a95f4-f16b-430a-8446-e7330923ec1a"
+  },
+  "assicurazioni-generali": {
+    "slug": "assicurazioni-generali",
+    "ticker": "G.MI",
+    "companyName": "Assicurazioni Generali",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:22:36.908Z",
+    "runId": "69428d70-8f99-4cc9-94fc-1db8be7a8e9b"
+  },
+  "poste-italiane": {
+    "slug": "poste-italiane",
+    "ticker": "PST.MI",
+    "companyName": "Poste Italiane",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:14:55.109Z",
+    "runId": "28cf6a53-70b9-480b-af13-03d8703f6352"
+  },
+  "leonardo": {
+    "slug": "leonardo",
+    "ticker": "LDO.MI",
+    "companyName": "Leonardo",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:14:48.917Z",
+    "runId": "193fa1fd-7d54-48ee-8c0c-b14396d17272"
+  },
+  "moncler": {
+    "slug": "moncler",
+    "ticker": "MONC.MI",
+    "companyName": "Moncler",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:14:44.126Z",
+    "runId": "3c72bc53-51b6-4e6a-bbca-f2d8e36134db"
+  },
+  "pirelli": {
+    "slug": "pirelli",
+    "ticker": "PIRC.MI",
+    "companyName": "Pirelli",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:15:36.835Z",
+    "runId": "cbdc4f24-0266-44f2-ab99-1fff5e8c0212"
+  },
+  "ucb": {
+    "slug": "ucb",
+    "ticker": "UCB.BR",
+    "companyName": "UCB",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:15:36.683Z",
+    "runId": "42117102-6119-413d-9440-0e198b3f8602"
+  },
+  "umicore": {
+    "slug": "umicore",
+    "ticker": "UMI.BR",
+    "companyName": "Umicore",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:16:26.403Z",
+    "runId": "b6fd6243-bcc5-4883-9f18-5eebdb7a037a"
+  },
+  "proximus": {
+    "slug": "proximus",
+    "ticker": "PROX.BR",
+    "companyName": "Proximus",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:15:08.001Z",
+    "runId": "48986b1a-9e92-4571-8f96-d298e6cbf135"
+  },
+  "ageas": {
+    "slug": "ageas",
+    "ticker": "AGS.BR",
+    "companyName": "Ageas",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:16:11.729Z",
+    "runId": "39354f98-7fd7-432d-8fc3-056d335ad7e3"
+  },
+  "colruyt": {
+    "slug": "colruyt",
+    "ticker": "COLR.BR",
+    "companyName": "Colruyt",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:18:16.465Z",
+    "runId": "6e125e0d-3618-4f76-be38-7588e2675b16"
+  },
+  "dieteren": {
+    "slug": "dieteren",
+    "ticker": "DIE.BR",
+    "companyName": "D'Ieteren",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:17:02.287Z",
+    "runId": "37469502-14c9-43a4-8871-36b45b8850c9"
+  },
+  "banco-do-brasil": {
+    "slug": "banco-do-brasil",
+    "ticker": "BBAS3.SA",
+    "companyName": "Banco do Brasil",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:17:31.918Z",
+    "runId": "2ed968af-7498-497b-ab91-79881d1e0388"
+  },
+  "gerdau": {
+    "slug": "gerdau",
+    "ticker": "GGB",
+    "companyName": "Gerdau",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:16:39.746Z",
+    "runId": "85aefd97-a8f8-4967-a4d5-c6747900b68e"
+  },
+  "embraer": {
+    "slug": "embraer",
+    "ticker": "ERJ",
+    "companyName": "Embraer",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:18:40.044Z",
+    "runId": "57f5d7c2-1a81-4634-8fc3-434404c3bd64"
+  },
+  "eletrobras": {
+    "slug": "eletrobras",
+    "ticker": "EBR",
+    "companyName": "Eletrobras",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:17:22.868Z",
+    "runId": "a9a6b0ac-3534-4c55-9c17-dc5f90900b05"
+  },
+  "natura-co": {
+    "slug": "natura-co",
+    "ticker": "NTCO",
+    "companyName": "Natura &Co",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:19:00.460Z",
+    "runId": "f5efee41-56d5-470a-8540-99dbc6959912"
+  },
+  "latam-airlines": {
+    "slug": "latam-airlines",
+    "ticker": "LTM",
+    "companyName": "LATAM Airlines",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:18:38.560Z",
+    "runId": "ece48bc1-730d-478f-9b65-d382be60e363"
+  },
+  "empresas-copec": {
+    "slug": "empresas-copec",
+    "ticker": "COPEC.SN",
+    "companyName": "Empresas Copec",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:19:29.896Z",
+    "runId": "5533a21a-a439-49ca-a5fa-27dbd19f7f17"
+  },
+  "banco-santander-chile": {
+    "slug": "banco-santander-chile",
+    "ticker": "BSAC",
+    "companyName": "Banco Santander Chile",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:19:32.698Z",
+    "runId": "90ee5745-b58e-4af1-a5d6-01ee54092c9e"
+  },
+  "compania-cervecerias-unidas": {
+    "slug": "compania-cervecerias-unidas",
+    "ticker": "CCU",
+    "companyName": "Compania Cervecerias Unidas",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:19:11.321Z",
+    "runId": "b505052b-244d-4b85-8d99-e15fe9bacac8"
+  },
+  "colbun": {
+    "slug": "colbun",
+    "ticker": "COLB.SN",
+    "companyName": "Colbun",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:19:25.178Z",
+    "runId": "b608808e-c629-46f0-b56e-cadf22a1048d"
+  },
+  "saci-falabella": {
+    "slug": "saci-falabella",
+    "ticker": "FALABELLA.SN",
+    "companyName": "S.A.C.I. Falabella",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:20:54.627Z",
+    "runId": "12e20d47-7eec-49e7-bbe0-e1f5dacb8791"
+  },
+  "dino-polska": {
+    "slug": "dino-polska",
+    "ticker": "DNP.WA",
+    "companyName": "Dino Polska",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:19:44.503Z",
+    "runId": "fa976ab5-2e04-41de-aaf4-2812ad123a96"
+  },
+  "cd-projekt": {
+    "slug": "cd-projekt",
+    "ticker": "CDR.WA",
+    "companyName": "CD Projekt",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:18:40.166Z",
+    "runId": "19cff9ea-1832-4ab3-8a57-21f5db5d88ad"
+  },
+  "lpp": {
+    "slug": "lpp",
+    "ticker": "LPP.WA",
+    "companyName": "LPP",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:21:02.847Z",
+    "runId": "88836782-f34d-44fc-8e33-8779f81edf27"
+  },
+  "santander-bank-polska": {
+    "slug": "santander-bank-polska",
+    "ticker": "SPL.WA",
+    "companyName": "Santander Bank Polska",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:20:38.727Z",
+    "runId": "0dfddb37-c993-4989-b109-89605e67fb55"
+  },
+  "pge-polska-grupa-energetyczna": {
+    "slug": "pge-polska-grupa-energetyczna",
+    "ticker": "PGE.WA",
+    "companyName": "PGE Polska Grupa Energetyczna",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:21:35.899Z",
+    "runId": "b79f78fc-0aa7-4be0-b7df-445977da4c71"
+  },
+  "asseco-poland": {
+    "slug": "asseco-poland",
+    "ticker": "ASE.WA",
+    "companyName": "Asseco Poland",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:22:16.807Z",
+    "runId": "1220ad39-58f0-4d79-a967-65157c252851"
+  },
+  "aker-bp": {
+    "slug": "aker-bp",
+    "ticker": "AKERBP.OL",
+    "companyName": "Aker BP",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:21:09.400Z",
+    "runId": "b368e5de-f753-42f7-acd7-97e274565af0"
+  },
+  "mowi": {
+    "slug": "mowi",
+    "ticker": "MOWI.OL",
+    "companyName": "Mowi",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:24:00.698Z",
+    "runId": "fbc5f8e1-c6c8-48b4-83fa-54b70ce681aa"
+  },
+  "orkla": {
+    "slug": "orkla",
+    "ticker": "ORK.OL",
+    "companyName": "Orkla",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:23:28.023Z",
+    "runId": "21845e8b-e4f7-418a-8913-fe27235d4673"
+  },
+  "gjensidige-forsikring": {
+    "slug": "gjensidige-forsikring",
+    "ticker": "GJF.OL",
+    "companyName": "Gjensidige Forsikring",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:23:07.372Z",
+    "runId": "3e311ea4-b3fb-4192-9d20-40061069d42b"
+  },
+  "storebrand": {
+    "slug": "storebrand",
+    "ticker": "STB.OL",
+    "companyName": "Storebrand",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:25:38.693Z",
+    "runId": "43b77646-380b-4450-a83c-fca069f27e42"
+  },
+  "subsea-7": {
+    "slug": "subsea-7",
+    "ticker": "SUBC.OL",
+    "companyName": "Subsea 7",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:23:57.610Z",
+    "runId": "4b971e20-808c-4a47-be4d-bf1be377dd2e"
+  },
+  "raiffeisen-bank-international": {
+    "slug": "raiffeisen-bank-international",
+    "ticker": "RBI.VI",
+    "companyName": "Raiffeisen Bank International",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:51:15.440Z",
+    "runId": "b7a233a5-6e83-4eb5-b8ed-5a1c0cda2615"
+  },
+  "verbund": {
+    "slug": "verbund",
+    "ticker": "VER.VI",
+    "companyName": "Verbund",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:51:44.983Z",
+    "runId": "1906c46b-ffe7-441f-90bb-4b4ceed39bce"
+  },
+  "vienna-insurance-group": {
+    "slug": "vienna-insurance-group",
+    "ticker": "VIG.VI",
+    "companyName": "Vienna Insurance Group",
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-04T11:04:27.623Z",
+    "runId": "2211f7d7-e28b-4d71-a176-9e02decfcb08"
+  },
+  "andritz": {
+    "slug": "andritz",
+    "ticker": "ANDR.VI",
+    "companyName": "Andritz",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:51:31.202Z",
+    "runId": "0e579d9a-7976-4734-ad61-035ca6c318ac"
+  },
+  "wienerberger": {
+    "slug": "wienerberger",
+    "ticker": "WIE.VI",
+    "companyName": "Wienerberger",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:51:55.619Z",
+    "runId": "dbd3f2ad-2ca9-47db-ad6b-f57431f21d1c"
+  },
+  "oesterreichische-post": {
+    "slug": "oesterreichische-post",
+    "ticker": "POST.VI",
+    "companyName": "Oesterreichische Post",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:53:08.971Z",
+    "runId": "c4608a12-f24b-4b9d-977c-29a25ef7ff41"
+  },
+  "do-co": {
+    "slug": "do-co",
+    "ticker": "DOC.VI",
+    "companyName": "DO & CO",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:51:30.855Z",
+    "runId": "339268ed-5b5b-4a43-a92b-1b2c7ea42c1f"
+  },
+  "posco-holdings": {
+    "slug": "posco-holdings",
+    "ticker": "005490.KS",
+    "companyName": "POSCO Holdings",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:52:05.438Z",
+    "runId": "ba1b2c67-6f28-4432-bed9-6c5e2aebbfec"
+  },
+  "amorepacific": {
+    "slug": "amorepacific",
+    "ticker": "090430.KS",
+    "companyName": "Amorepacific",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:51:51.071Z",
+    "runId": "cbae2cf9-0250-40c8-953f-3f50febd962b"
+  },
+  "kb-financial-group": {
+    "slug": "kb-financial-group",
+    "ticker": "105560.KS",
+    "companyName": "KB Financial Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:51:44.979Z",
+    "runId": "89fbca0e-6ddd-4724-ab5b-fadc1753b205"
+  },
+  "lg-corp": {
+    "slug": "lg-corp",
+    "ticker": "003550.KS",
+    "companyName": "LG Corp",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:55:37.053Z",
+    "runId": "79fd5bd6-1894-4c8e-b706-1deafe52eb4c"
+  },
+  "s-oil": {
+    "slug": "s-oil",
+    "ticker": "017670.KS",
+    "companyName": "S-Oil",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:52:48.624Z",
+    "runId": "e7d42db3-3f60-4265-aaf3-0103aaca5b4c"
+  },
+  "venture-corporation": {
+    "slug": "venture-corporation",
+    "ticker": "T39.SI",
+    "companyName": "Venture Corporation",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:51:09.095Z",
+    "runId": "f3a6123f-20d6-4532-82cd-1250584e6e82"
+  },
+  "capitaland-integrated-commercial-trust": {
+    "slug": "capitaland-integrated-commercial-trust",
+    "ticker": "A17U.SI",
+    "companyName": "CapitaLand Integrated Commercial Trust",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:49:43.512Z",
+    "runId": "5b727896-faee-4e7b-b05b-e4ff44d54c73"
+  },
+  "mapletree-industrial-trust": {
+    "slug": "mapletree-industrial-trust",
+    "ticker": "ME8U.SI",
+    "companyName": "Mapletree Industrial Trust",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:50:50.978Z",
+    "runId": "3cdc13cb-01ab-4a5b-940b-047bee5aa39e"
+  },
+  "bank-rakyat-indonesia": {
+    "slug": "bank-rakyat-indonesia",
+    "ticker": "BBRI.JK",
+    "companyName": "Bank Rakyat Indonesia",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:51:24.799Z",
+    "runId": "11700977-bfd3-42ed-8962-8b2b7d1fe566"
+  },
+  "bank-negara-indonesia": {
+    "slug": "bank-negara-indonesia",
+    "ticker": "BBNI.JK",
+    "companyName": "Bank Negara Indonesia",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:51:17.190Z",
+    "runId": "7f1f80a7-100f-47e7-9f9b-c9599ad95ef4"
+  },
+  "indofood-cbp": {
+    "slug": "indofood-cbp",
+    "ticker": "ICBP.JK",
+    "companyName": "Indofood CBP",
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-04T11:03:27.349Z",
+    "runId": "d98262d5-b5f7-4fbc-93a4-dd73bfe32217"
+  },
+  "unilever-indonesia": {
+    "slug": "unilever-indonesia",
+    "ticker": "UNVR.JK",
+    "companyName": "Unilever Indonesia",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:52:47.343Z",
+    "runId": "9014b57a-9eee-46bc-b3cf-3695fb373448"
+  },
+  "aneka-tambang": {
+    "slug": "aneka-tambang",
+    "ticker": "ANTM.JK",
+    "companyName": "Aneka Tambang",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:54:59.742Z",
+    "runId": "2935a7ba-e7df-4003-9e42-4c33e499f82b"
+  },
+  "perusahaan-gas-negara": {
+    "slug": "perusahaan-gas-negara",
+    "ticker": "PGAS.JK",
+    "companyName": "Perusahaan Gas Negara",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:56:06.519Z",
+    "runId": "7d8a92da-d070-4ca7-8d80-cb076855d4d6"
+  },
+  "indofood-sukses-makmur": {
+    "slug": "indofood-sukses-makmur",
+    "ticker": "INDF.JK",
+    "companyName": "Indofood Sukses Makmur",
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-04T11:07:05.753Z",
+    "runId": "56ab23a3-1f95-413c-b5a0-7a514ce21f5b"
+  },
+  "contact-energy": {
+    "slug": "contact-energy",
+    "ticker": "CEN.NZ",
+    "companyName": "Contact Energy",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:55:46.627Z",
+    "runId": "141371b5-8ab5-4688-b836-b8cb2921eb48"
+  },
+  "mercury-nz": {
+    "slug": "mercury-nz",
+    "ticker": "MCY.NZ",
+    "companyName": "Mercury NZ",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:55:28.822Z",
+    "runId": "26211d62-a012-4de5-b588-794ced1afb69"
+  },
+  "infratil": {
+    "slug": "infratil",
+    "ticker": "IFT.NZ",
+    "companyName": "Infratil",
+    "status": "completed",
+    "attempts": 2,
+    "updatedAt": "2025-11-04T11:03:50.304Z",
+    "runId": "0b9830c5-2f3a-4237-b8c3-89bc48570948"
+  },
+  "skycity-entertainment": {
+    "slug": "skycity-entertainment",
+    "ticker": "SKC.NZ",
+    "companyName": "SkyCity Entertainment",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:56:23.196Z",
+    "runId": "89b6f88e-b5ee-42cd-97cd-c9ca148f50c6"
+  },
+  "fletcher-building": {
+    "slug": "fletcher-building",
+    "ticker": "FBU.NZ",
+    "companyName": "Fletcher Building",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:57:45.979Z",
+    "runId": "365d90d2-b0ac-4366-9b0b-0415bd52e63e"
+  },
+  "the-a2-milk-company": {
+    "slug": "the-a2-milk-company",
+    "ticker": "ATM.NZ",
+    "companyName": "The a2 Milk Company",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:56:47.934Z",
+    "runId": "29fc6d19-307c-4b7f-87ea-fbe230b20387"
+  },
+  "tgs-asa": {
+    "slug": "tgs-asa",
+    "ticker": "TGS.OL",
+    "companyName": "TGS ASA",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:57:04.946Z",
+    "runId": "4eff0201-4fa7-479b-8e13-675bbb9b8ef3"
+  },
+  "nordic-semiconductor": {
+    "slug": "nordic-semiconductor",
+    "ticker": "NOD.OL",
+    "companyName": "Nordic Semiconductor",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:56:25.188Z",
+    "runId": "5e3486f2-66c7-444b-8575-19df4e86596b"
+  },
+  "fresenius": {
+    "slug": "fresenius",
+    "ticker": "FRE.DE",
+    "companyName": "Fresenius",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:58:42.205Z",
+    "runId": "a42589e3-360b-4712-af5c-d13bcb4cee5b"
+  },
+  "hellofresh": {
+    "slug": "hellofresh",
+    "ticker": "HFG.DE",
+    "companyName": "HelloFresh",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:57:35.434Z",
+    "runId": "d9fe43bf-711c-4247-9795-5d26f3cfaaaa"
+  },
+  "symrise": {
+    "slug": "symrise",
+    "ticker": "SY1.DE",
+    "companyName": "Symrise",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:57:34.835Z",
+    "runId": "632f1ecb-8a46-4b9c-81bf-2fc6c94a72a5"
+  },
+  "deutsche-pfandbriefbank": {
+    "slug": "deutsche-pfandbriefbank",
+    "ticker": "PAH3.DE",
+    "companyName": "Deutsche Pfandbriefbank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:57:15.452Z",
+    "runId": "1a93ffe2-d758-419b-94e5-3e173ea41496"
+  },
+  "garanti-bbva": {
+    "slug": "garanti-bbva",
+    "ticker": "GARAN.IS",
+    "companyName": "Garanti BBVA",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:57:48.338Z",
+    "runId": "45873ade-885f-4621-8bd1-988a6f20787f"
+  },
+  "isbank": {
+    "slug": "isbank",
+    "ticker": "ISCTR.IS",
+    "companyName": "Isbank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:58:06.923Z",
+    "runId": "f035c276-b3c3-41d5-aafa-43299142a3bb"
+  },
+  "bim-birlesik-magazalar": {
+    "slug": "bim-birlesik-magazalar",
+    "ticker": "BIMAS.IS",
+    "companyName": "BIM Birlesik Magazalar",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:58:04.891Z",
+    "runId": "b2de3453-1d85-4a44-8e58-9e2764c5e54b"
+  },
+  "eregli-demir-ve-celik": {
+    "slug": "eregli-demir-ve-celik",
+    "ticker": "EREGL.IS",
+    "companyName": "Eregli Demir ve Celik",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:59:57.810Z",
+    "runId": "d032ddfe-b15b-46a8-8db8-0ca1f865a51b"
+  },
+  "koza-altin": {
+    "slug": "koza-altin",
+    "ticker": "KOZAL.IS",
+    "companyName": "Koza Altin",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T02:58:48.307Z",
+    "runId": "0ac2ea95-1afe-4dd6-ba81-4aa8aa2d879a"
+  },
+  "sabanci-holding": {
+    "slug": "sabanci-holding",
+    "ticker": "SAHOL.IS",
+    "companyName": "Sabanci Holding",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:00:10.417Z",
+    "runId": "e1c80fa3-8ee7-4ba0-ae8d-3aff87f2b272"
+  },
+  "vestas-wind-systems": {
+    "slug": "vestas-wind-systems",
+    "ticker": "VWS.CO",
+    "companyName": "Vestas Wind Systems",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:00:43.854Z",
+    "runId": "970ec242-012a-43b5-bf40-d890c73e1f39"
+  },
+  "genmab": {
+    "slug": "genmab",
+    "ticker": "GEN.CO",
+    "companyName": "Genmab",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:01:53.875Z",
+    "runId": "9b4dece8-fcfa-4b78-ba79-0a8268ba3886"
+  },
+  "pandora": {
+    "slug": "pandora",
+    "ticker": "PNDORA.CO",
+    "companyName": "Pandora",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:00:35.702Z",
+    "runId": "1fabeaeb-572a-48f3-92c6-d556d495a578"
+  },
+  "carlsberg": {
+    "slug": "carlsberg",
+    "ticker": "CARL-B.CO",
+    "companyName": "Carlsberg",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:02:37.817Z",
+    "runId": "91b29f10-dece-4f1d-aae2-35ebd3ec550b"
+  },
+  "tryg": {
+    "slug": "tryg",
+    "ticker": "TRYG.CO",
+    "companyName": "Tryg",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:02:09.059Z",
+    "runId": "2ca451da-f914-4404-95d1-b576c03561a5"
+  },
+  "jyske-bank": {
+    "slug": "jyske-bank",
+    "ticker": "JYSK.CO",
+    "companyName": "Jyske Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:01:23.149Z",
+    "runId": "fc09ad0f-de1a-45b7-a04a-a458f317f470"
+  },
+  "al-rajhi-bank": {
+    "slug": "al-rajhi-bank",
+    "ticker": "1120.SR",
+    "companyName": "Al Rajhi Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:03:45.952Z",
+    "runId": "fe6f2a42-4149-4442-b01e-bb474620a2be"
+  },
+  "riyad-bank": {
+    "slug": "riyad-bank",
+    "ticker": "1180.SR",
+    "companyName": "Riyad Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:03:39.707Z",
+    "runId": "a4904c54-44f7-445b-a713-2332077c4f89"
+  },
+  "saudi-national-bank": {
+    "slug": "saudi-national-bank",
+    "ticker": "1060.SR",
+    "companyName": "Saudi National Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:02:37.269Z",
+    "runId": "4b52d246-cdc6-40da-be39-c64c4fcb031c"
+  },
+  "maaden": {
+    "slug": "maaden",
+    "ticker": "1211.SR",
+    "companyName": "Maaden",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:09:26.947Z",
+    "runId": "c48efc12-4ea3-4201-805c-8da581c22f65"
+  },
+  "cooperative-insurance-company": {
+    "slug": "cooperative-insurance-company",
+    "ticker": "8010.SR",
+    "companyName": "Cooperative Insurance Company",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:02:53.841Z",
+    "runId": "4c87e6c7-c9a4-433a-958b-3cf53c875218"
+  },
+  "bindawood-holding": {
+    "slug": "bindawood-holding",
+    "ticker": "4002.SR",
+    "companyName": "BinDawood Holding",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:02:49.475Z",
+    "runId": "ba2336fc-6565-4502-b2c0-3e93993ef249"
+  },
+  "tasnee": {
+    "slug": "tasnee",
+    "ticker": "2082.SR",
+    "companyName": "Tasnee",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:03:14.029Z",
+    "runId": "feb88a8e-eb4b-4699-b3d2-be8ec0a81a3b"
+  },
+  "walmart-de-mexico": {
+    "slug": "walmart-de-mexico",
+    "ticker": "WALMEX.MX",
+    "companyName": "Walmart de Mexico",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:04:36.978Z",
+    "runId": "94a4051d-4466-4712-85fc-4d8baf9c1c9c"
+  },
+  "cemex": {
+    "slug": "cemex",
+    "ticker": "CEMEXCPO.MX",
+    "companyName": "Cemex",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:03:46.153Z",
+    "runId": "ccd55c75-980f-46fb-805f-ad0d6c04d387"
+  },
+  "grupo-mexico": {
+    "slug": "grupo-mexico",
+    "ticker": "GMEXICOB.MX",
+    "companyName": "Grupo Mexico",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:03:08.678Z",
+    "runId": "d02dfdf4-c4d2-4618-987a-eb949897d671"
+  },
+  "grupo-aeroportuario-del-pacifico": {
+    "slug": "grupo-aeroportuario-del-pacifico",
+    "ticker": "GAPB.MX",
+    "companyName": "Grupo Aeroportuario del Pacifico",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:03:57.783Z",
+    "runId": "b0da8c38-3d61-4e3a-8942-52be439847f7"
+  },
+  "kimberly-clark-de-mexico": {
+    "slug": "kimberly-clark-de-mexico",
+    "ticker": "KIMBERA.MX",
+    "companyName": "Kimberly-Clark de Mexico",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:04:37.818Z",
+    "runId": "eb2c557e-4cf1-4a5f-8149-318527289aee"
+  },
+  "industrias-penoles": {
+    "slug": "industrias-penoles",
+    "ticker": "PE&OLES.MX",
+    "companyName": "Industrias Penoles",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:05:58.578Z",
+    "runId": "a826ab45-2053-4de8-b0da-874a4d3912db"
+  },
+  "grupo-televisa": {
+    "slug": "grupo-televisa",
+    "ticker": "TLEVISACPO.MX",
+    "companyName": "Grupo Televisa",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:05:51.981Z",
+    "runId": "e5040179-13ae-4d21-ab4b-a34fe02de86a"
+  },
+  "bolsa-mexicana-de-valores": {
+    "slug": "bolsa-mexicana-de-valores",
+    "ticker": "BOLSAA.MX",
+    "companyName": "Bolsa Mexicana de Valores",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:04:51.834Z",
+    "runId": "5eb6dc68-a170-4fb5-9a36-dc83e36205bd"
+  },
+  "mediatek": {
+    "slug": "mediatek",
+    "ticker": "2454.TW",
+    "companyName": "MediaTek",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:06:17.194Z",
+    "runId": "fa50953a-424e-4fe3-bc58-aec20a1d1230"
+  },
+  "delta-electronics": {
+    "slug": "delta-electronics",
+    "ticker": "2308.TW",
+    "companyName": "Delta Electronics",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:07:27.396Z",
+    "runId": "30cdb9c1-390f-4437-9efa-d0ff0b5fe2e8"
+  },
+  "formosa-plastics": {
+    "slug": "formosa-plastics",
+    "ticker": "1301.TW",
+    "companyName": "Formosa Plastics",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:08:03.796Z",
+    "runId": "8a4f3749-4e72-4a4f-99c2-ffdf72c3990a"
+  },
+  "formosa-petrochemical": {
+    "slug": "formosa-petrochemical",
+    "ticker": "6505.TW",
+    "companyName": "Formosa Petrochemical",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:07:15.613Z",
+    "runId": "a244423a-79b0-4b78-9b01-264c872890b3"
+  },
+  "chunghwa-telecom": {
+    "slug": "chunghwa-telecom",
+    "ticker": "2412.TW",
+    "companyName": "Chunghwa Telecom",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:08:03.784Z",
+    "runId": "5009ecee-aa7f-40df-aeea-526cb228da8a"
+  },
+  "mega-financial-holding": {
+    "slug": "mega-financial-holding",
+    "ticker": "2886.TW",
+    "companyName": "Mega Financial Holding",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:07:57.616Z",
+    "runId": "e42104fc-c66e-4263-8df9-aa07fe94cf76"
+  },
+  "wistron": {
+    "slug": "wistron",
+    "ticker": "3231.TW",
+    "companyName": "Wistron",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:07:51.874Z",
+    "runId": "56fab713-85c6-4c9d-8c12-b7c8648c650e"
+  },
+  "nova-ltd": {
+    "slug": "nova-ltd",
+    "ticker": "NVMI",
+    "companyName": "Nova Ltd.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:08:27.034Z",
+    "runId": "c83502a8-de7a-4293-961e-3c71512195e3"
+  },
+  "tower-semiconductor": {
+    "slug": "tower-semiconductor",
+    "ticker": "TSEM",
+    "companyName": "Tower Semiconductor",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:08:01.066Z",
+    "runId": "10da4599-2909-4d4f-b364-9e04f62000e2"
+  },
+  "mondaycom": {
+    "slug": "mondaycom",
+    "ticker": "MNDY",
+    "companyName": "monday.com",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:08:09.635Z",
+    "runId": "16e9ded0-8377-4439-a831-8bff2983e8c6"
+  },
+  "fiverr": {
+    "slug": "fiverr",
+    "ticker": "FVRR",
+    "companyName": "Fiverr",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-03T03:07:35.932Z",
+    "runId": "69719996-3be2-444a-9017-fa18d95aea01"
+  },
+  "pagseguro-digital": {
+    "slug": "pagseguro-digital",
+    "ticker": "PAGS",
+    "companyName": "PagSeguro Digital",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:04:28.351Z",
+    "runId": "2bb712bd-2bcf-41c4-9d45-0821b0d54558"
+  },
+  "brookfield-asset-management": {
+    "slug": "brookfield-asset-management",
+    "ticker": "BAM",
+    "companyName": "Brookfield Asset Management",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:05:01.382Z",
+    "runId": "3cd4da48-98c7-4aa6-99df-11017ce3dbfc"
+  },
+  "canadian-natural-resources": {
+    "slug": "canadian-natural-resources",
+    "ticker": "CNQ",
+    "companyName": "Canadian Natural Resources",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:04:37.053Z",
+    "runId": "554aae66-3225-43a1-96c7-21b8d0f59e4c"
+  },
+  "opentext": {
+    "slug": "opentext",
+    "ticker": "OTEX",
+    "companyName": "OpenText",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:04:59.812Z",
+    "runId": "28a65595-7ed6-4497-a036-af3ab39e9a89"
+  },
+  "cnooc": {
+    "slug": "cnooc",
+    "ticker": "0883.HK",
+    "companyName": "Cnooc",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:03:08.596Z",
+    "runId": "a8a16336-387a-4dfa-861a-b55aa63f0853"
+  },
+  "sinopec": {
+    "slug": "sinopec",
+    "ticker": "0386.HK",
+    "companyName": "Sinopec",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:06:30.433Z",
+    "runId": "0c66709f-09f4-4ab1-917b-f77cf2ed0b37"
+  },
+  "bancolombia": {
+    "slug": "bancolombia",
+    "ticker": "CIB",
+    "companyName": "Bancolombia",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:05:16.892Z",
+    "runId": "73d62429-ee90-431b-90bb-29710c5b1071"
+  },
+  "ecopetrol": {
+    "slug": "ecopetrol",
+    "ticker": "EC",
+    "companyName": "Ecopetrol",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:04:20.286Z",
+    "runId": "4a9d4493-d36f-4b4d-a254-2de011196537"
+  },
+  "commercial-international-bank": {
+    "slug": "commercial-international-bank",
+    "ticker": "COMI.CA",
+    "companyName": "Commercial International Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:03:23.571Z",
+    "runId": "793f0599-2fde-43ef-aa4b-04546c71c6aa"
+  },
+  "nordea-bank": {
+    "slug": "nordea-bank",
+    "ticker": "NDA-SE.ST",
+    "companyName": "Nordea Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:04:17.085Z",
+    "runId": "f8b477b5-7c3c-445d-befc-5420cf5f3b2b"
+  },
+  "safran": {
+    "slug": "safran",
+    "ticker": "SAF.PA",
+    "companyName": "Safran",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:08:38.451Z",
+    "runId": "da49b43b-981e-4631-9521-decdb31a0cb1"
+  },
+  "beiersdorf": {
+    "slug": "beiersdorf",
+    "ticker": "BEI.DE",
+    "companyName": "Beiersdorf",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:06:06.732Z",
+    "runId": "5865c846-7c86-4c0d-a027-28ff640a26cb"
+  },
+  "axis-bank": {
+    "slug": "axis-bank",
+    "ticker": "AXISBANK.NS",
+    "companyName": "Axis Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:05:11.179Z",
+    "runId": "2c322932-a165-4fd4-a7b1-38ccbed89cf8"
+  },
+  "bajaj-auto": {
+    "slug": "bajaj-auto",
+    "ticker": "BAJAJ-AUTO.NS",
+    "companyName": "Bajaj Auto",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:04:43.549Z",
+    "runId": "d1265c27-8a06-4c81-a4dd-bc6f49c5b75e"
+  },
+  "kotak-mahindra-bank": {
+    "slug": "kotak-mahindra-bank",
+    "ticker": "KOTAKBANK.NS",
+    "companyName": "Kotak Mahindra Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:06:03.675Z",
+    "runId": "a5580320-9d7c-430f-bfcd-02264dca7120"
+  },
+  "ltimindtree": {
+    "slug": "ltimindtree",
+    "ticker": "LTIM.NS",
+    "companyName": "LTIMindtree",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:08:42.358Z",
+    "runId": "15f50da4-668c-439b-aab7-1d814ba7a7c9"
+  },
+  "mahindra-mahindra": {
+    "slug": "mahindra-mahindra",
+    "ticker": "M&M.NS",
+    "companyName": "Mahindra & Mahindra",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:09:58.753Z",
+    "runId": "38c03930-4684-4328-ba4e-035debb23b50"
+  },
+  "sun-pharmaceutical": {
+    "slug": "sun-pharmaceutical",
+    "ticker": "SUNPHARMA.NS",
+    "companyName": "Sun Pharmaceutical",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:07:58.956Z",
+    "runId": "b4a5f28f-2889-4b6a-acba-246f16cc3687"
+  },
+  "nippon-telegraph-and-telephone": {
+    "slug": "nippon-telegraph-and-telephone",
+    "ticker": "9432.T",
+    "companyName": "Nippon Telegraph and Telephone",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:10:12.398Z",
+    "runId": "7a90e0ba-caf3-42f1-a8a1-7f22a22ea4e6"
+  },
+  "panasonic-holdings": {
+    "slug": "panasonic-holdings",
+    "ticker": "6752.T",
+    "companyName": "Panasonic Holdings",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:10:44.990Z",
+    "runId": "f563db2c-101f-4494-bacb-e4dee6456c90"
+  },
+  "tokio-marine-holdings": {
+    "slug": "tokio-marine-holdings",
+    "ticker": "8766.T",
+    "companyName": "Tokio Marine Holdings",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:08:37.398Z",
+    "runId": "942b6d11-bc5a-4dc3-b00b-a2ddda9191f0"
+  },
+  "mtn-nigeria": {
+    "slug": "mtn-nigeria",
+    "ticker": "MTNN.LG",
+    "companyName": "MTN Nigeria",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:08:16.752Z",
+    "runId": "41ebbbd1-e2c7-40a9-8839-15f79d9dfd4d"
+  },
+  "aker-asa": {
+    "slug": "aker-asa",
+    "ticker": "AKER.OL",
+    "companyName": "Aker ASA",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:08:19.011Z",
+    "runId": "a621e057-dbe3-4673-98b1-3f2a5bfdf7c9"
+  },
+  "alinma-bank": {
+    "slug": "alinma-bank",
+    "ticker": "ALINMA.SR",
+    "companyName": "Alinma Bank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:10:05.488Z",
+    "runId": "59631f34-e44e-404c-9ec2-ee34abd07113"
+  },
+  "bid-corporation": {
+    "slug": "bid-corporation",
+    "ticker": "BIDCORP.JO",
+    "companyName": "Bid Corporation",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:09:23.923Z",
+    "runId": "3d1e80c6-9748-4a18-997e-4279e78c042d"
+  },
+  "alfa-laval": {
+    "slug": "alfa-laval",
+    "ticker": "ALFA.ST",
+    "companyName": "Alfa Laval",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:10:19.773Z",
+    "runId": "7193339f-c568-45da-9b11-4472d8d1675b"
+  },
+  "evolution-ab": {
+    "slug": "evolution-ab",
+    "ticker": "EVO.ST",
+    "companyName": "Evolution AB",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:09:54.921Z",
+    "runId": "6f828f87-7b96-44cc-9abc-e4922f9427b1"
+  },
+  "volvo-car-ab": {
+    "slug": "volvo-car-ab",
+    "ticker": "VOLCAR-B.ST",
+    "companyName": "Volvo Car AB",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:10:28.147Z",
+    "runId": "d5eaac38-fe4d-43bb-950c-413754f1a087"
+  },
+  "adecco-group": {
+    "slug": "adecco-group",
+    "ticker": "ADEN.SW",
+    "companyName": "Adecco Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:10:52.793Z",
+    "runId": "3e954f8f-4208-449c-8952-fcac7ecfb4ae"
+  },
+  "geberit": {
+    "slug": "geberit",
+    "ticker": "GEBN.SW",
+    "companyName": "Geberit",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:10:37.792Z",
+    "runId": "9dfdef00-c393-4162-9ae5-7af2e535bbb9"
+  },
+  "logitech": {
+    "slug": "logitech",
+    "ticker": "LOGN.SW",
+    "companyName": "Logitech",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:11:36.385Z",
+    "runId": "0ea76281-be6d-4c52-8899-9a6fc46b8d22"
+  },
+  "legal-general": {
+    "slug": "legal-general",
+    "ticker": "LGEN.L",
+    "companyName": "Legal & General",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:12:13.224Z",
+    "runId": "f760e3f0-4613-4416-9a37-306ecc2a9b7b"
+  },
+  "national-grid": {
+    "slug": "national-grid",
+    "ticker": "NG.L",
+    "companyName": "National Grid",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:11:22.665Z",
+    "runId": "d93feade-f664-4d0f-9627-49498118cb72"
+  },
+  "sse-plc": {
+    "slug": "sse-plc",
+    "ticker": "SSE.L",
+    "companyName": "SSE plc",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:12:51.983Z",
+    "runId": "25f39bc7-9558-4c46-b39a-c1386a4b2c32"
+  },
+  "smiths-group": {
+    "slug": "smiths-group",
+    "ticker": "SMIN.L",
+    "companyName": "Smiths Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:14:10.570Z",
+    "runId": "deb0f47b-aa35-4cb8-a550-cefea3708ccc"
+  },
+  "standard-chartered": {
+    "slug": "standard-chartered",
+    "ticker": "STAN.L",
+    "companyName": "Standard Chartered",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:13:40.765Z",
+    "runId": "50757ddc-c79f-4dc4-8cef-209042a97473"
+  },
+  "fidelity-national-info-services": {
+    "slug": "fidelity-national-info-services",
+    "ticker": "FIS",
+    "companyName": "Fidelity National Info Services",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:13:58.354Z",
+    "runId": "a0c886a2-748d-4974-b206-c47a4771e0f4"
+  },
+  "kroger": {
+    "slug": "kroger",
+    "ticker": "KR",
+    "companyName": "Kroger",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:15:31.266Z",
+    "runId": "fdaa549f-cc6c-4c12-8a60-8c304f36bb33"
+  },
+  "phillips-66": {
+    "slug": "phillips-66",
+    "ticker": "PSX",
+    "companyName": "Phillips 66",
     "status": "failed",
     "attempts": 1,
-    "updatedAt": "2025-10-25T13:43:32.918Z",
-    "error": "Failed to start run (500): "
+    "updatedAt": "2025-11-04T11:15:30.013Z",
+    "error": "Run phillips-66 failed"
+  },
+  "snowflake": {
+    "slug": "snowflake",
+    "ticker": "SNOW",
+    "companyName": "Snowflake",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:15:54.226Z",
+    "runId": "67296b50-b9e4-4d16-b9de-3dbd7320306d"
+  },
+  "booz-allen-hamilton": {
+    "slug": "booz-allen-hamilton",
+    "ticker": "BAH",
+    "companyName": "Booz Allen Hamilton",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:14:13.049Z",
+    "runId": "11de0f1e-70b0-4f22-9144-742ebac970f6"
+  },
+  "cgi-inc": {
+    "slug": "cgi-inc",
+    "ticker": "GIB",
+    "companyName": "CGI Inc.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:15:46.631Z",
+    "runId": "30b4ba93-6fe8-400f-94a9-1d2d647a077b"
+  },
+  "wsp-global": {
+    "slug": "wsp-global",
+    "ticker": "WSP.TO",
+    "companyName": "WSP Global",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:14:34.455Z",
+    "runId": "4a5c07b1-c77c-405a-afc7-55c49f892e21"
+  },
+  "flex-ltd": {
+    "slug": "flex-ltd",
+    "ticker": "FLEX",
+    "companyName": "Flex Ltd.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:16:30.954Z",
+    "runId": "c9527f3a-c3ee-4d1d-bdc5-c582dfc56b2d"
+  },
+  "jabil-inc": {
+    "slug": "jabil-inc",
+    "ticker": "JBL",
+    "companyName": "Jabil Inc.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:16:01.781Z",
+    "runId": "16cd4138-c8a5-414e-ae2f-b48eddaf0422"
+  },
+  "nidec-corporation": {
+    "slug": "nidec-corporation",
+    "ticker": "6594.T",
+    "companyName": "Nidec Corporation",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:16:41.012Z",
+    "runId": "50d5fbd2-8be0-4580-9bc0-11914955166e"
+  },
+  "murata-manufacturing": {
+    "slug": "murata-manufacturing",
+    "ticker": "6981.T",
+    "companyName": "Murata Manufacturing",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:17:39.330Z",
+    "runId": "6edd0e0a-e3ac-4c92-a1af-745888738282"
+  },
+  "roku-inc": {
+    "slug": "roku-inc",
+    "ticker": "ROKU",
+    "companyName": "Roku Inc.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:16:17.429Z",
+    "runId": "a723ce3e-ac64-485c-876a-4028d0271b4b"
+  },
+  "take-two-interactive": {
+    "slug": "take-two-interactive",
+    "ticker": "TTWO",
+    "companyName": "Take-Two Interactive",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:17:54.616Z",
+    "runId": "2c93a317-7fe3-4dff-8752-bbbb5576a7ea"
+  },
+  "roblox-corp": {
+    "slug": "roblox-corp",
+    "ticker": "RBLX",
+    "companyName": "Roblox Corp.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:17:01.027Z",
+    "runId": "aa1feebe-fce2-4009-8b48-99e5be5302c9"
+  },
+  "newmont-corporation": {
+    "slug": "newmont-corporation",
+    "ticker": "NEM",
+    "companyName": "Newmont Corporation",
+    "status": "failed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:33:51.494Z",
+    "error": "Timed out waiting for newmont-corporation"
+  },
+  "teck-resources": {
+    "slug": "teck-resources",
+    "ticker": "TECK",
+    "companyName": "Teck Resources",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:19:43.259Z",
+    "runId": "a3fb6f6a-11e3-45ec-a72c-ea80475aa891"
+  },
+  "arcadis-nv": {
+    "slug": "arcadis-nv",
+    "ticker": "ARCAD.AS",
+    "companyName": "Arcadis NV",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:19:05.720Z",
+    "runId": "ee631ccd-20d0-48f5-9204-2934f89ce5eb"
+  },
+  "afry-ab": {
+    "slug": "afry-ab",
+    "ticker": "AFRY.ST",
+    "companyName": "Afry AB",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:19:20.299Z",
+    "runId": "df9eadd3-5c83-4170-a99f-1a74cdc6ba73"
+  },
+  "nomura-research-institute": {
+    "slug": "nomura-research-institute",
+    "ticker": "4307.T",
+    "companyName": "Nomura Research Institute",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:18:25.773Z",
+    "runId": "6c98e304-0a19-4666-ac34-1258a33ba816"
+  },
+  "asm-international": {
+    "slug": "asm-international",
+    "ticker": "ASM.AS",
+    "companyName": "ASM International",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:21:14.575Z",
+    "runId": "48a9c2cf-c7c4-4262-968b-7b46bdde3abd"
+  },
+  "dixon-technologies": {
+    "slug": "dixon-technologies",
+    "ticker": "DIXON.NS",
+    "companyName": "Dixon Technologies",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:20:39.360Z",
+    "runId": "07726505-b169-4028-a0bc-d36695d5b6d7"
+  },
+  "hana-microelectronics": {
+    "slug": "hana-microelectronics",
+    "ticker": "HANA.BK",
+    "companyName": "Hana Microelectronics",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:20:43.881Z",
+    "runId": "48aaf36e-41e0-44d0-a109-6dd883f5a208"
+  },
+  "iqiyi-inc": {
+    "slug": "iqiyi-inc",
+    "ticker": "IQ",
+    "companyName": "iQIYI Inc.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:21:18.242Z",
+    "runId": "b4c4ba03-36a0-48af-a80e-830a086ac53c"
+  },
+  "bilibili-inc": {
+    "slug": "bilibili-inc",
+    "ticker": "BILI",
+    "companyName": "Bilibili Inc.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:21:16.478Z",
+    "runId": "f8e6ede0-c26d-4ebc-9015-4fd880d98a9f"
+  },
+  "zee-entertainment-enterprises": {
+    "slug": "zee-entertainment-enterprises",
+    "ticker": "ZEE.NS",
+    "companyName": "Zee Entertainment Enterprises",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:20:19.874Z",
+    "runId": "e91a6b29-06c4-4646-8f13-43b6a5e1c9d0"
+  },
+  "square-enix-holdings": {
+    "slug": "square-enix-holdings",
+    "ticker": "7994.T",
+    "companyName": "Square Enix Holdings",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:20:45.233Z",
+    "runId": "454ddb78-7986-404c-9c38-746223c2f881"
+  },
+  "krafton-inc": {
+    "slug": "krafton-inc",
+    "ticker": "293490.KS",
+    "companyName": "Krafton Inc.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:21:02.213Z",
+    "runId": "fde6f92a-14a0-436a-82f2-ab535c6de984"
+  },
+  "sega-sammy-holdings": {
+    "slug": "sega-sammy-holdings",
+    "ticker": "6460.T",
+    "companyName": "Sega Sammy Holdings",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:21:09.766Z",
+    "runId": "9a467f7f-cfa1-4986-8ae9-33761dd3cfcf"
+  },
+  "antofagasta-plc": {
+    "slug": "antofagasta-plc",
+    "ticker": "ANTO.L",
+    "companyName": "Antofagasta plc",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:20:44.070Z",
+    "runId": "38667048-8f87-453b-af74-03715803ff62"
+  },
+  "boliden-ab": {
+    "slug": "boliden-ab",
+    "ticker": "BOL.ST",
+    "companyName": "Boliden AB",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:24:20.046Z",
+    "runId": "414f0abf-787e-4ac2-9ff6-8f17ca20eb3a"
+  },
+  "zijin-mining-group": {
+    "slug": "zijin-mining-group",
+    "ticker": "2899.HK",
+    "companyName": "Zijin Mining Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:22:24.148Z",
+    "runId": "8525e257-4ffd-476b-ae6a-7d84bcd75b5a"
+  },
+  "tech-mahindra": {
+    "slug": "tech-mahindra",
+    "ticker": "TECHM.NS",
+    "companyName": "Tech Mahindra",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:24:39.067Z",
+    "runId": "ee9ca9e5-ad80-43b8-857d-103af0265326"
+  },
+  "lt-technology-services": {
+    "slug": "lt-technology-services",
+    "ticker": "LTTS.NS",
+    "companyName": "L&T Technology Services",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:23:16.993Z",
+    "runId": "a839afdb-9f7d-4eca-b24e-a6c583e712da"
+  },
+  "dxc-technology": {
+    "slug": "dxc-technology",
+    "ticker": "DXC",
+    "companyName": "DXC Technology",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:23:37.367Z",
+    "runId": "776fb17b-9ce8-4e77-ba38-aa4aeb5872e6"
+  },
+  "concentrix-corporation": {
+    "slug": "concentrix-corporation",
+    "ticker": "CNXC",
+    "companyName": "Concentrix Corporation",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:24:55.149Z",
+    "runId": "a92cee90-1cdd-4453-bbea-1226ceec7afd"
+  },
+  "telus-international": {
+    "slug": "telus-international",
+    "ticker": "TELUS.TO",
+    "companyName": "TELUS International",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:25:35.522Z",
+    "runId": "c533d9c0-9c20-4da3-ab44-a88837ef3f3f"
+  },
+  "genpact": {
+    "slug": "genpact",
+    "ticker": "GEN",
+    "companyName": "Genpact",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:25:18.411Z",
+    "runId": "c4cd843a-1553-461e-bbc1-36b973742e48"
+  },
+  "baker-mckenzie": {
+    "slug": "baker-mckenzie",
+    "ticker": "BakerMcKenzie",
+    "companyName": "Baker McKenzie",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:25:25.652Z",
+    "runId": "1f901b79-9c2e-44f8-8061-df0fd288483b"
+  },
+  "dentons": {
+    "slug": "dentons",
+    "ticker": "Dentons",
+    "companyName": "Dentons",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:26:30.667Z",
+    "runId": "9d4fe699-b8d6-42b9-9119-ffefca5200e4"
+  },
+  "dla-piper": {
+    "slug": "dla-piper",
+    "ticker": "DLA Piper",
+    "companyName": "DLA Piper",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:25:10.087Z",
+    "runId": "609b88cf-4615-418a-bf3f-66ed2c1e32b2"
+  },
+  "clifford-chance": {
+    "slug": "clifford-chance",
+    "ticker": "CliffordChance",
+    "companyName": "Clifford Chance",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:26:47.541Z",
+    "runId": "8e7b0b93-d47e-4cda-abd1-3c5202de42f3"
+  },
+  "linklaters": {
+    "slug": "linklaters",
+    "ticker": "Linklaters",
+    "companyName": "Linklaters",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:26:03.861Z",
+    "runId": "f9d915f1-1ddf-490f-9596-356e9646a066"
+  },
+  "skadden-arps-slate-meagher-flom": {
+    "slug": "skadden-arps-slate-meagher-flom",
+    "ticker": "Skadden",
+    "companyName": "Skadden, Arps, Slate, Meagher & Flom",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:25:39.823Z",
+    "runId": "090171a2-d71d-4974-a181-4c42da704935"
+  },
+  "kirkland-ellis": {
+    "slug": "kirkland-ellis",
+    "ticker": "Kirkland",
+    "companyName": "Kirkland & Ellis",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:26:36.102Z",
+    "runId": "ea00b4d2-2568-48e1-a9d2-0597cdfdfa26"
+  },
+  "herbert-smith-freehills": {
+    "slug": "herbert-smith-freehills",
+    "ticker": "HerbertSmithFreehills",
+    "companyName": "Herbert Smith Freehills",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:24:51.484Z",
+    "runId": "06ba9014-1111-4ec7-93db-d3038183edf1"
+  },
+  "albertsons-companies": {
+    "slug": "albertsons-companies",
+    "ticker": "ACI",
+    "companyName": "Albertsons Companies",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:26:41.587Z",
+    "runId": "b0df837f-7e93-4334-9b81-0445727aa20c"
+  },
+  "greggs-plc": {
+    "slug": "greggs-plc",
+    "ticker": "GRG.L",
+    "companyName": "Greggs plc",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:28:03.393Z",
+    "runId": "df95dd10-f3ac-478b-b894-3b02401b657a"
+  },
+  "hannover-ruck": {
+    "slug": "hannover-ruck",
+    "ticker": "HNR1.DE",
+    "companyName": "Hannover Rück",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:26:43.443Z",
+    "runId": "1271c6ad-32ea-4691-9e93-22afc953c19f"
+  },
+  "banco-bpm": {
+    "slug": "banco-bpm",
+    "ticker": "BAMI.MI",
+    "companyName": "Banco BPM",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:27:37.782Z",
+    "runId": "b8adeca5-416d-4214-8a17-62fbb2366b29"
+  },
+  "caixabank": {
+    "slug": "caixabank",
+    "ticker": "CABK.MC",
+    "companyName": "CaixaBank",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:29:02.922Z",
+    "runId": "e42c15e7-eb01-4fa7-bb5d-8ea46738f31c"
+  },
+  "ntpc-limited": {
+    "slug": "ntpc-limited",
+    "ticker": "NTPC.NS",
+    "companyName": "NTPC Limited",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:31:33.207Z",
+    "runId": "b8a87023-fce3-4b5f-9ccc-1ae85fa07f17"
+  },
+  "hydro-one": {
+    "slug": "hydro-one",
+    "ticker": "H.TO",
+    "companyName": "Hydro One",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:31:43.117Z",
+    "runId": "da258da3-8895-447a-bf33-161cf97b83a2"
+  },
+  "adnoc-gas": {
+    "slug": "adnoc-gas",
+    "ticker": "ADNOCGAS.AE",
+    "companyName": "ADNOC Gas",
+    "status": "failed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:28:29.379Z",
+    "error": "Run adnoc-gas failed"
+  },
+  "etihad-etisalat-mobily": {
+    "slug": "etihad-etisalat-mobily",
+    "ticker": "7020.SR",
+    "companyName": "Etihad Etisalat (Mobily)",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:29:34.609Z",
+    "runId": "13b6f7c3-0151-4802-9526-68fa2ed4bdc2"
+  },
+  "vodafone-qatar": {
+    "slug": "vodafone-qatar",
+    "ticker": "VFQS.QA",
+    "companyName": "Vodafone Qatar",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:28:40.424Z",
+    "runId": "870a4d99-df82-43a0-9bec-0f2cffa6fe89"
+  },
+  "nexon-co": {
+    "slug": "nexon-co",
+    "ticker": "3659.T",
+    "companyName": "Nexon Co.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:30:26.939Z",
+    "runId": "efeb22a1-9535-474a-9110-7bf96b171f52"
+  },
+  "ncsoft-corporation": {
+    "slug": "ncsoft-corporation",
+    "ticker": "036570.KS",
+    "companyName": "NCSoft Corporation",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:30:24.163Z",
+    "runId": "2ac05834-6164-4ccf-acd6-4708058012f7"
+  },
+  "sun-tv-network": {
+    "slug": "sun-tv-network",
+    "ticker": "SUNTV.NS",
+    "companyName": "Sun TV Network",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:29:44.166Z",
+    "runId": "981d130b-a557-4c92-b7f5-7e6ad886d0c4"
+  },
+  "first-quantum-minerals": {
+    "slug": "first-quantum-minerals",
+    "ticker": "FM.TO",
+    "companyName": "First Quantum Minerals",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:30:35.761Z",
+    "runId": "913ac9ce-d648-48f1-bcd1-a5951ce973a6"
+  },
+  "vale-indonesia": {
+    "slug": "vale-indonesia",
+    "ticker": "INCO.JK",
+    "companyName": "Vale Indonesia",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:30:48.949Z",
+    "runId": "3678dfcf-cb13-438b-9e80-ab3faa85fa6f"
+  },
+  "united-airlines-holdings": {
+    "slug": "united-airlines-holdings",
+    "ticker": "UAL",
+    "companyName": "United Airlines Holdings",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:31:46.751Z",
+    "runId": "32ead573-63bc-41c6-b9ae-4c9db6a2f109"
+  },
+  "hologic-inc": {
+    "slug": "hologic-inc",
+    "ticker": "HOLX",
+    "companyName": "Hologic Inc.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:32:05.092Z",
+    "runId": "4e2e5635-0741-4504-9090-f0bdc54f58b9"
+  },
+  "evonik-industries": {
+    "slug": "evonik-industries",
+    "ticker": "EVK.DE",
+    "companyName": "Evonik Industries",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:32:58.218Z",
+    "runId": "ded9cb04-4564-4a5d-94d5-0b1e9682cbbf"
+  },
+  "sartorius-ag": {
+    "slug": "sartorius-ag",
+    "ticker": "SRT3.DE",
+    "companyName": "Sartorius AG",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:33:03.923Z",
+    "runId": "6dc29818-2ed8-4761-8c80-d985e64000c5"
+  },
+  "oil-natural-gas-corporation": {
+    "slug": "oil-natural-gas-corporation",
+    "ticker": "ONGC.NS",
+    "companyName": "Oil & Natural Gas Corporation",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:31:51.347Z",
+    "runId": "114dfa4d-8709-43c3-b192-bb26f108a8da"
+  },
+  "vodafone-idea": {
+    "slug": "vodafone-idea",
+    "ticker": "IDEA.NS",
+    "companyName": "Vodafone Idea",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:32:28.374Z",
+    "runId": "9fdf255a-72c9-4567-938a-5d2f2df1a180"
+  },
+  "ircon-international": {
+    "slug": "ircon-international",
+    "ticker": "IRCON.NS",
+    "companyName": "IRCON International",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:32:13.181Z",
+    "runId": "0baa4af5-4749-41ce-b082-5e537ad97da0"
+  },
+  "unilever-plc": {
+    "slug": "unilever-plc",
+    "ticker": "ULVR.L",
+    "companyName": "Unilever plc",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:34:47.228Z",
+    "runId": "2ec474ae-e3d5-418a-a89e-37048323b19e"
+  },
+  "experian-plc": {
+    "slug": "experian-plc",
+    "ticker": "EXPN.L",
+    "companyName": "Experian plc",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:33:36.279Z",
+    "runId": "a2995049-6a67-4249-b54e-cd88e339a1f1"
+  },
+  "indra-sistemas": {
+    "slug": "indra-sistemas",
+    "ticker": "IDR.MC",
+    "companyName": "Indra Sistemas",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:33:46.183Z",
+    "runId": "0445e40d-c422-4b91-af3f-9f2cf7b6f534"
+  },
+  "distribuidora-internacional-de-alimentacion": {
+    "slug": "distribuidora-internacional-de-alimentacion",
+    "ticker": "DIA.MC",
+    "companyName": "Distribuidora Internacional de Alimentación",
+    "status": "failed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:49:09.549Z",
+    "error": "Timed out waiting for distribuidora-internacional-de-alimentacion"
+  },
+  "inwit-spa": {
+    "slug": "inwit-spa",
+    "ticker": "INW.MI",
+    "companyName": "Inwit S.p.A.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:33:19.100Z",
+    "runId": "5f837af5-c7c1-4fa9-b729-7f87dfee492f"
+  },
+  "snam-spa": {
+    "slug": "snam-spa",
+    "ticker": "SRG.MI",
+    "companyName": "Snam S.p.A.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:34:22.168Z",
+    "runId": "a22a9f28-1985-4692-b594-320cea0fe1e4"
+  },
+  "ramsay-sante": {
+    "slug": "ramsay-sante",
+    "ticker": "GDS.PA",
+    "companyName": "Ramsay Santé",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:36:05.193Z",
+    "runId": "34076723-dc36-4fc3-8aae-a27d66d69aac"
+  },
+  "getlink-se": {
+    "slug": "getlink-se",
+    "ticker": "GET.PA",
+    "companyName": "Getlink SE",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:34:34.519Z",
+    "runId": "f28ca49b-4bed-4e1c-802c-2cd530234ea8"
+  },
+  "rakuten-group": {
+    "slug": "rakuten-group",
+    "ticker": "4755.T",
+    "companyName": "Rakuten Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:35:45.295Z",
+    "runId": "1d92d8be-c437-4e38-bac9-aa5bb478dccb"
+  },
+  "rogers-communications": {
+    "slug": "rogers-communications",
+    "ticker": "RCI-B.TO",
+    "companyName": "Rogers Communications",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:36:29.113Z",
+    "runId": "e2db825b-4d33-47f4-8021-b757bd2c8dcb"
+  },
+  "air-arabia": {
+    "slug": "air-arabia",
+    "ticker": "AIRARABIADU",
+    "companyName": "Air Arabia",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:37:05.103Z",
+    "runId": "5b2f0dcb-9631-4ebb-b4c6-c3f82055bd2d"
+  },
+  "qatar-general-insurance-reinsurance": {
+    "slug": "qatar-general-insurance-reinsurance",
+    "ticker": "QGRI.QA",
+    "companyName": "Qatar General Insurance & Reinsurance",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:36:18.223Z",
+    "runId": "e746147a-0317-4efd-bd39-38e6bef4cb12"
+  },
+  "tpg-telecom": {
+    "slug": "tpg-telecom",
+    "ticker": "TPG.AX",
+    "companyName": "TPG Telecom",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:37:48.208Z",
+    "runId": "c1872f25-c3f2-4bbb-af7f-870a92ef87db"
+  },
+  "jb-hi-fi": {
+    "slug": "jb-hi-fi",
+    "ticker": "JBH.AX",
+    "companyName": "JB Hi-Fi",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:37:29.897Z",
+    "runId": "0140bb07-5598-46df-ba0a-69bbc307b757"
+  },
+  "kt-corporation": {
+    "slug": "kt-corporation",
+    "ticker": "030200.KS",
+    "companyName": "KT Corporation",
+    "status": "failed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:34:30.738Z",
+    "error": "Run kt-corporation failed"
+  },
+  "bk-brasil-operacao-e-assessoria-a-restaurantes": {
+    "slug": "bk-brasil-operacao-e-assessoria-a-restaurantes",
+    "ticker": "BKBR3.SA",
+    "companyName": "BK Brasil Operacao e Assessoria a Restaurantes",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:37:26.992Z",
+    "runId": "96cb4872-f330-4bc9-9fa9-24c84f6c5b6d"
+  },
+  "mckinsey-company": {
+    "slug": "mckinsey-company",
+    "ticker": "MCKINSEY",
+    "companyName": "McKinsey & Company",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:37:06.459Z",
+    "runId": "28fab606-8aca-4d37-bae6-37d1bf1c18ed"
+  },
+  "boston-consulting-group": {
+    "slug": "boston-consulting-group",
+    "ticker": "BCG",
+    "companyName": "Boston Consulting Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:37:54.239Z",
+    "runId": "ea202d2e-e241-40df-a1cb-883de91a981a"
+  },
+  "bain-company": {
+    "slug": "bain-company",
+    "ticker": "BAIN",
+    "companyName": "Bain & Company",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:38:59.032Z",
+    "runId": "22d912ed-c207-4fb9-9672-1aa66cd90d0f"
+  },
+  "kearney": {
+    "slug": "kearney",
+    "ticker": "KEARNEY",
+    "companyName": "Kearney",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:38:21.591Z",
+    "runId": "69d13106-c8c5-4d6b-955d-ed3fba2d62a3"
+  },
+  "roland-berger": {
+    "slug": "roland-berger",
+    "ticker": "ROLANDBERGER",
+    "companyName": "Roland Berger",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:37:56.897Z",
+    "runId": "a7c7ec7a-7863-4770-90c8-0b9b82277b72"
+  },
+  "pa-consulting": {
+    "slug": "pa-consulting",
+    "ticker": "PACONSULTING",
+    "companyName": "PA Consulting",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:38:48.696Z",
+    "runId": "ef883754-7870-42db-97ef-f74fa835caed"
+  },
+  "koch-industries": {
+    "slug": "koch-industries",
+    "ticker": "KOCH",
+    "companyName": "Koch Industries",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:38:46.077Z",
+    "runId": "aa6978de-5881-4054-ae7d-055247298c60"
+  },
+  "spacex": {
+    "slug": "spacex",
+    "ticker": "SPACEX",
+    "companyName": "SpaceX",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:39:34.624Z",
+    "runId": "e0fce8d4-d5aa-418c-9f47-823d06f6fda5"
+  },
+  "cargill": {
+    "slug": "cargill",
+    "ticker": "CARGILL",
+    "companyName": "Cargill",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:40:40.706Z",
+    "runId": "728c1133-d556-4734-a522-ffb2acbcbd65"
+  },
+  "publix-super-markets": {
+    "slug": "publix-super-markets",
+    "ticker": "PUBLIX",
+    "companyName": "Publix Super Markets",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:39:58.550Z",
+    "runId": "df960031-f192-4131-8436-598655853052"
+  },
+  "schwarz-gruppe-lidlkaufland": {
+    "slug": "schwarz-gruppe-lidlkaufland",
+    "ticker": "SCHWARZ",
+    "companyName": "Schwarz Gruppe (Lidl/Kaufland)",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:40:59.459Z",
+    "runId": "4df0bbe8-c5e5-4740-bf49-0a56862a55d0"
+  },
+  "robert-bosch-gmbh": {
+    "slug": "robert-bosch-gmbh",
+    "ticker": "BOSCH",
+    "companyName": "Robert Bosch GmbH",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:42:19.195Z",
+    "runId": "3b330324-2b7d-4f4b-97f8-84e3912bd098"
+  },
+  "aldi-sud-aldi-nord": {
+    "slug": "aldi-sud-aldi-nord",
+    "ticker": "ALDI",
+    "companyName": "ALDI Süd & Aldi Nord",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:41:21.999Z",
+    "runId": "a0f57ce9-2274-44c3-b259-8bdb64ea6c49"
+  },
+  "bytedance": {
+    "slug": "bytedance",
+    "ticker": "BYTEDANCE",
+    "companyName": "ByteDance",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:42:11.192Z",
+    "runId": "372f509a-bf56-4b8f-aedd-392b00d1c170"
+  },
+  "huawei-technologies": {
+    "slug": "huawei-technologies",
+    "ticker": "HUAWEI",
+    "companyName": "Huawei Technologies",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:42:33.547Z",
+    "runId": "6568485f-8d94-4d92-87ad-f22670b79054"
+  },
+  "ingka-group-ikea": {
+    "slug": "ingka-group-ikea",
+    "ticker": "IKEA",
+    "companyName": "Ingka Group (IKEA)",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:43:33.494Z",
+    "runId": "19aee275-9b78-43eb-b065-0d9aed1ce6d8"
+  },
+  "deloitte": {
+    "slug": "deloitte",
+    "ticker": "DELOITTE",
+    "companyName": "Deloitte",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:41:56.328Z",
+    "runId": "750406d3-58dd-4508-b497-89bfcd25bb25"
+  },
+  "pwc": {
+    "slug": "pwc",
+    "ticker": "PWC",
+    "companyName": "PwC",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:43:06.303Z",
+    "runId": "2783ebaa-f1ab-4ebe-971f-5dc4c37163b8"
+  },
+  "ey-ernst-young": {
+    "slug": "ey-ernst-young",
+    "ticker": "EY",
+    "companyName": "EY (Ernst & Young)",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:41:55.154Z",
+    "runId": "21586550-8636-4e4c-830c-d944b68f98c5"
+  },
+  "kpmg": {
+    "slug": "kpmg",
+    "ticker": "KPMG",
+    "companyName": "Kpmg",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:43:27.826Z",
+    "runId": "03921318-17a1-49c8-8068-77919e6fa3ed"
+  },
+  "united-microelectronics": {
+    "slug": "united-microelectronics",
+    "ticker": "2303.TW",
+    "companyName": "United Microelectronics",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:43:04.702Z",
+    "runId": "a3d741c4-baad-49d8-95d6-f8ad587dbc17"
+  },
+  "unimicron-technology": {
+    "slug": "unimicron-technology",
+    "ticker": "2414.TW",
+    "companyName": "Unimicron Technology",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:44:09.387Z",
+    "runId": "739ec8b3-537b-4e95-9f85-60c17601d790"
+  },
+  "yuanta-financial-holding": {
+    "slug": "yuanta-financial-holding",
+    "ticker": "2884.TW",
+    "companyName": "Yuanta Financial Holding",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:44:21.963Z",
+    "runId": "9ae2baba-3c82-4be7-92e8-19938178b530"
+  },
+  "first-financial-holding": {
+    "slug": "first-financial-holding",
+    "ticker": "2892.TW",
+    "companyName": "First Financial Holding",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:44:58.638Z",
+    "runId": "0a183a7d-ba4e-4beb-b410-081e5b1dc3ac"
+  },
+  "grimaldi-group": {
+    "slug": "grimaldi-group",
+    "ticker": "GRIMALDI",
+    "companyName": "Grimaldi Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:43:44.522Z",
+    "runId": "6ba388cc-76b7-461a-af86-1f4b1e8a5c6e"
+  },
+  "pt-pelabuhan-indonesia-pelindo": {
+    "slug": "pt-pelabuhan-indonesia-pelindo",
+    "ticker": "PELINDO",
+    "companyName": "PT Pelabuhan Indonesia (Pelindo)",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:44:59.368Z",
+    "runId": "7bd47e82-8fcc-4736-8b67-0af5ca5e501b"
+  },
+  "empresa-brasileira-de-correios-e-telegrafos": {
+    "slug": "empresa-brasileira-de-correios-e-telegrafos",
+    "ticker": "CORREIOS",
+    "companyName": "Empresa Brasileira de Correios e Telégrafos",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:44:05.125Z",
+    "runId": "d62df5e4-5c7d-40da-a31c-ba2e353c1e59"
+  },
+  "qube-holdings": {
+    "slug": "qube-holdings",
+    "ticker": "QUB.AX",
+    "companyName": "Qube Holdings",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:45:06.396Z",
+    "runId": "a81e4ee5-f34f-4982-80ed-8d4cf36b2375"
+  },
+  "pkp-cargo": {
+    "slug": "pkp-cargo",
+    "ticker": "PKPC.WA",
+    "companyName": "PKP Cargo",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:45:54.564Z",
+    "runId": "e2d25a67-1deb-465b-af15-7d96cc6d2479"
+  },
+  "postnl": {
+    "slug": "postnl",
+    "ticker": "PNL.AS",
+    "companyName": "PostNL",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:46:52.869Z",
+    "runId": "d95efc89-4067-4421-9462-fe122c0fcd27"
+  },
+  "transnet-soc-ltd": {
+    "slug": "transnet-soc-ltd",
+    "ticker": "TRANSNET",
+    "companyName": "Transnet SOC Ltd",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:46:39.752Z",
+    "runId": "51b39879-1b6a-4af1-987c-3912b615e54d"
+  },
+  "misc-berhad": {
+    "slug": "misc-berhad",
+    "ticker": "MISC.KL",
+    "companyName": "MISC Berhad",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:47:21.417Z",
+    "runId": "df6f9244-4887-4c82-babd-288a6713d303"
+  },
+  "saam-sa": {
+    "slug": "saam-sa",
+    "ticker": "SAAM.SN",
+    "companyName": "Saam S.a.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:47:10.789Z",
+    "runId": "9e400adc-5103-4028-b82e-e971b09ab8c1"
+  },
+  "lbc-express-holdings": {
+    "slug": "lbc-express-holdings",
+    "ticker": "LBC.PS",
+    "companyName": "LBC Express Holdings",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:48:29.017Z",
+    "runId": "fad9ff3a-125e-468d-bf5c-f7c02fc96787"
+  },
+  "odfjell-se": {
+    "slug": "odfjell-se",
+    "ticker": "ODF.OL",
+    "companyName": "Odfjell SE",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:47:03.681Z",
+    "runId": "cb37af79-25f4-4bf0-a26b-ff6596aea8c1"
+  },
+  "bahri-national-shipping-co-of-saudi-arabia": {
+    "slug": "bahri-national-shipping-co-of-saudi-arabia",
+    "ticker": "4030.SR",
+    "companyName": "Bahri (National Shipping Co. of Saudi Arabia)",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:47:45.330Z",
+    "runId": "d8b49ea1-155b-4746-8580-21d431933848"
+  },
+  "psa-international": {
+    "slug": "psa-international",
+    "ticker": "PSA",
+    "companyName": "PSA International",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:48:23.884Z",
+    "runId": "9524f693-c880-4826-8514-3000fd32a59e"
+  },
+  "ekol-logistics": {
+    "slug": "ekol-logistics",
+    "ticker": "EKOL",
+    "companyName": "Ekol Logistics",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:47:27.899Z",
+    "runId": "16aedcc5-2b19-4084-8e91-f9cbc8ae3a05"
+  },
+  "hmm-co-ltd": {
+    "slug": "hmm-co-ltd",
+    "ticker": "011200.KS",
+    "companyName": "HMM Co., Ltd.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:48:08.063Z",
+    "runId": "11510c56-3a45-4211-96f8-b3e1b2c7f356"
+  },
+  "hamburger-hafen-und-logistik-ag-hhla": {
+    "slug": "hamburger-hafen-und-logistik-ag-hhla",
+    "ticker": "HHFA.DE",
+    "companyName": "Hamburger Hafen und Logistik AG (HHLA)",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:48:22.662Z",
+    "runId": "2d6e7f77-da9e-4512-b376-c5b0c1c3e0e8"
+  },
+  "mainfreight-limited": {
+    "slug": "mainfreight-limited",
+    "ticker": "MFT.NZ",
+    "companyName": "Mainfreight Limited",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:48:15.476Z",
+    "runId": "60b334fc-e22b-446c-b42e-374bfa61bdd7"
+  },
+  "dfds-as": {
+    "slug": "dfds-as",
+    "ticker": "DFDS.CO",
+    "companyName": "Dfds A/S",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:49:06.687Z",
+    "runId": "6263ab09-7d6e-464e-a446-a6658d52e0b7"
+  },
+  "obb-rail-cargo-group": {
+    "slug": "obb-rail-cargo-group",
+    "ticker": "OEBB-RCG",
+    "companyName": "ÖBB Rail Cargo Group",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:49:45.869Z",
+    "runId": "2acad56c-098b-4e3f-9786-00bcd8b39fae"
+  },
+  "grupo-traxion": {
+    "slug": "grupo-traxion",
+    "ticker": "TRAXIONA.MX",
+    "companyName": "Grupo Traxión",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:50:51.843Z",
+    "runId": "3c99e2b0-4336-41d8-922a-3ebede378cab"
+  },
+  "evergreen-marine-corp": {
+    "slug": "evergreen-marine-corp",
+    "ticker": "2603.TW",
+    "companyName": "Evergreen Marine Corp.",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:49:36.491Z",
+    "runId": "2365b9e4-ec75-449d-a2ce-749b1b05dfc9"
+  },
+  "mistral-ai": {
+    "slug": "mistral-ai",
+    "ticker": "MISTRAL",
+    "companyName": "Mistral AI",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:49:16.507Z",
+    "runId": "9f46fd11-53c2-4020-a90f-c05d8767746f"
+  },
+  "moonshot-ai": {
+    "slug": "moonshot-ai",
+    "ticker": "MOONSHOT",
+    "companyName": "Moonshot AI",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:48:54.500Z",
+    "runId": "e8076768-9727-4234-bdaf-1339106285bc"
+  },
+  "cohere": {
+    "slug": "cohere",
+    "ticker": "COHERE",
+    "companyName": "Cohere",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:49:15.773Z",
+    "runId": "79cbeb1f-de65-46f9-a1e5-b99ab416174d"
+  },
+  "aleph-alpha": {
+    "slug": "aleph-alpha",
+    "ticker": "ALEPH",
+    "companyName": "Aleph Alpha",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:50:17.032Z",
+    "runId": "7c157ef8-f7cf-48cd-a736-2bc842170c77"
+  },
+  "glean-technologies": {
+    "slug": "glean-technologies",
+    "ticker": "GLEAN",
+    "companyName": "Glean Technologies",
+    "status": "completed",
+    "attempts": 1,
+    "updatedAt": "2025-11-04T11:50:54.565Z",
+    "runId": "ef399152-cdcd-4a9d-b849-abe37b97a317"
   }
 }

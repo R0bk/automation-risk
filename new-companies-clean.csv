@@ -140,3 +140,557 @@ DE,Deere & Company,United States,Agricultural Equipment
 GE,General Electric,United States,Industrial Conglomerate
 ELV,Elevance Health,United States,Healthcare Services
 BIIB,Biogen,United States,Biotechnology
+2010.SR,Saudi Basic Industries,Saudi Arabia,Chemicals
+FAB.AE,First Abu Dhabi Bank,United Arab Emirates,Banking
+7010.SR,Saudi Telecom Company,Saudi Arabia,Telecommunications
+5110.SR,Saudi Electricity Company,Saudi Arabia,Utilities
+ADNOCDIST.AE,ADNOC Distribution,United Arab Emirates,Oil & Gas
+MTN.JO,MTN Group,South Africa,Telecommunications
+VOD.JO,Vodacom Group,South Africa,Telecommunications
+SBK.JO,Standard Bank Group,South Africa,Banking
+FSR.JO,FirstRand,South Africa,Banking
+SHP.JO,Shoprite Holdings,South Africa,Retail
+QNBK.QA,Qatar National Bank,Qatar,Banking
+1299.HK,AIA Group,Hong Kong,Insurance
+0293.HK,Cathay Pacific Airways,Hong Kong,Airlines
+2317.TW,Hon Hai Precision Industry,Taiwan,Electronics Manufacturing
+4938.TW,Pegatron,Taiwan,Electronics Manufacturing
+0241.HK,Alibaba Health Information Technology,Hong Kong,E-Commerce
+0836.HK,China Resources Power,Hong Kong,Utilities
+0002.HK,CLP Holdings,Hong Kong,Utilities
+4904.TW,Far EasTone Telecommunications,Taiwan,Telecommunications
+2882.TW,Cathay Financial Holding,Taiwan,Financial Services
+0016.HK,Sun Hung Kai Properties,Hong Kong,Real Estate
+PEP,PepsiCo,United States,Food Products
+MDLZ,Mondelez International,United States,Food Products
+TSN,Tyson Foods,United States,Food Products
+KRZ.IR,Kerry Group,Ireland,Food Products
+AMZN,Amazon.com,United States,E-Commerce
+MELI,MercadoLibre,Argentina,E-Commerce
+SE,Sea Limited,Singapore,E-Commerce
+CPNG,Coupang,South Korea,E-Commerce
+ALE.PL,Allegro.eu,Poland,E-Commerce
+ZAL.DE,Zalando,Germany,E-Commerce
+1913.HK,Prada,Hong Kong,Luxury Goods
+EL,Estee Lauder Companies,United States,Personal Care
+UHR.SW,Swatch Group,Switzerland,Luxury Goods
+BRBY.L,Burberry Group,United Kingdom,Luxury Goods
+DPW.DE,Deutsche Post DHL,Germany,Transportation & Logistics
+KNIN.SW,Kuehne + Nagel International,Switzerland,Transportation & Logistics
+DAL,Delta Air Lines,United States,Airlines
+C6L.SI,Singapore Airlines,Singapore,Airlines
+SHL.DE,Siemens Healthineers,Germany,Medical Devices & Diagnostics
+BAS.DE,BASF,Germany,Chemicals
+BAYN.DE,Bayer,Germany,Pharmaceuticals
+ADS.DE,Adidas,Germany,Consumer Products
+P911.DE,Porsche AG,Germany,Automotive Manufacturing
+MBG.DE,Mercedes-Benz Group,Germany,Automotive Manufacturing
+BMW.DE,BMW,Germany,Automotive Manufacturing
+DBK.DE,Deutsche Bank,Germany,Banking
+IFX.DE,Infineon Technologies,Germany,Semiconductors
+VOW3.DE,Volkswagen,Germany,Automotive Manufacturing
+HEN3.DE,Henkel,Germany,Consumer Products
+FME.DE,Fresenius Medical Care,Germany,Healthcare Services & Distribution
+LHA.DE,Lufthansa,Germany,Airlines
+BMO,Bank of Montreal,Canada,Banking
+BNS,Bank of Nova Scotia,Canada,Banking
+CM,Canadian Imperial Bank of Commerce,Canada,Banking
+MFC,Manulife Financial,Canada,Insurance
+SLF,Sun Life Financial,Canada,Insurance
+CNR.TO,Canadian National Railway,Canada,Transportation & Logistics
+CP.TO,Canadian Pacific Kansas City,Canada,Transportation & Logistics
+ENB,Enbridge,Canada,Oil & Gas
+SU,Suncor Energy,Canada,Oil & Gas
+NTR,Nutrien,Canada,Chemicals
+BN,Brookfield Corporation,Canada,Financial Services
+TRI,Thomson Reuters,Canada,Business Services
+RELIANCE.NS,Reliance Industries,India,Oil & Gas
+TCS.NS,Tata Consultancy Services,India,Software & IT Services
+INFY.NS,Infosys,India,Software & IT Services
+HDFCBANK.NS,HDFC Bank,India,Banking
+ICICIBANK.NS,ICICI Bank,India,Banking
+SBIN.NS,State Bank of India,India,Banking
+BHARTIARTL.NS,Bharti Airtel,India,Telecommunications
+LT.NS,Larsen & Toubro,India,Industrial Equipment & Automation
+HINDUNILVR.NS,Hindustan Unilever,India,Consumer Products
+TATAMOTORS.NS,Tata Motors,India,Automotive Manufacturing
+ADANIGREEN.NS,Adani Green Energy,India,Utilities & Infrastructure
+RYA.IR,Ryanair Holdings,Ireland,Transportation & Logistics
+CRH,CRH plc,Ireland,Materials
+FLTR.L,Flutter Entertainment,Ireland,Hospitality & Leisure
+PKN.PL,Orlen,Poland,Oil & Gas
+PKO.PL,PKO Bank Polski,Poland,Banking
+PZU.PL,PZU,Poland,Insurance
+KGH.PL,KGHM Polska Miedz,Poland,Mining
+NPN.JO,Naspers,South Africa,Internet Services
+SOL.JO,Sasol,South Africa,Oil & Gas
+ANG.JO,AngloGold Ashanti,South Africa,Mining
+IMP.JO,Impala Platinum,South Africa,Mining
+CPI.JO,Capitec Bank,South Africa,Banking
+INVE-B.ST,Investor AB,Sweden,Financial Services
+ESSITY-B.ST,Essity,Sweden,Consumer Products
+ASSA-B.ST,Assa Abloy,Sweden,Industrial Equipment
+TELIA.ST,Telia Company,Sweden,Telecommunications
+DELL,Dell Technologies,United States,IT Hardware
+HPQ,HP Inc.,United States,IT Hardware
+CMCSA,Comcast,United States,Media & Telecommunications
+CHTR,Charter Communications,United States,Media & Telecommunications
+GEHC,GE HealthCare,United States,Healthcare & Imaging
+PHG,Koninklijke Philips,Netherlands,Healthcare & Imaging
+DHR,Danaher,United States,Life Sciences & Diagnostics
+TMO,Thermo Fisher Scientific,United States,Life Sciences & Diagnostics
+ILMN,Illumina,United States,Life Sciences & Diagnostics
+QIBK.QA,Qatar Islamic Bank,Qatar,Banking
+QEWC.QA,Qatar Electricity & Water,Qatar,Utilities & Infrastructure
+QGTS.QA,Qatar Gas Transport,Qatar,Oil & Gas
+EAND.AE,e&,United Arab Emirates,Telecommunications
+ADPORTS.AE,AD Ports Group,United Arab Emirates,Transportation & Logistics
+EMIRATESNBD.DU,Emirates NBD,United Arab Emirates,Banking
+EMAAR.DU,Emaar Properties,United Arab Emirates,Real Estate
+DU.DU,du (Emirates Integrated Telecommunications),United Arab Emirates,Telecommunications
+FLR,Fluor Corporation,United States,Engineering & Construction
+J,Jacobs Solutions,United States,Engineering & Construction
+DG.PA,Vinci,France,Engineering & Construction
+ACS.MC,ACS Group,Spain,Engineering & Construction
+CNHI,CNH Industrial,Netherlands,Agricultural Equipment
+AGCO,AGCO Corporation,United States,Agricultural Equipment
+6326.T,Kubota,Japan,Agricultural Equipment
+PBR,Petrobras,Brazil,Oil & Gas
+VALE,Vale,Brazil,Mining
+ITUB,Itau Unibanco,Brazil,Banking
+ABEV,Ambev,Brazil,Beverages
+BBD,Banco Bradesco,Brazil,Banking
+AMXL.MX,America Movil,Mexico,Telecommunications
+BIMBOA.MX,Grupo Bimbo,Mexico,Food Products
+FMX,Fomento Economico Mexicano,Mexico,Beverages
+ASR,Grupo Aeroportuario del Sureste,Mexico,Transportation & Logistics
+ENEL.MI,Enel,Italy,Utilities & Infrastructure
+ENI.MI,Eni,Italy,Oil & Gas
+ISP.MI,Intesa Sanpaolo,Italy,Banking
+UCG.MI,UniCredit,Italy,Banking
+RACE,Ferrari,Italy,Automotive Manufacturing
+DNB.OL,DNB Bank,Norway,Banking
+YAR.OL,Yara International,Norway,Food Products
+NOKIA.HE,Nokia,Finland,Telecommunications
+KNEBV.HE,Kone,Finland,Industrial Equipment
+FORTUM.HE,Fortum,Finland,Utilities & Infrastructure
+ABI.BR,Anheuser-Busch InBev,Belgium,Beverages
+KBC.BR,KBC Group,Belgium,Banking
+SOLB.BR,Solvay,Belgium,Chemicals
+OMV.VI,OMV,Austria,Oil & Gas
+EBS.VI,Erste Group Bank,Austria,Banking
+VOE.VI,Voestalpine,Austria,Industrial Equipment
+EDP.LS,Energias de Portugal,Portugal,Utilities & Infrastructure
+GALP.LS,Galp Energia,Portugal,Oil & Gas
+JMT.LS,Jeronimo Martins,Portugal,Retail
+KCHOL.IS,Koc Holding,Turkey,Conglomerate
+TCELL.IS,Turkcell,Turkey,Telecommunications
+THYAO.IS,Turkish Airlines,Turkey,Transportation & Logistics
+AKBNK.IS,Akbank,Turkey,Banking
+TEVA,Teva Pharmaceutical Industries,Israel,Pharmaceuticals
+CHKP,Check Point Software Technologies,Israel,Cybersecurity
+NICE,NICE Ltd.,Israel,Software & IT Services
+LUMI.TA,Bank Leumi,Israel,Banking
+PCHEM.KL,Petronas Chemicals,Malaysia,Chemicals
+TENAGA.KL,Tenaga Nasional,Malaysia,Utilities & Infrastructure
+MAYBANK.KL,Maybank,Malaysia,Banking
+AXIATA.KL,Axiata Group,Malaysia,Telecommunications
+PTT.BK,PTT Public Company,Thailand,Oil & Gas
+CPALL.BK,CP All,Thailand,Retail
+SCB.BK,Siam Commercial Bank,Thailand,Banking
+ADVANC.BK,Advanced Info Service,Thailand,Telecommunications
+TEL.PS,PLDT,Philippines,Telecommunications
+SM.PS,SM Investments,Philippines,Conglomerate
+AC.PS,Ayala Corporation,Philippines,Conglomerate
+BDO.PS,BDO Unibank,Philippines,Banking
+BBCA.JK,Bank Central Asia,Indonesia,Banking
+TLKM.JK,Telkom Indonesia,Indonesia,Telecommunications
+ASII.JK,Astra International,Indonesia,Conglomerate
+GOTO.JK,GoTo Group,Indonesia,Internet Services
+FSF.NZ,Fonterra Co-operative Group,New Zealand,Food Products
+SPK.NZ,Spark New Zealand,New Zealand,Telecommunications
+FPH.NZ,Fisher & Paykel Healthcare,New Zealand,Medical Devices & Diagnostics
+AIR.NZ,Air New Zealand,New Zealand,Airlines
+ENIC,Enel Chile,Chile,Utilities & Infrastructure
+SQM,SQM,Chile,Mining
+BCH,Banco de Chile,Chile,Banking
+CNCO,Cencosud,Chile,Retail
+AIBG.IR,AIB Group,Ireland,Banking
+BIRG.IR,Bank of Ireland,Ireland,Banking
+SKG.L,Smurfit Kappa,Ireland,Materials
+KSP.IR,Kingspan Group,Ireland,Industrial Equipment & Automation
+GL9.IR,Glanbia,Ireland,Food Products
+DCC.L,DCC plc,Ireland,Industrial Conglomerate
+ESLT,Elbit Systems,Israel,Aerospace & Defense
+ICL,ICL Group,Israel,Chemicals
+MZTF.TA,Mizrahi Tefahot Bank,Israel,Banking
+DOX,Amdocs,Israel,Software & IT Services
+NESTE.HE,Neste,Finland,Oil & Gas
+UPM.HE,UPM-Kymmene,Finland,Materials
+STERV.HE,Stora Enso,Finland,Materials
+SAMPO.HE,Sampo,Finland,Insurance
+ELISA.HE,Elisa,Finland,Telecommunications
+KESKOB.HE,Kesko,Finland,Retail
+METSO.HE,Metso,Finland,Industrial Equipment & Automation
+VALMT.HE,Valmet,Finland,Industrial Equipment & Automation
+BN4.SI,Keppel Corporation,Singapore,Industrial Conglomerate
+9CI.SI,CapitaLand Investment,Singapore,Real Estate
+F34.SI,Wilmar International,Singapore,Food Products
+S63.SI,ST Engineering,Singapore,Aerospace & Defense
+C52.SI,ComfortDelGro,Singapore,Transportation & Logistics
+M44U.SI,Mapletree Logistics Trust,Singapore,Real Estate
+U96.SI,Sembcorp Industries,Singapore,Utilities & Infrastructure
+S58.SI,SATS,Singapore,Transportation & Logistics
+ADCB.AE,Abu Dhabi Commercial Bank,United Arab Emirates,Banking
+DIB.DU,Dubai Islamic Bank,United Arab Emirates,Banking
+ALDAR.AE,Aldar Properties,United Arab Emirates,Real Estate
+TAQA.AE,Abu Dhabi National Energy Company,United Arab Emirates,Utilities & Infrastructure
+DEWA.DU,Dubai Electricity & Water Authority,United Arab Emirates,Utilities & Infrastructure
+ORDS.QA,Ooredoo,Qatar,Telecommunications
+IQCD.QA,Industries Qatar,Qatar,Chemicals
+MARK.QA,Masraf Al Rayan,Qatar,Banking
+CBQK.QA,Commercial Bank of Qatar,Qatar,Banking
+QFLS.QA,Qatar Fuel,Qatar,Oil & Gas
+QATI.QA,Qatar Insurance,Qatar,Insurance
+ITX.MC,Industria de Diseno Textil,Spain,Retail
+SAN,Banco Santander,Spain,Banking
+BBVA,BBVA,Spain,Banking
+IBE,Iberdrola,Spain,Utilities & Infrastructure
+TEF,Telefonica,Spain,Telecommunications
+FER.MC,Ferrovial,Spain,Transportation & Logistics
+REP.MC,Repsol,Spain,Oil & Gas
+AENA.MC,Aena,Spain,Transportation & Logistics
+AMS.MC,Amadeus IT Group,Spain,Software & IT Services
+ANA.MC,Acciona,Spain,Utilities & Infrastructure
+PUBM.KL,Public Bank,Malaysia,Banking
+CIMB.KL,CIMB Group,Malaysia,Banking
+GENT.KL,Genting,Malaysia,Hospitality & Leisure
+SIME.KL,Sime Darby,Malaysia,Industrial Conglomerate
+PETGAS.KL,Petronas Gas,Malaysia,Utilities & Infrastructure
+TOPG.KL,Top Glove,Malaysia,Medical Devices & Diagnostics
+MAXIS.KL,Maxis,Malaysia,Telecommunications
+HLBK.KL,Hong Leong Bank,Malaysia,Banking
+IHH.KL,IHH Healthcare,Malaysia,Healthcare Services & Distribution
+BBL.BK,Bangkok Bank,Thailand,Banking
+KBANK.BK,KASIKORNBANK,Thailand,Banking
+PTTEP.BK,PTT Exploration & Production,Thailand,Oil & Gas
+THBEV.SI,Thai Beverage,Thailand,Beverages
+BEM.BK,Bangkok Expressway and Metro,Thailand,Transportation & Logistics
+GULF.BK,Gulf Energy Development,Thailand,Utilities & Infrastructure
+CPN.BK,Central Pattana,Thailand,Real Estate
+TEO,Telecom Argentina,Argentina,Telecommunications
+BMA,Banco Macro,Argentina,Banking
+PAM,Pampa Energia,Argentina,Utilities & Infrastructure
+TX,Ternium,Argentina,Materials
+GLOB,Globant,Argentina,Software & IT Services
+DESP,Despegar,Argentina,E-Commerce
+NVG.LS,Navigator Company,Portugal,Materials
+RENE.LS,REN,Portugal,Utilities & Infrastructure
+SON.LS,Sonae,Portugal,Retail
+BCP.LS,Banco Comercial Portugues,Portugal,Banking
+EDPR.LS,EDP Renovaveis,Portugal,Utilities & Infrastructure
+GLO.PS,Globe Telecom,Philippines,Telecommunications
+JFC.PS,Jollibee Foods,Philippines,Hospitality & Leisure
+AEV.PS,Aboitiz Equity Ventures,Philippines,Conglomerate
+BPI.PS,Bank of the Philippine Islands,Philippines,Banking
+SMC.PS,San Miguel Corporation,Philippines,Conglomerate
+MER.PS,Manila Electric Company,Philippines,Utilities & Infrastructure
+G.MI,Assicurazioni Generali,Italy,Insurance
+PST.MI,Poste Italiane,Italy,Financial Services
+TIT.MI,Telecom Italia,Italy,Telecommunications
+LDO.MI,Leonardo,Italy,Aerospace & Defense
+MONC.MI,Moncler,Italy,Luxury Goods
+PIRC.MI,Pirelli,Italy,Automotive Parts
+UCB.BR,UCB,Belgium,Pharmaceuticals
+UMI.BR,Umicore,Belgium,Chemicals
+PROX.BR,Proximus,Belgium,Telecommunications
+AGS.BR,Ageas,Belgium,Insurance
+COLR.BR,Colruyt,Belgium,Retail
+DIE.BR,D'Ieteren,Belgium,Automotive Products
+BBAS3.SA,Banco do Brasil,Brazil,Banking
+GGB,Gerdau,Brazil,Materials
+ERJ,Embraer,Brazil,Aerospace & Defense
+EBR,Eletrobras,Brazil,Utilities & Infrastructure
+NTCO,Natura &Co,Brazil,Personal Care
+WEGE3.SA,WEG,Brazil,Industrial Equipment
+LTM,LATAM Airlines,Chile,Airlines
+COPEC.SN,Empresas Copec,Chile,Oil & Gas
+BSAC,Banco Santander Chile,Chile,Banking
+CCU,Compania Cervecerias Unidas,Chile,Beverages
+COLB.SN,Colbun,Chile,Utilities & Infrastructure
+FALABELLA.SN,S.A.C.I. Falabella,Chile,Retail
+DNP.WA,Dino Polska,Poland,Retail
+CDR.WA,CD Projekt,Poland,Gaming
+LPP.WA,LPP,Poland,Retail
+SPL.WA,Santander Bank Polska,Poland,Banking
+PGE.WA,PGE Polska Grupa Energetyczna,Poland,Utilities & Infrastructure
+ASE.WA,Asseco Poland,Poland,Software & IT Services
+AKERBP.OL,Aker BP,Norway,Oil & Gas
+MOWI.OL,Mowi,Norway,Food Products
+ORK.OL,Orkla,Norway,Consumer Products
+GJF.OL,Gjensidige Forsikring,Norway,Insurance
+STB.OL,Storebrand,Norway,Insurance
+SUBC.OL,Subsea 7,Norway,Oil & Gas
+GGAL,Grupo Financiero Galicia,Argentina,Banking
+YPF,YPF,Argentina,Oil & Gas
+BBAR,Banco BBVA Argentina,Argentina,Banking
+D05.SI,DBS Group,Singapore,Banking
+O39.SI,Oversea-Chinese Banking,Singapore,Banking
+U11.SI,United Overseas Bank,Singapore,Banking
+Z74.SI,Singtel,Singapore,Telecommunications
+SGE.L,Sage Group,United Kingdom,Software & IT Services
+REL.L,RELX,United Kingdom,Information Services
+AUTO.L,Auto Trader Group,United Kingdom,E-Commerce
+ITV.L,ITV plc,United Kingdom,Media & Entertainment
+ENT.L,Entain,United Kingdom,Gaming
+LSEG.L,London Stock Exchange Group,United Kingdom,Financial Services
+RBI.VI,Raiffeisen Bank International,Austria,Banking
+VER.VI,Verbund,Austria,Utilities & Infrastructure
+VIG.VI,Vienna Insurance Group,Austria,Insurance
+ANDR.VI,Andritz,Austria,Industrial Equipment & Automation
+WIE.VI,Wienerberger,Austria,Materials
+POST.VI,Oesterreichische Post,Austria,Transportation & Logistics
+DOC.VI,DO & CO,Austria,Hospitality & Leisure
+005490.KS,POSCO Holdings,South Korea,Materials
+090430.KS,Amorepacific,South Korea,Personal Care
+105560.KS,KB Financial Group,South Korea,Banking
+003550.KS,LG Corp,South Korea,Industrial Conglomerate
+017670.KS,S-Oil,South Korea,Oil & Gas
+T39.SI,Venture Corporation,Singapore,Electronics Manufacturing
+A17U.SI,CapitaLand Integrated Commercial Trust,Singapore,Real Estate
+ME8U.SI,Mapletree Industrial Trust,Singapore,Real Estate
+BBRI.JK,Bank Rakyat Indonesia,Indonesia,Banking
+BBNI.JK,Bank Negara Indonesia,Indonesia,Banking
+ICBP.JK,Indofood CBP,Indonesia,Food Products
+UNVR.JK,Unilever Indonesia,Indonesia,Personal Care
+ANTM.JK,Aneka Tambang,Indonesia,Mining
+PGAS.JK,Perusahaan Gas Negara,Indonesia,Utilities & Infrastructure
+INDF.JK,Indofood Sukses Makmur,Indonesia,Food Products
+CEN.NZ,Contact Energy,New Zealand,Utilities & Infrastructure
+MCY.NZ,Mercury NZ,New Zealand,Utilities & Infrastructure
+IFT.NZ,Infratil,New Zealand,Infrastructure
+SKC.NZ,SkyCity Entertainment,New Zealand,Hospitality & Leisure
+FBU.NZ,Fletcher Building,New Zealand,Industrial Equipment & Automation
+ATM.NZ,The a2 Milk Company,New Zealand,Food Products
+NHY.OL,Norsk Hydro,Norway,Materials
+TGS.OL,TGS ASA,Norway,Energy Services
+NOD.OL,Nordic Semiconductor,Norway,Semiconductors
+FRE.DE,Fresenius,Germany,Healthcare Services & Distribution
+HFG.DE,HelloFresh,Germany,Food Products
+SY1.DE,Symrise,Germany,Food Products
+PAH3.DE,Deutsche Pfandbriefbank,Germany,Financial Services
+GARAN.IS,Garanti BBVA,Turkey,Banking
+ISCTR.IS,Isbank,Turkey,Banking
+BIMAS.IS,BIM Birlesik Magazalar,Turkey,Retail
+EREGL.IS,Eregli Demir ve Celik,Turkey,Materials
+KOZAL.IS,Koza Altin,Turkey,Mining
+SAHOL.IS,Sabanci Holding,Turkey,Conglomerate
+VWS.CO,Vestas Wind Systems,Denmark,Industrial Equipment & Automation
+GEN.CO,Genmab,Denmark,Biotechnology
+PNDORA.CO,Pandora,Denmark,Luxury Goods
+CARL-B.CO,Carlsberg,Denmark,Beverages
+TRYG.CO,Tryg,Denmark,Insurance
+JYSK.CO,Jyske Bank,Denmark,Banking
+2222.SR,Saudi Aramco,Saudi Arabia,Oil & Gas
+1120.SR,Al Rajhi Bank,Saudi Arabia,Banking
+1180.SR,Riyad Bank,Saudi Arabia,Banking
+1060.SR,Saudi National Bank,Saudi Arabia,Banking
+1211.SR,Maaden,Saudi Arabia,Mining
+8010.SR,Cooperative Insurance Company,Saudi Arabia,Insurance
+4002.SR,BinDawood Holding,Saudi Arabia,Retail
+2082.SR,Tasnee,Saudi Arabia,Chemicals
+WALMEX.MX,Walmart de Mexico,Mexico,Retail
+CEMEXCPO.MX,Cemex,Mexico,Materials
+GMEXICOB.MX,Grupo Mexico,Mexico,Mining
+GAPB.MX,Grupo Aeroportuario del Pacifico,Mexico,Transportation & Logistics
+KIMBERA.MX,Kimberly-Clark de Mexico,Mexico,Personal Care
+PE&OLES.MX,Industrias Penoles,Mexico,Mining
+TLEVISACPO.MX,Grupo Televisa,Mexico,Media & Entertainment
+BOLSAA.MX,Bolsa Mexicana de Valores,Mexico,Financial Services
+2330.TW,Taiwan Semiconductor Manufacturing,Taiwan,Semiconductors
+2454.TW,MediaTek,Taiwan,Semiconductors
+2308.TW,Delta Electronics,Taiwan,Electronics Manufacturing
+1301.TW,Formosa Plastics,Taiwan,Chemicals
+6505.TW,Formosa Petrochemical,Taiwan,Oil & Gas
+2412.TW,Chunghwa Telecom,Taiwan,Telecommunications
+2886.TW,Mega Financial Holding,Taiwan,Financial Services
+3231.TW,Wistron,Taiwan,Electronics Manufacturing
+NVMI,Nova Ltd.,Israel,Semiconductor Equipment
+TSEM,Tower Semiconductor,Israel,Semiconductors
+MNDY,monday.com,Israel,Software & IT Services
+FVRR,Fiverr,Israel,E-Commerce
+PAGS,PagSeguro Digital,Brazil,Financial Technology
+BAM,Brookfield Asset Management,Canada,Financial Services
+CNQ,Canadian Natural Resources,Canada,Oil & Gas
+OTEX,OpenText,Canada,Software & IT Services
+0883.HK,CNOOC,China / Hong Kong,Oil & Gas
+0386.HK,Sinopec,China / Hong Kong,Oil & Gas
+CIB,Bancolombia,Colombia,Banking
+EC,Ecopetrol,Colombia,Oil & Gas
+COMI.CA,Commercial International Bank,Egypt,Banking
+NDA-SE.ST,Nordea Bank,Finland,Banking
+SAF.PA,Safran,France,Aerospace & Defense
+BEI.DE,Beiersdorf,Germany,Personal Care
+AXISBANK.NS,Axis Bank,India,Banking
+BAJAJ-AUTO.NS,Bajaj Auto,India,Automotive Manufacturing
+KOTAKBANK.NS,Kotak Mahindra Bank,India,Banking
+LTIM.NS,LTIMindtree,India,Software & IT Services
+M&M.NS,Mahindra & Mahindra,India,Automotive Manufacturing
+SUNPHARMA.NS,Sun Pharmaceutical,India,Pharmaceuticals
+9432.T,Nippon Telegraph and Telephone,Japan,Telecommunications
+6752.T,Panasonic Holdings,Japan,Consumer Electronics
+8766.T,Tokio Marine Holdings,Japan,Insurance
+MTNN.LG,MTN Nigeria,Nigeria,Telecommunications
+AKER.OL,Aker ASA,Norway,Industrial Conglomerate
+ALINMA.SR,Alinma Bank,Saudi Arabia,Banking
+BIDCORP.JO,Bid Corporation,South Africa,Food Services
+ALFA.ST,Alfa Laval,Sweden,Industrial Equipment & Automation
+EVO.ST,Evolution AB,Sweden,Gaming
+VOLCAR-B.ST,Volvo Car AB,Sweden,Automotive Manufacturing
+ADEN.SW,Adecco Group,Switzerland,Business Services
+GEBN.SW,Geberit,Switzerland,Industrial Equipment & Automation
+LOGN.SW,Logitech,Switzerland,Consumer Electronics
+CFR.SW,Richemont,Switzerland,Luxury Goods
+LGEN.L,Legal & General,United Kingdom,Insurance
+NG.L,National Grid,United Kingdom,Utilities & Infrastructure
+SSE.L,SSE plc,United Kingdom,Utilities & Infrastructure
+SMIN.L,Smiths Group,United Kingdom,Industrial Equipment & Automation
+STAN.L,Standard Chartered,United Kingdom,Banking
+ABNB,Airbnb,United States,Hospitality & Leisure
+CAT,Caterpillar,United States,Industrial Equipment & Automation
+FIS,Fidelity National Info Services,United States,Financial Technology
+KR,Kroger,United States,Food Products
+PSX,Phillips 66,United States,Oil & Gas
+SNOW,Snowflake,United States,Software & IT Services
+SO,Southern Company,United States,Utilities & Infrastructure
+WDAY,Workday,United States,Software & IT Services
+BAH,Booz Allen Hamilton,United States,Business Services
+GIB,CGI Inc.,Canada,Business Services
+WSP.TO,WSP Global,Canada,Business Services
+FLEX,Flex Ltd.,Singapore,Electronics Manufacturing
+JBL,Jabil Inc.,United States,Electronics Manufacturing
+6594.T,Nidec Corporation,Japan,Electronics Manufacturing
+6981.T,Murata Manufacturing,Japan,Electronics Manufacturing
+ROKU,Roku Inc.,United States,Media Streaming
+TTWO,Take-Two Interactive,United States,Gaming
+RBLX,Roblox Corp.,United States,Gaming
+NEM,Newmont Corporation,United States,Mining
+TECK,Teck Resources,Canada,Mining
+ARCAD.AS,Arcadis NV,Netherlands,Business Services
+AFRY.ST,AFRY AB,Sweden,Business Services
+4307.T,Nomura Research Institute,Japan,Business Services
+ASM.AS,ASM International,Netherlands,Electronics Manufacturing
+DIXON.NS,Dixon Technologies,India,Electronics Manufacturing
+HANA.BK,Hana Microelectronics,Thailand,Electronics Manufacturing
+IQ,iQIYI Inc.,China / Hong Kong,Media Streaming
+BILI,Bilibili Inc.,China / Hong Kong,Media Streaming
+ZEE.NS,Zee Entertainment Enterprises,India,Media Streaming
+7994.T,Square Enix Holdings,Japan,Gaming
+293490.KS,Krafton Inc.,South Korea,Gaming
+6460.T,Sega Sammy Holdings,Japan,Gaming
+ANTO.L,Antofagasta plc,United Kingdom,Mining
+BOL.ST,Boliden AB,Sweden,Mining
+HINDALCO.NS,Hindalco Industries,India,Mining
+2899.HK,Zijin Mining Group,China / Hong Kong,Mining
+TECHM.NS,Tech Mahindra,India,Business Services
+LTTS.NS,L&T Technology Services,India,Business Services
+DXC,DXC Technology,United States,Business Services
+CNXC,Concentrix Corporation,United States,Business Services
+TELUS.TO,TELUS International,Canada,Business Services
+GEN,Genpact,United States,Business Services
+BakerMcKenzie,Baker McKenzie,United States,Legal Services
+Dentons,Dentons,Canada,Legal Services
+DLA Piper,DLA Piper,United Kingdom,Legal Services
+CliffordChance,Clifford Chance,United Kingdom,Legal Services
+Linklaters,Linklaters,United Kingdom,Legal Services
+Skadden,"Skadden, Arps, Slate, Meagher & Flom",United States,Legal Services
+Kirkland,Kirkland & Ellis,United States,Legal Services
+HerbertSmithFreehills,Herbert Smith Freehills,Australia,Legal Services
+ACI,Albertsons Companies,United States,Retail
+GRG.L,Greggs plc,United Kingdom,Hospitality & Leisure
+HNR1.DE,Hannover Rück,Germany,Insurance
+BAMI.MI,Banco BPM,Italy,Banking
+CABK.MC,CaixaBank,Spain,Banking
+NTPC.NS,NTPC Limited,India,Utilities & Infrastructure
+H.TO,Hydro One,Canada,Utilities & Infrastructure
+ADNOCGAS.AE,ADNOC Gas,United Arab Emirates,Oil & Gas
+7020.SR,Etihad Etisalat (Mobily),Saudi Arabia,Telecommunications
+VFQS.QA,Vodafone Qatar,Qatar,Telecommunications
+3659.T,Nexon Co.,Japan,Gaming
+036570.KS,NCSoft Corporation,South Korea,Gaming
+SUNTV.NS,Sun TV Network,India,Media Streaming
+FM.TO,First Quantum Minerals,Canada,Mining
+INCO.JK,Vale Indonesia,Indonesia,Mining
+UAL,United Airlines Holdings,United States,Airlines
+HOLX,Hologic Inc.,United States,Healthcare & Imaging
+EVK.DE,Evonik Industries,Germany,Chemicals
+SRT3.DE,Sartorius AG,Germany,Medical Devices & Diagnostics
+ONGC.NS,Oil & Natural Gas Corporation,India,Oil & Gas
+IDEA.NS,Vodafone Idea,India,Telecommunications
+IRCON.NS,IRCON International,India,Engineering & Construction
+ULVR.L,Unilever plc,United Kingdom,Food Products
+EXPN.L,Experian plc,United Kingdom,Information Services
+IDR.MC,Indra Sistemas,Spain,Software & IT Services
+DIA.MC,Distribuidora Internacional de Alimentación,Spain,Retail
+INW.MI,Inwit S.p.A.,Italy,Telecommunications
+SRG.MI,Snam S.p.A.,Italy,Utilities & Infrastructure
+GDS.PA,Ramsay Santé,France,Healthcare Services & Distribution
+GET.PA,Getlink SE,France,Logistics & Transportation
+4755.T,Rakuten Group,Japan,Internet Services
+RCI-B.TO,Rogers Communications,Canada,Telecommunications
+AIRARABIADU,Air Arabia,United Arab Emirates,Airlines
+QGRI.QA,Qatar General Insurance & Reinsurance,Qatar,Insurance
+TPG.AX,TPG Telecom,Australia,Telecommunications
+JBH.AX,JB Hi-Fi,Australia,Retail
+030200.KS,KT Corporation,South Korea,Telecommunications
+BKBR3.SA,BK Brasil Operacao e Assessoria a Restaurantes,Brazil,Restaurants
+MCKINSEY,McKinsey & Company,United States,Professional Services
+BCG,Boston Consulting Group,United States,Professional Services
+BAIN,Bain & Company,United States,Professional Services
+KEARNEY,Kearney,United States,Professional Services
+ROLANDBERGER,Roland Berger,Germany,Professional Services
+PACONSULTING,PA Consulting,United Kingdom,Professional Services
+KOCH,Koch Industries,United States,Industrial Conglomerate
+SPACEX,SpaceX,United States,Aerospace & Defense
+CARGILL,Cargill,United States,Food Products
+PUBLIX,Publix Super Markets,United States,Retail
+SCHWARZ,Schwarz Gruppe (Lidl/Kaufland),Germany,Retail
+BOSCH,Robert Bosch GmbH,Germany,Industrial Equipment & Automation
+ALDI,ALDI Süd & Aldi Nord,Germany,Retail
+BYTEDANCE,ByteDance,China / Hong Kong,Internet Services
+HUAWEI,Huawei Technologies,China / Hong Kong,Telecommunications
+IKEA,Ingka Group (IKEA),Sweden,Retail
+DELOITTE,Deloitte,United Kingdom,Professional Services
+PWC,PwC,United Kingdom,Professional Services
+EY,EY (Ernst & Young),United Kingdom,Professional Services
+KPMG,KPMG,Netherlands,Professional Services
+2303.TW,United Microelectronics,Taiwan,Semiconductors
+2414.TW,Unimicron Technology,Taiwan,Electronics Manufacturing
+2884.TW,Yuanta Financial Holding,Taiwan,Financial Services
+2892.TW,First Financial Holding,Taiwan,Financial Services
+GRIMALDI,Grimaldi Group,Italy,Transportation & Logistics
+PELINDO,PT Pelabuhan Indonesia (Pelindo),Indonesia,Transportation & Logistics
+CORREIOS,Empresa Brasileira de Correios e Telégrafos,Brazil,Transportation & Logistics
+QUB.AX,Qube Holdings,Australia,Transportation & Logistics
+PKPC.WA,PKP Cargo,Poland,Transportation & Logistics
+PNL.AS,PostNL,Netherlands,Transportation & Logistics
+TRANSNET,Transnet SOC Ltd,South Africa,Transportation & Logistics
+MISC.KL,MISC Berhad,Malaysia,Transportation & Logistics
+SAAM.SN,SAAM S.A.,Chile,Transportation & Logistics
+LBC.PS,LBC Express Holdings,Philippines,Transportation & Logistics
+ODF.OL,Odfjell SE,Norway,Transportation & Logistics
+4030.SR,Bahri (National Shipping Co. of Saudi Arabia),Saudi Arabia,Transportation & Logistics
+PSA,PSA International,Singapore,Transportation & Logistics
+EKOL,Ekol Logistics,Turkey,Transportation & Logistics
+011200.KS,"HMM Co., Ltd.",South Korea,Transportation & Logistics
+HHFA.DE,Hamburger Hafen und Logistik AG (HHLA),Germany,Transportation & Logistics
+MFT.NZ,Mainfreight Limited,New Zealand,Transportation & Logistics
+DFDS.CO,DFDS A/S,Denmark,Transportation & Logistics
+OEBB-RCG,ÖBB Rail Cargo Group,Austria,Transportation & Logistics
+TRAXIONA.MX,Grupo Traxión,Mexico,Transportation & Logistics
+2603.TW,Evergreen Marine Corp.,Taiwan,Transportation & Logistics
+MISTRAL,Mistral AI,France,Artificial Intelligence
+MOONSHOT,Moonshot AI,China / Hong Kong,Artificial Intelligence
+COHERE,Cohere,Canada,Artificial Intelligence
+ALEPH,Aleph Alpha,Germany,Artificial Intelligence
+GLEAN,Glean Technologies,United States,Artificial Intelligence
