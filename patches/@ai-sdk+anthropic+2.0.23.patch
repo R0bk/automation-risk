@@ -193,7 +193,7 @@
                      });
                      break;
                    }
-@@ -1358,6 +1500,12 @@
+@@ -1358,6 +1500,13 @@
        fetch: this.config.fetch
      });
      const content = [];
@@ -227,7 +227,7 @@
              content.push({
                type: "tool-result",
                toolCallId: part.tool_use_id,
-@@ -1453,6 +1607,9 @@
+@@ -1453,5 +1607,8 @@
              });
            } else if (part.content.type === "web_fetch_tool_result_error") {
 +            if (skipProviderResults) {
@@ -246,7 +246,7 @@
              content.push({
                type: "tool-result",
                toolCallId: part.tool_use_id,
-@@ -1500,6 +1660,9 @@
+@@ -1500,5 +1660,8 @@
              }
            } else {
 +            if (skipProviderResults) {
@@ -265,7 +265,7 @@
              content.push({
                type: "tool-result",
                toolCallId: part.tool_use_id,
-@@ -1529,6 +1695,9 @@
+@@ -1529,5 +1695,8 @@
              });
            } else if (part.content.type === "code_execution_tool_result_error") {
 +            if (skipProviderResults) {
