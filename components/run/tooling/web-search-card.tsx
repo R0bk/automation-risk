@@ -3,7 +3,7 @@ import { Globe } from "lucide-react";
 import type { ReactNode } from "react";
 import { z } from "zod";
 
-type ToolState = "input-streaming" | "input-available" | "output-available" | "output-error";
+type ToolState = "input-streaming" | "input-available" | "approval-requested" | "approval-responded" | "output-available" | "output-error" | "output-denied";
 
 export interface WebSearchCardProps {
   args?: unknown;

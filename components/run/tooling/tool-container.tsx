@@ -8,7 +8,7 @@ const ToolContainer = ({
   className,
   blur = true,
 }: {
-  toolState: "input-streaming" | "input-available" | "output-available" | "output-error";
+  toolState: "input-streaming" | "input-available" | "approval-requested" | "approval-responded" | "output-available" | "output-error" | "output-denied";
   children: ReactNode;
   className?: string;
   blur?: boolean;

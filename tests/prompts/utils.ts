@@ -93,8 +93,8 @@ export const getResponseChunksByPrompt = (
         ...textToDeltas("It's just blue duh!"),
         {
           type: "finish",
-          finishReason: "stop",
-          usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
+          finishReason: { unified: "stop", raw: undefined },
+          usage: { inputTokens: { total: 3, noCache: undefined, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 10, text: undefined, reasoning: undefined } },
         },
       ];
     }
@@ -107,8 +107,8 @@ export const getResponseChunksByPrompt = (
         ...textToDeltas("It's just green duh!"),
         {
           type: "finish",
-          finishReason: "stop",
-          usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
+          finishReason: { unified: "stop", raw: undefined },
+          usage: { inputTokens: { total: 3, noCache: undefined, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 10, text: undefined, reasoning: undefined } },
         },
       ];
     }
@@ -119,8 +119,8 @@ export const getResponseChunksByPrompt = (
       ...textToDeltas("You're welcome!"),
       {
         type: "finish",
-        finishReason: "stop",
-        usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
+        finishReason: { unified: "stop", raw: undefined },
+        usage: { inputTokens: { total: 3, noCache: undefined, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 10, text: undefined, reasoning: undefined } },
       },
     ];
   }
@@ -130,8 +130,8 @@ export const getResponseChunksByPrompt = (
       ...textToDeltas("It's just green duh!"),
       {
         type: "finish",
-        finishReason: "stop",
-        usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
+        finishReason: { unified: "stop", raw: undefined },
+        usage: { inputTokens: { total: 3, noCache: undefined, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 10, text: undefined, reasoning: undefined } },
       },
     ];
   }
@@ -141,8 +141,8 @@ export const getResponseChunksByPrompt = (
       ...textToDeltas("It's just blue duh!"),
       {
         type: "finish",
-        finishReason: "stop",
-        usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
+        finishReason: { unified: "stop", raw: undefined },
+        usage: { inputTokens: { total: 3, noCache: undefined, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 10, text: undefined, reasoning: undefined } },
       },
     ];
   }
@@ -153,8 +153,8 @@ export const getResponseChunksByPrompt = (
 
       {
         type: "finish",
-        finishReason: "stop",
-        usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
+        finishReason: { unified: "stop", raw: undefined },
+        usage: { inputTokens: { total: 3, noCache: undefined, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 10, text: undefined, reasoning: undefined } },
       },
     ];
   }
@@ -164,8 +164,8 @@ export const getResponseChunksByPrompt = (
       ...textToDeltas("This painting is by Monet!"),
       {
         type: "finish",
-        finishReason: "stop",
-        usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
+        finishReason: { unified: "stop", raw: undefined },
+        usage: { inputTokens: { total: 3, noCache: undefined, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 10, text: undefined, reasoning: undefined } },
       },
     ];
   }
@@ -203,8 +203,8 @@ export const getResponseChunksByPrompt = (
       },
       {
         type: "finish",
-        finishReason: "stop",
-        usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
+        finishReason: { unified: "stop", raw: undefined },
+        usage: { inputTokens: { total: 3, noCache: undefined, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 10, text: undefined, reasoning: undefined } },
       },
     ];
   }
@@ -232,8 +232,8 @@ As we move forward, Silicon Valley continues to reinvent itself. While some pred
 `),
       {
         type: "finish",
-        finishReason: "stop",
-        usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
+        finishReason: { unified: "stop", raw: undefined },
+        usage: { inputTokens: { total: 3, noCache: undefined, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 10, text: undefined, reasoning: undefined } },
       },
     ];
   }
@@ -245,8 +245,8 @@ As we move forward, Silicon Valley continues to reinvent itself. While some pred
       ...textToDeltas("A document was created and is now visible to the user."),
       {
         type: "finish",
-        finishReason: "stop",
-        usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
+        finishReason: { unified: "stop", raw: undefined },
+        usage: { inputTokens: { total: 3, noCache: undefined, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 10, text: undefined, reasoning: undefined } },
       },
     ];
   }
