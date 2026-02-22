@@ -361,7 +361,7 @@ function buildCountryIndustryCrossTabs(
       let cluster = roleClusterLookup.get(code);
       if (!cluster) {
         const catalogRole = codeLookup.get(code);
-        cluster = catalogRole?.parentCluster ?? null;
+        cluster = catalogRole?.parentCluster ?? undefined;
       }
       if (!cluster) continue;
 

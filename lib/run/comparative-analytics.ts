@@ -30,6 +30,12 @@ type GroupAccumulator = {
   weightedAutomationSum: number;
   weightedAugmentationSum: number;
   weightSum: number;
+  /** Headcount-weighted sum of per-role automation task deltas (v1→v4) */
+  deltaAutoSum: number;
+  /** Headcount-weighted sum of per-role augmentation task deltas (v1→v4) */
+  deltaAugSum: number;
+  /** Total headcount used for delta weighting */
+  deltaWeightSum: number;
 };
 
 function ensureGroup(
@@ -53,6 +59,9 @@ function ensureGroup(
       weightedAutomationSum: 0,
       weightedAugmentationSum: 0,
       weightSum: 0,
+      deltaAutoSum: 0,
+      deltaAugSum: 0,
+      deltaWeightSum: 0,
     };
     map.set(key, match);
   }
@@ -116,6 +125,10 @@ type TaskAccumulator = {
   runIds: Set<string>;
   roles: Set<string>;
   companies: Map<string, { name: string; exposure: number }>;
+  /** Per-task auto share delta from catalog prior data (weighted by headcount) */
+  deltaAutoShareSum: number;
+  deltaAugShareSum: number;
+  deltaWeightSum: number;
 };
 
 
@@ -177,6 +190,9 @@ export function buildComparativeAnalytics(
       scores: number[];
       highRisk: number;
       runs: Set<string>;
+      deltaAutoSum: number;
+      deltaAugSum: number;
+      deltaWeightSum: number;
     }
   >();
   const taskAccumulator = new Map<string, TaskAccumulator>();
@@ -292,6 +308,9 @@ export function buildComparativeAnalytics(
           scores: [],
           highRisk: 0,
           runs: new Set(),
+          deltaAutoSum: 0,
+          deltaAugSum: 0,
+          deltaWeightSum: 0,
         };
         heatmap.set(key, cell);
       }
@@ -328,6 +347,38 @@ export function buildComparativeAnalytics(
 
           const catalogRole = ONET_ROLE_LOOKUP.get(code);
           if (!catalogRole) continue;
+
+          // Accumulate v1→v4 deltas into country/industry/heatmap groups
+          if (catalogRole.delta) {
+            const autoDelta = catalogRole.delta.automationTasksDelta;
+            const augDelta = catalogRole.delta.augmentationTasksDelta;
+            if (countryLabel) {
+              const countryGroup = countries.get(countryLabel.toLowerCase());
+              if (countryGroup) {
+                countryGroup.deltaAutoSum += autoDelta * roleHeadcount;
+                countryGroup.deltaAugSum += augDelta * roleHeadcount;
+                countryGroup.deltaWeightSum += roleHeadcount;
+              }
+            }
+            if (industryLabel) {
+              const industryGroup = industries.get(industryLabel.toLowerCase());
+              if (industryGroup) {
+                industryGroup.deltaAutoSum += autoDelta * roleHeadcount;
+                industryGroup.deltaAugSum += augDelta * roleHeadcount;
+                industryGroup.deltaWeightSum += roleHeadcount;
+              }
+            }
+            if (countryLabel && industryLabel) {
+              const heatmapKey = `${countryLabel.toLowerCase()}::${industryLabel.toLowerCase()}`;
+              const heatmapCell = heatmap.get(heatmapKey);
+              if (heatmapCell) {
+                heatmapCell.deltaAutoSum += autoDelta * roleHeadcount;
+                heatmapCell.deltaAugSum += augDelta * roleHeadcount;
+                heatmapCell.deltaWeightSum += roleHeadcount;
+              }
+            }
+          }
+
           const catalogTasks: CatalogTaskMetric[] = catalogRole.metrics.tasks ?? [];
           if (catalogTasks.length === 0) continue;
 
@@ -365,6 +416,9 @@ export function buildComparativeAnalytics(
                 runIds: new Set<string>(),
                 roles: new Set<string>(),
                 companies: new Map<string, { name: string; exposure: number }>(),
+                deltaAutoShareSum: 0,
+                deltaAugShareSum: 0,
+                deltaWeightSum: 0,
               };
               taskAccumulator.set(taskKey, accumulator);
             }
@@ -372,6 +426,18 @@ export function buildComparativeAnalytics(
             accumulator.automationExposure += automationExposure;
             accumulator.augmentationExposure += augmentationExposure;
             accumulator.runIds.add(run.runId);
+
+            // Accumulate per-task share deltas from catalog (role-level delta distributed by task weight)
+            if (catalogRole.delta) {
+              const taskCount = catalogRole.metrics.taskCount;
+              if (taskCount > 0) {
+                const taskAutoDelta = catalogRole.delta.automationTasksDelta / taskCount;
+                const taskAugDelta = catalogRole.delta.augmentationTasksDelta / taskCount;
+                accumulator.deltaAutoShareSum += taskAutoDelta * roleHeadcount;
+                accumulator.deltaAugShareSum += taskAugDelta * roleHeadcount;
+                accumulator.deltaWeightSum += roleHeadcount;
+              }
+            }
             if (accumulator.roles.size < MAX_SAMPLE_ROLES_PER_TASK) {
               accumulator.roles.add(roleName);
             }
@@ -405,62 +471,84 @@ export function buildComparativeAnalytics(
     });
 
   const countryMetrics: CountryMetric[] = sortByRunCountThenScore(
-    Array.from(countries.values()).map((group) => ({
-      country: group.label,
-      isoCode: group.isoCode ?? null,
-      runCount: group.runIds.size,
-      averageScore: weightedAverage(
-        group.weightedScoreSum,
-        group.weightSum,
-        group.scores
-      ),
-      averageAutomation: weightedAverage(
-        group.weightedAutomationSum,
-        group.weightSum,
-        group.automation
-      ),
-      averageAugmentation: weightedAverage(
-        group.weightedAugmentationSum,
-        group.weightSum,
-        group.augmentation
-      ),
-      averageHeadcount: average(group.headcounts),
-    }))
+    Array.from(countries.values()).map((group) => {
+      const autoDelta = group.deltaWeightSum > 0 ? group.deltaAutoSum / group.deltaWeightSum : null;
+      const augDelta = group.deltaWeightSum > 0 ? group.deltaAugSum / group.deltaWeightSum : null;
+      const netDelta = autoDelta != null && augDelta != null ? autoDelta + augDelta : null;
+      return {
+        country: group.label,
+        isoCode: group.isoCode ?? null,
+        runCount: group.runIds.size,
+        averageScore: weightedAverage(
+          group.weightedScoreSum,
+          group.weightSum,
+          group.scores
+        ),
+        averageAutomation: weightedAverage(
+          group.weightedAutomationSum,
+          group.weightSum,
+          group.automation
+        ),
+        averageAugmentation: weightedAverage(
+          group.weightedAugmentationSum,
+          group.weightSum,
+          group.augmentation
+        ),
+        averageHeadcount: average(group.headcounts),
+        netExposureDelta: netDelta,
+        automationDelta: autoDelta,
+        augmentationDelta: augDelta,
+      };
+    })
   );
 
   const industryMetrics: IndustryMetric[] = sortByRunCountThenScore(
-    Array.from(industries.values()).map((group) => ({
-      industry: group.label,
-      runCount: group.runIds.size,
-      averageScore: weightedAverage(
-        group.weightedScoreSum,
-        group.weightSum,
-        group.scores
-      ),
-      averageAutomation: weightedAverage(
-        group.weightedAutomationSum,
-        group.weightSum,
-        group.automation
-      ),
-      averageAugmentation: weightedAverage(
-        group.weightedAugmentationSum,
-        group.weightSum,
-        group.augmentation
-      ),
-      averageHeadcount: average(group.headcounts),
-    }))
+    Array.from(industries.values()).map((group) => {
+      const autoDelta = group.deltaWeightSum > 0 ? group.deltaAutoSum / group.deltaWeightSum : null;
+      const augDelta = group.deltaWeightSum > 0 ? group.deltaAugSum / group.deltaWeightSum : null;
+      const netDelta = autoDelta != null && augDelta != null ? autoDelta + augDelta : null;
+      return {
+        industry: group.label,
+        runCount: group.runIds.size,
+        averageScore: weightedAverage(
+          group.weightedScoreSum,
+          group.weightSum,
+          group.scores
+        ),
+        averageAutomation: weightedAverage(
+          group.weightedAutomationSum,
+          group.weightSum,
+          group.automation
+        ),
+        averageAugmentation: weightedAverage(
+          group.weightedAugmentationSum,
+          group.weightSum,
+          group.augmentation
+        ),
+        averageHeadcount: average(group.headcounts),
+        netExposureDelta: netDelta,
+        automationDelta: autoDelta,
+        augmentationDelta: augDelta,
+      };
+    })
   );
 
   const heatmapCells: HeatmapCell[] = Array.from(heatmap.values())
-    .map((cell) => ({
-      country: cell.country,
-      isoCode: cell.isoCode ?? null,
-      industry: cell.industry,
-      runCount: cell.runs.size,
-      averageScore: average(cell.scores),
-      highRiskShare:
-        cell.scores.length > 0 ? cell.highRisk / cell.scores.length : null,
-    }))
+    .map((cell) => {
+      const autoDelta = cell.deltaWeightSum > 0 ? cell.deltaAutoSum / cell.deltaWeightSum : null;
+      const augDelta = cell.deltaWeightSum > 0 ? cell.deltaAugSum / cell.deltaWeightSum : null;
+      const netDelta = autoDelta != null && augDelta != null ? autoDelta + augDelta : null;
+      return {
+        country: cell.country,
+        isoCode: cell.isoCode ?? null,
+        industry: cell.industry,
+        runCount: cell.runs.size,
+        averageScore: average(cell.scores),
+        highRiskShare:
+          cell.scores.length > 0 ? cell.highRisk / cell.scores.length : null,
+        netExposureDelta: netDelta,
+      };
+    })
     .sort((a, b) => {
       if (b.runCount !== a.runCount) {
         return b.runCount - a.runCount;
@@ -529,7 +617,7 @@ export function buildComparativeAnalytics(
   );
 
   const topTasks: TopTaskMetric[] = Array.from(taskAccumulator.values())
-    .map((entry) => {
+    .map((entry): TopTaskMetric | null => {
       const automationExposure = entry.automationExposure;
       const augmentationExposure = entry.augmentationExposure;
       const totalExposure = automationExposure + augmentationExposure;
@@ -546,6 +634,8 @@ export function buildComparativeAnalytics(
           exposure,
           share: exposure > 0 ? exposure / totalExposure : 0,
         }));
+      const taskAutoDelta = entry.deltaWeightSum > 0 ? entry.deltaAutoShareSum / entry.deltaWeightSum : null;
+      const taskAugDelta = entry.deltaWeightSum > 0 ? entry.deltaAugShareSum / entry.deltaWeightSum : null;
       return {
         task: entry.task,
         automationExposure,
@@ -556,6 +646,8 @@ export function buildComparativeAnalytics(
         runCount: entry.runIds.size,
         sampleRoles: Array.from(entry.roles),
         topCompanies,
+        automationDelta: taskAutoDelta,
+        augmentationDelta: taskAugDelta,
       };
     })
     .filter((entry): entry is TopTaskMetric => entry != null)

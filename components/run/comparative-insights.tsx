@@ -213,6 +213,32 @@ const formatPercent = (value: number | null | undefined) => {
   return `${Math.round(value * 100)}%`;
 };
 
+const formatDelta = (value: number | null | undefined) => {
+  if (value == null || !Number.isFinite(value) || Math.abs(value) < 0.005) {
+    return null;
+  }
+  const sign = value > 0 ? "+" : "";
+  return `${sign}${value.toFixed(2)}`;
+};
+
+function ExposureDelta({ value, className }: { value: number | null | undefined; className?: string }) {
+  const label = formatDelta(value);
+  if (!label) return null;
+  const isPositive = (value ?? 0) > 0;
+  return (
+    <span
+      className={`text-[10px] font-semibold tabular-nums ${
+        isPositive
+          ? "text-[rgba(245,78,0,0.8)]"
+          : "text-[rgba(38,37,30,0.45)]"
+      } ${className ?? ""}`}
+      title={`Net AI exposure change per role: ${label} tasks`}
+    >
+      {label}
+    </span>
+  );
+}
+
 const peopleFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
 
 const formatMillions = (value: number) => {
@@ -481,6 +507,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
       <span className="font-mono text-[rgba(38,37,30,0.6)]">
         {formatExposurePercent(entry.averageScore)}
       </span>
+      <ExposureDelta value={entry.netExposureDelta} />
     </li>
   );
 
@@ -506,6 +533,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
       <span className="font-mono text-[rgba(38,37,30,0.6)]">
         {formatExposurePercent(entry.averageScore)}
       </span>
+      <ExposureDelta value={entry.netExposureDelta} />
     </li>
   );
 
@@ -535,7 +563,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
 
   const heatmapLookup = new Map<
     string,
-    { score: number | null; runs: number; highRiskShare: number | null }
+    { score: number | null; runs: number; highRiskShare: number | null; netExposureDelta: number | null }
   >();
   const heatmapScores: number[] = [];
 
@@ -554,6 +582,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
       score,
       runs: cell.runCount,
       highRiskShare: cell.highRiskShare,
+      netExposureDelta: cell.netExposureDelta ?? null,
     });
   }
 
@@ -610,7 +639,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
               >
                 AI Automation
               </span>
-              .
+              . Numbers next to each bar show how exposure is changing per role.
             </p>
           </div>
           {analytics && (
@@ -635,7 +664,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
                   By Industry
                 </h3>
                 <span className="text-[rgba(38,37,30,0.45)] text-xs">
-                  Avg share of roles (%)
+                  Avg share of roles (%) · change per role
                 </span>
               </div>
               <ul className="mt-4 space-y-2 text-sm">
@@ -821,7 +850,11 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
                               cell
                                 ? `${country} • ${industry}\nShare of roles impacted ${formatExposurePercent(cell.score, 1)} · ${
                                     cell.runs
-                                  } runs · High risk ${formatPercent(cell.highRiskShare)}`
+                                  } runs · High risk ${formatPercent(cell.highRiskShare)}${
+                                    cell.netExposureDelta != null && Math.abs(cell.netExposureDelta) >= 0.005
+                                      ? `\nExposure change: ${cell.netExposureDelta > 0 ? "+" : ""}${cell.netExposureDelta.toFixed(2)} tasks/role`
+                                      : ""
+                                  }`
                                 : `${country} • ${industry}\nNo completed runs yet`
                             }
                           >

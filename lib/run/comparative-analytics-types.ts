@@ -22,6 +22,12 @@ export type CountryMetric = {
   averageAutomation: number | null;
   averageAugmentation: number | null;
   averageHeadcount: number | null;
+  /** Average net change in total AI exposure (auto+aug tasks) per role, v1→v4 */
+  netExposureDelta?: number | null;
+  /** Average change in automation tasks per role */
+  automationDelta?: number | null;
+  /** Average change in augmentation tasks per role */
+  augmentationDelta?: number | null;
 };
 
 export type IndustryMetric = {
@@ -31,6 +37,12 @@ export type IndustryMetric = {
   averageAutomation: number | null;
   averageAugmentation: number | null;
   averageHeadcount: number | null;
+  /** Average net change in total AI exposure (auto+aug tasks) per role, v1→v4 */
+  netExposureDelta?: number | null;
+  /** Average change in automation tasks per role */
+  automationDelta?: number | null;
+  /** Average change in augmentation tasks per role */
+  augmentationDelta?: number | null;
 };
 
 export type HeatmapCell = {
@@ -40,6 +52,8 @@ export type HeatmapCell = {
   runCount: number;
   averageScore: number | null;
   highRiskShare: number | null;
+  /** Average net change in total AI exposure per role, v1→v4 */
+  netExposureDelta?: number | null;
 };
 
 export type DistributionEntry = {
@@ -64,6 +78,10 @@ export type TopTaskMetric = {
   runCount: number;
   sampleRoles: string[];
   topCompanies: Array<{ name: string; exposure: number; share: number }>;
+  /** Change in automation classification for this task, v1→v4 */
+  automationDelta?: number | null;
+  /** Change in augmentation classification for this task, v1→v4 */
+  augmentationDelta?: number | null;
 };
 
 export type ComparativeAnalyticsPayload = {
@@ -101,6 +119,9 @@ export const comparativeAnalyticsSchema = z.object({
       averageAutomation: z.number().nullable(),
       averageAugmentation: z.number().nullable(),
       averageHeadcount: z.number().nullable(),
+      netExposureDelta: z.number().nullable().optional(),
+      automationDelta: z.number().nullable().optional(),
+      augmentationDelta: z.number().nullable().optional(),
     })
   ),
   industries: z.array(
@@ -111,6 +132,9 @@ export const comparativeAnalyticsSchema = z.object({
       averageAutomation: z.number().nullable(),
       averageAugmentation: z.number().nullable(),
       averageHeadcount: z.number().nullable(),
+      netExposureDelta: z.number().nullable().optional(),
+      automationDelta: z.number().nullable().optional(),
+      augmentationDelta: z.number().nullable().optional(),
     })
   ),
   heatmap: z.array(
@@ -121,6 +145,7 @@ export const comparativeAnalyticsSchema = z.object({
       runCount: z.number(),
       averageScore: z.number().nullable(),
       highRiskShare: z.number().nullable(),
+      netExposureDelta: z.number().nullable().optional(),
     })
   ),
   distributions: z.object({
@@ -167,6 +192,8 @@ export const comparativeAnalyticsSchema = z.object({
           share: z.number(),
         })
       ),
+      automationDelta: z.number().nullable().optional(),
+      augmentationDelta: z.number().nullable().optional(),
     })
   ),
 });
