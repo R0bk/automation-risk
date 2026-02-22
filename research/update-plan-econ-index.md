@@ -1,207 +1,392 @@
-# Comparison: Current Data vs. Anthropic Economic Index Updates
+# Plan: Update Automation Risk Explorer with Latest Anthropic Economic Index Data
 
 > Compiled: 2026-02-22
 
 ---
 
-## What You Currently Have (Report 1/2 era data)
+## Current State
 
-Your `onetData.json` (29 MB) contains the **original release** of the Anthropic Economic Index dataset. Here's exactly what's in it:
+Your `onetData.json` (29 MB) contains **Report 1 era data** (Jan 2025):
 
-### Data Structure
 ```
 onet_hierarchy → 23 sectors → 974 roles → 19,530 tasks
 ```
 
-### Variables Per Task (7 metrics + 2 metadata)
-| Variable | Description | Source |
-|----------|-------------|--------|
-| `pct` | Share of Claude conversations for this task | Report 1 |
-| `count` | Conversation count | Report 1 |
-| `automation_pct` | % of conversations that are automation | Report 1 |
-| `augmentation_pct` | % of conversations that are augmentation | Report 1 |
-| `directive_pct` | % directive (sub-type of automation) | Report 1 |
-| `feedback_loop_pct` | % feedback loop (sub-type of automation) | Report 1 |
-| `validation_pct` | % validation (sub-type of augmentation) | Report 1 |
-| `task_iteration_pct` | % task iteration (sub-type of augmentation) | Report 1 |
-| `learning_pct` | % learning (sub-type of augmentation) | Report 1 |
+**7 metrics per task** (GLOBAL region only):
+`pct`, `count`, `automation_pct`, `augmentation_pct`, `directive_pct`, `feedback_loop_pct`, `validation_pct`, `task_iteration_pct`, `learning_pct`
 
-### Geographic Granularity
-- **GLOBAL only** — single `"GLOBAL"` key per metric, no per-country breakdown
+- 584/974 roles have automation/augmentation signal
+- Claude.ai Free & Pro only, no API data, no geographic breakdown
 
-### Coverage
-- 584 out of 974 roles have any automation/augmentation signal
-- Data from **January 2025** Claude.ai Free & Pro conversations only
-- No API data
-
-### How It Flows Through Your App
-1. `onetData.json` → parsed by `lib/onet/catalog.ts` → builds `OnetCatalogRole[]` with aggregated metrics per role
-2. AI agent maps company roles to O\*NET codes → `dominantRoles` in org hierarchy
-3. `enrich-report.ts` → looks up each O\*NET code → pulls `automationShare` and `augmentationShare` from catalog
-4. `workforce-impact.ts` → headcount-weighted scores using task mix counts
-5. `comparative-analytics.ts` → aggregates across runs by country/industry
+**Data flow**: `onetData.json` → `catalog.ts` → `enrich-report.ts` → `workforce-impact.ts` → `comparative-analytics.ts`
 
 ---
 
-## What's Available Now (Reports 2–4)
+## Latest Available: Release 2026-01-15 (Report 4)
 
-The HuggingFace dataset has **4 releases**. Here's what each adds:
+**Important format change**: The v4 data is **flat CSVs**, not a nested JSON hierarchy like your current file.
 
-### Release 2025-03-27 (Report 2)
-- **Updated metrics** using Claude 3.7 Sonnet classifier (better accuracy)
-- **630 bottom-up usage clusters** — granular usage patterns not captured by O\*NET (e.g., "battery technology guidance", "water management systems")
-- **Removed occupational relevance filtering** — more data preserved
-- Coding usage share increased; educational/learning interactions grew from 23% → 28%
+### Files (142 MB total)
+```
+release_2026_01_15/
+├── data/intermediate/
+│   ├── aei_raw_claude_ai_2025-11-13_to_2025-11-20.csv   (94 MB)
+│   └── aei_raw_1p_api_2025-11-13_to_2025-11-20.csv      (42 MB)
+├── aei_v4_appendix.pdf                                   (6 MB)
+└── data_documentation.md                                 (19 KB)
+```
 
-### Release 2025-09-15 (Report 3)
-- **Per-country metrics** for 150+ countries (not just GLOBAL)
-- **First-party API data** (~1M API transcripts from August 2025, ~50% of 1P API traffic)
-- **Country-level collaboration patterns** — automation vs augmentation varies by country development level
-- **Enterprise API vs consumer** split (API is 97% automation-dominant vs ~50% on Claude.ai)
-- **US state-level data** — per-state usage indices
+### CSV Schema (11 columns)
+| Column | Type | Example |
+|--------|------|---------|
+| `geo_id` | string | `"USA"`, `"GBR"`, `"US-CA"`, `"GLOBAL"` |
+| `geography` | string | `"country"`, `"country-state"`, `"global"` |
+| `date_start` | date | `2025-11-13` |
+| `date_end` | date | `2025-11-20` |
+| `platform_and_product` | string | `"Claude AI (Free and Pro)"` |
+| `facet` | string | `"onet_task"`, `"collaboration"`, `"request"` |
+| `level` | int | 0, 1, 2 |
+| `variable` | string | `"onet_task_pct"`, `"task_success_mean"` |
+| `cluster_name` | string | `"Software Developers"`, `"onet_task::collaboration"` |
+| `value` | float | numeric value |
 
-### Release 2026-01-15 (Report 4) — Latest
-- **Five Economic Primitives per task:**
-  - Task complexity (estimated human hours)
-  - Skill level (years of education for prompt & response)
-  - Use case (work / education / personal)
-  - AI autonomy (1–5 scale)
-  - Task success rate
-- **Effective coverage** — success-rate-weighted task coverage (vs. raw task coverage)
-- **Productivity estimates** — reliability-adjusted labor productivity growth projections
-- **US state convergence data** — Gini coefficient, diffusion modeling
-- **Updated automation/augmentation** — augmentation rebounded to 52% (Nov 2025)
-- Data from **November 2025** conversations, pre-Opus 4.5
+### New Facets/Dimensions Available
+| Facet | Description | Your Use |
+|-------|-------------|----------|
+| `onet_task` | Updated task-level automation/augmentation | **Replace current metrics** |
+| `collaboration` | 6 collaboration types (directive, feedback_loop, learning, task_iteration, validation, none) | Already have these |
+| `task_success` | Per-task success rates | **New: reliability weighting** |
+| `human_only_time` | Hours for human alone (mean, median, CI) | **New: task complexity** |
+| `human_with_ai_time` | Hours with AI (mean, median, CI) | **New: speedup ratio** |
+| `ai_autonomy` | Delegation scale (0–1) | **New: refine auto/aug split** |
+| `human_education_years` | Education needed for prompt | **New: skill composition** |
+| `ai_education_years` | Education of response | **New: skill composition** |
+| `use_case` | work / coursework / personal | **New: filter to work-only** |
+| Intersections (`onet_task::collaboration`, `onet_task::task_success`, etc.) | Cross-dimensional breakdowns | **New: per-task success** |
 
----
-
-## Gap Analysis: What Your App Is Missing
-
-### HIGH IMPACT — Direct improvements to core scoring
-
-| Gap | What It Means | Impact |
-|-----|---------------|--------|
-| **Stale classifier data** | You're using Jan 2025 metrics; Nov 2025 data has updated percentages from a better classifier (Sonnet 4.5) and 10 months of usage evolution | Scores may be inaccurate for roles where patterns shifted |
-| **No task success rates** | Your scores assume 100% reliability; Report 4 shows success drops from ~70% (simple) to ~45% (complex 5hr+ tasks via API) | Current scores overestimate impact; reliability-weighting would halve some estimates |
-| **No effective coverage** | You use raw task count ratios; Report 4 distinguishes "effective coverage" (weighted by actual task time + success) | Data entry workers = underestimated, microbiologists = overestimated |
-| **No task complexity** | All tasks treated equally; Report 4 shows more complex tasks give bigger speedups but lower reliability | Missing nuance in impact scoring |
-
-### MEDIUM IMPACT — Enriched context and comparative analytics
-
-| Gap | What It Means | Impact |
-|-----|---------------|--------|
-| **No per-country metrics** | Your comparative analytics derive country scores from company run aggregation only | Could overlay real AEI per-country adoption rates onto company HQ analysis |
-| **No API vs consumer split** | Enterprises use Claude very differently (97% automation); your data only reflects consumer patterns | Companies with heavy API use (tech firms) may have different risk profiles |
-| **No skill/education data** | No deskilling/upskilling signal per role | Missing workforce transition narrative (e.g., "travel agents lose complex work, keep routine work") |
-| **630 bottom-up clusters** | Your O\*NET mapping misses novel AI use cases not in traditional job descriptions | Some emerging tasks (prompt engineering, AI model evaluation) aren't captured |
-
-### LOWER IMPACT — Nice-to-have enhancements
-
-| Gap | What It Means | Impact |
-|-----|---------------|--------|
-| **No productivity projections** | Report 4 has macro productivity growth estimates (1.0–1.8 pp/year) | Could contextualize company scores against macro backdrop |
-| **No US state data** | State-level convergence/diffusion data | Only relevant if you add state-level views |
-| **No autonomy scale** | 1–5 delegation scale per task | Could refine automation vs augmentation classification |
+### Geographic Coverage
+- 150+ countries (3-letter ISO), 200+ conversation minimum
+- US subnational regions (ISO 3166-2, e.g. `US-CA`)
+- Separate Claude.ai and 1P API files
 
 ---
 
-## Recommended Update Plan
+## Gap Analysis
 
-### Phase 1: Refresh Core Data (Highest ROI)
+### HIGH IMPACT — Core scoring improvements
 
-**Goal**: Replace `onetData.json` with the 2026-01-15 release data
+| Gap | Current | With v4 | Effect on Scores |
+|-----|---------|---------|-----------------|
+| **Stale data** | Jan 2025 classifier | Nov 2025 + Sonnet 4.5 classifier | Updated % for all 974 roles |
+| **No success rates** | Assumes 100% task reliability | 45–70% actual success by complexity | Halves some impact estimates |
+| **No effective coverage** | Raw task-count ratios | Time-weighted + success-weighted coverage | Data entry ↑, microbiologists ↓ |
+| **No task complexity** | All tasks equal weight | Hours to complete + speedup ratios | Complex tasks = bigger but riskier impact |
 
-1. **Download latest HuggingFace release** (`release_2026_01_15/`)
-2. **Transform into your existing hierarchy format** — the structure should be compatible since it's the same O\*NET backbone
-3. **Add new variable keys** to the hierarchy:
+### MEDIUM IMPACT — Enriched analysis
+
+| Gap | What v4 Adds |
+|-----|-------------|
+| **No per-country data** | Real AEI adoption rates for 150+ countries (vs. deriving from company runs) |
+| **No API vs consumer** | Enterprise API is 97% automation-dominant — different risk profile for tech companies |
+| **No education/skill data** | Deskilling/upskilling signal per role |
+| **No use-case filtering** | Can filter to work-only (exclude coursework/personal) |
+
+---
+
+## Phase 1: ETL — Transform v4 CSVs into Your Hierarchy Format
+
+**Goal**: Build a new `onetData.json` from the flat CSVs
+
+The v4 CSV uses `facet` + `variable` + `cluster_name` to encode what your JSON encodes as nested hierarchy. You need a transformation script.
+
+### Step 1.1: Download the data
+```bash
+# From HuggingFace
+# release_2026_01_15/data/intermediate/aei_raw_claude_ai_2025-11-13_to_2025-11-20.csv
+# release_2026_01_15/data/intermediate/aei_raw_1p_api_2025-11-13_to_2025-11-20.csv
+```
+
+### Step 1.2: Write ETL script (`scripts/transform-aei-v4.ts`)
+
+The script needs to:
+
+1. **Parse CSVs** — filter to `geo_id = "GLOBAL"` for core data
+2. **Reconstruct hierarchy** — map `cluster_name` back to O\*NET sectors → roles → tasks using `SOC_Structure.csv` and `onet_task_statements.csv`
+3. **Pivot facet rows into the nested `variable` structure** your code expects:
    ```
-   Existing:      pct, count, automation_pct, augmentation_pct, directive_pct,
-                   feedback_loop_pct, validation_pct, task_iteration_pct, learning_pct
+   CSV row:  facet=onet_task, variable=onet_task_pct, cluster_name="Software Developers", value=5.2
 
-   New to add:    success_rate, complexity_hours, education_years,
-                   autonomy_level, use_case_work_pct, use_case_education_pct,
-                   use_case_personal_pct
+   JSON:     { "cluster_name": "Software Developers", "variable": { "pct": { "global": { "GLOBAL": 5.2 }}}}
    ```
-4. **Update `METRIC_KEYS`** in `lib/onet/catalog.ts` and `lib/ai/tools/onet-tools.ts`
-5. **Validate**: run existing scoring on a few known companies and compare old vs new
+4. **Add new metrics** from intersection facets:
+   ```
+   facet=onet_task::task_success → extract success_rate per task
+   facet=onet_task + variable=human_only_time_mean → extract complexity_hours per task
+   facet=onet_task + variable=human_education_years_mean → extract education_years per task
+   ```
+5. **Output** new `onetData.json` in the same nested format, plus a separate `onetCountryData.json` for per-country metrics
+
+### Step 1.3: Validate output
+- Compare role count (should still be ~974)
+- Compare task count (should still be ~19,500)
+- Spot-check a few known roles (e.g., Software Developers, Accountants) — metrics should be close but updated
+
+**New files:**
+- `scripts/transform-aei-v4.ts` — ETL script
+- `data/onet/onetData.json` — replaced with v4 data
+- `data/aei/country-metrics.json` — new, per-country lookup
+
+**Effort**: Medium (ETL script is the main work; rest is format mapping)
+
+---
+
+## Phase 2: Extend Metric Keys in Code
+
+**Goal**: Make the app aware of new metric dimensions
+
+### Step 2.1: Update `lib/onet/catalog.ts`
+
+```typescript
+// Current METRIC_KEYS (7):
+const METRIC_KEYS = [
+  "automation_pct", "augmentation_pct", "directive_pct",
+  "feedback_loop_pct", "validation_pct", "task_iteration_pct", "learning_pct",
+] as const;
+
+// Add new keys:
+const METRIC_KEYS = [
+  // existing
+  "automation_pct", "augmentation_pct", "directive_pct",
+  "feedback_loop_pct", "validation_pct", "task_iteration_pct", "learning_pct",
+  // new from v4
+  "success_rate",           // task success probability (0-1)
+  "human_only_hours",       // estimated hours without AI
+  "human_with_ai_hours",    // estimated hours with AI
+  "education_years",        // years of education required
+  "autonomy_level",         // AI delegation level (0-1)
+  "use_case_work_pct",      // % that is work use
+] as const;
+```
+
+### Step 2.2: Extend `CatalogMetrics` type
+```typescript
+type CatalogMetrics = {
+  // existing fields...
+  automationCount: number;
+  augmentationCount: number;
+  // ...
+
+  // new fields:
+  avgSuccessRate: number | null;          // role-level avg success rate
+  avgComplexityHours: number | null;      // role-level avg human-only hours
+  avgSpeedup: number | null;             // human_only / human_with_ai ratio
+  avgEducationYears: number | null;       // role-level avg education
+  effectiveAutomationShare: number | null; // automationShare × successRate
+  effectiveAugmentationShare: number | null;
+};
+```
+
+### Step 2.3: Update `lib/ai/tools/onet-tools.ts`
+- Add new keys to `METRIC_LABELS`
+- Include `success_rate` and `education_years` in tool output so the AI agent can reference them
 
 **Files to modify:**
-- `data/onet/onetData.json` — replace with new data
-- `lib/onet/catalog.ts` — add new metric keys to `METRIC_KEYS`, extend `CatalogMetrics` type
-- `lib/ai/tools/onet-tools.ts` — add new metric keys to `METRIC_KEYS` and `METRIC_LABELS`
+- `lib/onet/catalog.ts` — `METRIC_KEYS`, `CatalogMetrics`, `CatalogTaskMetric`, `aggregateRoleMetrics()`
+- `lib/ai/tools/onet-tools.ts` — `METRIC_KEYS`, `METRIC_LABELS`, tool output shape
 
-### Phase 2: Add Reliability-Weighted Scoring
+**Effort**: Low (type changes + plumbing)
 
-**Goal**: Use task success rates to compute "effective" automation/augmentation shares
+---
 
-1. **Extend `CatalogTaskMetric`** with `successRate: number` field
-2. **In `aggregateRoleMetrics()`** (catalog.ts), compute effective shares:
-   ```
-   effectiveAutomationShare = automationShare × successRate
-   effectiveAugmentationShare = augmentationShare × successRate
-   ```
-3. **Add `effectiveAutomationShare` / `effectiveAugmentationShare`** to `EnrichedOrgRole` schema
-4. **Update `workforce-impact.ts`** to optionally use effective shares
-5. **UI**: Show both raw and effective scores (e.g., "3.2 impact (2.1 reliability-adjusted)")
+## Phase 3: Reliability-Weighted Scoring
+
+**Goal**: Use task success rates to produce "effective" impact scores alongside raw ones
+
+### Step 3.1: Compute effective shares in `catalog.ts`
+
+In `aggregateRoleMetrics()`, after computing `autoShare` and `augShare` per task:
+```typescript
+const successRate = toShare(getGlobalMetric(task, "success_rate"));
+
+// Effective = raw × success probability
+const effectiveAutoShare = autoShare * (successRate || 1);
+const effectiveAugShare = augShare * (successRate || 1);
+```
+
+### Step 3.2: Add to report schema (`report-schema.ts`)
+
+Extend `enrichedOrgRoleSchema`:
+```typescript
+effectiveAutomationShare: z.number().min(0).max(1).nullable().optional(),
+effectiveAugmentationShare: z.number().min(0).max(1).nullable().optional(),
+successRate: z.number().min(0).max(1).nullable().optional(),
+complexityHours: z.number().nullable().optional(),
+educationYears: z.number().nullable().optional(),
+```
+
+### Step 3.3: Populate in `enrich-report.ts`
+
+In `buildRoleFromSources()`, pull effective shares from catalog:
+```typescript
+const effectiveAutomationShare = catalogMetrics?.effectiveAutomationShare ?? null;
+const effectiveAugmentationShare = catalogMetrics?.effectiveAugmentationShare ?? null;
+```
+
+### Step 3.4: Update workforce impact (`workforce-impact.ts`)
+
+Add a `computeEffectiveWorkforceImpact()` that mirrors `computeWorkforceImpact()` but uses effective shares. The existing function stays unchanged for backward compatibility.
+
+### Step 3.5: Surface in UI
+
+Show dual scores:
+- "Impact Score: 6.4" (raw, current formula)
+- "Reliability-Adjusted: 4.1" (with success weighting)
 
 **Files to modify:**
-- `lib/onet/catalog.ts` — add `successRate` to task metrics, compute effective shares
-- `lib/run/report-schema.ts` — add `effectiveAutomationShare`, `effectiveAugmentationShare` to `enrichedOrgRoleSchema`
-- `lib/run/enrich-report.ts` — populate effective shares from catalog
-- `lib/run/workforce-impact.ts` — optionally weight by success rate
-- UI components showing scores
+- `lib/onet/catalog.ts` — effective share computation
+- `lib/run/report-schema.ts` — new fields
+- `lib/run/enrich-report.ts` — populate new fields
+- `lib/run/workforce-impact.ts` — add effective scoring function
+- `components/run/` — UI changes for dual scores
 
-### Phase 3: Add Per-Country Overlay
+**Effort**: Medium
 
-**Goal**: Integrate real AEI country-level adoption data into comparative analytics
+---
 
-1. **Ingest country-level CSV** from HuggingFace release (150+ countries with per-task metrics)
-2. **Create `data/aei/country-metrics.json`** — preprocessed lookup by ISO code
-3. **Extend `comparative-analytics.ts`** — overlay AEI country adoption index onto company HQ analysis
-4. **Add country collaboration patterns** — show whether a country leans automation or augmentation
+## Phase 4: Per-Country Data Overlay
+
+**Goal**: Integrate real AEI country adoption data into comparative analytics
+
+### Step 4.1: Create country lookup
+
+From the v4 Claude.ai CSV, filter by `geography = "country"` and extract:
+- Per-country `onet_task_pct` (which tasks each country uses most)
+- Per-country `collaboration_pct` (automation vs augmentation lean)
+- Per-country `usage_count` (volume)
+
+Output as `data/aei/country-metrics.json`:
+```json
+{
+  "USA": {
+    "usageIndex": 1.0,
+    "automationLean": 0.48,
+    "augmentationLean": 0.52,
+    "topTasks": ["Software Developers", "..."],
+    "totalUsage": 12345
+  },
+  "IND": { ... }
+}
+```
+
+### Step 4.2: Extend `comparative-analytics-types.ts`
+
+Add to `CountryMetric`:
+```typescript
+aeiUsageIndex?: number;            // AEI per-capita usage vs baseline
+aeiAutomationLean?: number;        // country-level auto/aug preference
+aeiTopTasks?: string[];            // top O*NET tasks in this country
+```
+
+### Step 4.3: Merge in `comparative-analytics.ts`
+
+When building country metrics, overlay AEI data:
+```typescript
+const aeiCountry = aeiCountryLookup[isoCode];
+if (aeiCountry) {
+  metric.aeiUsageIndex = aeiCountry.usageIndex;
+  metric.aeiAutomationLean = aeiCountry.automationLean;
+}
+```
 
 **Files to modify:**
-- New: `data/aei/country-metrics.json`
-- `lib/run/comparative-analytics.ts` — add AEI overlay
-- `lib/run/comparative-analytics-types.ts` — extend `CountryMetric` type
-- Country-level UI components
+- New: `data/aei/country-metrics.json` (generated by ETL)
+- `lib/run/comparative-analytics-types.ts`
+- `lib/run/comparative-analytics.ts`
+- `components/run/comparative-insights.tsx` — display AEI overlay
 
-### Phase 4: Add Skill Composition & Deskilling Analysis
+**Effort**: Medium
 
-**Goal**: Show what happens to roles when AI-covered tasks are removed
+---
 
-1. **Add education years per task** from Report 4 primitives
-2. **Compute per-role**: average education of AI-covered tasks vs remaining tasks
-3. **Classify** as "deskilling" (AI handles high-skill tasks) or "upskilling" (AI handles low-skill tasks)
-4. **Add to enriched role data** and surface in UI
+## Phase 5: Skill Composition & Deskilling Analysis
+
+**Goal**: Show workforce transition dynamics per role
+
+### Step 5.1: Add education years to task metrics
+
+In `CatalogTaskMetric`, add:
+```typescript
+educationYears: number | null;   // from human_education_years_mean
+```
+
+### Step 5.2: Compute skill shift per role
+
+```typescript
+// Average education of AI-covered tasks (automation + augmentation > 0)
+const aiTaskEducation = mean(tasks.filter(t => t.automationShare + t.augmentationShare > 0).map(t => t.educationYears));
+
+// Average education of remaining tasks
+const manualTaskEducation = mean(tasks.filter(t => t.automationShare + t.augmentationShare === 0).map(t => t.educationYears));
+
+// If AI handles higher-skill tasks → deskilling
+// If AI handles lower-skill tasks → upskilling
+const skillShift = aiTaskEducation - manualTaskEducation;
+// > 0 = deskilling, < 0 = upskilling
+```
+
+### Step 5.3: Add to report schema
+
+```typescript
+skillShift: z.number().nullable().optional(),         // positive = deskilling
+skillShiftLabel: z.enum(["deskilling", "upskilling", "neutral"]).optional(),
+```
 
 **Files to modify:**
-- `lib/onet/catalog.ts` — add `educationYears` to task metrics
-- `lib/run/report-schema.ts` — add `skillShiftDirection` to role schema
+- `lib/onet/catalog.ts` — education aggregation
+- `lib/run/report-schema.ts` — skill shift fields
 - `lib/run/enrich-report.ts` — compute skill shift
-- New UI component for skill shift visualization
+- New: UI component for skill shift visualization
+
+**Effort**: Medium
 
 ---
 
-## Data Compatibility Notes
+## Priority Order & Dependencies
 
-- The O\*NET backbone (23 sectors → ~974 roles → ~19,500 tasks) should be **structurally identical** across all 4 releases — the hierarchy doesn't change, only the metrics attached to each node
-- Your existing `onetRoleCodes.json` mapping should still work since O\*NET codes haven't changed
-- The `variable` structure (`{ "metric_name": { "global": { "GLOBAL": value } } }`) should be the same, but Report 3+ data may include **additional region keys** beyond `"GLOBAL"` (e.g., country ISO codes)
-- Your code currently reads `metric.global["GLOBAL"]` which will continue to work — new regions would be additive
+```
+Phase 1 (ETL) ──────→ Phase 2 (Metric Keys) ──────→ Phase 3 (Reliability Scoring)
+     │                                                         │
+     └──→ Phase 4 (Country Data) ──────────────────────────────┘
+                                                               │
+                                                    Phase 5 (Skill Analysis)
+```
 
-## What to Download
+**Phase 1 is the prerequisite for everything else.** Without transforming the v4 CSVs into your hierarchy format, no downstream changes work.
 
-From [huggingface.co/datasets/Anthropic/EconomicIndex](https://huggingface.co/datasets/Anthropic/EconomicIndex):
-
-1. `release_2026_01_15/` — Latest data with all economic primitives
-2. Check for a processed hierarchy file similar to your current format, or transform from the intermediate CSVs
-3. The raw CSVs (`aei_raw_1p_api_2025-11-13_to_2025-11-20.csv` etc.) will need transformation into your hierarchy JSON format
+| Phase | Effort | Impact | Prerequisite |
+|-------|--------|--------|-------------|
+| 1. ETL | Medium | Foundation for all else | None |
+| 2. Metric Keys | Low | Unlocks new data in tools | Phase 1 |
+| 3. Reliability Scoring | Medium | Most impactful single change | Phase 1, 2 |
+| 4. Country Overlay | Medium | Enriches comparative analytics | Phase 1 |
+| 5. Skill Analysis | Medium | New narrative layer | Phase 1, 2 |
 
 ---
 
-## Quick Wins (Can Do Immediately)
+## Quick Wins (Independent of Phases)
 
-1. **Just swap `onetData.json`** with the latest release — if the format is compatible, this alone updates all scores to Nov 2025 data with zero code changes
-2. **Add `success_rate` display** to the onet_role_metrics tool output — even without changing scoring, showing success rates gives users context
-3. **Add a "Data vintage" indicator** to reports — show that metrics are from "Nov 2025" rather than "Jan 2025"
+These require no data changes:
+
+1. **Add "Data vintage" label** — show "Based on Jan 2025 Claude usage data" on reports so users know the freshness
+2. **Display existing sub-metrics** — you already have `directive_pct`, `feedback_loop_pct`, etc. but they're only used for classification, not shown to users. Surfacing them adds free insight.
+3. **Link to Anthropic Economic Index** — add a citation/link to the AEI on reports since your data comes from it
+
+---
+
+## Data Compatibility Warning
+
+Your current `onetData.json` is a **pre-built nested JSON hierarchy**. The v4 HuggingFace release is **flat CSVs**. There is no direct drop-in replacement — you need the ETL script (Phase 1) to bridge the format gap.
+
+However, the underlying O\*NET taxonomy (sectors → roles → tasks) is the same across all releases. The `onetRoleCodes.json` mapping should continue to work unchanged. The CSV `cluster_name` values should map to the same `cluster_name` values in your hierarchy.
+
+The key question for Phase 1 is: **where did the original `onetData.json` come from?** If Anthropic published a hierarchy JSON alongside Report 1 (not visible on current HuggingFace), the v4 release may also have an equivalent file not yet discovered. Otherwise, the ETL script is needed.
