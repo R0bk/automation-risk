@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
-import type { ComparativeAnalytics, TopTaskMetric, CountryMetric } from "@/lib/run/comparative-analytics-types";
+import type { ComparativeAnalytics, TopTaskMetric, CountryMetric, IndustryMetric } from "@/lib/run/comparative-analytics-types";
 import { resolveIsoCode } from "@/lib/constants/countries";
 import { ComposableMap, Geographies, Geography, Graticule } from "react-simple-maps";
 
@@ -450,6 +450,33 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
 
   const sortedCountries = sortByImpact(analytics?.countries ?? []);
   const sortedIndustries = sortByImpact(analytics?.industries ?? []);
+
+  const growthSummary = useMemo(() => {
+    const industries = analytics?.industries ?? [];
+    const countries = analytics?.countries ?? [];
+    const withDelta = industries.filter(
+      (i): i is IndustryMetric & { netExposureDelta: number } =>
+        typeof i.netExposureDelta === "number" && Math.abs(i.netExposureDelta) >= 0.005
+    );
+    if (withDelta.length === 0) return null;
+
+    const growing = withDelta.filter((i) => i.netExposureDelta > 0);
+    const topGrowing = [...growing].sort((a, b) => b.netExposureDelta - a.netExposureDelta).slice(0, 3);
+    const countriesWithDelta = countries.filter(
+      (c): c is CountryMetric & { netExposureDelta: number } =>
+        typeof c.netExposureDelta === "number" && c.netExposureDelta > 0.005
+    );
+    const topCountry = countriesWithDelta.length > 0
+      ? [...countriesWithDelta].sort((a, b) => b.netExposureDelta - a.netExposureDelta)[0]
+      : null;
+
+    return {
+      growingCount: growing.length,
+      totalCount: withDelta.length,
+      topIndustries: topGrowing,
+      topCountry,
+    };
+  }, [analytics]);
   const [showAllIndustries, setShowAllIndustries] = useState(false);
   const [showAllCountries, setShowAllCountries] = useState(false);
   const [showFullHeatmap, setShowFullHeatmap] = useState(false);
@@ -639,7 +666,7 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
               >
                 AI Automation
               </span>
-              . Numbers next to each bar show how exposure is changing per role.
+              .
             </p>
           </div>
           {analytics && (
@@ -651,6 +678,42 @@ export function ComparativeInsights({ analytics }: ComparativeInsightsProps) {
             </div>
           )}
         </header>
+
+      {hasData && growthSummary && (
+        <div className="mt-6 mx-5 lg:mx-0 rounded-2xl border border-[rgba(245,78,0,0.18)] bg-[rgba(245,78,0,0.04)] px-6 py-5">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-8">
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-[rgba(38,37,30,0.85)]">
+                AI exposure is growing across {growthSummary.growingCount} of {growthSummary.totalCount} industries
+              </p>
+              <p className="mt-1 text-xs text-[rgba(38,37,30,0.6)] leading-relaxed">
+                Since Jan 2025, more roles are being impacted by AI — both through automation and augmentation.
+                {growthSummary.topCountry && (
+                  <> {growthSummary.topCountry.country} is seeing the fastest growth at +{growthSummary.topCountry.netExposureDelta.toFixed(1)} tasks per role on average.</>
+                )}
+              </p>
+            </div>
+            {growthSummary.topIndustries.length > 0 && (
+              <div className="flex flex-wrap gap-2 sm:flex-col sm:items-end sm:gap-1.5">
+                <span className="w-full text-[10px] font-semibold text-[rgba(38,37,30,0.45)] uppercase tracking-[0.2em] sm:text-right">
+                  Fastest growing
+                </span>
+                {growthSummary.topIndustries.map((ind) => (
+                  <span
+                    key={ind.industry}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(245,78,0,0.15)] bg-white/80 px-2.5 py-1 text-xs text-[rgba(38,37,30,0.75)]"
+                  >
+                    <span className="font-medium">{ind.industry}</span>
+                    <span className="font-semibold tabular-nums text-[rgba(245,78,0,0.85)]">
+                      +{ind.netExposureDelta.toFixed(1)}
+                    </span>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {hasData ? (
         <div className="mt-4 space-y-10">
