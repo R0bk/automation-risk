@@ -413,6 +413,7 @@ export type TopMover = {
   code: string;
   title: string;
   parentCluster: string | null;
+  taskCount: number;
   automationTasksBefore: number;
   automationTasksAfter: number;
   augmentationTasksBefore: number;
@@ -430,6 +431,7 @@ export function getTopMovers(catalog: OnetCatalogRole[], limit = 20): TopMover[]
       code: r.code,
       title: r.title,
       parentCluster: r.parentCluster,
+      taskCount: r.metrics.taskCount,
       automationTasksBefore: r.prior!.automationTasks,
       automationTasksAfter: r.metrics.automationTasks,
       augmentationTasksBefore: r.prior!.augmentationTasks,

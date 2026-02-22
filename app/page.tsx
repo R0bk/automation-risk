@@ -79,7 +79,7 @@ async function ComparativeInsightsAsync() {
 
 function WhatsChangedSync() {
   const catalog = loadOnetCatalog();
-  const movers = getTopMovers(catalog, 9);
+  const movers = getTopMovers(catalog, 6);
   return <WhatsChanged movers={movers} />;
 }
 
