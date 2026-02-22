@@ -794,6 +794,29 @@ export async function listCompletedRunsWithReports() {
   }
 }
 
+export async function listCompletedRunsWithCompany() {
+  try {
+    return await db
+      .select({
+        runId: analysisRun.id,
+        companyId: analysisRun.companyId,
+        finalReportJson: analysisRun.finalReportJson,
+        companySlug: company.slug,
+        displayName: company.displayName,
+        hqCountry: company.hqCountry,
+        industry: company.industry,
+      })
+      .from(analysisRun)
+      .innerJoin(company, eq(analysisRun.companyId, company.id))
+      .where(and(eq(analysisRun.status, "completed"), isNotNull(analysisRun.finalReportJson)));
+  } catch (_error) {
+    throw new ChatSDKError(
+      "bad_request:database",
+      "Failed to list completed runs with company data"
+    );
+  }
+}
+
 export async function replaceRunMetrics(metricType: string, values: RunMetricInsert[]) {
   try {
     await db.transaction(async (tx) => {

@@ -2,9 +2,14 @@ import { NextResponse } from "next/server";
 
 import { enrichedOrgReportSchema } from "@/lib/run/report-schema";
 import { computeWorkforceImpact } from "@/lib/run/workforce-impact";
+import { buildComparativeAnalytics } from "@/lib/run/comparative-analytics";
+import { LANDING_ANALYTICS_SNAPSHOT_KEY } from "@/lib/constants/analytics";
+import type { ComparativeRun } from "@/lib/run/comparative-analytics-types";
 import {
   listCompletedRunsWithReports,
+  listCompletedRunsWithCompany,
   replaceRunMetrics,
+  upsertAnalyticsSnapshot,
 } from "@/lib/db/queries";
 import { runMetric } from "@/lib/db/schema";
 
@@ -105,8 +110,48 @@ export async function POST() {
 
   await replaceRunMetrics("workforce_score", metrics);
 
+  // Build and store comparative analytics snapshot (with delta data)
+  let comparativeStats = { runs: 0 };
+  try {
+    const runsWithCompany = await listCompletedRunsWithCompany();
+    const impactByRun = new Map(results.map((r) => [r.runId, r]));
+
+    const comparativeRuns: ComparativeRun[] = runsWithCompany
+      .map((row): ComparativeRun | null => {
+        if (!row.finalReportJson) return null;
+        const parsed = enrichedOrgReportSchema.safeParse(row.finalReportJson);
+        if (!parsed.success) return null;
+
+        const impact = impactByRun.get(row.runId);
+
+        return {
+          runId: row.runId,
+          companyId: row.companyId,
+          companySlug: row.companySlug ?? null,
+          displayName: row.displayName ?? null,
+          hqCountry: row.hqCountry ?? null,
+          industry: row.industry ?? null,
+          workforceMetric: impact ?? null,
+          report: parsed.data,
+        };
+      })
+      .filter((r): r is ComparativeRun => r != null);
+
+    if (comparativeRuns.length > 0) {
+      const payload = buildComparativeAnalytics(comparativeRuns);
+      await upsertAnalyticsSnapshot({
+        key: LANDING_ANALYTICS_SNAPSHOT_KEY,
+        payload,
+      });
+      comparativeStats = { runs: comparativeRuns.length };
+    }
+  } catch (err) {
+    console.warn("[benchmark] comparative analytics generation failed", err);
+  }
+
   return NextResponse.json({
     processedRuns: runs.length,
     storedMetrics: metrics.length,
+    comparativeAnalytics: comparativeStats,
   });
 }
