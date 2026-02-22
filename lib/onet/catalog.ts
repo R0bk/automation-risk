@@ -1,6 +1,6 @@
 import onetDataJson from "@/data/onet/onetData.json" assert { type: "json" };
+import onetDataV4Json from "@/data/onet/onetData-v4-2025-11.json" assert { type: "json" };
 import onetRoleCodesJson from "@/data/onet/onetRoleCodes.json" assert { type: "json" };
-// import onetCrosswalksJson from "@/data/onet/onetCrosswalks.json" assert { type: "json" };
 
 const METRIC_KEYS = [
   "automation_pct",
@@ -12,7 +12,17 @@ const METRIC_KEYS = [
   "learning_pct",
 ] as const;
 
+/** New metric keys available in v4 (Nov 2025) data */
+const V4_METRIC_KEYS = [
+  "success_rate",
+  "human_only_hours",
+  "human_with_ai_hours",
+  "education_years",
+  "autonomy_level",
+] as const;
+
 type MetricKey = (typeof METRIC_KEYS)[number];
+type V4MetricKey = (typeof V4_METRIC_KEYS)[number];
 
 type MetricValue = Partial<Record<string, { global?: Record<string, number | undefined> }>>;
 
@@ -46,6 +56,33 @@ export type CatalogTaskMetric = {
   augmentationShare: number;
   manualShare: number;
   metrics: Partial<Record<MetricKey, number>> | null;
+  /** v4: task success rate (0-1) */
+  successRate?: number | null;
+  /** v4: estimated human-only hours */
+  humanOnlyHours?: number | null;
+  /** v4: estimated hours with AI */
+  humanWithAiHours?: number | null;
+  /** v4: required education years */
+  educationYears?: number | null;
+  /** v4: AI autonomy level (1-5) */
+  autonomyLevel?: number | null;
+};
+
+/** Snapshot of core metrics for a single data vintage, used for delta computation */
+export type VintageSnapshot = {
+  automationTasks: number;
+  augmentationTasks: number;
+  manualTasks: number;
+  automationCount: number;
+  augmentationCount: number;
+  totalCount: number;
+};
+
+/** Delta between two data vintages (v4 - v1) */
+export type CatalogDelta = {
+  automationTasksDelta: number;
+  augmentationTasksDelta: number;
+  manualTasksDelta: number;
 };
 
 type CatalogMetrics = {
@@ -60,6 +97,12 @@ type CatalogMetrics = {
   augmentationTasks: number;
   manualTasks: number;
   tasks: CatalogTaskMetric[];
+  /** v4: average success rate across tasks (0-1) */
+  avgSuccessRate?: number | null;
+  /** v4: average human-only hours */
+  avgHumanOnlyHours?: number | null;
+  /** v4: average education years */
+  avgEducationYears?: number | null;
 };
 
 export interface OnetCatalogRole {
@@ -68,16 +111,17 @@ export interface OnetCatalogRole {
   normalizedTitle: string;
   parentCluster: string | null;
   metrics: CatalogMetrics;
+  /** Metrics from the prior (v1, Jan 2025) data vintage for delta comparison */
+  prior?: VintageSnapshot | null;
+  /** Computed delta: current (v4) minus prior (v1) */
+  delta?: CatalogDelta | null;
 }
 
-const onetHierarchy: OnetHierarchy = onetDataJson as OnetHierarchy;
+/** Primary data: v4 (Nov 2025) with updated metrics + new economic primitives */
+const onetHierarchy: OnetHierarchy = onetDataV4Json as OnetHierarchy;
+/** Prior data: v1 (Jan 2025) for delta computation */
+const onetHierarchyPrior: OnetHierarchy = onetDataJson as OnetHierarchy;
 const roleCodes: RoleCodeMap = onetRoleCodesJson as RoleCodeMap;
-// const crosswalks = onetCrosswalksJson as Array<{
-//   code: string;
-//   title: string;
-//   normalizedTitle: string;
-//   sourceTitles: string[];
-// }>;
 
 function normalizeRole(value: string | undefined): string {
   return value?.trim().toLowerCase() ?? "";
@@ -190,6 +234,13 @@ function aggregateRoleMetrics(role: OnetRoleNode): CatalogMetrics {
       return acc;
     }, {} as Partial<Record<MetricKey, number>>);
 
+    // v4 economic primitives
+    const successRate = getGlobalMetric(task, "success_rate") || null;
+    const humanOnlyHours = getGlobalMetric(task, "human_only_hours") || null;
+    const humanWithAiHours = getGlobalMetric(task, "human_with_ai_hours") || null;
+    const educationYears = getGlobalMetric(task, "education_years") || null;
+    const autonomyLevel = getGlobalMetric(task, "autonomy_level") || null;
+
     catalogTasks.push({
       name: task.cluster_name,
       normalizedWeight,
@@ -198,6 +249,11 @@ function aggregateRoleMetrics(role: OnetRoleNode): CatalogMetrics {
       augmentationShare: augShare,
       manualShare,
       metrics: Object.keys(taskMetrics).length > 0 ? taskMetrics : null,
+      successRate,
+      humanOnlyHours,
+      humanWithAiHours,
+      educationYears,
+      autonomyLevel,
     });
 
     if (normalizedWeight === 0) continue;
@@ -234,6 +290,22 @@ function aggregateRoleMetrics(role: OnetRoleNode): CatalogMetrics {
     return acc;
   }, {} as Partial<Record<MetricKey, number>>);
 
+  // v4: compute role-level averages from task primitives
+  const tasksWithSuccess = catalogTasks.filter(t => t.successRate != null && t.successRate > 0);
+  const avgSuccessRate = tasksWithSuccess.length > 0
+    ? round(tasksWithSuccess.reduce((s, t) => s + (t.successRate ?? 0), 0) / tasksWithSuccess.length)
+    : null;
+
+  const tasksWithHours = catalogTasks.filter(t => t.humanOnlyHours != null && t.humanOnlyHours > 0);
+  const avgHumanOnlyHours = tasksWithHours.length > 0
+    ? round(tasksWithHours.reduce((s, t) => s + (t.humanOnlyHours ?? 0), 0) / tasksWithHours.length)
+    : null;
+
+  const tasksWithEdu = catalogTasks.filter(t => t.educationYears != null && t.educationYears > 0);
+  const avgEducationYears = tasksWithEdu.length > 0
+    ? round(tasksWithEdu.reduce((s, t) => s + (t.educationYears ?? 0), 0) / tasksWithEdu.length)
+    : null;
+
   return {
     automationCount,
     augmentationCount,
@@ -246,15 +318,42 @@ function aggregateRoleMetrics(role: OnetRoleNode): CatalogMetrics {
     augmentationTasks,
     manualTasks,
     tasks: catalogTasks,
+    avgSuccessRate,
+    avgHumanOnlyHours,
+    avgEducationYears,
   };
 }
 
 let cachedCatalog: OnetCatalogRole[] | null = null;
 
+/** Build a lookup of prior (v1) role metrics by normalized title */
+function buildPriorLookup(): Map<string, VintageSnapshot> {
+  const lookup = new Map<string, VintageSnapshot>();
+  const sectors = onetHierarchyPrior.onet_hierarchy ?? [];
+  for (const sector of sectors) {
+    for (const roleNode of sector.children ?? []) {
+      const normalizedTitle = normalizeRole(roleNode.cluster_name);
+      if (!normalizedTitle) continue;
+      const m = aggregateRoleMetrics(roleNode);
+      lookup.set(normalizedTitle, {
+        automationTasks: m.automationTasks,
+        augmentationTasks: m.augmentationTasks,
+        manualTasks: m.manualTasks,
+        automationCount: m.automationCount,
+        augmentationCount: m.augmentationCount,
+        totalCount: m.totalCount,
+      });
+    }
+  }
+  return lookup;
+}
+
 export function loadOnetCatalog(): OnetCatalogRole[] {
   if (cachedCatalog) {
     return cachedCatalog;
   }
+
+  const priorLookup = buildPriorLookup();
 
   const catalog: OnetCatalogRole[] = [];
   const sectors = onetHierarchy.onet_hierarchy ?? [];
@@ -272,94 +371,29 @@ export function loadOnetCatalog(): OnetCatalogRole[] {
         continue;
       }
 
+      const currentMetrics = aggregateRoleMetrics(roleNode);
+      const prior = priorLookup.get(normalizedTitle) ?? null;
+
+      const delta: CatalogDelta | null = prior ? {
+        automationTasksDelta: currentMetrics.automationTasks - prior.automationTasks,
+        augmentationTasksDelta: currentMetrics.augmentationTasks - prior.augmentationTasks,
+        manualTasksDelta: currentMetrics.manualTasks - prior.manualTasks,
+      } : null;
+
       const role: OnetCatalogRole = {
         code: codeEntry.code,
         title: codeEntry.title ?? roleNode.cluster_name ?? codeEntry.code,
         normalizedTitle,
         parentCluster,
-        metrics: aggregateRoleMetrics(roleNode),
+        metrics: currentMetrics,
+        prior,
+        delta,
       };
 
       catalog.push(role);
       byNormalizedTitle.set(normalizedTitle, role);
     }
   }
-
-  // for (const alias of crosswalks) {
-  //   if (catalog.some((role) => role.code === alias.code)) {
-  //     continue;
-  //   }
-
-  //   const sources = alias.sourceTitles
-  //     .map((title) => byNormalizedTitle.get(title))
-  //     .filter((role): role is OnetCatalogRole => Boolean(role));
-
-  //   if (sources.length === 0) {
-  //     continue;
-  //   }
-
-  //   const metrics: Partial<Record<MetricKey, number>> = {};
-  //   let automationCount = 0;
-  //   let augmentationCount = 0;
-  //   let totalCount = 0;
-  //   let automationTasks = 0;
-  //   let augmentationTasks = 0;
-  //   let manualTasks = 0;
-
-  //   for (const key of METRIC_KEYS) {
-  //     const values = sources
-  //       .map((role) => role.metrics.metrics?.[key] ?? null)
-  //       .filter((value): value is number => value != null);
-
-  //     if (!values.length) {
-  //       continue;
-  //     }
-
-  //     const average = values.reduce((sum, value) => sum + value, 0) / values.length;
-  //     metrics[key] = round(average);
-  //   }
-
-  //   const coverages = sources
-  //     .map((role) => role.metrics.coverage)
-  //     .filter((value): value is number => value != null);
-  //   const coverageAvg = coverages.length
-  //     ? round(coverages.reduce((sum, value) => sum + value, 0) / coverages.length)
-  //     : null;
-
-  //   const taskCount = sources.reduce((sum, role) => sum + role.metrics.taskCount, 0);
-  //   const parentCluster = sources.find((role) => role.parentCluster)?.parentCluster ?? null;
-
-  //   for (const source of sources) {
-  //     automationCount += source.metrics.automationCount;
-  //     augmentationCount += source.metrics.augmentationCount;
-  //     totalCount += source.metrics.totalCount;
-  //     automationTasks += source.metrics.automationTasks;
-  //     augmentationTasks += source.metrics.augmentationTasks;
-  //     manualTasks += source.metrics.manualTasks;
-  //   }
-
-  //   const compositeRole: OnetCatalogRole = {
-  //     code: alias.code,
-  //     title: alias.title,
-  //     normalizedTitle: alias.normalizedTitle,
-  //     parentCluster,
-  //     metrics: {
-  //       automationCount,
-  //       augmentationCount,
-  //       manualCount: Math.max(totalCount - automationCount - augmentationCount, 0),
-  //       totalCount,
-  //       coverage: coverageAvg,
-  //       taskCount,
-  //       metrics: Object.keys(metrics).length > 0 ? metrics : null,
-  //       automationTasks,
-  //       augmentationTasks,
-  //       manualTasks,
-  //     },
-  //   };
-
-  //   catalog.push(compositeRole);
-  //   byNormalizedTitle.set(alias.normalizedTitle, compositeRole);
-  // }
 
   cachedCatalog = catalog;
   return catalog;
@@ -373,6 +407,39 @@ export function buildCodeLookup(catalog: OnetCatalogRole[]): Map<string, OnetCat
   }
 
   return lookup;
+}
+
+export type TopMover = {
+  code: string;
+  title: string;
+  parentCluster: string | null;
+  automationTasksBefore: number;
+  automationTasksAfter: number;
+  augmentationTasksBefore: number;
+  augmentationTasksAfter: number;
+  automationDelta: number;
+  augmentationDelta: number;
+  avgSuccessRate: number | null;
+};
+
+/** Get the roles with the biggest automation increase between v1 → v4 */
+export function getTopMovers(catalog: OnetCatalogRole[], limit = 20): TopMover[] {
+  return catalog
+    .filter(r => r.delta != null && r.prior != null)
+    .map(r => ({
+      code: r.code,
+      title: r.title,
+      parentCluster: r.parentCluster,
+      automationTasksBefore: r.prior!.automationTasks,
+      automationTasksAfter: r.metrics.automationTasks,
+      augmentationTasksBefore: r.prior!.augmentationTasks,
+      augmentationTasksAfter: r.metrics.augmentationTasks,
+      automationDelta: r.delta!.automationTasksDelta,
+      augmentationDelta: r.delta!.augmentationTasksDelta,
+      avgSuccessRate: r.metrics.avgSuccessRate ?? null,
+    }))
+    .sort((a, b) => Math.abs(b.automationDelta) - Math.abs(a.automationDelta))
+    .slice(0, limit);
 }
 
 export function buildPrefixLookup(catalog: OnetCatalogRole[]): Map<string, OnetCatalogRole[]> {

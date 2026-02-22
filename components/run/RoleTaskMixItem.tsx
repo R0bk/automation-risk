@@ -16,6 +16,7 @@ import {
 } from "@/lib/constants/task-mix";
 import type { TaskMixView } from "@/lib/run/task-mix";
 import type { OrgFlowDenseRoleSummary } from "@/lib/run/org-flow-model";
+import { DeltaBadge } from "./delta-badge";
 
 const SEGMENT_ORDER: TaskMixCategory[] = ["automation", "augmentation", "manual"];
 
@@ -204,10 +205,16 @@ export function RoleTaskMixItem({ role, view, nodeHeadcount, className }: RoleTa
             {view === "coverage" ? (
               <div className="flex items-center font-bold gap-2">
                 {taskCounts?.automation ? (
-                  <span className="text-[#B7410E]">{taskCounts.automation} auto</span>
+                  <span className="inline-flex items-center gap-1 text-[#B7410E]">
+                    {taskCounts.automation} auto
+                    <DeltaBadge value={role.delta?.automationTasksDelta} sentiment="up-is-bad" label="since Jan 2025" />
+                  </span>
                 ) : null}
                 {taskCounts?.augmentation ? (
-                  <span className="text-[#4F7F7D]">{taskCounts.augmentation} aug</span>
+                  <span className="inline-flex items-center gap-1 text-[#4F7F7D]">
+                    {taskCounts.augmentation} aug
+                    <DeltaBadge value={role.delta?.augmentationTasksDelta} sentiment="up-is-good" label="since Jan 2025" />
+                  </span>
                 ) : null}
                 {taskCounts?.manual ? (
                   <span className="text-[#26251e]">{taskCounts.manual} manual</span>
@@ -219,10 +226,16 @@ export function RoleTaskMixItem({ role, view, nodeHeadcount, className }: RoleTa
             ) : (
               <div className="flex items-center font-bold gap-2">
                 {autoShare != null && (
-                  <span className="text-[#B7410E]">{Math.round(clampShare(autoShare) * 100)}% Auto</span>
+                  <span className="inline-flex items-center gap-1 text-[#B7410E]">
+                    {Math.round(clampShare(autoShare) * 100)}% Auto
+                    <DeltaBadge value={role.delta?.automationTasksDelta} sentiment="up-is-bad" label="tasks since Jan 2025" />
+                  </span>
                 )}
                 {augShare != null && (
-                  <span className="text-[#4F7F7D]">{Math.round(clampShare(augShare) * 100)}% Aug</span>
+                  <span className="inline-flex items-center gap-1 text-[#4F7F7D]">
+                    {Math.round(clampShare(augShare) * 100)}% Aug
+                    <DeltaBadge value={role.delta?.augmentationTasksDelta} sentiment="up-is-good" label="tasks since Jan 2025" />
+                  </span>
                 )}
                 {manualShare != null && (
                   <span className="text-[#26251e]">{Math.round(clampShare(manualShare) * 100)}% Manual</span>

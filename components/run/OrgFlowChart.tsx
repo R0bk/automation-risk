@@ -119,6 +119,7 @@ const OrgNode = ({ id, data }: NodeProps<OrgFlowNodeData>) => {
                 groupHeadcount: nodeHeadcount ?? null,
                 taskMixCounts: deriveTaskMixCounts(role),
                 taskMixShares: deriveTaskMixShares(role),
+                delta: role.delta ?? null,
               };
 
               return (
