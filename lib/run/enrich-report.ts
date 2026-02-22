@@ -247,6 +247,9 @@ function buildRoleFromSources(code: string, jobRole: JobRole | null, catalogRole
     augmentationShare,
     taskMixCounts: catalogTaskCounts,
     taskMixShares,
+    avgSuccessRate: catalogRole?.metrics.avgSuccessRate ?? null,
+    avgEducationYears: catalogRole?.metrics.avgEducationYears ?? null,
+    delta: catalogRole?.delta ?? null,
   };
 }
 

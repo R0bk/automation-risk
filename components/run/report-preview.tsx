@@ -12,6 +12,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { TaskMixSelector } from "./TaskMixSelector";
 import { OrgFlowChart } from "./OrgFlowChart";
+import { DeltaBadge } from "./delta-badge";
 
 interface ReportPreviewProps {
   report: EnrichedOrgReport;
@@ -149,7 +150,14 @@ const renderRoleCard = (role: RoleImpact) => {
       <div className="flex items-center justify-between gap-3">
         <div>
           <div className="text-base font-semibold text-[#26251e]">{role.title}</div>
-          <div className="text-xs text-[rgba(38,37,30,0.5)]">{role.onetCode}</div>
+          <div className="flex items-center gap-2 text-xs text-[rgba(38,37,30,0.5)]">
+            <span>{role.onetCode}</span>
+            {role.avgSuccessRate != null && (
+              <span className="font-mono text-[10px] text-[rgba(38,37,30,0.45)]" title="Average task success rate">
+                {Math.round(role.avgSuccessRate * 100)}% success
+              </span>
+            )}
+          </div>
         </div>
         <div className="text-right font-mono text-sm text-[#26251e]">
           {numberFormatter.format(role.headcount)} mapped
@@ -157,8 +165,14 @@ const renderRoleCard = (role: RoleImpact) => {
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-[rgba(38,37,30,0.65)]">
         <span>{numberFormatter.format(role.headcount)} mapped headcount</span>
-        <span className="text-[#cf2d56]">Auto {formatPercent(role.automationShare)}</span>
-        <span className="text-[#2d6fce]">Aug {formatPercent(role.augmentationShare)}</span>
+        <span className="inline-flex items-center gap-1 text-[#cf2d56]">
+          Auto {formatPercent(role.automationShare)}
+          <DeltaBadge value={role.delta?.automationTasksDelta} sentiment="up-is-bad" label="tasks since Jan 2025" />
+        </span>
+        <span className="inline-flex items-center gap-1 text-[#2d6fce]">
+          Aug {formatPercent(role.augmentationShare)}
+          <DeltaBadge value={role.delta?.augmentationTasksDelta} sentiment="up-is-good" label="tasks since Jan 2025" />
+        </span>
         <span className="text-[rgba(38,37,30,0.6)]">Manual {formatPercent(manualShare)}</span>
       </div>
       {topNode && (
@@ -398,9 +412,14 @@ const roleSpotlight = roleImpacts
           )}
           <span>Last updated {new Date(report.metadata.lastUpdatedIso).toLocaleString()}</span>
         </div>
-        {impact?.computedAt && (
-          <span>Benchmark refreshed {new Date(impact.computedAt).toLocaleString()}</span>
-        )}
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-[10px] uppercase tracking-[0.16em] text-[rgba(38,37,30,0.4)]">
+            Based on Anthropic Economic Index v4 (Nov 2025)
+          </span>
+          {impact?.computedAt && (
+            <span>Benchmark refreshed {new Date(impact.computedAt).toLocaleString()}</span>
+          )}
+        </div>
       </div>
     </section>
     </TooltipProvider>

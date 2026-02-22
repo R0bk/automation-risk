@@ -13,10 +13,13 @@ import {
 import { ComparativeInsights } from "@/components/run/comparative-insights";
 import { loadComparativeInsights } from "@/lib/run/load-comparative-insights";
 import { FloatingOnboardingButton } from "@/components/onboarding/FloatingOnboardingButton";
+import { WhatsChanged } from "@/components/run/whats-changed";
+import { loadOnetCatalog, getTopMovers } from "@/lib/onet/catalog";
 
 const LANDING_FOOTER_LINKS = [
   { label: "Home", href: "#top" },
   { label: "Trending", href: "#trending" },
+  { label: "What Changed", href: "#whats-changed" },
   { label: "Marketplace", href: "#marketplace" },
 ];
 
@@ -72,6 +75,12 @@ async function HeroAsync() {
 async function ComparativeInsightsAsync() {
   const { data, updatedAt } = await loadComparativeInsights();
   return <ComparativeInsights analytics={data} updatedAt={updatedAt} />;
+}
+
+function WhatsChangedSync() {
+  const catalog = loadOnetCatalog();
+  const movers = getTopMovers(catalog, 9);
+  return <WhatsChanged movers={movers} />;
 }
 
 // Loading skeletons
@@ -146,11 +155,13 @@ export default function Page() {
           </Suspense>
         </div>
 
+        <div id="whats-changed">
+          <WhatsChangedSync />
+        </div>
+
         <Suspense fallback={<ComparativeInsightsSkeleton />}>
           <ComparativeInsightsAsync />
         </Suspense>
-
-
 
         <div id="marketplace">
           <Suspense fallback={<MarketplaceSkeleton />}>

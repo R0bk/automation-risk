@@ -264,6 +264,14 @@ export type RoleImpact = {
   manualShare: number | null;
   impact: number | null;
   nodes: RoleAccumulator["nodes"];
+  /** Delta: change in task counts from Jan 2025 (v1) → Nov 2025 (v4) */
+  delta: {
+    automationTasksDelta: number;
+    augmentationTasksDelta: number;
+    manualTasksDelta: number;
+  } | null;
+  /** Average task success rate from v4 data (0-1) */
+  avgSuccessRate: number | null;
 };
 
 export function collectRoleImpacts(report: EnrichedOrgReport): RoleImpact[] {
@@ -336,6 +344,8 @@ export function collectRoleImpacts(report: EnrichedOrgReport): RoleImpact[] {
       manualShare,
       impact,
       nodes: record.nodes,
+      delta: resolvedRole?.delta ?? null,
+      avgSuccessRate: resolvedRole?.avgSuccessRate ?? null,
     });
   }
 
