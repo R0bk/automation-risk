@@ -17,7 +17,7 @@
  * Usage: pnpm tsx scripts/analyze-country-impact.ts
  */
 
-import { loadOnetCatalog, type OnetCatalogRole, type CatalogDelta } from "@/lib/onet/catalog";
+import { loadOnetCatalog, buildCodeLookup, type OnetCatalogRole, type CatalogDelta } from "@/lib/onet/catalog";
 import { COUNTRY_GROUP_ALIASES } from "@/lib/constants/aggregation-groups";
 import { resolveIsoCode } from "@/lib/constants/countries";
 import { readFileSync, writeFileSync } from "node:fs";
@@ -38,30 +38,23 @@ type IndustryDelta = {
   totalRoles: number;
   rolesWithDeltas: number;
   rolesChanged: number;
-  // v1 baseline shares (as fraction of tasks)
   v1AutomationShare: number;
   v1AugmentationShare: number;
   v1ManualShare: number;
-  // v4 current shares
   v4AutomationShare: number;
   v4AugmentationShare: number;
   v4ManualShare: number;
-  // deltas (v4 - v1)
   automationShareDelta: number;
   augmentationShareDelta: number;
   manualShareDelta: number;
-  // absolute change for ranking
   totalAbsShareDelta: number;
-  // net AI exposure shift (automation + augmentation deltas combined)
   netAIExposureDelta: number;
   direction: string;
-  // average per-role task-count deltas
   avgAutoTaskDelta: number;
   avgAugTaskDelta: number;
   avgManualTaskDelta: number;
-  // workforce weight: how many total tasks exist in this cluster
   totalTaskCount: number;
-  workforceWeight: number; // fraction of all catalog tasks
+  workforceWeight: number;
 };
 
 /** Country-industry cell from the company reports */
@@ -88,14 +81,12 @@ type CountryExposure = {
     industryAugShareDelta: number;
     industryManualShareDelta: number;
     industryNetAIDelta: number;
-    weightedContribution: number; // headcountShare * industryNetAIDelta
+    weightedContribution: number;
   }>;
-  // Weighted exposure deltas
   weightedAutoShareDelta: number;
   weightedAugShareDelta: number;
   weightedManualShareDelta: number;
   weightedNetAIExposureDelta: number;
-  // Top industry exposures
   topPositiveIndustry: string | null;
   topNegativeIndustry: string | null;
   exposureDirection: string;
@@ -107,14 +98,6 @@ type CountryExposure = {
 
 function round4(v: number): number {
   return Number(v.toFixed(4));
-}
-
-function round2(v: number): number {
-  return Number(v.toFixed(2));
-}
-
-function sign(v: number): string {
-  return v > 0 ? `+${v.toFixed(4)}` : v.toFixed(4);
 }
 
 function signPct(v: number): string {
@@ -142,7 +125,6 @@ function normalizeCountryLabel(raw: string | null | undefined): string | null {
 // ---------------------------------------------------------------------------
 
 function computeIndustryDeltas(catalog: OnetCatalogRole[]): IndustryDelta[] {
-  // Group by parentCluster
   const clusterMap = new Map<string, OnetCatalogRole[]>();
   for (const role of catalog) {
     const key = role.parentCluster ?? "(Uncategorized)";
@@ -151,12 +133,11 @@ function computeIndustryDeltas(catalog: OnetCatalogRole[]): IndustryDelta[] {
   }
 
   let globalTotalTasks = 0;
-  const results: IndustryDelta[] = [];
-
-  // First pass: count total tasks globally
   for (const role of catalog) {
     globalTotalTasks += role.metrics.taskCount;
   }
+
+  const results: IndustryDelta[] = [];
 
   for (const [cluster, roles] of clusterMap) {
     const rolesWithDeltas = roles.filter(
@@ -169,10 +150,6 @@ function computeIndustryDeltas(catalog: OnetCatalogRole[]): IndustryDelta[] {
         r.delta.augmentationTasksDelta !== 0 ||
         r.delta.manualTasksDelta !== 0
     ).length;
-
-    // Compute share-based metrics (more meaningful than raw task counts)
-    // For each role, compute what fraction of its tasks are auto/aug/manual
-    // Then average across the cluster
 
     let sumV1AutoShare = 0;
     let sumV1AugShare = 0;
@@ -191,12 +168,10 @@ function computeIndustryDeltas(catalog: OnetCatalogRole[]): IndustryDelta[] {
       if (tc === 0) continue;
       validRoleCount++;
 
-      // v4 shares
       const v4Auto = role.metrics.automationTasks / tc;
       const v4Aug = role.metrics.augmentationTasks / tc;
       const v4Manual = role.metrics.manualTasks / tc;
 
-      // v1 shares: compute from prior data
       const priorTotal =
         role.prior.automationTasks +
         role.prior.augmentationTasks +
@@ -218,7 +193,6 @@ function computeIndustryDeltas(catalog: OnetCatalogRole[]): IndustryDelta[] {
       clusterTotalTasks += tc;
     }
 
-    // Also include roles WITHOUT deltas in task count for workforce weight
     for (const role of roles) {
       if (role.delta == null || role.prior == null) {
         clusterTotalTasks += role.metrics.taskCount;
@@ -253,13 +227,13 @@ function computeIndustryDeltas(catalog: OnetCatalogRole[]): IndustryDelta[] {
       rolesChanged,
       v1AutomationShare: v1AutoShare,
       v1AugmentationShare: v1AugShare,
-      v1ManualShare: v1ManualShare,
+      v1ManualShare,
       v4AutomationShare: v4AutoShare,
       v4AugmentationShare: v4AugShare,
-      v4ManualShare: v4ManualShare,
+      v4ManualShare,
       automationShareDelta: autoShareDelta,
       augmentationShareDelta: augShareDelta,
-      manualShareDelta: manualShareDelta,
+      manualShareDelta,
       totalAbsShareDelta,
       netAIExposureDelta,
       direction,
@@ -271,13 +245,12 @@ function computeIndustryDeltas(catalog: OnetCatalogRole[]): IndustryDelta[] {
     });
   }
 
-  // Sort by absolute share delta (biggest movers first)
   results.sort((a, b) => b.totalAbsShareDelta - a.totalAbsShareDelta);
   return results;
 }
 
 // ---------------------------------------------------------------------------
-// Step 2: Load sp100 reports for country-industry cross-tabs
+// Step 2: Load sp100 reports and extract role headcounts from hierarchy
 // ---------------------------------------------------------------------------
 
 type CompanyReportEntry = {
@@ -285,11 +258,13 @@ type CompanyReportEntry = {
   slug: string;
   companyName: string;
   hqCountry: string;
-  headcount: number;
+  totalHeadcount: number;
+  /** Role headcounts aggregated from hierarchy.dominantRoles, keyed by O*NET code */
+  roleHeadcounts: Map<string, number>;
+  /** Roles array from the report (has parentCluster) */
   roles: Array<{
     onetCode: string;
     parentCluster: string | null;
-    headcount: number;
   }>;
 };
 
@@ -318,10 +293,25 @@ function loadCompanyReports(): CompanyReportEntry[] {
       if (!rawCountry) continue;
 
       const totalHeadcount = meta.workforceEstimate ?? 0;
+
+      // Build role headcount map from hierarchy.dominantRoles
+      // Each hierarchy node is flat, and its dominantRoles have {id, headcount}
+      const roleHeadcounts = new Map<string, number>();
+      const hierarchy = report.hierarchy ?? [];
+      for (const node of hierarchy) {
+        for (const entry of node.dominantRoles ?? []) {
+          const code = (entry.id ?? "").trim();
+          const hc = entry.headcount ?? 0;
+          if (code && hc > 0) {
+            roleHeadcounts.set(code, (roleHeadcounts.get(code) ?? 0) + hc);
+          }
+        }
+      }
+
+      // Roles array has parentCluster info
       const roles = (report.roles ?? []).map((r: any) => ({
-        onetCode: r.onetCode ?? "",
+        onetCode: (r.onetCode ?? "").trim(),
         parentCluster: r.parentCluster ?? null,
-        headcount: r.headcount ?? 0,
       }));
 
       entries.push({
@@ -329,7 +319,8 @@ function loadCompanyReports(): CompanyReportEntry[] {
         slug: d.slug ?? "",
         companyName: meta.companyName ?? d.companyName ?? "",
         hqCountry: rawCountry,
-        headcount: totalHeadcount,
+        totalHeadcount,
+        roleHeadcounts,
         roles,
       });
     } catch {
@@ -341,32 +332,41 @@ function loadCompanyReports(): CompanyReportEntry[] {
 }
 
 // ---------------------------------------------------------------------------
-// Step 3: Build country-industry cross-tabs from company reports
+// Step 3: Build country-industry cross-tabs
+// Map each company's role headcounts to O*NET clusters, then aggregate by country
 // ---------------------------------------------------------------------------
 
 function buildCountryIndustryCrossTabs(
-  reports: CompanyReportEntry[]
+  reports: CompanyReportEntry[],
+  codeLookup: Map<string, OnetCatalogRole>
 ): Map<string, CountryIndustryCell[]> {
-  // For each company, distribute headcount across O*NET clusters based on role headcounts
   const cellMap = new Map<string, CountryIndustryCell>();
 
   for (const report of reports) {
     const country = report.hqCountry;
     const isoCode = resolveIsoCode(country);
 
-    // Aggregate role headcounts by parentCluster
-    const clusterHeadcounts = new Map<string, number>();
-    let assignedHeadcount = 0;
-
-    for (const role of report.roles) {
-      if (!role.parentCluster || role.headcount <= 0) continue;
-      const existing = clusterHeadcounts.get(role.parentCluster) ?? 0;
-      clusterHeadcounts.set(role.parentCluster, existing + role.headcount);
-      assignedHeadcount += role.headcount;
+    // Build a lookup from onetCode -> parentCluster from the report's roles array
+    const roleClusterLookup = new Map<string, string>();
+    for (const r of report.roles) {
+      if (r.onetCode && r.parentCluster) {
+        roleClusterLookup.set(r.onetCode, r.parentCluster);
+      }
     }
 
-    // If roles don't account for all headcount, the remainder is unassigned
-    // We only count what's assigned to known clusters
+    // For each role with headcount, map to parentCluster
+    const clusterHeadcounts = new Map<string, number>();
+    for (const [code, hc] of report.roleHeadcounts) {
+      // Try report's role array first, then fall back to catalog
+      let cluster = roleClusterLookup.get(code);
+      if (!cluster) {
+        const catalogRole = codeLookup.get(code);
+        cluster = catalogRole?.parentCluster ?? null;
+      }
+      if (!cluster) continue;
+
+      clusterHeadcounts.set(cluster, (clusterHeadcounts.get(cluster) ?? 0) + hc);
+    }
 
     for (const [cluster, hc] of clusterHeadcounts) {
       const key = `${country}::${cluster}`;
@@ -414,7 +414,6 @@ function computeCountryExposures(
     deltaLookup.set(d.cluster, d);
   }
 
-  // Count companies per country
   const companyCountByCountry = new Map<string, Set<string>>();
   for (const r of reports) {
     if (!companyCountByCountry.has(r.hqCountry)) {
@@ -461,10 +460,8 @@ function computeCountryExposures(
       });
     }
 
-    // Sort industries by headcount share descending
     industryBreakdown.sort((a, b) => b.headcountShare - a.headcountShare);
 
-    // Find top positive and negative contributors
     const sorted = [...industryBreakdown].sort(
       (a, b) => b.weightedContribution - a.weightedContribution
     );
@@ -493,7 +490,6 @@ function computeCountryExposures(
     });
   }
 
-  // Sort by absolute net exposure delta (most affected first)
   exposures.sort(
     (a, b) =>
       Math.abs(b.weightedNetAIExposureDelta) -
@@ -509,16 +505,15 @@ function computeCountryExposures(
 
 type IndustryRankEntry = {
   cluster: string;
-  v1AIExposure: number; // fraction of tasks that are auto+aug under v1
-  v4AIExposure: number; // fraction of tasks that are auto+aug under v4
+  v1AIExposure: number;
+  v4AIExposure: number;
   v1Rank: number;
   v4Rank: number;
-  rankChange: number; // positive = moved up (more exposed relative to others)
+  rankChange: number;
   exposureDelta: number;
 };
 
 function computeIndustryRanking(industryDeltas: IndustryDelta[]): IndustryRankEntry[] {
-  // Compute v1 and v4 AI exposure for each cluster
   const entries = industryDeltas.map((d) => ({
     cluster: d.cluster,
     v1AIExposure: round4(d.v1AutomationShare + d.v1AugmentationShare),
@@ -526,12 +521,10 @@ function computeIndustryRanking(industryDeltas: IndustryDelta[]): IndustryRankEn
     exposureDelta: round4(d.netAIExposureDelta),
   }));
 
-  // Rank by v1 exposure (1 = most exposed)
   const byV1 = [...entries].sort((a, b) => b.v1AIExposure - a.v1AIExposure);
   const v1Ranks = new Map<string, number>();
   byV1.forEach((e, i) => v1Ranks.set(e.cluster, i + 1));
 
-  // Rank by v4 exposure
   const byV4 = [...entries].sort((a, b) => b.v4AIExposure - a.v4AIExposure);
   const v4Ranks = new Map<string, number>();
   byV4.forEach((e, i) => v4Ranks.set(e.cluster, i + 1));
@@ -543,11 +536,10 @@ function computeIndustryRanking(industryDeltas: IndustryDelta[]): IndustryRankEn
       ...e,
       v1Rank,
       v4Rank,
-      rankChange: v1Rank - v4Rank, // positive = moved up in AI exposure
+      rankChange: v1Rank - v4Rank,
     };
   });
 
-  // Sort by v4 rank
   result.sort((a, b) => a.v4Rank - b.v4Rank);
   return result;
 }
@@ -557,14 +549,15 @@ function computeIndustryRanking(industryDeltas: IndustryDelta[]): IndustryRankEn
 // ---------------------------------------------------------------------------
 
 function main() {
-  console.log("=".repeat(120));
+  console.log("=".repeat(140));
   console.log("  COUNTRY IMPACT ANALYSIS: How v4 O*NET Changes Affect Countries");
-  console.log("=".repeat(120));
+  console.log("=".repeat(140));
   console.log();
 
   // Step 1: Load catalog and compute industry deltas
   console.log("[1/5] Loading O*NET catalog...");
   const catalog = loadOnetCatalog();
+  const codeLookup = buildCodeLookup(catalog);
   console.log(`  Loaded ${catalog.length} roles from O*NET catalog.`);
   console.log();
 
@@ -578,16 +571,32 @@ function main() {
   const reports = loadCompanyReports();
   console.log(`  Loaded ${reports.length} company reports.`);
 
-  if (reports.length === 0) {
-    console.log("  [WARN] No company reports available. Falling back to catalog-only analysis.");
-    console.log("  We will still produce industry-level deltas and rankings.");
+  // Quick diagnostic on role headcount extraction
+  let reportsWithRoleHC = 0;
+  let totalRoleHCEntries = 0;
+  for (const r of reports) {
+    if (r.roleHeadcounts.size > 0) {
+      reportsWithRoleHC++;
+      totalRoleHCEntries += r.roleHeadcounts.size;
+    }
   }
+  console.log(`  Reports with role headcounts from hierarchy: ${reportsWithRoleHC}`);
+  console.log(`  Total role-headcount entries: ${totalRoleHCEntries}`);
   console.log();
 
   // Step 3: Build country-industry cross-tabs
   console.log("[4/5] Building country-industry cross-tabs...");
-  const countryIndustryMap = buildCountryIndustryCrossTabs(reports);
+  const countryIndustryMap = buildCountryIndustryCrossTabs(reports, codeLookup);
   console.log(`  Found ${countryIndustryMap.size} countries with industry data.`);
+
+  // Diagnostic: total headcount assigned
+  let totalAssignedHC = 0;
+  for (const [, cells] of countryIndustryMap) {
+    for (const cell of cells) {
+      totalAssignedHC += cell.headcount;
+    }
+  }
+  console.log(`  Total headcount assigned to country-industry cells: ${totalAssignedHC.toLocaleString()}`);
   console.log();
 
   // Step 4: Compute country exposures
@@ -607,16 +616,36 @@ function main() {
   // OUTPUT: JSON
   // =========================================================================
 
+  // Convert Maps to plain objects for JSON serialization
+  const crossTabsForJson = Array.from(countryIndustryMap.entries()).map(
+    ([country, cells]) => ({
+      country,
+      isoCode: resolveIsoCode(country),
+      totalHeadcount: cells.reduce((s, c) => s + c.headcount, 0),
+      clusterCount: cells.length,
+      topClusters: cells
+        .sort((a, b) => b.headcount - a.headcount)
+        .slice(0, 10)
+        .map((c) => ({
+          cluster: c.cluster,
+          headcount: c.headcount,
+          companyCount: c.companyCount,
+          companies: c.companies,
+        })),
+    })
+  );
+
   const output = {
     generatedAt: new Date().toISOString(),
     methodology: {
       description:
         "Cross-references O*NET v1->v4 industry-level task classification deltas with " +
         "company workforce composition data from sp100-reports.ndjson. For each country, " +
-        "the industry mix (by headcount) is used to weight-average the industry-level AI " +
-        "exposure shifts, producing an estimated country-level impact of the v4 reclassification.",
+        "the industry mix (by headcount from hierarchy.dominantRoles) is used to weight-average " +
+        "the industry-level AI exposure shifts, producing an estimated country-level impact " +
+        "of the v4 reclassification.",
       dataVintages: {
-        v1: "January 2025 (onetData.json / onetData-v1-2025-01.json)",
+        v1: "January 2025 (onetData.json)",
         v4: "November 2025 (onetData-v4-2025-11.json)",
       },
       caveats: [
@@ -631,33 +660,22 @@ function main() {
       industryClusters: industryDeltas.length,
       companiesAnalyzed: reports.length,
       countriesCovered: countryExposures.length,
-      topCountryByExposureIncrease: countryExposures.find(
-        (c) => c.weightedNetAIExposureDelta > 0
-      )?.country ?? null,
-      topCountryByExposureDecrease: countryExposures.find(
-        (c) => c.weightedNetAIExposureDelta < 0
-      )?.country ?? null,
+      totalHeadcountCovered: totalAssignedHC,
+      topCountryByExposureIncrease: (() => {
+        const top = countryExposures.find((c) => c.weightedNetAIExposureDelta > 0);
+        return top ? { country: top.country, delta: top.weightedNetAIExposureDelta } : null;
+      })(),
+      topCountryByExposureDecrease: (() => {
+        const bottom = [...countryExposures]
+          .reverse()
+          .find((c) => c.weightedNetAIExposureDelta < 0);
+        return bottom ? { country: bottom.country, delta: bottom.weightedNetAIExposureDelta } : null;
+      })(),
     },
     industryDeltas,
     industryRanking,
     countryExposures,
-    countryIndustryCrossTabs: Array.from(countryIndustryMap.entries()).map(
-      ([country, cells]) => ({
-        country,
-        isoCode: resolveIsoCode(country),
-        totalHeadcount: cells.reduce((s, c) => s + c.headcount, 0),
-        clusterCount: cells.length,
-        topClusters: cells
-          .sort((a, b) => b.headcount - a.headcount)
-          .slice(0, 10)
-          .map((c) => ({
-            cluster: c.cluster,
-            headcount: c.headcount,
-            companyCount: c.companyCount,
-            companies: c.companies,
-          })),
-      })
-    ),
+    countryIndustryCrossTabs: crossTabsForJson,
   };
 
   writeFileSync(
@@ -672,10 +690,10 @@ function main() {
   // PRINT: Industry Deltas Summary
   // =========================================================================
 
-  console.log("=".repeat(120));
+  console.log("=".repeat(140));
   console.log("  SECTION A: INDUSTRY-LEVEL AI EXPOSURE DELTAS (v1 -> v4)");
   console.log("  Sorted by total absolute share change");
-  console.log("=".repeat(120));
+  console.log("=".repeat(140));
   console.log();
 
   const hdr1 = [
@@ -692,7 +710,7 @@ function main() {
   ].join(" ");
 
   console.log(hdr1);
-  console.log("-".repeat(120));
+  console.log("-".repeat(140));
 
   for (let i = 0; i < industryDeltas.length; i++) {
     const d = industryDeltas[i];
@@ -712,17 +730,17 @@ function main() {
     ].join(" ");
     console.log(row);
   }
-  console.log("-".repeat(120));
+  console.log("-".repeat(140));
   console.log();
 
   // =========================================================================
   // PRINT: Industry Ranking Change
   // =========================================================================
 
-  console.log("=".repeat(120));
+  console.log("=".repeat(140));
   console.log("  SECTION B: INDUSTRY AI EXPOSURE RANKING (v1 vs v4)");
   console.log("  Rank 1 = most AI-exposed. Positive rank change = moved up (more exposed).");
-  console.log("=".repeat(120));
+  console.log("=".repeat(140));
   console.log();
 
   const hdr2 = [
@@ -737,7 +755,7 @@ function main() {
   ].join(" ");
 
   console.log(hdr2);
-  console.log("-".repeat(120));
+  console.log("-".repeat(140));
 
   for (const r of industryRanking) {
     const v1AI = r.v1AIExposure * 100;
@@ -759,7 +777,7 @@ function main() {
     ].join(" ");
     console.log(row);
   }
-  console.log("-".repeat(120));
+  console.log("-".repeat(140));
   console.log();
 
   // =========================================================================
@@ -767,25 +785,25 @@ function main() {
   // =========================================================================
 
   if (countryExposures.length > 0) {
-    console.log("=".repeat(120));
+    console.log("=".repeat(140));
     console.log("  SECTION C: COUNTRY-LEVEL EXPOSURE DELTAS");
-    console.log("  Weighted by each country's industry composition (headcount-based).");
+    console.log("  Weighted by each country's industry composition (headcount-based from hierarchy.dominantRoles).");
     console.log("  Interpretation: if a country's workforce is concentrated in industries");
     console.log("  that saw large v4 reclassifications, the country has higher exposure delta.");
-    console.log("=".repeat(120));
+    console.log("=".repeat(140));
     console.log();
 
     const hdr3 = [
       padRight("#", 3),
       padRight("Country", 26),
       padLeft("ISO", 4),
-      padLeft("Cos", 4),
-      padLeft("HC", 10),
+      padLeft("Cos", 5),
+      padLeft("Headcount", 12),
       padLeft("Net AI D", 10),
       padLeft("Auto D", 10),
       padLeft("Aug D", 10),
-      padRight("  Top+ Industry", 30),
-      padRight("  Direction", 24),
+      padRight("  Top+ Industry", 32),
+      padRight("  Direction", 26),
     ].join(" ");
 
     console.log(hdr3);
@@ -797,12 +815,12 @@ function main() {
         padRight(String(i + 1), 3),
         padRight(c.country.slice(0, 26), 26),
         padLeft(c.isoCode ?? "??", 4),
-        padLeft(String(c.companyCount), 4),
-        padLeft(c.totalHeadcount.toLocaleString(), 10),
+        padLeft(String(c.companyCount), 5),
+        padLeft(c.totalHeadcount.toLocaleString(), 12),
         padLeft(signPct(c.weightedNetAIExposureDelta), 10),
         padLeft(signPct(c.weightedAutoShareDelta), 10),
         padLeft(signPct(c.weightedAugShareDelta), 10),
-        "  " + padRight((c.topPositiveIndustry ?? "N/A").slice(0, 28), 28),
+        "  " + padRight((c.topPositiveIndustry ?? "N/A").slice(0, 30), 30),
         "  " + c.exposureDirection,
       ].join(" ");
       console.log(row);
@@ -814,9 +832,9 @@ function main() {
     // PRINT: Detailed country breakdowns (top 10)
     // =========================================================================
 
-    console.log("=".repeat(120));
+    console.log("=".repeat(140));
     console.log("  SECTION D: DETAILED COUNTRY BREAKDOWNS (top 10 by absolute exposure delta)");
-    console.log("=".repeat(120));
+    console.log("=".repeat(140));
 
     for (let i = 0; i < Math.min(10, countryExposures.length); i++) {
       const c = countryExposures[i];
@@ -838,16 +856,61 @@ function main() {
         console.log(`       ... and ${c.industries.length - 8} more clusters`);
       }
     }
+
+    console.log();
+
+    // =========================================================================
+    // PRINT: Summary interpretation
+    // =========================================================================
+
+    console.log("=".repeat(140));
+    console.log("  SECTION E: INTERPRETATION GUIDE");
+    console.log("=".repeat(140));
+    console.log();
+    console.log("  How to read the country exposure deltas:");
+    console.log();
+    console.log("  The 'Net AI Delta' for each country represents the headcount-weighted average");
+    console.log("  shift in AI exposure (automation + augmentation share) across all O*NET");
+    console.log("  industry clusters present in that country's company workforce data.");
+    console.log();
+    console.log("  Example: If Country X has 60% of workforce in 'Computer and Mathematical'");
+    console.log("  (which saw +1.98% AI exposure shift) and 40% in 'Management'");
+    console.log("  (which saw +2.04% shift), then:");
+    console.log("    Country X Net AI Delta = 0.60 * 1.98% + 0.40 * 2.04% = +1.19% + 0.82% = +2.01%");
+    console.log();
+    console.log("  Key findings:");
+
+    const increasing = countryExposures.filter((c) => c.weightedNetAIExposureDelta > 0.002);
+    const stable = countryExposures.filter(
+      (c) => Math.abs(c.weightedNetAIExposureDelta) <= 0.002
+    );
+    const decreasing = countryExposures.filter((c) => c.weightedNetAIExposureDelta < -0.002);
+
+    console.log(`    - ${increasing.length} countries with INCREASING AI exposure`);
+    console.log(`    - ${stable.length} countries with STABLE exposure`);
+    console.log(`    - ${decreasing.length} countries with DECREASING AI exposure`);
+
+    if (increasing.length > 0) {
+      console.log();
+      console.log("  Most affected (increasing):");
+      for (const c of increasing.slice(0, 5)) {
+        console.log(
+          `    ${c.country}: ${signPct(c.weightedNetAIExposureDelta)} net AI shift` +
+            ` (driven by ${c.topPositiveIndustry ?? "multiple sectors"})`
+        );
+      }
+    }
+
   } else {
     console.log("  [INFO] No country exposure data available (no company reports loaded).");
     console.log("  The industry-level deltas (Sections A and B above) are still valid.");
   }
 
   console.log();
-  console.log("=".repeat(120));
+  console.log("=".repeat(140));
   console.log("  ANALYSIS COMPLETE");
-  console.log("  Full JSON output: /tmp/country-impact-analysis.json");
-  console.log("=".repeat(120));
+  console.log(`  Full JSON output: /tmp/country-impact-analysis.json`);
+  console.log("=".repeat(140));
 }
 
 main();
