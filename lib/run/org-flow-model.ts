@@ -23,6 +23,11 @@ export interface OrgFlowDenseRoleSummary {
   groupHeadcount?: number | null;
   taskMixCounts?: TaskMixCounts | null;
   taskMixShares?: TaskMixShares | null;
+  delta?: {
+    automationTasksDelta: number;
+    augmentationTasksDelta: number;
+    manualTasksDelta: number;
+  } | null;
 }
 
 export interface OrgFlowNodeData {
@@ -96,6 +101,7 @@ function toDenseRoleSummaries(node: OrgGraphNode): OrgFlowDenseRoleSummary[] {
       groupHeadcount: baseHeadcount,
       taskMixCounts: deriveTaskMixCounts(role),
       taskMixShares: deriveTaskMixShares(role),
+      delta: role.delta ?? null,
     }));
   }
 

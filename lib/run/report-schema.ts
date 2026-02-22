@@ -149,6 +149,15 @@ export const enrichedOrgRoleSchema = z.object({
     .optional(),
   notes: z.string().max(2000).optional(),
   sources: z.array(z.string().url()).max(20).optional(),
+  /** v4 primitives */
+  avgSuccessRate: z.number().min(0).max(1).nullable().optional(),
+  avgEducationYears: z.number().nullable().optional(),
+  /** Delta: change in task counts from Jan 2025 (v1) → Nov 2025 (v4) */
+  delta: z.object({
+    automationTasksDelta: z.number().int(),
+    augmentationTasksDelta: z.number().int(),
+    manualTasksDelta: z.number().int(),
+  }).nullable().optional(),
 });
 
 export const enrichedOrgNodeSchema = z.object({
