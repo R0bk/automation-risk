@@ -14,6 +14,7 @@ import { loadComparativeInsights } from "@/lib/run/load-comparative-insights";
 import { FloatingOnboardingButton } from "@/components/onboarding/FloatingOnboardingButton";
 import { loadOnetCatalog, getTopMovers, getCatalogSummary, getCatalogTransitions, getVintageAggregates } from "@/lib/onet/catalog";
 import { VintageShell } from "@/components/vintage-shell";
+import { LANDING_ANALYTICS_V1_BASELINE_KEY } from "@/lib/constants/analytics";
 
 const LANDING_FOOTER_LINKS = [
   { label: "Home", href: "#top" },
@@ -77,14 +78,21 @@ async function VintageContentAsync() {
   const summary = getCatalogSummary(catalog);
   const transitions = getCatalogTransitions();
   const vintageAggregates = getVintageAggregates(catalog);
-  const { data: analytics, updatedAt } = await loadComparativeInsights();
+
+  // Load both vintage snapshots in parallel
+  const [v4Result, v1Result] = await Promise.all([
+    loadComparativeInsights(),
+    loadComparativeInsights(LANDING_ANALYTICS_V1_BASELINE_KEY),
+  ]);
+
   return (
     <VintageShell
       movers={movers}
       summary={summary}
       transitions={transitions}
-      analytics={analytics}
-      updatedAt={updatedAt}
+      analyticsV4={v4Result.data}
+      analyticsV1={v1Result.data}
+      updatedAt={v4Result.updatedAt}
       vintageAggregates={vintageAggregates}
     />
   );

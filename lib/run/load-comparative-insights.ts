@@ -7,11 +7,11 @@ import {
 } from "./comparative-analytics-types";
 import { LANDING_ANALYTICS_SNAPSHOT_KEY } from "@/lib/constants/analytics";
 
-export async function loadComparativeInsights(): Promise<{
+export async function loadComparativeInsights(snapshotKey?: string): Promise<{
   data: ComparativeAnalytics | null;
   updatedAt: string | null;
 }> {
-  const snapshot = await getAnalyticsSnapshot(LANDING_ANALYTICS_SNAPSHOT_KEY);
+  const snapshot = await getAnalyticsSnapshot(snapshotKey ?? LANDING_ANALYTICS_SNAPSHOT_KEY);
   if (!snapshot) {
     return { data: null, updatedAt: null };
   }

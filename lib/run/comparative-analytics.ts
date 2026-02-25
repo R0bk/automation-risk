@@ -3,7 +3,7 @@ import {
   INDUSTRY_GROUP_ALIASES,
 } from "@/lib/constants/aggregation-groups";
 import { resolveIsoCode } from "@/lib/constants/countries";
-import { buildCodeLookup, loadOnetCatalog, type CatalogTaskMetric } from "@/lib/onet/catalog";
+import { buildCodeLookup, loadOnetCatalog, loadOnetCatalogV1, type CatalogTaskMetric, type OnetCatalogRole } from "@/lib/onet/catalog";
 import {
   ComparativeRun,
   ComparativeAnalyticsPayload,
@@ -15,7 +15,8 @@ import {
   CompanyMetric,
 } from "./comparative-analytics-types";
 
-import { buildRoleHeadcountMap } from "./workforce-impact";
+import { buildRoleHeadcountMap, computeWorkforceImpact } from "./workforce-impact";
+import { enrichedOrgReportSchema } from "./report-schema";
 
 
 type GroupAccumulator = {
@@ -138,7 +139,7 @@ const MAX_TOP_TASKS = 10;
 const MAX_SAMPLE_ROLES_PER_TASK = 5;
 const MIN_TASK_EXPOSURE = 1;
 const MAX_COMPANY_CONTRIBUTORS = 8;
-const ONET_ROLE_LOOKUP = buildCodeLookup(loadOnetCatalog());
+const ONET_ROLE_LOOKUP_V4 = buildCodeLookup(loadOnetCatalog());
 
 const normaliseShare = (value: number | null | undefined): number => {
   if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
@@ -177,8 +178,10 @@ const normalizeIndustryLabel = (
 };
 
 export function buildComparativeAnalytics(
-  runs: ComparativeRun[]
+  runs: ComparativeRun[],
+  onetLookup?: Map<string, OnetCatalogRole>,
 ): ComparativeAnalyticsPayload {
+  const ONET_ROLE_LOOKUP = onetLookup ?? ONET_ROLE_LOOKUP_V4;
   const countries = new Map<string, GroupAccumulator>();
   const industries = new Map<string, GroupAccumulator>();
   const heatmap = new Map<
@@ -731,5 +734,61 @@ export function buildComparativeAnalytics(
     topTasks,
     companies: companyMetrics,
   };
+}
+
+/**
+ * Build comparative analytics using v1 (Jan 2025) ONET data.
+ *
+ * Re-computes workforce impact for each run using v1 task mix counts
+ * (overriding baked-in taskMixCounts), then builds analytics with the
+ * v1 ONET lookup (no deltas since v1 has no prior).
+ */
+export function buildV1ComparativeAnalytics(
+  runs: ComparativeRun[],
+): ComparativeAnalyticsPayload {
+  const v1Catalog = loadOnetCatalogV1();
+  const v1CodeLookup = buildCodeLookup(v1Catalog);
+
+  // Build a normalized-title lookup for v1 catalog
+  const v1TitleLookup = new Map<string, OnetCatalogRole>(
+    v1Catalog.map((r) => [r.normalizedTitle, r]),
+  );
+
+  // Re-compute workforce impact for each run using v1 task mix
+  const v1Runs: ComparativeRun[] = runs.map((run) => {
+    if (!run.report) return run;
+
+    // Override taskMixCounts on each role with v1 catalog values
+    const modifiedRoles = run.report.roles.map((role) => {
+      const code = role.onetCode?.trim();
+      const catalogRole = code ? v1CodeLookup.get(code) : null;
+      const byTitle = !catalogRole && role.normalizedTitle
+        ? v1TitleLookup.get(role.normalizedTitle.trim().toLowerCase())
+        : null;
+      const matched = catalogRole ?? byTitle;
+
+      if (!matched) return role;
+
+      return {
+        ...role,
+        taskMixCounts: {
+          automation: Math.max(0, matched.metrics.automationTasks),
+          augmentation: Math.max(0, matched.metrics.augmentationTasks),
+          manual: Math.max(0, matched.metrics.manualTasks),
+        },
+      };
+    });
+
+    const modifiedReport = { ...run.report, roles: modifiedRoles };
+    const impact = computeWorkforceImpact(modifiedReport);
+
+    return {
+      ...run,
+      report: modifiedReport,
+      workforceMetric: impact ?? run.workforceMetric,
+    };
+  });
+
+  return buildComparativeAnalytics(v1Runs, v1CodeLookup);
 }
 

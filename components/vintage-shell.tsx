@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { DataTimeline, type TimelinePoint } from "@/components/data-timeline";
 import { WhatsChanged } from "@/components/run/whats-changed";
 import { ComparativeInsights } from "@/components/run/comparative-insights";
@@ -20,50 +20,18 @@ interface VintageShellProps {
   movers: TopMover[];
   summary: CatalogChangeSummary;
   transitions: CatalogTransitions;
-  analytics: ComparativeAnalytics | null;
+  analyticsV4: ComparativeAnalytics | null;
+  analyticsV1: ComparativeAnalytics | null;
   updatedAt: string | null;
   vintageAggregates: VintageAggregates;
-}
-
-/** Strip all v1→v4 delta fields from analytics so ComparativeInsights shows baseline state */
-function stripDeltas(analytics: ComparativeAnalytics): ComparativeAnalytics {
-  return {
-    ...analytics,
-    countries: analytics.countries.map((c) => ({
-      ...c,
-      netExposureDelta: null,
-      automationDelta: null,
-      augmentationDelta: null,
-    })),
-    industries: analytics.industries.map((i) => ({
-      ...i,
-      netExposureDelta: null,
-      automationDelta: null,
-      augmentationDelta: null,
-    })),
-    heatmap: analytics.heatmap.map((h) => ({
-      ...h,
-      netExposureDelta: null,
-    })),
-    topTasks: analytics.topTasks.map((t) => ({
-      ...t,
-      automationDelta: null,
-      augmentationDelta: null,
-    })),
-    companies: analytics.companies?.map((c) => ({
-      ...c,
-      netAIDelta: 0,
-      automationDelta: 0,
-      augmentationDelta: 0,
-    })),
-  };
 }
 
 export function VintageShell({
   movers,
   summary,
   transitions,
-  analytics,
+  analyticsV4,
+  analyticsV1,
   updatedAt,
   vintageAggregates,
 }: VintageShellProps) {
@@ -73,10 +41,8 @@ export function VintageShell({
   const currentAgg = isV1 ? vintageAggregates.v1 : vintageAggregates.v4;
   const vintageLabel = isV1 ? "January 2025" : "November 2025";
 
-  const displayAnalytics = useMemo(() => {
-    if (!analytics) return null;
-    return isV1 ? stripDeltas(analytics) : analytics;
-  }, [analytics, isV1]);
+  // Use the v1 snapshot if available, otherwise fall back to v4
+  const displayAnalytics = isV1 ? (analyticsV1 ?? analyticsV4) : analyticsV4;
 
   return (
     <>
@@ -92,7 +58,7 @@ export function VintageShell({
             movers={movers}
             summary={summary}
             transitions={transitions}
-            analytics={analytics}
+            analytics={analyticsV4}
           />
         )}
       </div>

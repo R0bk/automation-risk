@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 
 import { enrichedOrgReportSchema } from "@/lib/run/report-schema";
 import { computeWorkforceImpact } from "@/lib/run/workforce-impact";
-import { buildComparativeAnalytics } from "@/lib/run/comparative-analytics";
-import { LANDING_ANALYTICS_SNAPSHOT_KEY } from "@/lib/constants/analytics";
+import { buildComparativeAnalytics, buildV1ComparativeAnalytics } from "@/lib/run/comparative-analytics";
+import { LANDING_ANALYTICS_SNAPSHOT_KEY, LANDING_ANALYTICS_V1_BASELINE_KEY } from "@/lib/constants/analytics";
 import type { ComparativeRun } from "@/lib/run/comparative-analytics-types";
 import {
   listCompletedRunsWithReports,
@@ -143,6 +143,14 @@ export async function POST() {
         key: LANDING_ANALYTICS_SNAPSHOT_KEY,
         payload,
       });
+
+      // Generate v1 baseline snapshot (re-computes metrics with Jan 2025 ONET data)
+      const v1Payload = buildV1ComparativeAnalytics(comparativeRuns);
+      await upsertAnalyticsSnapshot({
+        key: LANDING_ANALYTICS_V1_BASELINE_KEY,
+        payload: v1Payload,
+      });
+
       comparativeStats = { runs: comparativeRuns.length };
     }
   } catch (err) {
