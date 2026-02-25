@@ -14,13 +14,19 @@ import { ComparativeInsights } from "@/components/run/comparative-insights";
 import { loadComparativeInsights } from "@/lib/run/load-comparative-insights";
 import { FloatingOnboardingButton } from "@/components/onboarding/FloatingOnboardingButton";
 import { WhatsChanged } from "@/components/run/whats-changed";
-import { loadOnetCatalog, getTopMovers } from "@/lib/onet/catalog";
+import { loadOnetCatalog, getTopMovers, getCatalogSummary } from "@/lib/onet/catalog";
+import { DataTimeline, type TimelinePoint } from "@/components/data-timeline";
 
 const LANDING_FOOTER_LINKS = [
   { label: "Home", href: "#top" },
   { label: "Trending", href: "#trending" },
   { label: "What Changed", href: "#whats-changed" },
   { label: "Marketplace", href: "#marketplace" },
+];
+
+const TIMELINE_POINTS: TimelinePoint[] = [
+  { year: 2025, label: "2025", available: true },
+  { year: 2026, label: "2026", available: false },
 ];
 
 // ISR: Revalidate every 60 seconds (reduces server load by 50-80%)
@@ -80,7 +86,8 @@ async function ComparativeInsightsAsync() {
 function WhatsChangedSync() {
   const catalog = loadOnetCatalog();
   const movers = getTopMovers(catalog, 6);
-  return <WhatsChanged movers={movers} />;
+  const summary = getCatalogSummary(catalog);
+  return <WhatsChanged movers={movers} summary={summary} />;
 }
 
 // Loading skeletons
@@ -169,6 +176,13 @@ export default function Page() {
           </Suspense>
         </div>
       </main>
+
+      <div className="relative z-10 mx-auto w-full max-w-[1200px]">
+        <DataTimeline
+          points={TIMELINE_POINTS}
+          activeYear={2025}
+        />
+      </div>
 
       <SiteFooter navLinks={LANDING_FOOTER_LINKS} />
       <FloatingOnboardingButton />

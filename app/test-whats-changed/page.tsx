@@ -1,12 +1,13 @@
 import { WhatsChanged } from "@/components/run/whats-changed";
 import { ComparativeInsights } from "@/components/run/comparative-insights";
-import { loadOnetCatalog, getTopMovers } from "@/lib/onet/catalog";
+import { loadOnetCatalog, getTopMovers, getCatalogSummary } from "@/lib/onet/catalog";
 import { loadComparativeInsights } from "@/lib/run/load-comparative-insights";
 
 function WhatsChangedSync() {
   const catalog = loadOnetCatalog();
   const movers = getTopMovers(catalog, 6);
-  return <WhatsChanged movers={movers} />;
+  const summary = getCatalogSummary(catalog);
+  return <WhatsChanged movers={movers} summary={summary} />;
 }
 
 async function ComparativeInsightsAsync() {

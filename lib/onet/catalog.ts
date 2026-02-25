@@ -444,6 +444,104 @@ export function getTopMovers(catalog: OnetCatalogRole[], limit = 20): TopMover[]
     .slice(0, limit);
 }
 
+export type IndustryChange = {
+  name: string;
+  totalRoles: number;
+  rolesChanged: number;
+  automationDelta: number;
+  augmentationDelta: number;
+  manualDelta: number;
+};
+
+export type CatalogChangeSummary = {
+  totalRoles: number;
+  rolesWithChanges: number;
+  automationBefore: number;
+  automationAfter: number;
+  augmentationBefore: number;
+  augmentationAfter: number;
+  manualBefore: number;
+  manualAfter: number;
+  industries: IndustryChange[];
+};
+
+/** Compute aggregate v1→v4 change summary across the entire catalog */
+export function getCatalogSummary(catalog: OnetCatalogRole[]): CatalogChangeSummary {
+  let totalRoles = 0;
+  let rolesWithChanges = 0;
+  let automationBefore = 0;
+  let automationAfter = 0;
+  let augmentationBefore = 0;
+  let augmentationAfter = 0;
+  let manualBefore = 0;
+  let manualAfter = 0;
+
+  const industryMap = new Map<
+    string,
+    { totalRoles: number; rolesChanged: number; autoDelta: number; augDelta: number; manDelta: number }
+  >();
+
+  for (const role of catalog) {
+    if (!role.prior || !role.delta) continue;
+    totalRoles++;
+
+    automationBefore += role.prior.automationTasks;
+    automationAfter += role.metrics.automationTasks;
+    augmentationBefore += role.prior.augmentationTasks;
+    augmentationAfter += role.metrics.augmentationTasks;
+    manualBefore += role.prior.manualTasks;
+    manualAfter += role.metrics.manualTasks;
+
+    const hasChange =
+      role.delta.automationTasksDelta !== 0 ||
+      role.delta.augmentationTasksDelta !== 0 ||
+      role.delta.manualTasksDelta !== 0;
+    if (hasChange) rolesWithChanges++;
+
+    const cluster = role.parentCluster ?? "Other";
+    const ind = industryMap.get(cluster) ?? {
+      totalRoles: 0,
+      rolesChanged: 0,
+      autoDelta: 0,
+      augDelta: 0,
+      manDelta: 0,
+    };
+    ind.totalRoles++;
+    if (hasChange) ind.rolesChanged++;
+    ind.autoDelta += role.delta.automationTasksDelta;
+    ind.augDelta += role.delta.augmentationTasksDelta;
+    ind.manDelta += role.delta.manualTasksDelta;
+    industryMap.set(cluster, ind);
+  }
+
+  const industries = Array.from(industryMap.entries())
+    .map(([name, d]) => ({
+      name,
+      totalRoles: d.totalRoles,
+      rolesChanged: d.rolesChanged,
+      automationDelta: d.autoDelta,
+      augmentationDelta: d.augDelta,
+      manualDelta: d.manDelta,
+    }))
+    .sort(
+      (a, b) =>
+        Math.abs(b.augmentationDelta) + Math.abs(b.automationDelta) -
+        (Math.abs(a.augmentationDelta) + Math.abs(a.automationDelta))
+    );
+
+  return {
+    totalRoles,
+    rolesWithChanges,
+    automationBefore,
+    automationAfter,
+    augmentationBefore,
+    augmentationAfter,
+    manualBefore,
+    manualAfter,
+    industries,
+  };
+}
+
 export function buildPrefixLookup(catalog: OnetCatalogRole[]): Map<string, OnetCatalogRole[]> {
   const lookup = new Map<string, OnetCatalogRole[]>();
 
