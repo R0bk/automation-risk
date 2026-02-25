@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { DataTimeline, type TimelinePoint } from "@/components/data-timeline";
 import { WhatsChanged } from "@/components/run/whats-changed";
 import { ComparativeInsights } from "@/components/run/comparative-insights";
@@ -25,6 +25,40 @@ interface VintageShellProps {
   vintageAggregates: VintageAggregates;
 }
 
+/** Strip all v1→v4 delta fields from analytics so ComparativeInsights shows baseline state */
+function stripDeltas(analytics: ComparativeAnalytics): ComparativeAnalytics {
+  return {
+    ...analytics,
+    countries: analytics.countries.map((c) => ({
+      ...c,
+      netExposureDelta: null,
+      automationDelta: null,
+      augmentationDelta: null,
+    })),
+    industries: analytics.industries.map((i) => ({
+      ...i,
+      netExposureDelta: null,
+      automationDelta: null,
+      augmentationDelta: null,
+    })),
+    heatmap: analytics.heatmap.map((h) => ({
+      ...h,
+      netExposureDelta: null,
+    })),
+    topTasks: analytics.topTasks.map((t) => ({
+      ...t,
+      automationDelta: null,
+      augmentationDelta: null,
+    })),
+    companies: analytics.companies?.map((c) => ({
+      ...c,
+      netAIDelta: 0,
+      automationDelta: 0,
+      augmentationDelta: 0,
+    })),
+  };
+}
+
 export function VintageShell({
   movers,
   summary,
@@ -38,6 +72,11 @@ export function VintageShell({
   const isV1 = activeYear === 2025.0;
   const currentAgg = isV1 ? vintageAggregates.v1 : vintageAggregates.v4;
   const vintageLabel = isV1 ? "January 2025" : "November 2025";
+
+  const displayAnalytics = useMemo(() => {
+    if (!analytics) return null;
+    return isV1 ? stripDeltas(analytics) : analytics;
+  }, [analytics, isV1]);
 
   return (
     <>
@@ -58,7 +97,7 @@ export function VintageShell({
         )}
       </div>
 
-      <ComparativeInsights analytics={analytics} updatedAt={updatedAt} />
+      <ComparativeInsights analytics={displayAnalytics} updatedAt={updatedAt} />
 
       <DataTimeline
         points={TIMELINE_POINTS}
