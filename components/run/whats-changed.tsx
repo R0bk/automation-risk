@@ -88,60 +88,6 @@ function Sparkline({
   );
 }
 
-// ── Before / After bars (v1 → v4 for role movers) ──────────
-function BeforeAfterBars({
-  autoBefore,
-  autoAfter,
-  augBefore,
-  augAfter,
-  total,
-}: {
-  autoBefore: number;
-  autoAfter: number;
-  augBefore: number;
-  augAfter: number;
-  total: number;
-}) {
-  if (total <= 0) return null;
-  const bAI = autoBefore + augBefore;
-  const aAI = autoAfter + augAfter;
-  const beforeW = (bAI / total) * 100;
-  const afterW = (aAI / total) * 100;
-  const autoBeforeSplit = bAI > 0 ? (autoBefore / bAI) * 100 : 0;
-  const autoAfterSplit = aAI > 0 ? (autoAfter / aAI) * 100 : 0;
-
-  return (
-    <div className="space-y-1">
-      <div className="flex items-center gap-2">
-        <span className="w-5 text-right text-[9px] font-medium text-[rgba(38,37,30,0.3)]">v1</span>
-        <div className="h-[5px] flex-1 overflow-hidden rounded-full bg-[rgba(38,37,30,0.05)]">
-          <div className="flex h-full rounded-full" style={{ width: `${Math.min(beforeW, 100)}%` }}>
-            {autoBefore > 0 && (
-              <div className="flex-none" style={{ width: `${autoBeforeSplit}%`, backgroundColor: AUTOMATION_COLOR, opacity: 0.4, minWidth: "2px" }} />
-            )}
-            {augBefore > 0 && (
-              <div className="flex-none" style={{ width: `${100 - autoBeforeSplit}%`, backgroundColor: AUGMENTATION_COLOR, opacity: 0.4, minWidth: "2px" }} />
-            )}
-          </div>
-        </div>
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="w-5 text-right text-[9px] font-semibold text-[rgba(245,78,0,0.55)]">v4</span>
-        <div className="h-[5px] flex-1 overflow-hidden rounded-full bg-[rgba(38,37,30,0.05)]">
-          <div className="flex h-full rounded-full shadow-[0_2px_8px_rgba(245,78,0,0.12)]" style={{ width: `${Math.min(afterW, 100)}%` }}>
-            {autoAfter > 0 && (
-              <div className="flex-none" style={{ width: `${autoAfterSplit}%`, backgroundColor: AUTOMATION_COLOR, minWidth: "2px" }} />
-            )}
-            {augAfter > 0 && (
-              <div className="flex-none" style={{ width: `${100 - autoAfterSplit}%`, backgroundColor: AUGMENTATION_COLOR, minWidth: "2px" }} />
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ── Slope / Trajectory chart (v1 → v4 multi-line) ──────────
 type SlopeLine = { key: string; label: string; v1: number; v4: number };
 
@@ -275,7 +221,6 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
   const [showAllMovers, setShowAllMovers] = useState(false);
   const [companyView, setCompanyView] = useState<"winners" | "losers" | "shift">("winners");
   const [showAllCompanies, setShowAllCompanies] = useState(false);
-  const [showAllTasks, setShowAllTasks] = useState(false);
   const [highlightedCountry, setHighlightedCountry] = useState<string>("__initial__");
   const [highlightedIndustry, setHighlightedIndustry] = useState<string>("__initial__");
 
@@ -304,9 +249,6 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
   const activeCompanies = companyView === "winners" ? companiesIncreased : companyView === "losers" ? companiesDecreased : companiesByShift;
   const companyHasToggle = activeCompanies.length > COMPANY_PREVIEW;
   const displayedCompanies = showAllCompanies ? activeCompanies : activeCompanies.slice(0, COMPANY_PREVIEW);
-
-  // Top reclassified tasks
-  const displayedReclassified = showAllTasks ? transitions.topReclassifiedTasks : transitions.topReclassifiedTasks.slice(0, 5);
 
   // Movers
   const moverHasToggle = movers.length > MOVER_PREVIEW;
@@ -784,182 +726,114 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
 
       {/* ── Role-Level Biggest Movers ── */}
       <Section title="Role-level biggest movers">
-        <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
-          <ul className="divide-y divide-[rgba(38,37,30,0.06)]">
-            {displayedMovers.map((mover, index) => {
-              const aiTasksBefore =
-                mover.automationTasksBefore + mover.augmentationTasksBefore;
-              const aiTasksAfter =
-                mover.automationTasksAfter + mover.augmentationTasksAfter;
-              const netDelta = aiTasksAfter - aiTasksBefore;
-              const aiPct =
-                mover.taskCount > 0
-                  ? Math.round((aiTasksAfter / mover.taskCount) * 100)
-                  : 0;
+        <div className="grid gap-3 sm:grid-cols-2">
+          {displayedMovers.map((mover, index) => {
+            const aiTasksBefore = mover.automationTasksBefore + mover.augmentationTasksBefore;
+            const aiTasksAfter = mover.automationTasksAfter + mover.augmentationTasksAfter;
+            const netDelta = aiTasksAfter - aiTasksBefore;
+            const story = buildMoverStory(mover);
 
-              const story = buildMoverStory(mover);
+            const pct = (n: number) => mover.taskCount > 0 ? (n / mover.taskCount) * 100 : 0;
 
-              return (
-                <li key={mover.code} className="px-5 py-4 sm:px-6">
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <span className="flex-shrink-0 pt-0.5 text-right text-base font-semibold tracking-[0.18em] text-[rgba(38,37,30,0.3)]">
-                      {(index + 1).toString().padStart(2, "\u2007")}
-                    </span>
+            return (
+              <div
+                key={mover.code}
+                className="group relative overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.08)] bg-white/70 p-5 transition-all hover:shadow-[0_12px_32px_rgba(245,78,0,0.08)]"
+              >
+                {/* Rank badge */}
+                <span className="absolute right-4 top-4 text-2xl font-bold tabular-nums leading-none text-[rgba(38,37,30,0.06)]">
+                  {index + 1}
+                </span>
 
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                        <div className="min-w-0">
-                          <span className="text-sm font-semibold text-[#26251e]">
-                            {mover.title}
-                          </span>
-                          {mover.parentCluster && (
-                            <span className="ml-2 text-[10px] text-[rgba(38,37,30,0.4)]">
-                              {mover.parentCluster}
-                            </span>
-                          )}
-                        </div>
+                {/* Title + cluster */}
+                <p className="pr-8 text-[13px] font-semibold leading-snug text-[#26251e]">
+                  {mover.title}
+                </p>
+                {mover.parentCluster && (
+                  <p className="mt-0.5 text-[10px] text-[rgba(38,37,30,0.4)]">
+                    {mover.parentCluster}
+                  </p>
+                )}
 
-                        <div className="flex items-center gap-3 text-xs text-[rgba(38,37,30,0.55)]">
-                          <span className="font-mono">
-                            {aiTasksAfter} of {mover.taskCount} tasks
-                          </span>
-                          <span className="font-mono text-[rgba(38,37,30,0.38)]">
-                            {aiPct}%
-                          </span>
-                          {netDelta !== 0 && (
-                            <span
-                              className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
-                              style={{
-                                backgroundColor:
-                                  netDelta > 0
-                                    ? "rgba(245,78,0,0.08)"
-                                    : "rgba(38,37,30,0.06)",
-                                color:
-                                  netDelta > 0
-                                    ? "hsl(22deg 90% 42%)"
-                                    : "rgba(38,37,30,0.55)",
-                              }}
-                            >
-                              {netDelta > 0 ? "+" : ""}
-                              {netDelta} task{Math.abs(netDelta) !== 1 ? "s" : ""}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Before/after breakdown text */}
-                      <div className="mt-1.5 flex flex-wrap gap-3 text-[10px] font-semibold tabular-nums">
-                        <span style={{ color: AUTOMATION_COLOR }}>
-                          Auto: {mover.automationTasksBefore} → {mover.automationTasksAfter}
-                          {mover.automationDelta !== 0 && (
-                            <span className="ml-1 opacity-60">
-                              ({mover.automationDelta > 0 ? "+" : ""}{mover.automationDelta})
-                            </span>
-                          )}
-                        </span>
-                        <span style={{ color: AUGMENTATION_COLOR }}>
-                          Aug: {mover.augmentationTasksBefore} → {mover.augmentationTasksAfter}
-                          {mover.augmentationDelta !== 0 && (
-                            <span className="ml-1 opacity-60">
-                              ({mover.augmentationDelta > 0 ? "+" : ""}{mover.augmentationDelta})
-                            </span>
-                          )}
-                        </span>
-                      </div>
-
-                      {/* Before/After visual bars */}
-                      <div className="mt-2.5">
-                        <BeforeAfterBars
-                          autoBefore={mover.automationTasksBefore}
-                          autoAfter={mover.automationTasksAfter}
-                          augBefore={mover.augmentationTasksBefore}
-                          augAfter={mover.augmentationTasksAfter}
-                          total={mover.taskCount}
-                        />
-                      </div>
-
-                      {story && (
-                        <p className="mt-2 text-[11px] italic leading-relaxed text-[rgba(38,37,30,0.45)]">
-                          {story}
-                        </p>
+                {/* Composition bars */}
+                <div className="mt-4 space-y-2">
+                  {/* V1 bar */}
+                  <div>
+                    <div className="mb-1 flex items-center justify-between text-[9px] font-semibold uppercase tracking-[0.16em] text-[rgba(38,37,30,0.35)]">
+                      <span>Jan 2025</span>
+                      <span className="tabular-nums">{aiTasksBefore}/{mover.taskCount} AI</span>
+                    </div>
+                    <div className="flex h-3 w-full overflow-hidden rounded-full bg-[rgba(38,37,30,0.04)]">
+                      {mover.automationTasksBefore > 0 && (
+                        <div className="flex-none transition-all duration-500" style={{ width: `${pct(mover.automationTasksBefore)}%`, backgroundColor: AUTOMATION_COLOR, opacity: 0.5 }} />
+                      )}
+                      {mover.augmentationTasksBefore > 0 && (
+                        <div className="flex-none transition-all duration-500" style={{ width: `${pct(mover.augmentationTasksBefore)}%`, backgroundColor: AUGMENTATION_COLOR, opacity: 0.5 }} />
                       )}
                     </div>
                   </div>
-                </li>
-              );
-            })}
-          </ul>
-          {moverHasToggle && (
-            <div className="flex justify-center py-3">
-              <ToggleButton
-                expanded={showAllMovers}
-                totalCount={movers.length}
-                onToggle={() => setShowAllMovers((v) => !v)}
-              />
-            </div>
-          )}
-        </div>
-      </Section>
 
-      {/* ── Task-Level Patterns ── */}
-      {transitions.topReclassifiedTasks.length > 0 && (
-        <Section title="Most commonly reclassified tasks">
-          <p className="mb-4 -mt-2 text-sm text-[rgba(38,37,30,0.55)]">
-            Tasks that changed category across the most roles. These are collaborative,
-            judgment-heavy tasks where AI can now assist but can&apos;t replace the human.
-          </p>
-          <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
-            <ul className="divide-y divide-[rgba(38,37,30,0.06)]">
-              {displayedReclassified.map((task) => {
-                const maxRoles = transitions.topReclassifiedTasks[0]?.roleCount ?? 1;
-                const barW = Math.max((task.roleCount / maxRoles) * 100, 3);
+                  {/* V4 bar */}
+                  <div>
+                    <div className="mb-1 flex items-center justify-between text-[9px] font-semibold uppercase tracking-[0.16em] text-[rgba(38,37,30,0.35)]">
+                      <span>Nov 2025</span>
+                      <span className="tabular-nums">{aiTasksAfter}/{mover.taskCount} AI</span>
+                    </div>
+                    <div className="flex h-3 w-full overflow-hidden rounded-full bg-[rgba(38,37,30,0.04)]">
+                      {mover.automationTasksAfter > 0 && (
+                        <div className="flex-none shadow-[0_2px_8px_rgba(245,78,0,0.15)] transition-all duration-500" style={{ width: `${pct(mover.automationTasksAfter)}%`, backgroundColor: AUTOMATION_COLOR }} />
+                      )}
+                      {mover.augmentationTasksAfter > 0 && (
+                        <div className="flex-none shadow-[0_2px_8px_rgba(245,78,0,0.15)] transition-all duration-500" style={{ width: `${pct(mover.augmentationTasksAfter)}%`, backgroundColor: AUGMENTATION_COLOR }} />
+                      )}
+                    </div>
+                  </div>
+                </div>
 
-                return (
-                  <li key={task.taskName} className="px-5 py-3.5 sm:px-6">
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                      <span className="text-sm text-[#26251e]">
-                        {task.taskName}
-                      </span>
-                      <div className="flex items-center gap-2 text-[10px] tabular-nums">
-                        <span className="font-medium text-[rgba(38,37,30,0.5)]">
-                          {task.roleCount} role{task.roleCount !== 1 ? "s" : ""}
-                        </span>
-                        <span className="rounded-full bg-[rgba(38,37,30,0.05)] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-[rgba(38,37,30,0.45)]">
-                          {task.dominantTransition}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="mt-1.5">
-                      <div
-                        className="h-1 rounded-full"
-                        style={{
-                          width: `${barW}%`,
-                          backgroundColor: task.dominantTransition.includes("augmentation")
-                            ? AUGMENTATION_COLOR
-                            : task.dominantTransition.includes("automation")
-                              ? AUTOMATION_COLOR
-                              : MANUAL_COLOR,
-                          opacity: 0.5,
-                          minWidth: "4px",
-                        }}
-                      />
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-            {transitions.topReclassifiedTasks.length > 5 && (
-              <div className="flex justify-center py-3">
-                <ToggleButton
-                  expanded={showAllTasks}
-                  totalCount={transitions.topReclassifiedTasks.length}
-                  onToggle={() => setShowAllTasks((v) => !v)}
-                />
+                {/* Delta chips + story */}
+                <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                  {mover.automationDelta !== 0 && (
+                    <span className="rounded-full px-2 py-0.5 text-[10px] font-semibold tabular-nums" style={{ backgroundColor: "rgba(245,78,0,0.06)", color: AUTOMATION_COLOR }}>
+                      {mover.automationDelta > 0 ? "+" : ""}{mover.automationDelta} auto
+                    </span>
+                  )}
+                  {mover.augmentationDelta !== 0 && (
+                    <span className="rounded-full px-2 py-0.5 text-[10px] font-semibold tabular-nums" style={{ backgroundColor: "rgba(245,78,0,0.06)", color: AUGMENTATION_COLOR }}>
+                      {mover.augmentationDelta > 0 ? "+" : ""}{mover.augmentationDelta} aug
+                    </span>
+                  )}
+                  {netDelta !== 0 && (
+                    <span
+                      className="rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums"
+                      style={{
+                        backgroundColor: netDelta > 0 ? "rgba(245,78,0,0.1)" : "rgba(38,37,30,0.06)",
+                        color: netDelta > 0 ? "hsl(22deg 90% 42%)" : "rgba(38,37,30,0.55)",
+                      }}
+                    >
+                      {netDelta > 0 ? "+" : ""}{netDelta} net
+                    </span>
+                  )}
+                </div>
+
+                {story && (
+                  <p className="mt-2 text-[10px] italic leading-relaxed text-[rgba(38,37,30,0.4)]">
+                    {story}
+                  </p>
+                )}
               </div>
-            )}
+            );
+          })}
+        </div>
+        {moverHasToggle && (
+          <div className="mt-4 flex justify-center">
+            <ToggleButton
+              expanded={showAllMovers}
+              totalCount={movers.length}
+              onToggle={() => setShowAllMovers((v) => !v)}
+            />
           </div>
-        </Section>
-      )}
+        )}
+      </Section>
 
       {/* ── Summary Narrative ── */}
       <Section title="Summary">
