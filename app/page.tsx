@@ -10,23 +10,16 @@ import {
   listMostViewedRuns,
   listTrendingRuns,
 } from "@/lib/db/queries";
-import { ComparativeInsights } from "@/components/run/comparative-insights";
 import { loadComparativeInsights } from "@/lib/run/load-comparative-insights";
 import { FloatingOnboardingButton } from "@/components/onboarding/FloatingOnboardingButton";
-import { WhatsChanged } from "@/components/run/whats-changed";
-import { loadOnetCatalog, getTopMovers, getCatalogSummary, getCatalogTransitions } from "@/lib/onet/catalog";
-import { DataTimeline, type TimelinePoint } from "@/components/data-timeline";
+import { loadOnetCatalog, getTopMovers, getCatalogSummary, getCatalogTransitions, getVintageAggregates } from "@/lib/onet/catalog";
+import { VintageShell } from "@/components/vintage-shell";
 
 const LANDING_FOOTER_LINKS = [
   { label: "Home", href: "#top" },
   { label: "Trending", href: "#trending" },
   { label: "What Changed", href: "#whats-changed" },
   { label: "Marketplace", href: "#marketplace" },
-];
-
-const TIMELINE_POINTS: TimelinePoint[] = [
-  { year: 2025.0, label: "Jan 2025", available: true },
-  { year: 2025.9, label: "Nov 2025", available: true },
 ];
 
 // ISR: Revalidate every 60 seconds (reduces server load by 50-80%)
@@ -78,23 +71,21 @@ async function HeroAsync() {
   return <Hero remainingRuns={remainingRuns} />;
 }
 
-async function ComparativeInsightsAsync() {
-  const { data, updatedAt } = await loadComparativeInsights();
-  return <ComparativeInsights analytics={data} updatedAt={updatedAt} />;
-}
-
-async function WhatsChangedAsync() {
+async function VintageContentAsync() {
   const catalog = loadOnetCatalog();
   const movers = getTopMovers(catalog, 20);
   const summary = getCatalogSummary(catalog);
   const transitions = getCatalogTransitions();
-  const { data: analytics } = await loadComparativeInsights();
+  const vintageAggregates = getVintageAggregates(catalog);
+  const { data: analytics, updatedAt } = await loadComparativeInsights();
   return (
-    <WhatsChanged
+    <VintageShell
       movers={movers}
       summary={summary}
       transitions={transitions}
       analytics={analytics}
+      updatedAt={updatedAt}
+      vintageAggregates={vintageAggregates}
     />
   );
 }
@@ -171,14 +162,8 @@ export default function Page() {
           </Suspense>
         </div>
 
-        <div id="whats-changed">
-          <Suspense fallback={<ComparativeInsightsSkeleton />}>
-            <WhatsChangedAsync />
-          </Suspense>
-        </div>
-
         <Suspense fallback={<ComparativeInsightsSkeleton />}>
-          <ComparativeInsightsAsync />
+          <VintageContentAsync />
         </Suspense>
 
         <div id="marketplace">
@@ -190,10 +175,6 @@ export default function Page() {
 
       <SiteFooter navLinks={LANDING_FOOTER_LINKS} />
 
-      <DataTimeline
-        points={TIMELINE_POINTS}
-        activeYear={2025.9}
-      />
       <FloatingOnboardingButton />
     </div>
   );

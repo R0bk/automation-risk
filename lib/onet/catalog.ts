@@ -687,6 +687,77 @@ export function getCatalogTransitions(): CatalogTransitions {
   return cachedTransitions;
 }
 
+// ── Vintage aggregates (v1 vs v4 totals) ────────────────────
+
+export type VintageIndustryAggregate = {
+  name: string;
+  totalRoles: number;
+  automationTasks: number;
+  augmentationTasks: number;
+  manualTasks: number;
+};
+
+export type VintageAggregate = {
+  totalRoles: number;
+  automationTasks: number;
+  augmentationTasks: number;
+  manualTasks: number;
+  byIndustry: VintageIndustryAggregate[];
+};
+
+export type VintageAggregates = {
+  v1: VintageAggregate;
+  v4: VintageAggregate;
+};
+
+/** Compute aggregate stats at each vintage for side-by-side comparison */
+export function getVintageAggregates(catalog: OnetCatalogRole[]): VintageAggregates {
+  const v1Totals = { totalRoles: 0, automationTasks: 0, augmentationTasks: 0, manualTasks: 0 };
+  const v4Totals = { totalRoles: 0, automationTasks: 0, augmentationTasks: 0, manualTasks: 0 };
+  const v1Industries = new Map<string, VintageIndustryAggregate>();
+  const v4Industries = new Map<string, VintageIndustryAggregate>();
+
+  for (const role of catalog) {
+    const cluster = role.parentCluster ?? "Other";
+
+    // V4 (current)
+    v4Totals.totalRoles++;
+    v4Totals.automationTasks += role.metrics.automationTasks;
+    v4Totals.augmentationTasks += role.metrics.augmentationTasks;
+    v4Totals.manualTasks += role.metrics.manualTasks;
+
+    const v4Ind = v4Industries.get(cluster) ?? { name: cluster, totalRoles: 0, automationTasks: 0, augmentationTasks: 0, manualTasks: 0 };
+    v4Ind.totalRoles++;
+    v4Ind.automationTasks += role.metrics.automationTasks;
+    v4Ind.augmentationTasks += role.metrics.augmentationTasks;
+    v4Ind.manualTasks += role.metrics.manualTasks;
+    v4Industries.set(cluster, v4Ind);
+
+    // V1 (prior)
+    if (role.prior) {
+      v1Totals.totalRoles++;
+      v1Totals.automationTasks += role.prior.automationTasks;
+      v1Totals.augmentationTasks += role.prior.augmentationTasks;
+      v1Totals.manualTasks += role.prior.manualTasks;
+
+      const v1Ind = v1Industries.get(cluster) ?? { name: cluster, totalRoles: 0, automationTasks: 0, augmentationTasks: 0, manualTasks: 0 };
+      v1Ind.totalRoles++;
+      v1Ind.automationTasks += role.prior.automationTasks;
+      v1Ind.augmentationTasks += role.prior.augmentationTasks;
+      v1Ind.manualTasks += role.prior.manualTasks;
+      v1Industries.set(cluster, v1Ind);
+    }
+  }
+
+  const sortByTotal = (a: VintageIndustryAggregate, b: VintageIndustryAggregate) =>
+    (b.automationTasks + b.augmentationTasks) - (a.automationTasks + a.augmentationTasks);
+
+  return {
+    v1: { ...v1Totals, byIndustry: Array.from(v1Industries.values()).sort(sortByTotal) },
+    v4: { ...v4Totals, byIndustry: Array.from(v4Industries.values()).sort(sortByTotal) },
+  };
+}
+
 export function buildPrefixLookup(catalog: OnetCatalogRole[]): Map<string, OnetCatalogRole[]> {
   const lookup = new Map<string, OnetCatalogRole[]>();
 
