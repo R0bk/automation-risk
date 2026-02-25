@@ -288,10 +288,6 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
   const augPctChange = formatPctChange(summary.augmentationBefore, summary.augmentationAfter);
   const manualPctChange = formatPctChange(summary.manualBefore, summary.manualAfter);
 
-  // Industry data
-  const industriesWithChanges = summary.industries.filter((i) => i.rolesChanged > 0);
-  const maxIndustryAugDelta = Math.max(...industriesWithChanges.map((i) => Math.abs(i.augmentationDelta)), 1);
-
   // Country data
   const countries = analytics?.countries ?? [];
   const countriesWithDeltas = countries.filter((c) => c.netExposureDelta != null && c.netExposureDelta !== 0);
@@ -536,51 +532,6 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
               </tr>
             </tbody>
           </table>
-        </div>
-      </Section>
-
-      {/* ── Industry Heatmap ── */}
-      <Section title="Industry impact">
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
-          {industriesWithChanges.map((ind) => {
-            const netDelta = ind.automationDelta + ind.augmentationDelta;
-            const intensity = Math.min(Math.abs(ind.augmentationDelta) / maxIndustryAugDelta, 1);
-            const augPositive = ind.augmentationDelta >= 0;
-
-            return (
-              <div
-                key={ind.name}
-                className="group rounded-xl border border-[rgba(38,37,30,0.08)] p-3.5 transition-all hover:shadow-[0_8px_24px_rgba(245,78,0,0.1)]"
-                style={{
-                  backgroundColor: augPositive
-                    ? `rgba(245,78,0,${(0.02 + intensity * 0.1).toFixed(3)})`
-                    : `rgba(38,37,30,${(0.02 + intensity * 0.04).toFixed(3)})`,
-                }}
-              >
-                <p className="text-[11px] font-semibold leading-tight text-[#26251e]">{ind.name}</p>
-                <p className="mt-0.5 text-[10px] text-[rgba(38,37,30,0.4)]">
-                  {ind.rolesChanged}/{ind.totalRoles} roles
-                </p>
-                <div className="mt-2 flex items-baseline gap-1.5">
-                  <span className="text-sm font-bold tabular-nums" style={{ color: AUGMENTATION_COLOR }}>
-                    {formatDelta(ind.augmentationDelta)}
-                  </span>
-                  <span className="text-[9px] text-[rgba(38,37,30,0.35)]">aug</span>
-                </div>
-                <div className="mt-0.5 flex items-baseline gap-1.5">
-                  <span className="text-xs font-semibold tabular-nums" style={{ color: AUTOMATION_COLOR }}>
-                    {formatDelta(ind.automationDelta)}
-                  </span>
-                  <span className="text-[9px] text-[rgba(38,37,30,0.35)]">auto</span>
-                </div>
-                {netDelta !== 0 && (
-                  <div className="mt-1.5">
-                    <DeltaPill value={netDelta} label="net" />
-                  </div>
-                )}
-              </div>
-            );
-          })}
         </div>
       </Section>
 
