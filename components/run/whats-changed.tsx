@@ -102,6 +102,7 @@ function SlopeChart({
   onHighlight: (key: string | null) => void;
   yLabel?: string;
 }) {
+  const [pillsExpanded, setPillsExpanded] = useState(false);
   if (lines.length === 0) return null;
 
   const W = 680, H = 300;
@@ -187,9 +188,15 @@ function SlopeChart({
         )}
       </svg>
 
-      {/* Selectable pills */}
-      <div className="mt-3 flex flex-wrap gap-1.5">
-        {lines.map((l) => (
+      {/* Selectable pills (truncated: first 5 … last 5) */}
+      {(() => {
+        const PILL_CAP = 5;
+        const needsTruncation = lines.length > PILL_CAP * 2 + 1 && !pillsExpanded;
+        const visiblePills = needsTruncation
+          ? [...lines.slice(0, PILL_CAP), null, ...lines.slice(-PILL_CAP)]
+          : lines;
+
+        const pillBtn = (l: SlopeLine) => (
           <button
             key={l.key}
             type="button"
@@ -204,8 +211,36 @@ function SlopeChart({
           >
             {l.label}
           </button>
-        ))}
-      </div>
+        );
+
+        return (
+          <div className="mt-3 flex flex-wrap items-center gap-1.5">
+            {visiblePills.map((item, i) =>
+              item === null ? (
+                <button
+                  key="__expand__"
+                  type="button"
+                  onClick={() => setPillsExpanded(true)}
+                  className="rounded-full border border-[rgba(38,37,30,0.12)] bg-white/60 px-2.5 py-1 text-[10px] font-semibold text-[rgba(38,37,30,0.4)] transition-all hover:border-[rgba(38,37,30,0.25)] hover:text-[rgba(38,37,30,0.6)]"
+                >
+                  +{lines.length - PILL_CAP * 2} more
+                </button>
+              ) : (
+                pillBtn(item)
+              )
+            )}
+            {pillsExpanded && lines.length > PILL_CAP * 2 + 1 && (
+              <button
+                type="button"
+                onClick={() => setPillsExpanded(false)}
+                className="rounded-full border border-[rgba(38,37,30,0.12)] bg-white/60 px-2.5 py-1 text-[10px] font-semibold text-[rgba(38,37,30,0.4)] transition-all hover:border-[rgba(38,37,30,0.25)] hover:text-[rgba(38,37,30,0.6)]"
+              >
+                Show less
+              </button>
+            )}
+          </div>
+        );
+      })()}
     </div>
   );
 }
@@ -213,12 +248,10 @@ function SlopeChart({
 // ── Constants ───────────────────────────────────────────────
 const COUNTRY_PREVIEW = 8;
 const COMPANY_PREVIEW = 8;
-const MOVER_PREVIEW = 8;
 
 // ─────────────────────────────────────────────────────────────
 export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsChangedProps) {
   const [showAllCountries, setShowAllCountries] = useState(false);
-  const [showAllMovers, setShowAllMovers] = useState(false);
   const [companyView, setCompanyView] = useState<"winners" | "losers" | "shift">("winners");
   const [showAllCompanies, setShowAllCompanies] = useState(false);
   const [highlightedCountry, setHighlightedCountry] = useState<string>("__initial__");
@@ -249,10 +282,6 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
   const activeCompanies = companyView === "winners" ? companiesIncreased : companyView === "losers" ? companiesDecreased : companiesByShift;
   const companyHasToggle = activeCompanies.length > COMPANY_PREVIEW;
   const displayedCompanies = showAllCompanies ? activeCompanies : activeCompanies.slice(0, COMPANY_PREVIEW);
-
-  // Movers
-  const moverHasToggle = movers.length > MOVER_PREVIEW;
-  const displayedMovers = showAllMovers ? movers : movers.slice(0, MOVER_PREVIEW);
 
   // Narrative
   const autoToAugCount = transitions.transitions.find((t) => t.from === "automation" && t.to === "augmentation")?.count ?? 0;
@@ -724,117 +753,6 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
         </Section>
       )}
 
-      {/* ── Role-Level Biggest Movers ── */}
-      <Section title="Role-level biggest movers">
-        <div className="grid gap-3 sm:grid-cols-2">
-          {displayedMovers.map((mover, index) => {
-            const aiTasksBefore = mover.automationTasksBefore + mover.augmentationTasksBefore;
-            const aiTasksAfter = mover.automationTasksAfter + mover.augmentationTasksAfter;
-            const netDelta = aiTasksAfter - aiTasksBefore;
-            const story = buildMoverStory(mover);
-
-            const pct = (n: number) => mover.taskCount > 0 ? (n / mover.taskCount) * 100 : 0;
-
-            return (
-              <div
-                key={mover.code}
-                className="group relative overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.08)] bg-white/70 p-5 transition-all hover:shadow-[0_12px_32px_rgba(245,78,0,0.08)]"
-              >
-                {/* Rank badge */}
-                <span className="absolute right-4 top-4 text-2xl font-bold tabular-nums leading-none text-[rgba(38,37,30,0.06)]">
-                  {index + 1}
-                </span>
-
-                {/* Title + cluster */}
-                <p className="pr-8 text-[13px] font-semibold leading-snug text-[#26251e]">
-                  {mover.title}
-                </p>
-                {mover.parentCluster && (
-                  <p className="mt-0.5 text-[10px] text-[rgba(38,37,30,0.4)]">
-                    {mover.parentCluster}
-                  </p>
-                )}
-
-                {/* Composition bars */}
-                <div className="mt-4 space-y-2">
-                  {/* V1 bar */}
-                  <div>
-                    <div className="mb-1 flex items-center justify-between text-[9px] font-semibold uppercase tracking-[0.16em] text-[rgba(38,37,30,0.35)]">
-                      <span>Jan 2025</span>
-                      <span className="tabular-nums">{aiTasksBefore}/{mover.taskCount} AI</span>
-                    </div>
-                    <div className="flex h-3 w-full overflow-hidden rounded-full bg-[rgba(38,37,30,0.04)]">
-                      {mover.automationTasksBefore > 0 && (
-                        <div className="flex-none transition-all duration-500" style={{ width: `${pct(mover.automationTasksBefore)}%`, backgroundColor: AUTOMATION_COLOR, opacity: 0.5 }} />
-                      )}
-                      {mover.augmentationTasksBefore > 0 && (
-                        <div className="flex-none transition-all duration-500" style={{ width: `${pct(mover.augmentationTasksBefore)}%`, backgroundColor: AUGMENTATION_COLOR, opacity: 0.5 }} />
-                      )}
-                    </div>
-                  </div>
-
-                  {/* V4 bar */}
-                  <div>
-                    <div className="mb-1 flex items-center justify-between text-[9px] font-semibold uppercase tracking-[0.16em] text-[rgba(38,37,30,0.35)]">
-                      <span>Nov 2025</span>
-                      <span className="tabular-nums">{aiTasksAfter}/{mover.taskCount} AI</span>
-                    </div>
-                    <div className="flex h-3 w-full overflow-hidden rounded-full bg-[rgba(38,37,30,0.04)]">
-                      {mover.automationTasksAfter > 0 && (
-                        <div className="flex-none shadow-[0_2px_8px_rgba(245,78,0,0.15)] transition-all duration-500" style={{ width: `${pct(mover.automationTasksAfter)}%`, backgroundColor: AUTOMATION_COLOR }} />
-                      )}
-                      {mover.augmentationTasksAfter > 0 && (
-                        <div className="flex-none shadow-[0_2px_8px_rgba(245,78,0,0.15)] transition-all duration-500" style={{ width: `${pct(mover.augmentationTasksAfter)}%`, backgroundColor: AUGMENTATION_COLOR }} />
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Delta chips + story */}
-                <div className="mt-3 flex flex-wrap items-center gap-1.5">
-                  {mover.automationDelta !== 0 && (
-                    <span className="rounded-full px-2 py-0.5 text-[10px] font-semibold tabular-nums" style={{ backgroundColor: "rgba(245,78,0,0.06)", color: AUTOMATION_COLOR }}>
-                      {mover.automationDelta > 0 ? "+" : ""}{mover.automationDelta} auto
-                    </span>
-                  )}
-                  {mover.augmentationDelta !== 0 && (
-                    <span className="rounded-full px-2 py-0.5 text-[10px] font-semibold tabular-nums" style={{ backgroundColor: "rgba(245,78,0,0.06)", color: AUGMENTATION_COLOR }}>
-                      {mover.augmentationDelta > 0 ? "+" : ""}{mover.augmentationDelta} aug
-                    </span>
-                  )}
-                  {netDelta !== 0 && (
-                    <span
-                      className="rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums"
-                      style={{
-                        backgroundColor: netDelta > 0 ? "rgba(245,78,0,0.1)" : "rgba(38,37,30,0.06)",
-                        color: netDelta > 0 ? "hsl(22deg 90% 42%)" : "rgba(38,37,30,0.55)",
-                      }}
-                    >
-                      {netDelta > 0 ? "+" : ""}{netDelta} net
-                    </span>
-                  )}
-                </div>
-
-                {story && (
-                  <p className="mt-2 text-[10px] italic leading-relaxed text-[rgba(38,37,30,0.4)]">
-                    {story}
-                  </p>
-                )}
-              </div>
-            );
-          })}
-        </div>
-        {moverHasToggle && (
-          <div className="mt-4 flex justify-center">
-            <ToggleButton
-              expanded={showAllMovers}
-              totalCount={movers.length}
-              onToggle={() => setShowAllMovers((v) => !v)}
-            />
-          </div>
-        )}
-      </Section>
-
       {/* ── Summary Narrative ── */}
       <Section title="Summary">
         <div className="rounded-2xl border border-[rgba(38,37,30,0.08)] bg-white/60 px-6 py-5">
@@ -926,36 +844,4 @@ function ToggleButton({
       {expanded ? "Collapse" : `Show all ${totalCount}`}
     </button>
   );
-}
-
-function buildMoverStory(mover: TopMover): string | null {
-  const autoDelta = mover.automationDelta;
-  const augDelta = mover.augmentationDelta;
-  const manualDelta = mover.taskCount - (mover.automationTasksAfter + mover.augmentationTasksAfter) -
-    (mover.taskCount - (mover.automationTasksBefore + mover.augmentationTasksBefore));
-
-  if (autoDelta < 0 && augDelta > 0 && Math.abs(manualDelta) <= 1 && Math.abs(autoDelta) === augDelta) {
-    return "Pure automation \u2192 augmentation flip";
-  }
-  if (autoDelta < -3) {
-    if (augDelta > 0 && manualDelta > 0) {
-      return "Biggest single automation loss \u2014 tasks split to augmentation and manual";
-    }
-    if (augDelta > 0) {
-      return "Strong automation \u2192 augmentation shift";
-    }
-  }
-  if (autoDelta > 0 && augDelta > 0) {
-    return "AI now helps AND does more tasks";
-  }
-  if (autoDelta < 0 && manualDelta > 0 && augDelta >= 0) {
-    return "Some automation tasks reverted to manual";
-  }
-  if (augDelta > 3) {
-    return "Strong augmentation gain";
-  }
-  if (autoDelta < 0 && augDelta > 0) {
-    return "Automation \u2192 augmentation shift";
-  }
-  return null;
 }
