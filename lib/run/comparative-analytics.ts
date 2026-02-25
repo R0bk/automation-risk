@@ -12,6 +12,7 @@ import {
   HeatmapCell,
   DistributionEntry,
   TopTaskMetric,
+  CompanyMetric,
 } from "./comparative-analytics-types";
 
 import { buildRoleHeadcountMap } from "./workforce-impact";
@@ -196,6 +197,19 @@ export function buildComparativeAnalytics(
     }
   >();
   const taskAccumulator = new Map<string, TaskAccumulator>();
+  const companyAccumulator = new Map<
+    string,
+    {
+      name: string;
+      slug: string | null;
+      hqCountry: string | null;
+      industry: string | null;
+      headcount: number;
+      deltaAutoSum: number;
+      deltaAugSum: number;
+      deltaWeightSum: number;
+    }
+  >();
 
   // Track global metrics
   const globalMetrics = {
@@ -321,6 +335,21 @@ export function buildComparativeAnalytics(
       }
     }
 
+    // Initialize company accumulator
+    const companyKey = run.companyId ?? run.runId;
+    if (!companyAccumulator.has(companyKey)) {
+      companyAccumulator.set(companyKey, {
+        name: run.displayName?.trim() || run.companySlug || companyKey,
+        slug: run.companySlug,
+        hqCountry: countryLabel,
+        industry: industryLabel,
+        headcount: headcount && headcount > 0 ? headcount : 0,
+        deltaAutoSum: 0,
+        deltaAugSum: 0,
+        deltaWeightSum: 0,
+      });
+    }
+
     if (run.report) {
       const roleHeadcounts = buildRoleHeadcountMap(run.report);
       if (roleHeadcounts.size > 0) {
@@ -376,6 +405,14 @@ export function buildComparativeAnalytics(
                 heatmapCell.deltaAugSum += augDelta * roleHeadcount;
                 heatmapCell.deltaWeightSum += roleHeadcount;
               }
+            }
+
+            // Accumulate into company
+            const companyAcc = companyAccumulator.get(companyKey);
+            if (companyAcc) {
+              companyAcc.deltaAutoSum += autoDelta * roleHeadcount;
+              companyAcc.deltaAugSum += augDelta * roleHeadcount;
+              companyAcc.deltaWeightSum += roleHeadcount;
             }
           }
 
@@ -659,6 +696,21 @@ export function buildComparativeAnalytics(
     })
     .slice(0, MAX_TOP_TASKS);
 
+  const companyMetrics: CompanyMetric[] = Array.from(companyAccumulator.values())
+    .filter((c) => c.deltaWeightSum > 0)
+    .map((c) => ({
+      name: c.name,
+      slug: c.slug,
+      hqCountry: c.hqCountry,
+      industry: c.industry,
+      headcount: c.headcount,
+      netAIDelta:
+        (c.deltaAutoSum + c.deltaAugSum) / c.deltaWeightSum,
+      automationDelta: c.deltaAutoSum / c.deltaWeightSum,
+      augmentationDelta: c.deltaAugSum / c.deltaWeightSum,
+    }))
+    .sort((a, b) => Math.abs(b.netAIDelta) - Math.abs(a.netAIDelta));
+
   return {
     generatedAt: new Date().toISOString(),
     coverage: {
@@ -677,6 +729,7 @@ export function buildComparativeAnalytics(
       byIndustry: industryDistributions,
     },
     topTasks,
+    companies: companyMetrics,
   };
 }
 

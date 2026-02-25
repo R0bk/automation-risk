@@ -542,6 +542,151 @@ export function getCatalogSummary(catalog: OnetCatalogRole[]): CatalogChangeSumm
   };
 }
 
+// ── Task-level transition analysis (v1 → v4) ──────────────────────
+
+type TaskCategory = "automation" | "augmentation" | "manual";
+
+export type TransitionEntry = {
+  from: TaskCategory;
+  to: TaskCategory;
+  count: number;
+  shareOfChanges: number;
+};
+
+export type ReclassifiedTask = {
+  taskName: string;
+  roleCount: number;
+  dominantTransition: string;
+};
+
+export type CatalogTransitions = {
+  totalTaskRoleCombinations: number;
+  changedCombinations: number;
+  transitions: TransitionEntry[];
+  topReclassifiedTasks: ReclassifiedTask[];
+};
+
+function classifyTask(task: OnetTaskNode): TaskCategory {
+  const autoShare = toShare(getGlobalMetric(task, "automation_pct"));
+  const augShare = toShare(getGlobalMetric(task, "augmentation_pct"));
+  if (autoShare <= 0 && augShare <= 0) return "manual";
+  return autoShare >= augShare ? "automation" : "augmentation";
+}
+
+function buildPriorTaskClassifications(): Map<string, Map<string, TaskCategory>> {
+  const roleTaskMap = new Map<string, Map<string, TaskCategory>>();
+  const sectors = onetHierarchyPrior.onet_hierarchy ?? [];
+  for (const sector of sectors) {
+    for (const roleNode of sector.children ?? []) {
+      const normalizedTitle = normalizeRole(roleNode.cluster_name);
+      if (!normalizedTitle) continue;
+      const taskMap = new Map<string, TaskCategory>();
+      for (const task of roleNode.children ?? []) {
+        const taskName = task.cluster_name?.trim().toLowerCase();
+        if (!taskName) continue;
+        taskMap.set(taskName, classifyTask(task));
+      }
+      roleTaskMap.set(normalizedTitle, taskMap);
+    }
+  }
+  return roleTaskMap;
+}
+
+let cachedTransitions: CatalogTransitions | null = null;
+
+export function getCatalogTransitions(): CatalogTransitions {
+  if (cachedTransitions) return cachedTransitions;
+
+  const priorTaskMap = buildPriorTaskClassifications();
+
+  const transitionCounts = new Map<string, number>();
+  let totalCombinations = 0;
+  let changedCombinations = 0;
+  const taskChangeCounts = new Map<
+    string,
+    { count: number; transitions: Map<string, number> }
+  >();
+
+  const sectors = onetHierarchy.onet_hierarchy ?? [];
+  for (const sector of sectors) {
+    for (const roleNode of sector.children ?? []) {
+      const normalizedTitle = normalizeRole(roleNode.cluster_name);
+      if (!normalizedTitle) continue;
+      const priorTasks = priorTaskMap.get(normalizedTitle);
+      if (!priorTasks) continue;
+
+      for (const task of roleNode.children ?? []) {
+        const taskNameLower = task.cluster_name?.trim().toLowerCase();
+        if (!taskNameLower) continue;
+        totalCombinations++;
+
+        const currentCategory = classifyTask(task);
+        const priorCategory = priorTasks.get(taskNameLower);
+        if (!priorCategory) continue;
+
+        if (currentCategory !== priorCategory) {
+          changedCombinations++;
+          const key = `${priorCategory} → ${currentCategory}`;
+          transitionCounts.set(key, (transitionCounts.get(key) ?? 0) + 1);
+
+          const displayName = task.cluster_name ?? taskNameLower;
+          const existing = taskChangeCounts.get(displayName) ?? {
+            count: 0,
+            transitions: new Map(),
+          };
+          existing.count++;
+          existing.transitions.set(
+            key,
+            (existing.transitions.get(key) ?? 0) + 1
+          );
+          taskChangeCounts.set(displayName, existing);
+        }
+      }
+    }
+  }
+
+  const totalChanged = Array.from(transitionCounts.values()).reduce(
+    (a, b) => a + b,
+    0
+  );
+
+  const transitions: TransitionEntry[] = Array.from(
+    transitionCounts.entries()
+  )
+    .map(([key, count]) => {
+      const parts = key.split(" → ");
+      return {
+        from: parts[0] as TaskCategory,
+        to: parts[1] as TaskCategory,
+        count,
+        shareOfChanges: totalChanged > 0 ? count / totalChanged : 0,
+      };
+    })
+    .sort((a, b) => b.count - a.count);
+
+  const topReclassifiedTasks: ReclassifiedTask[] = Array.from(
+    taskChangeCounts.entries()
+  )
+    .map(([taskName, data]) => {
+      const dominantTransition =
+        Array.from(data.transitions.entries()).sort(
+          (a, b) => b[1] - a[1]
+        )[0]?.[0] ?? "";
+      return { taskName, roleCount: data.count, dominantTransition };
+    })
+    .sort((a, b) => b.roleCount - a.roleCount)
+    .slice(0, 15);
+
+  cachedTransitions = {
+    totalTaskRoleCombinations: totalCombinations,
+    changedCombinations,
+    transitions,
+    topReclassifiedTasks,
+  };
+
+  return cachedTransitions;
+}
+
 export function buildPrefixLookup(catalog: OnetCatalogRole[]): Map<string, OnetCatalogRole[]> {
   const lookup = new Map<string, OnetCatalogRole[]>();
 

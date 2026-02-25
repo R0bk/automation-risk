@@ -1,13 +1,22 @@
 import { WhatsChanged } from "@/components/run/whats-changed";
 import { ComparativeInsights } from "@/components/run/comparative-insights";
-import { loadOnetCatalog, getTopMovers, getCatalogSummary } from "@/lib/onet/catalog";
+import { loadOnetCatalog, getTopMovers, getCatalogSummary, getCatalogTransitions } from "@/lib/onet/catalog";
 import { loadComparativeInsights } from "@/lib/run/load-comparative-insights";
 
-function WhatsChangedSync() {
+async function WhatsChangedAsync() {
   const catalog = loadOnetCatalog();
-  const movers = getTopMovers(catalog, 6);
+  const movers = getTopMovers(catalog, 20);
   const summary = getCatalogSummary(catalog);
-  return <WhatsChanged movers={movers} summary={summary} />;
+  const transitions = getCatalogTransitions();
+  const { data: analytics } = await loadComparativeInsights();
+  return (
+    <WhatsChanged
+      movers={movers}
+      summary={summary}
+      transitions={transitions}
+      analytics={analytics}
+    />
+  );
 }
 
 async function ComparativeInsightsAsync() {
@@ -27,7 +36,7 @@ export default function TestPage() {
       </div>
 
       <main className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-col gap-14 px-6 pb-32 pt-16 text-[#26251e]">
-        <WhatsChangedSync />
+        <WhatsChangedAsync />
         <ComparativeInsightsAsync />
       </main>
     </div>

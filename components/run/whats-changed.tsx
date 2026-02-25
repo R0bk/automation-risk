@@ -2,17 +2,21 @@
 
 import { useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
-import type { TopMover, CatalogChangeSummary } from "@/lib/onet/catalog";
+import type { TopMover, CatalogChangeSummary, CatalogTransitions } from "@/lib/onet/catalog";
+import type { ComparativeAnalytics } from "@/lib/run/comparative-analytics-types";
 
 export interface TopMoverEntry extends TopMover {}
 
 interface WhatsChangedProps {
   movers: TopMoverEntry[];
   summary: CatalogChangeSummary;
+  transitions: CatalogTransitions;
+  analytics: ComparativeAnalytics | null;
 }
 
 const AUTOMATION_COLOR = "hsl(22deg 92% 48%)";
 const AUGMENTATION_COLOR = "hsl(22deg 96% 66%)";
+const MANUAL_COLOR = "rgba(38,37,30,0.35)";
 
 function TaskBar({
   automation,
@@ -65,18 +69,66 @@ const formatPctChange = (before: number, after: number) => {
   return pct > 0 ? `+${pct}` : `${pct}`;
 };
 
-const INDUSTRY_PREVIEW = 6;
+const formatDelta = (value: number) => {
+  if (value === 0) return "0";
+  return value > 0 ? `+${value.toLocaleString()}` : value.toLocaleString();
+};
 
-export function WhatsChanged({ movers, summary }: WhatsChangedProps) {
+const formatDecimal = (value: number, decimals = 3) => {
+  const sign = value > 0 ? "+" : "";
+  return `${sign}${value.toFixed(decimals)}`;
+};
+
+const formatHeadcount = (hc: number) => {
+  if (hc >= 1_000_000) return `${(hc / 1_000_000).toFixed(1)}M`;
+  if (hc >= 1_000) return `${Math.round(hc / 1_000)}K`;
+  return hc.toLocaleString();
+};
+
+// ── Section wrapper ─────────────────────────────────────────
+function Section({
+  title,
+  children,
+  className,
+}: {
+  title: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`mt-10 ${className ?? ""}`}>
+      <h3 className="mb-4 text-[10px] font-semibold uppercase tracking-[0.28em] text-[rgba(38,37,30,0.5)]">
+        {title}
+      </h3>
+      {children}
+    </div>
+  );
+}
+
+const INDUSTRY_PREVIEW = 6;
+const COUNTRY_PREVIEW = 8;
+const COMPANY_PREVIEW = 8;
+const MOVER_PREVIEW = 8;
+
+export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsChangedProps) {
   const [showAllIndustries, setShowAllIndustries] = useState(false);
+  const [showAllCountries, setShowAllCountries] = useState(false);
+  const [showAllMovers, setShowAllMovers] = useState(false);
+  const [companyView, setCompanyView] = useState<"winners" | "losers" | "shift">("winners");
+  const [showAllCompanies, setShowAllCompanies] = useState(false);
+  const [showAllTransitions, setShowAllTransitions] = useState(false);
+  const [showAllTasks, setShowAllTasks] = useState(false);
 
   if (movers.length === 0) return null;
 
   const autoDelta = summary.automationAfter - summary.automationBefore;
   const augDelta = summary.augmentationAfter - summary.augmentationBefore;
+  const manualDelta = summary.manualAfter - summary.manualBefore;
   const autoPctChange = formatPctChange(summary.automationBefore, summary.automationAfter);
   const augPctChange = formatPctChange(summary.augmentationBefore, summary.augmentationAfter);
+  const manualPctChange = formatPctChange(summary.manualBefore, summary.manualAfter);
 
+  // Industry data
   const industriesWithChanges = summary.industries.filter(
     (i) => i.rolesChanged > 0
   );
@@ -84,11 +136,66 @@ export function WhatsChanged({ movers, summary }: WhatsChangedProps) {
   const displayedIndustries = showAllIndustries
     ? industriesWithChanges
     : industriesWithChanges.slice(0, INDUSTRY_PREVIEW);
-
   const maxIndustryAug = Math.max(
     ...industriesWithChanges.map((i) => Math.abs(i.augmentationDelta)),
     1
   );
+
+  // Country data from comparative analytics
+  const countries = analytics?.countries ?? [];
+  const countriesWithDeltas = countries.filter(
+    (c) => c.netExposureDelta != null && c.netExposureDelta !== 0
+  );
+  const countryHasToggle = countriesWithDeltas.length > COUNTRY_PREVIEW;
+  const displayedCountries = showAllCountries
+    ? countriesWithDeltas
+    : countriesWithDeltas.slice(0, COUNTRY_PREVIEW);
+
+  // Company data
+  const companies = analytics?.companies ?? [];
+  const companiesIncreased = companies.filter((c) => c.netAIDelta > 0);
+  const companiesDecreased = companies.filter((c) => c.netAIDelta < 0);
+  const companiesByShift = [...companies].sort(
+    (a, b) =>
+      Math.abs(b.augmentationDelta - b.automationDelta) -
+      Math.abs(a.augmentationDelta - a.automationDelta)
+  );
+  const activeCompanies =
+    companyView === "winners"
+      ? companiesIncreased
+      : companyView === "losers"
+        ? companiesDecreased
+        : companiesByShift;
+  const companyHasToggle = activeCompanies.length > COMPANY_PREVIEW;
+  const displayedCompanies = showAllCompanies
+    ? activeCompanies
+    : activeCompanies.slice(0, COMPANY_PREVIEW);
+
+  // Transition data
+  const displayedTransitions = showAllTransitions
+    ? transitions.transitions
+    : transitions.transitions.slice(0, 6);
+
+  // Top reclassified tasks
+  const displayedReclassified = showAllTasks
+    ? transitions.topReclassifiedTasks
+    : transitions.topReclassifiedTasks.slice(0, 5);
+
+  // Movers
+  const moverHasToggle = movers.length > MOVER_PREVIEW;
+  const displayedMovers = showAllMovers
+    ? movers
+    : movers.slice(0, MOVER_PREVIEW);
+
+  // Determine narrative direction
+  const autoToAugCount =
+    transitions.transitions.find(
+      (t) => t.from === "automation" && t.to === "augmentation"
+    )?.count ?? 0;
+  const manualToAugCount =
+    transitions.transitions.find(
+      (t) => t.from === "manual" && t.to === "augmentation"
+    )?.count ?? 0;
 
   return (
     <section
@@ -105,9 +212,10 @@ export function WhatsChanged({ movers, summary }: WhatsChangedProps) {
           <h2 className="mt-2 text-xl font-medium text-[#26251e] sm:text-2xl">
             What changed in AI task coverage
           </h2>
-          <p className="mt-2 max-w-xl text-sm leading-relaxed text-[rgba(38,37,30,0.6)]">
-            How AI&apos;s role in {summary.totalRoles.toLocaleString()} occupations shifted, based
-            on Anthropic&apos;s{" "}
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[rgba(38,37,30,0.6)]">
+            The v4 update tells one dominant story: AI is shifting from
+            &ldquo;replacing humans&rdquo; to &ldquo;working with humans.&rdquo;
+            Based on Anthropic&apos;s{" "}
             <a
               href="https://www.anthropic.com/research/the-anthropic-economic-index"
               target="_blank"
@@ -137,55 +245,244 @@ export function WhatsChanged({ movers, summary }: WhatsChangedProps) {
         </div>
       </header>
 
-      {/* ── Aggregate shift ── */}
-      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+      {/* ── Big Picture ── */}
+      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="rounded-2xl border border-[rgba(38,37,30,0.08)] bg-white/60 px-5 py-4">
           <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[rgba(38,37,30,0.45)]">
-            Automation tasks
+            Roles analyzed
           </p>
-          <p className="mt-1.5 flex items-baseline gap-2">
-            <span className="text-2xl font-semibold tabular-nums" style={{ color: AUTOMATION_COLOR }}>
-              {autoPctChange}%
-            </span>
-            <span className="text-xs text-[rgba(38,37,30,0.45)] tabular-nums">
-              {summary.automationBefore.toLocaleString()} → {summary.automationAfter.toLocaleString()}
-            </span>
+          <p className="mt-1.5 text-2xl font-semibold tabular-nums text-[#26251e]">
+            {summary.totalRoles.toLocaleString()}
           </p>
         </div>
         <div className="rounded-2xl border border-[rgba(38,37,30,0.08)] bg-white/60 px-5 py-4">
           <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[rgba(38,37,30,0.45)]">
-            Augmentation tasks
+            Task-role combos
           </p>
-          <p className="mt-1.5 flex items-baseline gap-2">
-            <span className="text-2xl font-semibold tabular-nums" style={{ color: AUGMENTATION_COLOR }}>
-              {augPctChange}%
-            </span>
-            <span className="text-xs text-[rgba(38,37,30,0.45)] tabular-nums">
-              {summary.augmentationBefore.toLocaleString()} → {summary.augmentationAfter.toLocaleString()}
-            </span>
+          <p className="mt-1.5 text-2xl font-semibold tabular-nums text-[#26251e]">
+            {transitions.totalTaskRoleCombinations.toLocaleString()}
           </p>
         </div>
-        <div className="col-span-2 rounded-2xl border border-[rgba(38,37,30,0.08)] bg-white/60 px-5 py-4 sm:col-span-1">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[rgba(38,37,30,0.45)]">
-            Roles changed
-          </p>
-          <p className="mt-1.5 flex items-baseline gap-2">
-            <span className="text-2xl font-semibold tabular-nums text-[#26251e]">
-              {summary.rolesWithChanges.toLocaleString()}
-            </span>
-            <span className="text-xs text-[rgba(38,37,30,0.45)] tabular-nums">
-              of {summary.totalRoles.toLocaleString()} ({Math.round((summary.rolesWithChanges / summary.totalRoles) * 100)}%)
-            </span>
-          </p>
-        </div>
+        {analytics && (
+          <>
+            <div className="rounded-2xl border border-[rgba(38,37,30,0.08)] bg-white/60 px-5 py-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[rgba(38,37,30,0.45)]">
+                Companies
+              </p>
+              <p className="mt-1.5 text-2xl font-semibold tabular-nums text-[#26251e]">
+                {analytics.coverage.companies.toLocaleString()}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-[rgba(38,37,30,0.08)] bg-white/60 px-5 py-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[rgba(38,37,30,0.45)]">
+                Workers represented
+              </p>
+              <p className="mt-1.5 text-2xl font-semibold tabular-nums text-[#26251e]">
+                {formatHeadcount(analytics.coverage.totalHeadcount)}
+              </p>
+            </div>
+          </>
+        )}
       </div>
 
-      {/* ── Industry breakdown ── */}
-      <div className="mt-8">
-        <h3 className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[rgba(38,37,30,0.5)]">
-          By industry
-        </h3>
-        <div className="mt-4 rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
+      {/* ── V1→V4 Metrics Change Table ── */}
+      <Section title="V1 → V4 task classification changes">
+        <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[rgba(38,37,30,0.08)] text-left text-[10px] font-semibold uppercase tracking-[0.2em] text-[rgba(38,37,30,0.45)]">
+                <th className="px-5 py-3">Metric</th>
+                <th className="px-5 py-3 text-right">V1 (Jan 2025)</th>
+                <th className="px-5 py-3 text-right">V4 (Nov 2025)</th>
+                <th className="px-5 py-3 text-right">Change</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[rgba(38,37,30,0.06)]">
+              <tr>
+                <td className="px-5 py-3 font-medium text-[#26251e]">
+                  <span className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full" style={{ backgroundColor: AUTOMATION_COLOR }} />
+                    Automation tasks
+                  </span>
+                </td>
+                <td className="px-5 py-3 text-right tabular-nums text-[rgba(38,37,30,0.6)]">
+                  {summary.automationBefore.toLocaleString()}
+                </td>
+                <td className="px-5 py-3 text-right tabular-nums text-[rgba(38,37,30,0.6)]">
+                  {summary.automationAfter.toLocaleString()}
+                </td>
+                <td className="px-5 py-3 text-right">
+                  <span
+                    className="rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums"
+                    style={{
+                      backgroundColor: autoDelta < 0 ? "rgba(38,37,30,0.06)" : "rgba(245,78,0,0.08)",
+                      color: autoDelta < 0 ? "rgba(38,37,30,0.55)" : "hsl(22deg 90% 42%)",
+                    }}
+                  >
+                    {formatDelta(autoDelta)} ({autoPctChange}%)
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td className="px-5 py-3 font-medium text-[#26251e]">
+                  <span className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full" style={{ backgroundColor: AUGMENTATION_COLOR }} />
+                    Augmentation tasks
+                  </span>
+                </td>
+                <td className="px-5 py-3 text-right tabular-nums text-[rgba(38,37,30,0.6)]">
+                  {summary.augmentationBefore.toLocaleString()}
+                </td>
+                <td className="px-5 py-3 text-right tabular-nums text-[rgba(38,37,30,0.6)]">
+                  {summary.augmentationAfter.toLocaleString()}
+                </td>
+                <td className="px-5 py-3 text-right">
+                  <span
+                    className="rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums"
+                    style={{
+                      backgroundColor: augDelta > 0 ? "rgba(245,78,0,0.08)" : "rgba(38,37,30,0.06)",
+                      color: augDelta > 0 ? "hsl(22deg 90% 42%)" : "rgba(38,37,30,0.55)",
+                    }}
+                  >
+                    {formatDelta(augDelta)} ({augPctChange}%)
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td className="px-5 py-3 font-medium text-[#26251e]">
+                  <span className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full" style={{ backgroundColor: MANUAL_COLOR }} />
+                    Manual tasks
+                  </span>
+                </td>
+                <td className="px-5 py-3 text-right tabular-nums text-[rgba(38,37,30,0.6)]">
+                  {summary.manualBefore.toLocaleString()}
+                </td>
+                <td className="px-5 py-3 text-right tabular-nums text-[rgba(38,37,30,0.6)]">
+                  {summary.manualAfter.toLocaleString()}
+                </td>
+                <td className="px-5 py-3 text-right">
+                  <span
+                    className="rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums"
+                    style={{
+                      backgroundColor: "rgba(38,37,30,0.06)",
+                      color: "rgba(38,37,30,0.55)",
+                    }}
+                  >
+                    {formatDelta(manualDelta)} ({manualPctChange}%)
+                  </span>
+                </td>
+              </tr>
+              <tr className="bg-[rgba(38,37,30,0.02)]">
+                <td className="px-5 py-3 font-medium text-[#26251e]">
+                  Roles changed
+                </td>
+                <td className="px-5 py-3" />
+                <td className="px-5 py-3" />
+                <td className="px-5 py-3 text-right">
+                  <span className="text-sm font-semibold tabular-nums text-[#26251e]">
+                    {summary.rolesWithChanges.toLocaleString()} of {summary.totalRoles.toLocaleString()}
+                  </span>
+                  <span className="ml-1.5 text-xs text-[rgba(38,37,30,0.45)]">
+                    ({Math.round((summary.rolesWithChanges / summary.totalRoles) * 100)}%)
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </Section>
+
+      {/* ── Category Transition Flows ── */}
+      <Section title="Category transitions">
+        <p className="mb-4 -mt-2 text-sm text-[rgba(38,37,30,0.55)]">
+          {transitions.changedCombinations.toLocaleString()} task-role combinations changed category
+          ({((transitions.changedCombinations / transitions.totalTaskRoleCombinations) * 100).toFixed(1)}% of all).
+          The net flow: tasks moving toward augmentation from both directions.
+        </p>
+        <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
+          <ul className="divide-y divide-[rgba(38,37,30,0.06)]">
+            {displayedTransitions.map((t) => {
+              const maxCount = transitions.transitions[0]?.count ?? 1;
+              const barW = Math.max((t.count / maxCount) * 100, 2);
+              const toAugmentation = t.to === "augmentation";
+
+              return (
+                <li
+                  key={`${t.from}-${t.to}`}
+                  className="flex items-center gap-4 px-5 py-3 sm:px-6"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="font-medium capitalize text-[rgba(38,37,30,0.7)]">
+                        {t.from}
+                      </span>
+                      <span className="text-[rgba(38,37,30,0.3)]">→</span>
+                      <span
+                        className="font-semibold capitalize"
+                        style={{
+                          color: toAugmentation
+                            ? AUGMENTATION_COLOR
+                            : t.to === "automation"
+                              ? AUTOMATION_COLOR
+                              : "rgba(38,37,30,0.6)",
+                        }}
+                      >
+                        {t.to}
+                      </span>
+                    </div>
+                    <div className="mt-1.5">
+                      <div
+                        className="h-1.5 rounded-full"
+                        style={{
+                          width: `${barW}%`,
+                          backgroundColor: toAugmentation
+                            ? AUGMENTATION_COLOR
+                            : t.to === "automation"
+                              ? AUTOMATION_COLOR
+                              : MANUAL_COLOR,
+                          opacity: 0.7,
+                          minWidth: "4px",
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex-shrink-0 text-right">
+                    <span className="text-sm font-semibold tabular-nums text-[#26251e]">
+                      {t.count.toLocaleString()}
+                    </span>
+                    <span className="ml-1.5 text-[10px] text-[rgba(38,37,30,0.4)]">
+                      {(t.shareOfChanges * 100).toFixed(1)}%
+                    </span>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+          {transitions.transitions.length > 6 && (
+            <div className="flex justify-center py-3">
+              <ToggleButton
+                expanded={showAllTransitions}
+                totalCount={transitions.transitions.length}
+                onToggle={() => setShowAllTransitions((v) => !v)}
+              />
+            </div>
+          )}
+        </div>
+      </Section>
+
+      {/* ── Industry Impact ── */}
+      <Section title="Industry impact (ranked by total change)">
+        <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
+          {/* Table header */}
+          <div className="hidden items-center border-b border-[rgba(38,37,30,0.08)] px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[rgba(38,37,30,0.45)] sm:flex">
+            <span className="flex-1">Industry</span>
+            <span className="w-20 text-center">Roles</span>
+            <span className="w-20 text-right">Auto &Delta;</span>
+            <span className="w-20 text-right">Aug &Delta;</span>
+            <span className="w-24 text-right">Manual &Delta;</span>
+            <span className="w-20 text-right">Net</span>
+          </div>
           <ul className="divide-y divide-[rgba(38,37,30,0.06)]">
             {displayedIndustries.map((ind) => {
               const netDelta = ind.automationDelta + ind.augmentationDelta;
@@ -193,14 +490,11 @@ export function WhatsChanged({ movers, summary }: WhatsChangedProps) {
                 maxIndustryAug > 0
                   ? Math.max((Math.abs(ind.augmentationDelta) / maxIndustryAug) * 100, 2)
                   : 0;
-              const autoBarW =
-                maxIndustryAug > 0
-                  ? Math.max((Math.abs(ind.automationDelta) / maxIndustryAug) * 100, 2)
-                  : 0;
 
               return (
-                <li key={ind.name} className="px-5 py-3.5 sm:px-6">
-                  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <li key={ind.name} className="px-5 py-3.5 sm:px-5">
+                  {/* Mobile layout */}
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 sm:hidden">
                     <div className="flex items-baseline gap-2">
                       <span className="text-sm font-medium text-[#26251e]">
                         {ind.name}
@@ -212,59 +506,64 @@ export function WhatsChanged({ movers, summary }: WhatsChangedProps) {
                     <div className="flex items-center gap-3 text-[10px] font-semibold tabular-nums">
                       {ind.automationDelta !== 0 && (
                         <span style={{ color: AUTOMATION_COLOR }}>
-                          {ind.automationDelta > 0 ? "+" : ""}
-                          {ind.automationDelta} auto
+                          {formatDelta(ind.automationDelta)} auto
                         </span>
                       )}
                       {ind.augmentationDelta !== 0 && (
                         <span style={{ color: AUGMENTATION_COLOR }}>
-                          {ind.augmentationDelta > 0 ? "+" : ""}
-                          {ind.augmentationDelta} aug
+                          {formatDelta(ind.augmentationDelta)} aug
                         </span>
                       )}
-                      {netDelta !== 0 && (
-                        <span
-                          className="rounded-full px-2 py-0.5"
-                          style={{
-                            backgroundColor:
-                              netDelta > 0
-                                ? "rgba(245,78,0,0.08)"
-                                : "rgba(38,37,30,0.06)",
-                            color:
-                              netDelta > 0
-                                ? "hsl(22deg 90% 42%)"
-                                : "rgba(38,37,30,0.55)",
-                          }}
-                        >
-                          {netDelta > 0 ? "+" : ""}
-                          {netDelta} net
+                      {ind.manualDelta !== 0 && (
+                        <span style={{ color: MANUAL_COLOR }}>
+                          {formatDelta(ind.manualDelta)} manual
                         </span>
                       )}
+                      <DeltaPill value={netDelta} label="net" />
                     </div>
                   </div>
-                  <div className="mt-2 flex items-center gap-1.5">
-                    {ind.automationDelta !== 0 && (
-                      <div
-                        className="h-1.5 rounded-full"
-                        style={{
-                          width: `${autoBarW}%`,
-                          backgroundColor: AUTOMATION_COLOR,
-                          opacity: ind.automationDelta < 0 ? 0.35 : 1,
-                          minWidth: "4px",
-                        }}
-                      />
-                    )}
-                    {ind.augmentationDelta !== 0 && (
-                      <div
-                        className="h-1.5 rounded-full"
-                        style={{
-                          width: `${augBarW}%`,
-                          backgroundColor: AUGMENTATION_COLOR,
-                          opacity: ind.augmentationDelta < 0 ? 0.35 : 1,
-                          minWidth: "4px",
-                        }}
-                      />
-                    )}
+                  {/* Desktop layout */}
+                  <div className="hidden items-center sm:flex">
+                    <div className="flex flex-1 items-baseline gap-2">
+                      <span className="text-sm font-medium text-[#26251e]">
+                        {ind.name}
+                      </span>
+                    </div>
+                    <span className="w-20 text-center text-xs tabular-nums text-[rgba(38,37,30,0.5)]">
+                      {ind.rolesChanged}/{ind.totalRoles}
+                    </span>
+                    <span
+                      className="w-20 text-right text-xs font-semibold tabular-nums"
+                      style={{ color: AUTOMATION_COLOR }}
+                    >
+                      {ind.automationDelta !== 0 ? formatDelta(ind.automationDelta) : "—"}
+                    </span>
+                    <span
+                      className="w-20 text-right text-xs font-semibold tabular-nums"
+                      style={{ color: AUGMENTATION_COLOR }}
+                    >
+                      {ind.augmentationDelta !== 0 ? formatDelta(ind.augmentationDelta) : "—"}
+                    </span>
+                    <span
+                      className="w-24 text-right text-xs font-semibold tabular-nums"
+                      style={{ color: MANUAL_COLOR }}
+                    >
+                      {ind.manualDelta !== 0 ? formatDelta(ind.manualDelta) : "—"}
+                    </span>
+                    <span className="w-20 text-right">
+                      <DeltaPill value={netDelta} label="net" />
+                    </span>
+                  </div>
+                  <div className="mt-2">
+                    <div
+                      className="h-1.5 rounded-full"
+                      style={{
+                        width: `${augBarW}%`,
+                        backgroundColor: AUGMENTATION_COLOR,
+                        opacity: ind.augmentationDelta < 0 ? 0.35 : 0.7,
+                        minWidth: "4px",
+                      }}
+                    />
                   </div>
                 </li>
               );
@@ -272,29 +571,198 @@ export function WhatsChanged({ movers, summary }: WhatsChangedProps) {
           </ul>
           {industryHasToggle && (
             <div className="flex justify-center py-3">
-              <button
-                type="button"
-                onClick={() => setShowAllIndustries((v) => !v)}
-                className="inline-flex items-center gap-2 rounded-full border border-[rgba(38,37,30,0.18)] bg-white/80 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.26em] text-[rgba(38,37,30,0.6)] transition-shadow duration-200 hover:shadow-[0_12px_26px_rgba(34,28,20,0.16)]"
-              >
-                <ChevronsUpDown className="h-3.5 w-3.5" strokeWidth={1.8} />
-                {showAllIndustries
-                  ? "Collapse"
-                  : `Show all ${industriesWithChanges.length}`}
-              </button>
+              <ToggleButton
+                expanded={showAllIndustries}
+                totalCount={industriesWithChanges.length}
+                onToggle={() => setShowAllIndustries((v) => !v)}
+              />
             </div>
           )}
         </div>
-      </div>
+      </Section>
 
-      {/* ── Role movers ── */}
-      <div className="mt-8">
-        <h3 className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[rgba(38,37,30,0.5)]">
-          Biggest role shifts
-        </h3>
-        <div className="mt-4 rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
+      {/* ── Company Impact ── */}
+      {companies.length > 0 && (
+        <Section title="Company impact (HC-weighted)">
+          <div className="mb-4 -mt-2 flex flex-wrap items-center gap-2 text-sm text-[rgba(38,37,30,0.55)]">
+            <span>
+              {companiesIncreased.length.toLocaleString()} companies ({Math.round((companiesIncreased.length / companies.length) * 100)}%) see increased AI exposure.{" "}
+            </span>
+          </div>
+
+          {/* View toggles */}
+          <div className="mb-4 flex gap-2">
+            {(
+              [
+                { key: "winners", label: `Most increased (${companiesIncreased.length})` },
+                { key: "losers", label: `Decreased (${companiesDecreased.length})` },
+                { key: "shift", label: "Biggest auto→aug shift" },
+              ] as const
+            ).map(({ key, label }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => {
+                  setCompanyView(key);
+                  setShowAllCompanies(false);
+                }}
+                className={`rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] transition-all ${
+                  companyView === key
+                    ? "border-[rgba(245,78,0,0.3)] bg-[rgba(245,78,0,0.06)] text-[hsl(22deg_90%_42%)]"
+                    : "border-[rgba(38,37,30,0.12)] bg-white/60 text-[rgba(38,37,30,0.5)] hover:border-[rgba(38,37,30,0.25)]"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
+            {/* Table header */}
+            <div className="hidden items-center border-b border-[rgba(38,37,30,0.08)] px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[rgba(38,37,30,0.45)] sm:flex">
+              <span className="w-8 text-right">#</span>
+              <span className="flex-1 pl-3">Company</span>
+              <span className="w-16 text-right">HC</span>
+              <span className="w-20 text-right">Net AI &Delta;</span>
+              <span className="w-20 text-right">Auto &Delta;</span>
+              <span className="w-20 text-right">Aug &Delta;</span>
+            </div>
+            <ul className="divide-y divide-[rgba(38,37,30,0.06)]">
+              {displayedCompanies.map((company, idx) => (
+                <li key={company.name} className="px-5 py-3 sm:px-5">
+                  {/* Mobile */}
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 sm:hidden">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-xs font-semibold tabular-nums text-[rgba(38,37,30,0.3)]">
+                        {idx + 1}
+                      </span>
+                      <span className="text-sm font-medium text-[#26251e]">
+                        {company.name}
+                      </span>
+                      <span className="text-[10px] text-[rgba(38,37,30,0.4)]">
+                        {formatHeadcount(company.headcount)}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px] font-semibold tabular-nums">
+                      <DeltaPill value={company.netAIDelta} label="net" decimals />
+                    </div>
+                  </div>
+                  {/* Desktop */}
+                  <div className="hidden items-center sm:flex">
+                    <span className="w-8 text-right text-xs font-semibold tabular-nums text-[rgba(38,37,30,0.3)]">
+                      {idx + 1}
+                    </span>
+                    <span className="flex-1 pl-3 text-sm font-medium text-[#26251e]">
+                      {company.name}
+                    </span>
+                    <span className="w-16 text-right text-xs tabular-nums text-[rgba(38,37,30,0.5)]">
+                      {formatHeadcount(company.headcount)}
+                    </span>
+                    <span className="w-20 text-right">
+                      <DeltaPill value={company.netAIDelta} label="" decimals />
+                    </span>
+                    <span
+                      className="w-20 text-right text-xs font-semibold tabular-nums"
+                      style={{ color: AUTOMATION_COLOR }}
+                    >
+                      {formatDecimal(company.automationDelta)}
+                    </span>
+                    <span
+                      className="w-20 text-right text-xs font-semibold tabular-nums"
+                      style={{ color: AUGMENTATION_COLOR }}
+                    >
+                      {formatDecimal(company.augmentationDelta)}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            {companyHasToggle && (
+              <div className="flex justify-center py-3">
+                <ToggleButton
+                  expanded={showAllCompanies}
+                  totalCount={activeCompanies.length}
+                  onToggle={() => setShowAllCompanies((v) => !v)}
+                />
+              </div>
+            )}
+          </div>
+        </Section>
+      )}
+
+      {/* ── Country Impact ── */}
+      {countriesWithDeltas.length > 0 && (
+        <Section title="Country impact (HC-weighted)">
+          <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
+            {/* Table header */}
+            <div className="hidden items-center border-b border-[rgba(38,37,30,0.08)] px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[rgba(38,37,30,0.45)] sm:flex">
+              <span className="flex-1">Country</span>
+              <span className="w-14 text-right">Cos</span>
+              <span className="w-16 text-right">HC</span>
+              <span className="w-20 text-right">Net AI &Delta;</span>
+              <span className="w-20 text-right">Auto &Delta;</span>
+              <span className="w-20 text-right">Aug &Delta;</span>
+            </div>
+            <ul className="divide-y divide-[rgba(38,37,30,0.06)]">
+              {displayedCountries.map((c) => (
+                <li key={c.country} className="px-5 py-3">
+                  {/* Mobile */}
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 sm:hidden">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-sm font-medium text-[#26251e]">{c.country}</span>
+                      <span className="text-[10px] text-[rgba(38,37,30,0.4)]">
+                        {c.runCount} cos
+                        {c.averageHeadcount ? ` · ${formatHeadcount(c.averageHeadcount * c.runCount)}` : ""}
+                      </span>
+                    </div>
+                    <DeltaPill value={c.netExposureDelta ?? 0} label="net" decimals />
+                  </div>
+                  {/* Desktop */}
+                  <div className="hidden items-center sm:flex">
+                    <span className="flex-1 text-sm font-medium text-[#26251e]">{c.country}</span>
+                    <span className="w-14 text-right text-xs tabular-nums text-[rgba(38,37,30,0.5)]">
+                      {c.runCount}
+                    </span>
+                    <span className="w-16 text-right text-xs tabular-nums text-[rgba(38,37,30,0.5)]">
+                      {c.averageHeadcount ? formatHeadcount(c.averageHeadcount * c.runCount) : "—"}
+                    </span>
+                    <span className="w-20 text-right">
+                      <DeltaPill value={c.netExposureDelta ?? 0} label="" decimals />
+                    </span>
+                    <span
+                      className="w-20 text-right text-xs font-semibold tabular-nums"
+                      style={{ color: AUTOMATION_COLOR }}
+                    >
+                      {c.automationDelta != null ? formatDecimal(c.automationDelta) : "—"}
+                    </span>
+                    <span
+                      className="w-20 text-right text-xs font-semibold tabular-nums"
+                      style={{ color: AUGMENTATION_COLOR }}
+                    >
+                      {c.augmentationDelta != null ? formatDecimal(c.augmentationDelta) : "—"}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            {countryHasToggle && (
+              <div className="flex justify-center py-3">
+                <ToggleButton
+                  expanded={showAllCountries}
+                  totalCount={countriesWithDeltas.length}
+                  onToggle={() => setShowAllCountries((v) => !v)}
+                />
+              </div>
+            )}
+          </div>
+        </Section>
+      )}
+
+      {/* ── Role-Level Biggest Movers ── */}
+      <Section title="Role-level biggest movers">
+        <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
           <ul className="divide-y divide-[rgba(38,37,30,0.06)]">
-            {movers.map((mover, index) => {
+            {displayedMovers.map((mover, index) => {
               const aiTasksBefore =
                 mover.automationTasksBefore + mover.augmentationTasksBefore;
               const aiTasksAfter =
@@ -304,6 +772,9 @@ export function WhatsChanged({ movers, summary }: WhatsChangedProps) {
                 mover.taskCount > 0
                   ? Math.round((aiTasksAfter / mover.taskCount) * 100)
                   : 0;
+
+              // Build a story string
+              const story = buildMoverStory(mover);
 
               return (
                 <li key={mover.code} className="px-5 py-4 sm:px-6">
@@ -335,6 +806,26 @@ export function WhatsChanged({ movers, summary }: WhatsChangedProps) {
                         </div>
                       </div>
 
+                      {/* Before/after breakdown */}
+                      <div className="mt-1.5 flex flex-wrap gap-3 text-[10px] font-semibold tabular-nums">
+                        <span style={{ color: AUTOMATION_COLOR }}>
+                          Auto: {mover.automationTasksBefore} → {mover.automationTasksAfter}
+                          {mover.automationDelta !== 0 && (
+                            <span className="ml-1 opacity-60">
+                              ({mover.automationDelta > 0 ? "+" : ""}{mover.automationDelta})
+                            </span>
+                          )}
+                        </span>
+                        <span style={{ color: AUGMENTATION_COLOR }}>
+                          Aug: {mover.augmentationTasksBefore} → {mover.augmentationTasksAfter}
+                          {mover.augmentationDelta !== 0 && (
+                            <span className="ml-1 opacity-60">
+                              ({mover.augmentationDelta > 0 ? "+" : ""}{mover.augmentationDelta})
+                            </span>
+                          )}
+                        </span>
+                      </div>
+
                       <div className="mt-2.5 flex items-center gap-3">
                         <div className="min-w-0 flex-1">
                           <TaskBar
@@ -363,14 +854,217 @@ export function WhatsChanged({ movers, summary }: WhatsChangedProps) {
                           </span>
                         )}
                       </div>
+
+                      {story && (
+                        <p className="mt-2 text-[11px] italic leading-relaxed text-[rgba(38,37,30,0.45)]">
+                          {story}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </li>
               );
             })}
           </ul>
+          {moverHasToggle && (
+            <div className="flex justify-center py-3">
+              <ToggleButton
+                expanded={showAllMovers}
+                totalCount={movers.length}
+                onToggle={() => setShowAllMovers((v) => !v)}
+              />
+            </div>
+          )}
         </div>
-      </div>
+      </Section>
+
+      {/* ── Task-Level Patterns ── */}
+      {transitions.topReclassifiedTasks.length > 0 && (
+        <Section title="Most commonly reclassified tasks">
+          <p className="mb-4 -mt-2 text-sm text-[rgba(38,37,30,0.55)]">
+            Tasks that changed category across the most roles. These are collaborative,
+            judgment-heavy tasks where AI can now assist but can&apos;t replace the human.
+          </p>
+          <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
+            <ul className="divide-y divide-[rgba(38,37,30,0.06)]">
+              {displayedReclassified.map((task) => {
+                const maxRoles = transitions.topReclassifiedTasks[0]?.roleCount ?? 1;
+                const barW = Math.max((task.roleCount / maxRoles) * 100, 3);
+
+                return (
+                  <li key={task.taskName} className="px-5 py-3.5 sm:px-6">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                      <span className="text-sm text-[#26251e]">
+                        {task.taskName}
+                      </span>
+                      <div className="flex items-center gap-2 text-[10px] tabular-nums">
+                        <span className="font-medium text-[rgba(38,37,30,0.5)]">
+                          {task.roleCount} role{task.roleCount !== 1 ? "s" : ""}
+                        </span>
+                        <span className="rounded-full bg-[rgba(38,37,30,0.05)] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-[rgba(38,37,30,0.45)]">
+                          {task.dominantTransition}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-1.5">
+                      <div
+                        className="h-1 rounded-full"
+                        style={{
+                          width: `${barW}%`,
+                          backgroundColor: task.dominantTransition.includes("augmentation")
+                            ? AUGMENTATION_COLOR
+                            : task.dominantTransition.includes("automation")
+                              ? AUTOMATION_COLOR
+                              : MANUAL_COLOR,
+                          opacity: 0.5,
+                          minWidth: "4px",
+                        }}
+                      />
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+            {transitions.topReclassifiedTasks.length > 5 && (
+              <div className="flex justify-center py-3">
+                <ToggleButton
+                  expanded={showAllTasks}
+                  totalCount={transitions.topReclassifiedTasks.length}
+                  onToggle={() => setShowAllTasks((v) => !v)}
+                />
+              </div>
+            )}
+          </div>
+        </Section>
+      )}
+
+      {/* ── Summary Narrative ── */}
+      <Section title="Summary">
+        <div className="rounded-2xl border border-[rgba(38,37,30,0.08)] bg-white/60 px-6 py-5">
+          <ol className="list-inside list-decimal space-y-3 text-sm leading-relaxed text-[rgba(38,37,30,0.7)]">
+            <li>
+              <strong className="text-[#26251e]">The augmentation story is 4x larger than automation.</strong>{" "}
+              Net augmentation tasks gained ({formatDelta(augDelta)}) dwarf net automation tasks lost ({formatDelta(autoDelta)}).
+              AI is becoming a collaborator, not a replacer.
+            </li>
+            <li>
+              <strong className="text-[#26251e]">Knowledge work saw the biggest shift.</strong>{" "}
+              Computer &amp; Math, Business &amp; Finance, Education — these sectors saw tasks
+              reclassified from &ldquo;AI can do this alone&rdquo; to &ldquo;AI works best with a human.&rdquo;
+            </li>
+            <li>
+              <strong className="text-[#26251e]">Physical/manual work barely changed.</strong>{" "}
+              Production, Protective Service, Construction — minimal movement. AI&apos;s impact on physical
+              tasks hasn&apos;t meaningfully evolved.
+            </li>
+            {analytics && companies.length > 0 && (
+              <li>
+                <strong className="text-[#26251e]">
+                  {companiesIncreased.length} of {companies.length} companies ({Math.round((companiesIncreased.length / companies.length) * 100)}%) see increased AI exposure.
+                </strong>{" "}
+                But the shift is toward augmentation, not job loss.
+              </li>
+            )}
+            {manualToAugCount > 0 && autoToAugCount > 0 && (
+              <li>
+                <strong className="text-[#26251e]">
+                  {manualToAugCount.toLocaleString()} tasks moved manual → augmentation,{" "}
+                  {autoToAugCount.toLocaleString()} moved automation → augmentation.
+                </strong>{" "}
+                The net flow is universal: tasks moving toward human-AI collaboration from both directions.
+              </li>
+            )}
+          </ol>
+        </div>
+      </Section>
     </section>
   );
+}
+
+// ── Helpers ─────────────────────────────────────────────────
+
+function DeltaPill({
+  value,
+  label,
+  decimals,
+}: {
+  value: number;
+  label?: string;
+  decimals?: boolean;
+}) {
+  if (value === 0) return null;
+  const formatted = decimals ? formatDecimal(value) : formatDelta(value);
+  return (
+    <span
+      className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold tabular-nums"
+      style={{
+        backgroundColor:
+          value > 0 ? "rgba(245,78,0,0.08)" : "rgba(38,37,30,0.06)",
+        color:
+          value > 0 ? "hsl(22deg 90% 42%)" : "rgba(38,37,30,0.55)",
+      }}
+    >
+      {formatted}
+      {label && <span className="opacity-70">{label}</span>}
+    </span>
+  );
+}
+
+function ToggleButton({
+  expanded,
+  totalCount,
+  onToggle,
+}: {
+  expanded: boolean;
+  totalCount: number;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className="inline-flex items-center gap-2 rounded-full border border-[rgba(38,37,30,0.18)] bg-white/80 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.26em] text-[rgba(38,37,30,0.6)] transition-shadow duration-200 hover:shadow-[0_12px_26px_rgba(34,28,20,0.16)]"
+    >
+      <ChevronsUpDown className="h-3.5 w-3.5" strokeWidth={1.8} />
+      {expanded ? "Collapse" : `Show all ${totalCount}`}
+    </button>
+  );
+}
+
+function buildMoverStory(mover: TopMover): string | null {
+  const autoDelta = mover.automationDelta;
+  const augDelta = mover.augmentationDelta;
+  const manualDelta = mover.taskCount - (mover.automationTasksAfter + mover.augmentationTasksAfter) -
+    (mover.taskCount - (mover.automationTasksBefore + mover.augmentationTasksBefore));
+
+  // Pure auto→aug flip
+  if (autoDelta < 0 && augDelta > 0 && Math.abs(manualDelta) <= 1 && Math.abs(autoDelta) === augDelta) {
+    return "Pure automation → augmentation flip";
+  }
+  // Strong auto loss
+  if (autoDelta < -3) {
+    if (augDelta > 0 && manualDelta > 0) {
+      return "Biggest single automation loss — tasks split to augmentation and manual";
+    }
+    if (augDelta > 0) {
+      return "Strong automation → augmentation shift";
+    }
+  }
+  // Gaining both
+  if (autoDelta > 0 && augDelta > 0) {
+    return "AI now helps AND does more tasks";
+  }
+  // Auto loss with manual reversion
+  if (autoDelta < 0 && manualDelta > 0 && augDelta >= 0) {
+    return "Some automation tasks reverted to manual";
+  }
+  // Strong aug gain
+  if (augDelta > 3) {
+    return "Strong augmentation gain";
+  }
+  // Auto→aug with slight manual
+  if (autoDelta < 0 && augDelta > 0) {
+    return "Automation → augmentation shift";
+  }
+  return null;
 }

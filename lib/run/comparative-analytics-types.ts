@@ -84,6 +84,20 @@ export type TopTaskMetric = {
   augmentationDelta?: number | null;
 };
 
+export type CompanyMetric = {
+  name: string;
+  slug: string | null;
+  hqCountry: string | null;
+  industry: string | null;
+  headcount: number;
+  /** HC-weighted average net AI exposure delta (auto+aug tasks per role), v1→v4 */
+  netAIDelta: number;
+  /** HC-weighted average automation tasks delta per role */
+  automationDelta: number;
+  /** HC-weighted average augmentation tasks delta per role */
+  augmentationDelta: number;
+};
+
 export type ComparativeAnalyticsPayload = {
   generatedAt: string;
   coverage: {
@@ -100,6 +114,7 @@ export type ComparativeAnalyticsPayload = {
     byIndustry: DistributionEntry[];
   };
   topTasks: TopTaskMetric[];
+  companies?: CompanyMetric[];
 };
 
 export const comparativeAnalyticsSchema = z.object({
@@ -196,6 +211,18 @@ export const comparativeAnalyticsSchema = z.object({
       augmentationDelta: z.number().nullable().optional(),
     })
   ),
+  companies: z.array(
+    z.object({
+      name: z.string(),
+      slug: z.string().nullable(),
+      hqCountry: z.string().nullable(),
+      industry: z.string().nullable(),
+      headcount: z.number(),
+      netAIDelta: z.number(),
+      automationDelta: z.number(),
+      augmentationDelta: z.number(),
+    })
+  ).optional(),
 });
 
 export type ComparativeAnalytics = z.infer<typeof comparativeAnalyticsSchema>;

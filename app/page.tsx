@@ -14,7 +14,7 @@ import { ComparativeInsights } from "@/components/run/comparative-insights";
 import { loadComparativeInsights } from "@/lib/run/load-comparative-insights";
 import { FloatingOnboardingButton } from "@/components/onboarding/FloatingOnboardingButton";
 import { WhatsChanged } from "@/components/run/whats-changed";
-import { loadOnetCatalog, getTopMovers, getCatalogSummary } from "@/lib/onet/catalog";
+import { loadOnetCatalog, getTopMovers, getCatalogSummary, getCatalogTransitions } from "@/lib/onet/catalog";
 import { DataTimeline, type TimelinePoint } from "@/components/data-timeline";
 
 const LANDING_FOOTER_LINKS = [
@@ -25,8 +25,8 @@ const LANDING_FOOTER_LINKS = [
 ];
 
 const TIMELINE_POINTS: TimelinePoint[] = [
-  { year: 2025, label: "2025", available: true },
-  { year: 2026, label: "2026", available: false },
+  { year: 2025.0, label: "Jan 2025", available: true },
+  { year: 2025.9, label: "Nov 2025", available: true },
 ];
 
 // ISR: Revalidate every 60 seconds (reduces server load by 50-80%)
@@ -83,11 +83,20 @@ async function ComparativeInsightsAsync() {
   return <ComparativeInsights analytics={data} updatedAt={updatedAt} />;
 }
 
-function WhatsChangedSync() {
+async function WhatsChangedAsync() {
   const catalog = loadOnetCatalog();
-  const movers = getTopMovers(catalog, 6);
+  const movers = getTopMovers(catalog, 20);
   const summary = getCatalogSummary(catalog);
-  return <WhatsChanged movers={movers} summary={summary} />;
+  const transitions = getCatalogTransitions();
+  const { data: analytics } = await loadComparativeInsights();
+  return (
+    <WhatsChanged
+      movers={movers}
+      summary={summary}
+      transitions={transitions}
+      analytics={analytics}
+    />
+  );
 }
 
 // Loading skeletons
@@ -152,7 +161,7 @@ export default function Page() {
         />
       </div>
 
-      <main className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-col gap-14 px-6 pb-32 pt-8 lg:pt-28 text-[#26251e]">
+      <main className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-col gap-14 px-6 pb-40 pt-8 lg:pt-28 text-[#26251e]">
         <Suspense fallback={<Skeleton className="h-64 w-full rounded-xl bg-[rgba(38,37,30,0.08)]" />}>
           <HeroAsync />
         </Suspense>
@@ -163,7 +172,9 @@ export default function Page() {
         </div>
 
         <div id="whats-changed">
-          <WhatsChangedSync />
+          <Suspense fallback={<ComparativeInsightsSkeleton />}>
+            <WhatsChangedAsync />
+          </Suspense>
         </div>
 
         <Suspense fallback={<ComparativeInsightsSkeleton />}>
@@ -177,14 +188,12 @@ export default function Page() {
         </div>
       </main>
 
-      <div className="relative z-10 mx-auto w-full max-w-[1200px]">
-        <DataTimeline
-          points={TIMELINE_POINTS}
-          activeYear={2025}
-        />
-      </div>
-
       <SiteFooter navLinks={LANDING_FOOTER_LINKS} />
+
+      <DataTimeline
+        points={TIMELINE_POINTS}
+        activeYear={2025.9}
+      />
       <FloatingOnboardingButton />
     </div>
   );
