@@ -116,7 +116,6 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
   const [showAllMovers, setShowAllMovers] = useState(false);
   const [companyView, setCompanyView] = useState<"winners" | "losers" | "shift">("winners");
   const [showAllCompanies, setShowAllCompanies] = useState(false);
-  const [showAllTransitions, setShowAllTransitions] = useState(false);
   const [showAllTasks, setShowAllTasks] = useState(false);
 
   if (movers.length === 0) return null;
@@ -170,11 +169,6 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
   const displayedCompanies = showAllCompanies
     ? activeCompanies
     : activeCompanies.slice(0, COMPANY_PREVIEW);
-
-  // Transition data
-  const displayedTransitions = showAllTransitions
-    ? transitions.transitions
-    : transitions.transitions.slice(0, 6);
 
   // Top reclassified tasks
   const displayedReclassified = showAllTasks
@@ -390,84 +384,6 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
               </tr>
             </tbody>
           </table>
-        </div>
-      </Section>
-
-      {/* ── Category Transition Flows ── */}
-      <Section title="Category transitions">
-        <p className="mb-4 -mt-2 text-sm text-[rgba(38,37,30,0.55)]">
-          {transitions.changedCombinations.toLocaleString()} task-role combinations changed category
-          ({((transitions.changedCombinations / transitions.totalTaskRoleCombinations) * 100).toFixed(1)}% of all).
-          The net flow: tasks moving toward augmentation from both directions.
-        </p>
-        <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
-          <ul className="divide-y divide-[rgba(38,37,30,0.06)]">
-            {displayedTransitions.map((t) => {
-              const maxCount = transitions.transitions[0]?.count ?? 1;
-              const barW = Math.max((t.count / maxCount) * 100, 2);
-              const toAugmentation = t.to === "augmentation";
-
-              return (
-                <li
-                  key={`${t.from}-${t.to}`}
-                  className="flex items-center gap-4 px-5 py-3 sm:px-6"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="font-medium capitalize text-[rgba(38,37,30,0.7)]">
-                        {t.from}
-                      </span>
-                      <span className="text-[rgba(38,37,30,0.3)]">→</span>
-                      <span
-                        className="font-semibold capitalize"
-                        style={{
-                          color: toAugmentation
-                            ? AUGMENTATION_COLOR
-                            : t.to === "automation"
-                              ? AUTOMATION_COLOR
-                              : "rgba(38,37,30,0.6)",
-                        }}
-                      >
-                        {t.to}
-                      </span>
-                    </div>
-                    <div className="mt-1.5">
-                      <div
-                        className="h-1.5 rounded-full"
-                        style={{
-                          width: `${barW}%`,
-                          backgroundColor: toAugmentation
-                            ? AUGMENTATION_COLOR
-                            : t.to === "automation"
-                              ? AUTOMATION_COLOR
-                              : MANUAL_COLOR,
-                          opacity: 0.7,
-                          minWidth: "4px",
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex-shrink-0 text-right">
-                    <span className="text-sm font-semibold tabular-nums text-[#26251e]">
-                      {t.count.toLocaleString()}
-                    </span>
-                    <span className="ml-1.5 text-[10px] text-[rgba(38,37,30,0.4)]">
-                      {(t.shareOfChanges * 100).toFixed(1)}%
-                    </span>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-          {transitions.transitions.length > 6 && (
-            <div className="flex justify-center py-3">
-              <ToggleButton
-                expanded={showAllTransitions}
-                totalCount={transitions.transitions.length}
-                onToggle={() => setShowAllTransitions((v) => !v)}
-              />
-            </div>
-          )}
         </div>
       </Section>
 

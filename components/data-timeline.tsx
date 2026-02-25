@@ -24,10 +24,6 @@ export function DataTimeline({
   return (
     <div className="fixed bottom-5 left-1/2 z-40 -translate-x-1/2">
       <div className="flex items-center gap-4 rounded-full border border-[rgba(38,37,30,0.12)] bg-[rgba(255,255,252,0.88)] px-5 py-3 shadow-[0_8px_32px_rgba(31,29,18,0.14),0_0_0_1px_rgba(255,255,255,0.6)_inset] backdrop-blur-xl">
-        <p className="flex-shrink-0 text-[10px] font-semibold uppercase tracking-[0.28em] text-[rgba(38,37,30,0.4)]">
-          Data vintage
-        </p>
-
         {/* Track */}
         <div className="relative flex items-center" style={{ width: "160px", height: "36px" }}>
           {/* Background line */}
