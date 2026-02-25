@@ -276,8 +276,8 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
   const [companyView, setCompanyView] = useState<"winners" | "losers" | "shift">("winners");
   const [showAllCompanies, setShowAllCompanies] = useState(false);
   const [showAllTasks, setShowAllTasks] = useState(false);
-  const [highlightedCountry, setHighlightedCountry] = useState<string | null>(null);
-  const [highlightedIndustry, setHighlightedIndustry] = useState<string | null>(null);
+  const [highlightedCountry, setHighlightedCountry] = useState<string>("__initial__");
+  const [highlightedIndustry, setHighlightedIndustry] = useState<string>("__initial__");
 
   if (movers.length === 0) return null;
 
@@ -329,7 +329,8 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
       const v1 = v4 - (i.netExposureDelta ?? 0);
       return { key: i.industry, label: i.industry, v1, v4 };
     })
-    .filter((l) => Math.abs(l.v4 - l.v1) > 0.0001);
+    .filter((l) => Math.abs(l.v4 - l.v1) > 0.0001)
+    .sort((a, b) => (b.v4 - b.v1) - (a.v4 - a.v1));
 
   const countryTrajectory: SlopeLine[] = countriesWithDeltas
     .filter((c) => c.averageAutomation != null && c.averageAugmentation != null)
@@ -337,7 +338,18 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
       const v4 = (c.averageAutomation ?? 0) + (c.averageAugmentation ?? 0);
       const v1 = v4 - (c.netExposureDelta ?? 0);
       return { key: c.country, label: c.country, v1, v4 };
-    });
+    })
+    .sort((a, b) => (b.v4 - b.v1) - (a.v4 - a.v1));
+
+  // Resolve initial defaults (Legal for industry, top country by delta)
+  const effectiveIndustry: string | null =
+    highlightedIndustry === "__initial__"
+      ? (industryTrajectory.find((l) => /legal/i.test(l.label))?.key ?? industryTrajectory[0]?.key ?? null)
+      : (highlightedIndustry || null);
+  const effectiveCountry: string | null =
+    highlightedCountry === "__initial__"
+      ? (countryTrajectory[0]?.key ?? null)
+      : (highlightedCountry || null);
 
   return (
     <section
@@ -543,8 +555,8 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
           </p>
           <SlopeChart
             lines={industryTrajectory}
-            highlightedKey={highlightedIndustry}
-            onHighlight={setHighlightedIndustry}
+            highlightedKey={effectiveIndustry}
+            onHighlight={(k) => setHighlightedIndustry(k ?? "")}
             yLabel="Avg AI exposure"
           />
         </Section>
@@ -763,8 +775,8 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
           </p>
           <SlopeChart
             lines={countryTrajectory}
-            highlightedKey={highlightedCountry}
-            onHighlight={setHighlightedCountry}
+            highlightedKey={effectiveCountry}
+            onHighlight={(k) => setHighlightedCountry(k ?? "")}
             yLabel="Avg AI exposure"
           />
         </Section>
