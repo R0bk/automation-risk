@@ -344,145 +344,155 @@ function CompanyScatter({
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] p-4 shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
-      <svg
-        viewBox={`0 0 ${W} ${H}`}
-        className="w-full"
-        preserveAspectRatio="xMidYMid meet"
-        onMouseLeave={() => setHoverKey(null)}
-      >
-        {/* Grid */}
-        {yTickArr.map((t, i) => (
-          <g key={`y${i}`}>
-            <line x1={padL} y1={toY(t)} x2={padL + plotW} y2={toY(t)} stroke="rgba(38,37,30,0.05)" strokeWidth={1} />
-            <text x={padL - 6} y={toY(t) + 3.5} textAnchor="end" fill="rgba(38,37,30,0.3)" fontSize={9} fontFamily="system-ui">
-              {t.toFixed(2)}
-            </text>
-          </g>
-        ))}
-        {xTickArr.map((t, i) => (
-          <g key={`x${i}`}>
-            <line x1={toX(t)} y1={padT} x2={toX(t)} y2={padT + plotH} stroke="rgba(38,37,30,0.05)" strokeWidth={1} />
-            <text x={toX(t)} y={H - 10} textAnchor="middle" fill="rgba(38,37,30,0.3)" fontSize={9} fontFamily="system-ui">
-              {t.toFixed(2)}
-            </text>
-          </g>
-        ))}
-
-        {/* Zero lines */}
-        {xLow <= 0 && xHigh >= 0 && (
-          <line x1={toX(0)} y1={padT} x2={toX(0)} y2={padT + plotH} stroke="rgba(38,37,30,0.15)" strokeWidth={1} strokeDasharray="4 3" />
-        )}
-        {yLow <= 0 && yHigh >= 0 && (
-          <line x1={padL} y1={toY(0)} x2={padL + plotW} y2={toY(0)} stroke="rgba(38,37,30,0.15)" strokeWidth={1} strokeDasharray="4 3" />
-        )}
-
-        {/* Quadrant labels */}
-        {xLow <= 0 && xHigh >= 0 && yLow <= 0 && yHigh >= 0 && (
-          <>
-            <text x={toX(xHigh * 0.6)} y={toY(yHigh * 0.7)} textAnchor="middle" fill={`rgba(38,37,30,${qLabelOpacity})`} fontSize={8} fontFamily="system-ui">
-              +Auto +Aug
-            </text>
-            <text x={toX(xLow * 0.6)} y={toY(yHigh * 0.7)} textAnchor="middle" fill={`rgba(38,37,30,${qLabelOpacity})`} fontSize={8} fontFamily="system-ui">
-              −Auto +Aug
-            </text>
-            <text x={toX(xHigh * 0.6)} y={toY(yLow * 0.6)} textAnchor="middle" fill={`rgba(38,37,30,${qLabelOpacity})`} fontSize={8} fontFamily="system-ui">
-              +Auto −Aug
-            </text>
-            <text x={toX(xLow * 0.6)} y={toY(yLow * 0.6)} textAnchor="middle" fill={`rgba(38,37,30,${qLabelOpacity})`} fontSize={8} fontFamily="system-ui">
-              −Auto −Aug
-            </text>
-          </>
-        )}
-
-        {/* Axis labels */}
-        <text x={padL + plotW / 2} y={H - 1} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui">
-          Automation \u0394
-        </text>
-        <text x={10} y={padT + plotH / 2} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui" transform={`rotate(-90, 10, ${padT + plotH / 2})`}>
-          Augmentation \u0394
-        </text>
-
-        {/* Points */}
-        {points.map((p) => {
-          const isHi = p.key === activeKey;
-          const hasHi = activeKey != null;
-          return (
-            <g
-              key={p.key}
-              className="cursor-pointer"
-              onClick={() => onHighlight(highlightedKey === p.key ? null : p.key)}
-              onMouseEnter={() => setHoverKey(p.key)}
-              onMouseLeave={() => setHoverKey(null)}
-            >
-              {/* Invisible hit area */}
-              <circle cx={toX(p.x)} cy={toY(p.y)} r={Math.max(p.size + 4, 8)} fill="transparent" />
-              <circle
-                cx={toX(p.x)}
-                cy={toY(p.y)}
-                r={isHi ? 7 : Math.max(p.size, 3)}
-                fill={isHi ? AUGMENTATION_COLOR : hasHi ? "rgba(38,37,30,0.08)" : "rgba(245,78,0,0.25)"}
-                stroke={isHi ? "white" : "none"}
-                strokeWidth={isHi ? 2 : 0}
-                opacity={hasHi && !isHi ? 0.4 : 1}
-                style={{ transition: "r 150ms, fill 150ms, opacity 150ms" }}
-              />
+    <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] p-4 shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
+      <div className="relative" onMouseLeave={() => setHoverKey(null)}>
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          className="w-full"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          {/* Grid */}
+          {yTickArr.map((t, i) => (
+            <g key={`y${i}`}>
+              <line x1={padL} y1={toY(t)} x2={padL + plotW} y2={toY(t)} stroke="rgba(38,37,30,0.05)" strokeWidth={1} />
+              <text x={padL - 6} y={toY(t) + 3.5} textAnchor="end" fill="rgba(38,37,30,0.3)" fontSize={9} fontFamily="system-ui">
+                {t.toFixed(2)}
+              </text>
             </g>
-          );
-        })}
+          ))}
+          {xTickArr.map((t, i) => (
+            <g key={`x${i}`}>
+              <line x1={toX(t)} y1={padT} x2={toX(t)} y2={padT + plotH} stroke="rgba(38,37,30,0.05)" strokeWidth={1} />
+              <text x={toX(t)} y={H - 10} textAnchor="middle" fill="rgba(38,37,30,0.3)" fontSize={9} fontFamily="system-ui">
+                {t.toFixed(2)}
+              </text>
+            </g>
+          ))}
 
-        {/* Highlighted: crosshair lines + label */}
-        {hi && (
-          <g pointerEvents="none">
-            <line x1={toX(hi.x)} y1={padT} x2={toX(hi.x)} y2={padT + plotH} stroke={AUGMENTATION_COLOR} strokeWidth={0.5} strokeDasharray="3 3" opacity={0.4} />
-            <line x1={padL} y1={toY(hi.y)} x2={padL + plotW} y2={toY(hi.y)} stroke={AUGMENTATION_COLOR} strokeWidth={0.5} strokeDasharray="3 3" opacity={0.4} />
-          </g>
-        )}
-      </svg>
+          {/* Zero lines */}
+          {xLow <= 0 && xHigh >= 0 && (
+            <line x1={toX(0)} y1={padT} x2={toX(0)} y2={padT + plotH} stroke="rgba(38,37,30,0.15)" strokeWidth={1} strokeDasharray="4 3" />
+          )}
+          {yLow <= 0 && yHigh >= 0 && (
+            <line x1={padL} y1={toY(0)} x2={padL + plotW} y2={toY(0)} stroke="rgba(38,37,30,0.15)" strokeWidth={1} strokeDasharray="4 3" />
+          )}
 
-      {/* Tooltip card — positioned below chart */}
-      {hi && (() => {
-        const insight = classifyCompany(hi);
-        return (
-          <div className="mt-3 flex flex-wrap items-start gap-4 rounded-xl border border-[rgba(38,37,30,0.08)] bg-white/80 px-5 py-4">
-            <div className="min-w-0 flex-1">
+          {/* Quadrant labels */}
+          {xLow <= 0 && xHigh >= 0 && yLow <= 0 && yHigh >= 0 && (
+            <>
+              <text x={toX(xHigh * 0.6)} y={toY(yHigh * 0.7)} textAnchor="middle" fill={`rgba(38,37,30,${qLabelOpacity})`} fontSize={8} fontFamily="system-ui">
+                +Auto +Aug
+              </text>
+              <text x={toX(xLow * 0.6)} y={toY(yHigh * 0.7)} textAnchor="middle" fill={`rgba(38,37,30,${qLabelOpacity})`} fontSize={8} fontFamily="system-ui">
+                −Auto +Aug
+              </text>
+              <text x={toX(xHigh * 0.6)} y={toY(yLow * 0.6)} textAnchor="middle" fill={`rgba(38,37,30,${qLabelOpacity})`} fontSize={8} fontFamily="system-ui">
+                +Auto −Aug
+              </text>
+              <text x={toX(xLow * 0.6)} y={toY(yLow * 0.6)} textAnchor="middle" fill={`rgba(38,37,30,${qLabelOpacity})`} fontSize={8} fontFamily="system-ui">
+                −Auto −Aug
+              </text>
+            </>
+          )}
+
+          {/* Axis labels */}
+          <text x={padL + plotW / 2} y={H - 1} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui">
+            Automation \u0394
+          </text>
+          <text x={10} y={padT + plotH / 2} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui" transform={`rotate(-90, 10, ${padT + plotH / 2})`}>
+            Augmentation \u0394
+          </text>
+
+          {/* Points */}
+          {points.map((p) => {
+            const isHi = p.key === activeKey;
+            const hasHi = activeKey != null;
+            return (
+              <g
+                key={p.key}
+                className="cursor-pointer"
+                onClick={() => onHighlight(highlightedKey === p.key ? null : p.key)}
+                onMouseEnter={() => setHoverKey(p.key)}
+                onMouseLeave={() => setHoverKey(null)}
+              >
+                {/* Invisible hit area */}
+                <circle cx={toX(p.x)} cy={toY(p.y)} r={Math.max(p.size + 4, 8)} fill="transparent" />
+                <circle
+                  cx={toX(p.x)}
+                  cy={toY(p.y)}
+                  r={isHi ? 7 : Math.max(p.size, 3)}
+                  fill={isHi ? AUGMENTATION_COLOR : hasHi ? "rgba(38,37,30,0.08)" : "rgba(245,78,0,0.25)"}
+                  stroke={isHi ? "white" : "none"}
+                  strokeWidth={isHi ? 2 : 0}
+                  opacity={hasHi && !isHi ? 0.4 : 1}
+                  style={{ transition: "r 150ms, fill 150ms, opacity 150ms" }}
+                />
+              </g>
+            );
+          })}
+
+          {/* Highlighted: crosshair lines */}
+          {hi && (
+            <g pointerEvents="none">
+              <line x1={toX(hi.x)} y1={padT} x2={toX(hi.x)} y2={padT + plotH} stroke={AUGMENTATION_COLOR} strokeWidth={0.5} strokeDasharray="3 3" opacity={0.4} />
+              <line x1={padL} y1={toY(hi.y)} x2={padL + plotW} y2={toY(hi.y)} stroke={AUGMENTATION_COLOR} strokeWidth={0.5} strokeDasharray="3 3" opacity={0.4} />
+            </g>
+          )}
+        </svg>
+
+        {/* Floating tooltip near the hovered point */}
+        {hi && (() => {
+          const insight = classifyCompany(hi);
+          const xPct = (toX(hi.x) / W) * 100;
+          const yPct = (toY(hi.y) / H) * 100;
+          const flipX = xPct > 55;
+          const flipY = yPct > 50;
+          return (
+            <div
+              className="pointer-events-none absolute z-20 w-64 rounded-xl border border-[rgba(38,37,30,0.12)] bg-white/95 px-4 py-3 shadow-[0_12px_32px_rgba(34,28,20,0.18)] backdrop-blur-sm"
+              style={{
+                left: `${xPct}%`,
+                top: `${yPct}%`,
+                transform: `translate(${flipX ? "calc(-100% - 14px)" : "14px"}, ${flipY ? "calc(-100% - 14px)" : "14px"})`,
+              }}
+            >
               <div className="flex items-baseline gap-2">
                 <span className="text-sm font-semibold text-[#26251e]">{hi.label}</span>
                 {hi.industry && (
-                  <span className="text-[10px] text-[rgba(38,37,30,0.4)]">{hi.industry}</span>
-                )}
-                {hi.hqCountry && (
-                  <span className="text-[10px] text-[rgba(38,37,30,0.4)]">{hi.hqCountry}</span>
+                  <span className="text-[9px] text-[rgba(38,37,30,0.4)]">{hi.industry}</span>
                 )}
               </div>
-              <p className="mt-1 text-xs text-[rgba(38,37,30,0.5)]">
+              {hi.hqCountry && (
+                <p className="mt-0.5 text-[9px] text-[rgba(38,37,30,0.35)]">{hi.hqCountry}</p>
+              )}
+              <p className="mt-1.5 text-[10px] text-[rgba(38,37,30,0.5)]">
                 <span className="font-semibold" style={{ color: AUGMENTATION_COLOR }}>{insight.quadrant}</span>
                 {" — "}{insight.desc}
               </p>
+              <div className="mt-2 flex gap-3">
+                <div>
+                  <p className="text-[8px] font-semibold uppercase tracking-[0.12em] text-[rgba(38,37,30,0.3)]">HC</p>
+                  <p className="text-xs font-semibold tabular-nums text-[#26251e]">{formatHeadcount(hi.headcount)}</p>
+                </div>
+                <div>
+                  <p className="text-[8px] font-semibold uppercase tracking-[0.12em] text-[rgba(38,37,30,0.3)]">Net Δ</p>
+                  <p className="text-xs font-semibold tabular-nums" style={{ color: hi.netAIDelta > 0 ? "hsl(22deg 90% 42%)" : "rgba(38,37,30,0.55)" }}>
+                    {formatDecimal(hi.netAIDelta)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[8px] font-semibold uppercase tracking-[0.12em]" style={{ color: AUTOMATION_COLOR }}>Auto</p>
+                  <p className="text-xs font-semibold tabular-nums" style={{ color: AUTOMATION_COLOR }}>{formatDecimal(hi.x)}</p>
+                </div>
+                <div>
+                  <p className="text-[8px] font-semibold uppercase tracking-[0.12em]" style={{ color: AUGMENTATION_COLOR }}>Aug</p>
+                  <p className="text-xs font-semibold tabular-nums" style={{ color: AUGMENTATION_COLOR }}>{formatDecimal(hi.y)}</p>
+                </div>
+              </div>
             </div>
-            <div className="flex gap-4 text-right">
-              <div>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[rgba(38,37,30,0.35)]">HC</p>
-                <p className="text-sm font-semibold tabular-nums text-[#26251e]">{formatHeadcount(hi.headcount)}</p>
-              </div>
-              <div>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[rgba(38,37,30,0.35)]">Net AI Δ</p>
-                <p className="text-sm font-semibold tabular-nums" style={{ color: hi.netAIDelta > 0 ? "hsl(22deg 90% 42%)" : "rgba(38,37,30,0.55)" }}>
-                  {formatDecimal(hi.netAIDelta)}
-                </p>
-              </div>
-              <div>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.15em]" style={{ color: AUTOMATION_COLOR }}>Auto Δ</p>
-                <p className="text-sm font-semibold tabular-nums" style={{ color: AUTOMATION_COLOR }}>{formatDecimal(hi.x)}</p>
-              </div>
-              <div>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.15em]" style={{ color: AUGMENTATION_COLOR }}>Aug Δ</p>
-                <p className="text-sm font-semibold tabular-nums" style={{ color: AUGMENTATION_COLOR }}>{formatDecimal(hi.y)}</p>
-              </div>
-            </div>
-          </div>
-        );
-      })()}
+          );
+        })()}
+      </div>
     </div>
   );
 }

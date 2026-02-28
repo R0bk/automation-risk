@@ -754,11 +754,17 @@ export function buildV1ComparativeAnalytics(
     v1Catalog.map((r) => [r.normalizedTitle, r]),
   );
 
+  // Helper: compute share (0-1) from count/total, clamped
+  const shareFromCounts = (count: number, total: number): number | null => {
+    if (total <= 0 || count == null) return null;
+    return Math.max(0, Math.min(1, count / total));
+  };
+
   // Re-compute workforce impact for each run using v1 task mix
   const v1Runs: ComparativeRun[] = runs.map((run) => {
     if (!run.report) return run;
 
-    // Override taskMixCounts on each role with v1 catalog values
+    // Override taskMixCounts AND share fields on each role with v1 catalog values
     const modifiedRoles = run.report.roles.map((role) => {
       const code = role.onetCode?.trim();
       const catalogRole = code ? v1CodeLookup.get(code) : null;
@@ -769,13 +775,27 @@ export function buildV1ComparativeAnalytics(
 
       if (!matched) return role;
 
+      const m = matched.metrics;
+      const autoShare = shareFromCounts(m.automationCount, m.totalCount)
+        ?? (m.metrics?.automation_pct != null ? Math.max(0, Math.min(1, m.metrics.automation_pct)) : null);
+      const augShare = shareFromCounts(m.augmentationCount, m.totalCount)
+        ?? (m.metrics?.augmentation_pct != null ? Math.max(0, Math.min(1, m.metrics.augmentation_pct)) : null);
+      const manualShare = autoShare == null && augShare == null
+        ? null
+        : Math.max(0, Math.min(1, 1 - (autoShare ?? 0) - (augShare ?? 0)));
+
       return {
         ...role,
+        automationShare: autoShare,
+        augmentationShare: augShare,
         taskMixCounts: {
-          automation: Math.max(0, matched.metrics.automationTasks),
-          augmentation: Math.max(0, matched.metrics.augmentationTasks),
-          manual: Math.max(0, matched.metrics.manualTasks),
+          automation: Math.max(0, m.automationTasks),
+          augmentation: Math.max(0, m.augmentationTasks),
+          manual: Math.max(0, m.manualTasks),
         },
+        taskMixShares: autoShare != null || augShare != null
+          ? { automation: autoShare, augmentation: augShare, manual: manualShare }
+          : role.taskMixShares,
       };
     });
 
@@ -810,11 +830,17 @@ export function buildV3ComparativeAnalytics(
     v3Catalog.map((r) => [r.normalizedTitle, r]),
   );
 
+  // Helper: compute share (0-1) from count/total, clamped
+  const shareFromCounts = (count: number, total: number): number | null => {
+    if (total <= 0 || count == null) return null;
+    return Math.max(0, Math.min(1, count / total));
+  };
+
   // Re-compute workforce impact for each run using v3 task mix
   const v3Runs: ComparativeRun[] = runs.map((run) => {
     if (!run.report) return run;
 
-    // Override taskMixCounts on each role with v3 catalog values
+    // Override taskMixCounts AND share fields on each role with v3 catalog values
     const modifiedRoles = run.report.roles.map((role) => {
       const code = role.onetCode?.trim();
       const catalogRole = code ? v3CodeLookup.get(code) : null;
@@ -825,13 +851,27 @@ export function buildV3ComparativeAnalytics(
 
       if (!matched) return role;
 
+      const m = matched.metrics;
+      const autoShare = shareFromCounts(m.automationCount, m.totalCount)
+        ?? (m.metrics?.automation_pct != null ? Math.max(0, Math.min(1, m.metrics.automation_pct)) : null);
+      const augShare = shareFromCounts(m.augmentationCount, m.totalCount)
+        ?? (m.metrics?.augmentation_pct != null ? Math.max(0, Math.min(1, m.metrics.augmentation_pct)) : null);
+      const manualShare = autoShare == null && augShare == null
+        ? null
+        : Math.max(0, Math.min(1, 1 - (autoShare ?? 0) - (augShare ?? 0)));
+
       return {
         ...role,
+        automationShare: autoShare,
+        augmentationShare: augShare,
         taskMixCounts: {
-          automation: Math.max(0, matched.metrics.automationTasks),
-          augmentation: Math.max(0, matched.metrics.augmentationTasks),
-          manual: Math.max(0, matched.metrics.manualTasks),
+          automation: Math.max(0, m.automationTasks),
+          augmentation: Math.max(0, m.augmentationTasks),
+          manual: Math.max(0, m.manualTasks),
         },
+        taskMixShares: autoShare != null || augShare != null
+          ? { automation: autoShare, augmentation: augShare, manual: manualShare }
+          : role.taskMixShares,
       };
     });
 
