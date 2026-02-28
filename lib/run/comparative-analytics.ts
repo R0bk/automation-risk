@@ -3,7 +3,7 @@ import {
   INDUSTRY_GROUP_ALIASES,
 } from "@/lib/constants/aggregation-groups";
 import { resolveIsoCode } from "@/lib/constants/countries";
-import { buildCodeLookup, loadOnetCatalog, loadOnetCatalogV1, type CatalogTaskMetric, type OnetCatalogRole } from "@/lib/onet/catalog";
+import { buildCodeLookup, loadOnetCatalog, loadOnetCatalogV1, loadOnetCatalogV3, type CatalogTaskMetric, type OnetCatalogRole } from "@/lib/onet/catalog";
 import {
   ComparativeRun,
   ComparativeAnalyticsPayload,
@@ -790,5 +790,61 @@ export function buildV1ComparativeAnalytics(
   });
 
   return buildComparativeAnalytics(v1Runs, v1CodeLookup);
+}
+
+/**
+ * Build comparative analytics using v3 (Sep 2025) ONET data.
+ *
+ * Re-computes workforce impact for each run using v3 task mix counts
+ * (overriding baked-in taskMixCounts), then builds analytics with the
+ * v3 ONET lookup (no deltas since v3 has no prior).
+ */
+export function buildV3ComparativeAnalytics(
+  runs: ComparativeRun[],
+): ComparativeAnalyticsPayload {
+  const v3Catalog = loadOnetCatalogV3();
+  const v3CodeLookup = buildCodeLookup(v3Catalog);
+
+  // Build a normalized-title lookup for v3 catalog
+  const v3TitleLookup = new Map<string, OnetCatalogRole>(
+    v3Catalog.map((r) => [r.normalizedTitle, r]),
+  );
+
+  // Re-compute workforce impact for each run using v3 task mix
+  const v3Runs: ComparativeRun[] = runs.map((run) => {
+    if (!run.report) return run;
+
+    // Override taskMixCounts on each role with v3 catalog values
+    const modifiedRoles = run.report.roles.map((role) => {
+      const code = role.onetCode?.trim();
+      const catalogRole = code ? v3CodeLookup.get(code) : null;
+      const byTitle = !catalogRole && role.normalizedTitle
+        ? v3TitleLookup.get(role.normalizedTitle.trim().toLowerCase())
+        : null;
+      const matched = catalogRole ?? byTitle;
+
+      if (!matched) return role;
+
+      return {
+        ...role,
+        taskMixCounts: {
+          automation: Math.max(0, matched.metrics.automationTasks),
+          augmentation: Math.max(0, matched.metrics.augmentationTasks),
+          manual: Math.max(0, matched.metrics.manualTasks),
+        },
+      };
+    });
+
+    const modifiedReport = { ...run.report, roles: modifiedRoles };
+    const impact = computeWorkforceImpact(modifiedReport);
+
+    return {
+      ...run,
+      report: modifiedReport,
+      workforceMetric: impact ?? run.workforceMetric,
+    };
+  });
+
+  return buildComparativeAnalytics(v3Runs, v3CodeLookup);
 }
 

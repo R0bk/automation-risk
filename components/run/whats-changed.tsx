@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
-import type { TopMover, CatalogChangeSummary, CatalogTransitions, VintageAggregates } from "@/lib/onet/catalog";
+import type { TopMover, CatalogChangeSummary, CatalogTransitions } from "@/lib/onet/catalog";
 import type { ComparativeAnalytics } from "@/lib/run/comparative-analytics-types";
 
 export interface TopMoverEntry extends TopMover {}
@@ -11,8 +11,12 @@ interface WhatsChangedProps {
   movers: TopMoverEntry[];
   summary: CatalogChangeSummary;
   transitions: CatalogTransitions;
+  /** v4 (current) analytics — primary data source */
   analytics: ComparativeAnalytics | null;
-  vintageAggregates?: VintageAggregates;
+  /** v3 (Sep 2025) analytics — mid-point for trajectory charts */
+  analyticsV3?: ComparativeAnalytics | null;
+  /** v1 (Jan 2025) analytics — baseline for trajectory charts */
+  analyticsV1?: ComparativeAnalytics | null;
 }
 
 const AUTOMATION_COLOR = "hsl(22deg 92% 48%)";
@@ -267,7 +271,17 @@ function SlopeChart({
 }
 
 // ── Company Scatter (Auto Δ vs Aug Δ) ───────────────────────
-type ScatterPoint = { key: string; label: string; x: number; y: number; size: number };
+type ScatterPoint = {
+  key: string;
+  label: string;
+  x: number;          // automationDelta
+  y: number;          // augmentationDelta
+  size: number;
+  headcount: number;
+  industry: string | null;
+  hqCountry: string | null;
+  netAIDelta: number;
+};
 
 function CompanyScatter({
   points,
@@ -278,7 +292,11 @@ function CompanyScatter({
   highlightedKey: string | null;
   onHighlight: (key: string | null) => void;
 }) {
+  const [hoverKey, setHoverKey] = useState<string | null>(null);
+
   if (points.length === 0) return null;
+
+  const activeKey = highlightedKey ?? hoverKey;
 
   const W = 680, H = 400;
   const padL = 56, padR = 20, padT = 20, padB = 44;
@@ -308,11 +326,27 @@ function CompanyScatter({
   const xTickArr = Array.from({ length: xTicks }, (_, i) => xLow + ((xHigh - xLow) / (xTicks - 1)) * i);
   const yTickArr = Array.from({ length: yTicks }, (_, i) => yLow + ((yHigh - yLow) / (yTicks - 1)) * i);
 
-  const hi = points.find((p) => p.key === highlightedKey);
+  const hi = points.find((p) => p.key === activeKey);
+
+  // Quadrant labels
+  const qLabelOpacity = activeKey ? 0.08 : 0.15;
+
+  // Classify company for insight
+  const classifyCompany = (p: ScatterPoint) => {
+    if (p.x > 0 && p.y > 0) return { quadrant: "Both rising", desc: "Growing AI exposure across both automation and augmentation" };
+    if (p.x < 0 && p.y > 0) return { quadrant: "Shifting to augmentation", desc: "Replacing automation with human-AI collaboration" };
+    if (p.x > 0 && p.y < 0) return { quadrant: "Shifting to automation", desc: "Moving toward more autonomous AI usage" };
+    return { quadrant: "Both declining", desc: "Decreasing overall AI exposure" };
+  };
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] p-4 shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" preserveAspectRatio="xMidYMid meet">
+    <div className="relative overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] p-4 shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        className="w-full"
+        preserveAspectRatio="xMidYMid meet"
+        onMouseLeave={() => setHoverKey(null)}
+      >
         {/* Grid */}
         {yTickArr.map((t, i) => (
           <g key={`y${i}`}>
@@ -339,6 +373,24 @@ function CompanyScatter({
           <line x1={padL} y1={toY(0)} x2={padL + plotW} y2={toY(0)} stroke="rgba(38,37,30,0.15)" strokeWidth={1} strokeDasharray="4 3" />
         )}
 
+        {/* Quadrant labels */}
+        {xLow <= 0 && xHigh >= 0 && yLow <= 0 && yHigh >= 0 && (
+          <>
+            <text x={toX(xHigh * 0.6)} y={toY(yHigh * 0.7)} textAnchor="middle" fill={`rgba(38,37,30,${qLabelOpacity})`} fontSize={8} fontFamily="system-ui">
+              +Auto +Aug
+            </text>
+            <text x={toX(xLow * 0.6)} y={toY(yHigh * 0.7)} textAnchor="middle" fill={`rgba(38,37,30,${qLabelOpacity})`} fontSize={8} fontFamily="system-ui">
+              −Auto +Aug
+            </text>
+            <text x={toX(xHigh * 0.6)} y={toY(yLow * 0.6)} textAnchor="middle" fill={`rgba(38,37,30,${qLabelOpacity})`} fontSize={8} fontFamily="system-ui">
+              +Auto −Aug
+            </text>
+            <text x={toX(xLow * 0.6)} y={toY(yLow * 0.6)} textAnchor="middle" fill={`rgba(38,37,30,${qLabelOpacity})`} fontSize={8} fontFamily="system-ui">
+              −Auto −Aug
+            </text>
+          </>
+        )}
+
         {/* Axis labels */}
         <text x={padL + plotW / 2} y={H - 1} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui">
           Automation \u0394
@@ -349,35 +401,84 @@ function CompanyScatter({
 
         {/* Points */}
         {points.map((p) => {
-          const isHi = p.key === highlightedKey;
-          const hasHi = highlightedKey != null;
+          const isHi = p.key === activeKey;
+          const hasHi = activeKey != null;
           return (
-            <g key={p.key} className="cursor-pointer" onClick={() => onHighlight(isHi ? null : p.key)}>
+            <g
+              key={p.key}
+              className="cursor-pointer"
+              onClick={() => onHighlight(highlightedKey === p.key ? null : p.key)}
+              onMouseEnter={() => setHoverKey(p.key)}
+              onMouseLeave={() => setHoverKey(null)}
+            >
+              {/* Invisible hit area */}
+              <circle cx={toX(p.x)} cy={toY(p.y)} r={Math.max(p.size + 4, 8)} fill="transparent" />
               <circle
                 cx={toX(p.x)}
                 cy={toY(p.y)}
-                r={isHi ? 6 : Math.max(p.size, 3)}
+                r={isHi ? 7 : Math.max(p.size, 3)}
                 fill={isHi ? AUGMENTATION_COLOR : hasHi ? "rgba(38,37,30,0.08)" : "rgba(245,78,0,0.25)"}
                 stroke={isHi ? "white" : "none"}
                 strokeWidth={isHi ? 2 : 0}
                 opacity={hasHi && !isHi ? 0.4 : 1}
+                style={{ transition: "r 150ms, fill 150ms, opacity 150ms" }}
               />
             </g>
           );
         })}
 
-        {/* Highlighted label */}
+        {/* Highlighted: crosshair lines + label */}
         {hi && (
-          <g>
-            <text x={toX(hi.x) + 9} y={toY(hi.y) + 4} fill="#26251e" fontSize={11} fontWeight={600} fontFamily="system-ui">
-              {hi.label}
-            </text>
-            <text x={toX(hi.x) + 9} y={toY(hi.y) + 16} fill="rgba(38,37,30,0.45)" fontSize={9} fontFamily="system-ui">
-              auto {hi.x >= 0 ? "+" : ""}{hi.x.toFixed(3)} · aug {hi.y >= 0 ? "+" : ""}{hi.y.toFixed(3)}
-            </text>
+          <g pointerEvents="none">
+            <line x1={toX(hi.x)} y1={padT} x2={toX(hi.x)} y2={padT + plotH} stroke={AUGMENTATION_COLOR} strokeWidth={0.5} strokeDasharray="3 3" opacity={0.4} />
+            <line x1={padL} y1={toY(hi.y)} x2={padL + plotW} y2={toY(hi.y)} stroke={AUGMENTATION_COLOR} strokeWidth={0.5} strokeDasharray="3 3" opacity={0.4} />
           </g>
         )}
       </svg>
+
+      {/* Tooltip card — positioned below chart */}
+      {hi && (() => {
+        const insight = classifyCompany(hi);
+        return (
+          <div className="mt-3 flex flex-wrap items-start gap-4 rounded-xl border border-[rgba(38,37,30,0.08)] bg-white/80 px-5 py-4">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-baseline gap-2">
+                <span className="text-sm font-semibold text-[#26251e]">{hi.label}</span>
+                {hi.industry && (
+                  <span className="text-[10px] text-[rgba(38,37,30,0.4)]">{hi.industry}</span>
+                )}
+                {hi.hqCountry && (
+                  <span className="text-[10px] text-[rgba(38,37,30,0.4)]">{hi.hqCountry}</span>
+                )}
+              </div>
+              <p className="mt-1 text-xs text-[rgba(38,37,30,0.5)]">
+                <span className="font-semibold" style={{ color: AUGMENTATION_COLOR }}>{insight.quadrant}</span>
+                {" — "}{insight.desc}
+              </p>
+            </div>
+            <div className="flex gap-4 text-right">
+              <div>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[rgba(38,37,30,0.35)]">HC</p>
+                <p className="text-sm font-semibold tabular-nums text-[#26251e]">{formatHeadcount(hi.headcount)}</p>
+              </div>
+              <div>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[rgba(38,37,30,0.35)]">Net AI Δ</p>
+                <p className="text-sm font-semibold tabular-nums" style={{ color: hi.netAIDelta > 0 ? "hsl(22deg 90% 42%)" : "rgba(38,37,30,0.55)" }}>
+                  {formatDecimal(hi.netAIDelta)}
+                </p>
+              </div>
+              <div>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.15em]" style={{ color: AUTOMATION_COLOR }}>Auto Δ</p>
+                <p className="text-sm font-semibold tabular-nums" style={{ color: AUTOMATION_COLOR }}>{formatDecimal(hi.x)}</p>
+              </div>
+              <div>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.15em]" style={{ color: AUGMENTATION_COLOR }}>Aug Δ</p>
+                <p className="text-sm font-semibold tabular-nums" style={{ color: AUGMENTATION_COLOR }}>{formatDecimal(hi.y)}</p>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
@@ -387,7 +488,7 @@ const COUNTRY_PREVIEW = 8;
 const COMPANY_PREVIEW = 8;
 
 // ─────────────────────────────────────────────────────────────
-export function WhatsChanged({ movers, summary, transitions, analytics, vintageAggregates }: WhatsChangedProps) {
+export function WhatsChanged({ movers, summary, transitions, analytics, analyticsV3, analyticsV1 }: WhatsChangedProps) {
   const [showAllCountries, setShowAllCountries] = useState(false);
   const [companyView, setCompanyView] = useState<"winners" | "losers" | "shift">("winners");
   const [showAllCompanies, setShowAllCompanies] = useState(false);
@@ -438,44 +539,69 @@ export function WhatsChanged({ movers, summary, transitions, analytics, vintageA
     x: c.automationDelta,
     y: c.augmentationDelta,
     size: 2.5 + (c.headcount / maxHC) * 5,
+    headcount: c.headcount,
+    industry: c.industry,
+    hqCountry: c.hqCountry,
+    netAIDelta: c.netAIDelta,
   }));
 
   // ── Trajectory chart data ───────────────────────────────
-  // Industry trajectory: use VintageAggregates for all 3 points (same taxonomy)
+  // Industry trajectory: use real company-weighted analytics from each vintage
   const industryTrajectory: SlopeLine[] = (() => {
-    if (!vintageAggregates) return [];
-    const v1Map = new Map(vintageAggregates.v1.byIndustry.map((i) => [i.name, i]));
-    const v3Map = new Map(vintageAggregates.v3.byIndustry.map((i) => [i.name, i]));
-    const v4Map = new Map(vintageAggregates.v4.byIndustry.map((i) => [i.name, i]));
+    const v4Industries = analytics?.industries ?? [];
+    if (v4Industries.length === 0) return [];
 
-    const exposure = (i: { automationTasks: number; augmentationTasks: number; manualTasks: number }) => {
-      const total = i.automationTasks + i.augmentationTasks + i.manualTasks;
-      return total > 0 ? (i.automationTasks + i.augmentationTasks) / total : 0;
-    };
+    // Build v1 and v3 industry lookups from their respective analytics snapshots
+    const v1Map = new Map(
+      (analyticsV1?.industries ?? []).map((i) => [i.industry, i]),
+    );
+    const v3Map = new Map(
+      (analyticsV3?.industries ?? []).map((i) => [i.industry, i]),
+    );
 
-    const allNames = new Set([...v1Map.keys(), ...v4Map.keys()]);
+    const exposure = (i: { averageAutomation: number | null; averageAugmentation: number | null }) =>
+      (i.averageAutomation ?? 0) + (i.averageAugmentation ?? 0);
+
     const result: SlopeLine[] = [];
-    for (const name of allNames) {
-      const i1 = v1Map.get(name);
-      const i4 = v4Map.get(name);
-      if (!i1 || !i4) continue;
-      const v1 = exposure(i1);
-      const v4 = exposure(i4);
-      if (Math.abs(v4 - v1) <= 0.0001) continue;
-      const i3 = v3Map.get(name);
-      result.push({ key: name, label: name, v1, v3: i3 ? exposure(i3) : undefined, v4 });
+    for (const ind of v4Industries) {
+      const v4Val = exposure(ind);
+      const v1Ind = v1Map.get(ind.industry);
+      const v1Val = v1Ind ? exposure(v1Ind) : v4Val - (ind.netExposureDelta ?? 0);
+      if (Math.abs(v4Val - v1Val) <= 0.0001) continue;
+      const v3Ind = v3Map.get(ind.industry);
+      const v3Val = v3Ind ? exposure(v3Ind) : undefined;
+      result.push({ key: ind.industry, label: ind.industry, v1: v1Val, v3: v3Val, v4: v4Val });
     }
     return result.sort((a, b) => (b.v4 - b.v1) - (a.v4 - a.v1));
   })();
 
-  const countryTrajectory: SlopeLine[] = countriesWithDeltas
-    .filter((c) => c.averageAutomation != null && c.averageAugmentation != null)
-    .map((c) => {
-      const v4 = (c.averageAutomation ?? 0) + (c.averageAugmentation ?? 0);
-      const v1 = v4 - (c.netExposureDelta ?? 0);
-      return { key: c.country, label: c.country, v1, v4 };
-    })
-    .sort((a, b) => (b.v4 - b.v1) - (a.v4 - a.v1));
+  // Country trajectory: use real analytics from each vintage
+  const countryTrajectory: SlopeLine[] = (() => {
+    if (countriesWithDeltas.length === 0) return [];
+
+    const v1Map = new Map(
+      (analyticsV1?.countries ?? []).map((c) => [c.country, c]),
+    );
+    const v3Map = new Map(
+      (analyticsV3?.countries ?? []).map((c) => [c.country, c]),
+    );
+
+    const exposure = (c: { averageAutomation: number | null; averageAugmentation: number | null }) =>
+      (c.averageAutomation ?? 0) + (c.averageAugmentation ?? 0);
+
+    const result: SlopeLine[] = [];
+    for (const c of countriesWithDeltas) {
+      if (c.averageAutomation == null || c.averageAugmentation == null) continue;
+      const v4Val = exposure(c);
+      const v1C = v1Map.get(c.country);
+      const v1Val = v1C ? exposure(v1C) : v4Val - (c.netExposureDelta ?? 0);
+      if (Math.abs(v4Val - v1Val) <= 0.0001) continue;
+      const v3C = v3Map.get(c.country);
+      const v3Val = v3C ? exposure(v3C) : undefined;
+      result.push({ key: c.country, label: c.country, v1: v1Val, v3: v3Val, v4: v4Val });
+    }
+    return result.sort((a, b) => (b.v4 - b.v1) - (a.v4 - a.v1));
+  })();
 
   // Resolve initial defaults (Legal for industry, top country by delta)
   const effectiveIndustry: string | null =
@@ -931,7 +1057,7 @@ export function WhatsChanged({ movers, summary, transitions, analytics, vintageA
 
       {/* ── Country Trajectory ── */}
       {countryTrajectory.length > 0 && (
-        <Section title="Country trajectory (avg AI exposure, v1 → v4)">
+        <Section title="Country trajectory (avg AI exposure, v1 → v3 → v4)">
           <p className="mb-4 -mt-2 text-sm text-[rgba(38,37,30,0.55)]">
             Each line is one country. Click to highlight and compare trajectories.
           </p>

@@ -331,6 +331,7 @@ function aggregateRoleMetrics(role: OnetRoleNode): CatalogMetrics {
 
 let cachedCatalog: OnetCatalogRole[] | null = null;
 let cachedCatalogV1: OnetCatalogRole[] | null = null;
+let cachedCatalogV3: OnetCatalogRole[] | null = null;
 
 /** Build a lookup of prior (v1) role metrics by normalized title */
 function buildPriorLookup(): Map<string, VintageSnapshot> {
@@ -462,6 +463,41 @@ export function loadOnetCatalogV1(): OnetCatalogRole[] {
   }
 
   cachedCatalogV1 = catalog;
+  return catalog;
+}
+
+/** Load v3 (Sep 2025) ONET data as a primary catalog (no prior/delta) */
+export function loadOnetCatalogV3(): OnetCatalogRole[] {
+  if (cachedCatalogV3) return cachedCatalogV3;
+
+  const catalog: OnetCatalogRole[] = [];
+  const sectors = onetHierarchyV3.onet_hierarchy ?? [];
+
+  for (const sector of sectors) {
+    const parentCluster = sector.cluster_name ?? null;
+
+    for (const roleNode of sector.children ?? []) {
+      const normalizedTitle = normalizeRole(roleNode.cluster_name);
+      if (!normalizedTitle) continue;
+
+      const codeEntry = roleCodes[normalizedTitle];
+      if (!codeEntry?.code) continue;
+
+      const metrics = aggregateRoleMetrics(roleNode);
+
+      catalog.push({
+        code: codeEntry.code,
+        title: codeEntry.title ?? roleNode.cluster_name ?? codeEntry.code,
+        normalizedTitle,
+        parentCluster,
+        metrics,
+        prior: null,
+        delta: null,
+      });
+    }
+  }
+
+  cachedCatalogV3 = catalog;
   return catalog;
 }
 

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { DataTimeline, type TimelinePoint } from "@/components/data-timeline";
 import { WhatsChanged } from "@/components/run/whats-changed";
 import { ComparativeInsights } from "@/components/run/comparative-insights";
-import type { TopMover, CatalogChangeSummary, CatalogTransitions, VintageAggregates } from "@/lib/onet/catalog";
+import type { TopMover, CatalogChangeSummary, CatalogTransitions } from "@/lib/onet/catalog";
 import type { ComparativeAnalytics } from "@/lib/run/comparative-analytics-types";
 
 const TIMELINE_POINTS: TimelinePoint[] = [
@@ -18,9 +18,9 @@ interface VintageShellProps {
   summary: CatalogChangeSummary;
   transitions: CatalogTransitions;
   analyticsV4: ComparativeAnalytics | null;
+  analyticsV3: ComparativeAnalytics | null;
   analyticsV1: ComparativeAnalytics | null;
   updatedAt: string | null;
-  vintageAggregates: VintageAggregates;
 }
 
 export function VintageShell({
@@ -28,17 +28,21 @@ export function VintageShell({
   summary,
   transitions,
   analyticsV4,
+  analyticsV3,
   analyticsV1,
   updatedAt,
-  vintageAggregates,
 }: VintageShellProps) {
   const [activeYear, setActiveYear] = useState(2025.9);
 
   const isV1 = activeYear === 2025.0;
   const isV4 = activeYear === 2025.9;
 
-  // Use the v1 snapshot if available, otherwise fall back to v4
-  const displayAnalytics = isV1 ? (analyticsV1 ?? analyticsV4) : analyticsV4;
+  // Use the matching vintage snapshot, falling back to v4
+  const displayAnalytics = isV1
+    ? (analyticsV1 ?? analyticsV4)
+    : activeYear === 2025.7
+      ? (analyticsV3 ?? analyticsV4)
+      : analyticsV4;
 
   return (
     <>
@@ -49,7 +53,8 @@ export function VintageShell({
             summary={summary}
             transitions={transitions}
             analytics={analyticsV4}
-            vintageAggregates={vintageAggregates}
+            analyticsV3={analyticsV3}
+            analyticsV1={analyticsV1}
           />
         )}
       </div>

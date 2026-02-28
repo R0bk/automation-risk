@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 
 import { enrichedOrgReportSchema } from "@/lib/run/report-schema";
 import { computeWorkforceImpact } from "@/lib/run/workforce-impact";
-import { buildComparativeAnalytics, buildV1ComparativeAnalytics } from "@/lib/run/comparative-analytics";
-import { LANDING_ANALYTICS_SNAPSHOT_KEY, LANDING_ANALYTICS_V1_BASELINE_KEY } from "@/lib/constants/analytics";
+import { buildComparativeAnalytics, buildV1ComparativeAnalytics, buildV3ComparativeAnalytics } from "@/lib/run/comparative-analytics";
+import { LANDING_ANALYTICS_SNAPSHOT_KEY, LANDING_ANALYTICS_V1_BASELINE_KEY, LANDING_ANALYTICS_V3_BASELINE_KEY } from "@/lib/constants/analytics";
 import type { ComparativeRun } from "@/lib/run/comparative-analytics-types";
 import {
   listCompletedRunsWithReports,
@@ -149,6 +149,13 @@ export async function POST() {
       await upsertAnalyticsSnapshot({
         key: LANDING_ANALYTICS_V1_BASELINE_KEY,
         payload: v1Payload,
+      });
+
+      // Generate v3 baseline snapshot (re-computes metrics with Sep 2025 ONET data)
+      const v3Payload = buildV3ComparativeAnalytics(comparativeRuns);
+      await upsertAnalyticsSnapshot({
+        key: LANDING_ANALYTICS_V3_BASELINE_KEY,
+        payload: v3Payload,
       });
 
       comparativeStats = { runs: comparativeRuns.length };
