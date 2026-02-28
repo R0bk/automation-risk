@@ -441,28 +441,32 @@ export function WhatsChanged({ movers, summary, transitions, analytics, vintageA
   }));
 
   // ── Trajectory chart data ───────────────────────────────
-  // Build v3 industry lookup for mid-point
-  const v3IndustryMap = new Map<string, number>();
-  if (vintageAggregates?.v3) {
-    for (const ind of vintageAggregates.v3.byIndustry) {
-      const total = ind.automationTasks + ind.augmentationTasks + ind.manualTasks;
-      if (total > 0) {
-        v3IndustryMap.set(ind.name, (ind.automationTasks + ind.augmentationTasks) / total);
-      }
-    }
-  }
+  // Industry trajectory: use VintageAggregates for all 3 points (same taxonomy)
+  const industryTrajectory: SlopeLine[] = (() => {
+    if (!vintageAggregates) return [];
+    const v1Map = new Map(vintageAggregates.v1.byIndustry.map((i) => [i.name, i]));
+    const v3Map = new Map(vintageAggregates.v3.byIndustry.map((i) => [i.name, i]));
+    const v4Map = new Map(vintageAggregates.v4.byIndustry.map((i) => [i.name, i]));
 
-  const analyticsIndustries = analytics?.industries ?? [];
-  const industryTrajectory: SlopeLine[] = analyticsIndustries
-    .filter((i) => i.netExposureDelta != null && i.averageAutomation != null && i.averageAugmentation != null)
-    .map((i) => {
-      const v4 = (i.averageAutomation ?? 0) + (i.averageAugmentation ?? 0);
-      const v1 = v4 - (i.netExposureDelta ?? 0);
-      const v3 = v3IndustryMap.get(i.industry);
-      return { key: i.industry, label: i.industry, v1, v3, v4 };
-    })
-    .filter((l) => Math.abs(l.v4 - l.v1) > 0.0001)
-    .sort((a, b) => (b.v4 - b.v1) - (a.v4 - a.v1));
+    const exposure = (i: { automationTasks: number; augmentationTasks: number; manualTasks: number }) => {
+      const total = i.automationTasks + i.augmentationTasks + i.manualTasks;
+      return total > 0 ? (i.automationTasks + i.augmentationTasks) / total : 0;
+    };
+
+    const allNames = new Set([...v1Map.keys(), ...v4Map.keys()]);
+    const result: SlopeLine[] = [];
+    for (const name of allNames) {
+      const i1 = v1Map.get(name);
+      const i4 = v4Map.get(name);
+      if (!i1 || !i4) continue;
+      const v1 = exposure(i1);
+      const v4 = exposure(i4);
+      if (Math.abs(v4 - v1) <= 0.0001) continue;
+      const i3 = v3Map.get(name);
+      result.push({ key: name, label: name, v1, v3: i3 ? exposure(i3) : undefined, v4 });
+    }
+    return result.sort((a, b) => (b.v4 - b.v1) - (a.v4 - a.v1));
+  })();
 
   const countryTrajectory: SlopeLine[] = countriesWithDeltas
     .filter((c) => c.averageAutomation != null && c.averageAugmentation != null)
@@ -693,7 +697,7 @@ export function WhatsChanged({ movers, summary, transitions, analytics, vintageA
 
       {/* ── Industry Trajectory ── */}
       {industryTrajectory.length > 0 && (
-        <Section title="Industry trajectory (avg AI exposure, v1 → v4)">
+        <Section title="Industry trajectory (avg AI exposure, v1 → v3 → v4)">
           <p className="mb-4 -mt-2 text-sm text-[rgba(38,37,30,0.55)]">
             Each line is one industry. Click to highlight and compare trajectories.
           </p>
