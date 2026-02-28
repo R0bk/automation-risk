@@ -17,6 +17,8 @@ interface WhatsChangedProps {
   analyticsV3?: ComparativeAnalytics | null;
   /** v1 (Jan 2025) analytics — baseline for trajectory charts */
   analyticsV1?: ComparativeAnalytics | null;
+  /** Active timeline vintage (2025.0 = v1, 2025.7 = v3, 2025.9 = v4) */
+  activeVintage?: number;
 }
 
 const AUTOMATION_COLOR = "hsl(22deg 92% 48%)";
@@ -101,11 +103,13 @@ function SlopeChart({
   highlightedKey,
   onHighlight,
   yLabel,
+  endLabel,
 }: {
   lines: SlopeLine[];
   highlightedKey: string | null;
   onHighlight: (key: string | null) => void;
   yLabel?: string;
+  endLabel?: string;
 }) {
   const [pillsExpanded, setPillsExpanded] = useState(false);
   if (lines.length === 0) return null;
@@ -168,7 +172,7 @@ function SlopeChart({
         {hasV3 && (
           <text x={xMid} y={H - 6} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui">Sep 2025</text>
         )}
-        <text x={x2} y={H - 6} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui">Nov 2025</text>
+        <text x={x2} y={H - 6} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui">{endLabel ?? "Nov 2025"}</text>
 
         {/* Vertical axes */}
         <line x1={x1} y1={padT} x2={x1} y2={padT + plotH} stroke="rgba(38,37,30,0.08)" strokeWidth={1} />
@@ -488,7 +492,7 @@ const COUNTRY_PREVIEW = 8;
 const COMPANY_PREVIEW = 8;
 
 // ─────────────────────────────────────────────────────────────
-export function WhatsChanged({ movers, summary, transitions, analytics, analyticsV3, analyticsV1 }: WhatsChangedProps) {
+export function WhatsChanged({ movers, summary, transitions, analytics, analyticsV3, analyticsV1, activeVintage = 2025.9 }: WhatsChangedProps) {
   const [showAllCountries, setShowAllCountries] = useState(false);
   const [companyView, setCompanyView] = useState<"winners" | "losers" | "shift">("winners");
   const [showAllCompanies, setShowAllCompanies] = useState(false);
@@ -498,6 +502,11 @@ export function WhatsChanged({ movers, summary, transitions, analytics, analytic
   const [highlightedIndustry, setHighlightedIndustry] = useState<string>("__initial__");
 
   if (movers.length === 0) return null;
+
+  const isOnV3 = activeVintage === 2025.7;
+
+  // Active vintage's coverage data for stat cards
+  const activeCoverage = isOnV3 ? (analyticsV3?.coverage ?? analytics?.coverage) : analytics?.coverage;
 
   const autoDelta = summary.automationAfter - summary.automationBefore;
   const augDelta = summary.augmentationAfter - summary.augmentationBefore;
@@ -546,59 +555,73 @@ export function WhatsChanged({ movers, summary, transitions, analytics, analytic
   }));
 
   // ── Trajectory chart data ───────────────────────────────
-  // Industry trajectory: use real company-weighted analytics from each vintage
+  // Helper: total AI exposure for an industry/country metric
+  const exposure = (m: { averageAutomation: number | null; averageAugmentation: number | null }) =>
+    (m.averageAutomation ?? 0) + (m.averageAugmentation ?? 0);
+
+  // Industry trajectory: v1 from v4 deltas, v3 from snapshot, endpoint based on active vintage
   const industryTrajectory: SlopeLine[] = (() => {
     const v4Industries = analytics?.industries ?? [];
     if (v4Industries.length === 0) return [];
 
-    // Build v1 and v3 industry lookups from their respective analytics snapshots
-    const v1Map = new Map(
-      (analyticsV1?.industries ?? []).map((i) => [i.industry, i]),
-    );
+    // v3 analytics lookup
     const v3Map = new Map(
       (analyticsV3?.industries ?? []).map((i) => [i.industry, i]),
     );
 
-    const exposure = (i: { averageAutomation: number | null; averageAugmentation: number | null }) =>
-      (i.averageAutomation ?? 0) + (i.averageAugmentation ?? 0);
+    // Only include industries with meaningful v1→v4 change
+    const withDeltas = v4Industries.filter(
+      (i) => i.netExposureDelta != null && i.netExposureDelta !== 0,
+    );
 
     const result: SlopeLine[] = [];
-    for (const ind of v4Industries) {
+    for (const ind of withDeltas) {
       const v4Val = exposure(ind);
-      const v1Ind = v1Map.get(ind.industry);
-      const v1Val = v1Ind ? exposure(v1Ind) : v4Val - (ind.netExposureDelta ?? 0);
-      if (Math.abs(v4Val - v1Val) <= 0.0001) continue;
+      // v1 from delta (guaranteed to differ from v4)
+      const v1Val = v4Val - (ind.netExposureDelta ?? 0);
+      // v3 from analytics snapshot
       const v3Ind = v3Map.get(ind.industry);
       const v3Val = v3Ind ? exposure(v3Ind) : undefined;
-      result.push({ key: ind.industry, label: ind.industry, v1: v1Val, v3: v3Val, v4: v4Val });
+
+      if (isOnV3) {
+        // On v3 timeline: show v1 → v3 (2-point), skip if no v3 data
+        if (v3Val == null) continue;
+        result.push({ key: ind.industry, label: ind.industry, v1: v1Val, v4: v3Val });
+      } else {
+        // On v4 timeline: show v1 → v3 → v4 (3-point with optional midpoint)
+        result.push({ key: ind.industry, label: ind.industry, v1: v1Val, v3: v3Val, v4: v4Val });
+      }
     }
     return result.sort((a, b) => (b.v4 - b.v1) - (a.v4 - a.v1));
   })();
 
-  // Country trajectory: use real analytics from each vintage
+  // Country trajectory: v1 from v4 deltas, v3 from snapshot, endpoint based on active vintage
   const countryTrajectory: SlopeLine[] = (() => {
     if (countriesWithDeltas.length === 0) return [];
 
-    const v1Map = new Map(
-      (analyticsV1?.countries ?? []).map((c) => [c.country, c]),
-    );
+    // v3 analytics lookup
     const v3Map = new Map(
       (analyticsV3?.countries ?? []).map((c) => [c.country, c]),
     );
-
-    const exposure = (c: { averageAutomation: number | null; averageAugmentation: number | null }) =>
-      (c.averageAutomation ?? 0) + (c.averageAugmentation ?? 0);
 
     const result: SlopeLine[] = [];
     for (const c of countriesWithDeltas) {
       if (c.averageAutomation == null || c.averageAugmentation == null) continue;
       const v4Val = exposure(c);
-      const v1C = v1Map.get(c.country);
-      const v1Val = v1C ? exposure(v1C) : v4Val - (c.netExposureDelta ?? 0);
-      if (Math.abs(v4Val - v1Val) <= 0.0001) continue;
+      // v1 from delta (guaranteed to differ from v4)
+      const v1Val = v4Val - (c.netExposureDelta ?? 0);
+      // v3 from analytics snapshot
       const v3C = v3Map.get(c.country);
       const v3Val = v3C ? exposure(v3C) : undefined;
-      result.push({ key: c.country, label: c.country, v1: v1Val, v3: v3Val, v4: v4Val });
+
+      if (isOnV3) {
+        // On v3 timeline: show v1 → v3 (2-point), skip if no v3 data
+        if (v3Val == null) continue;
+        result.push({ key: c.country, label: c.country, v1: v1Val, v4: v3Val });
+      } else {
+        // On v4 timeline: show v1 → v3 → v4 (3-point with optional midpoint)
+        result.push({ key: c.country, label: c.country, v1: v1Val, v3: v3Val, v4: v4Val });
+      }
     }
     return result.sort((a, b) => (b.v4 - b.v1) - (a.v4 - a.v1));
   })();
@@ -623,7 +646,7 @@ export function WhatsChanged({ movers, summary, transitions, analytics, analytic
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.36em] text-[rgba(38,37,30,0.5)]">
-            Jan 2025 → Nov 2025
+            {isOnV3 ? "Jan 2025 → Sep 2025" : "Jan 2025 → Nov 2025"}
           </p>
           <h2 className="mt-2 text-xl font-medium text-[#26251e] sm:text-2xl">
             What changed in AI task coverage
@@ -679,22 +702,22 @@ export function WhatsChanged({ movers, summary, transitions, analytics, analytic
             {transitions.totalTaskRoleCombinations.toLocaleString()}
           </p>
         </div>
-        {analytics && (
+        {activeCoverage && (
           <>
             <div className="rounded-2xl border border-[rgba(38,37,30,0.08)] bg-white/60 px-5 py-4">
               <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[rgba(38,37,30,0.45)]">
                 Companies
               </p>
               <p className="mt-1.5 text-2xl font-semibold tabular-nums text-[#26251e]">
-                {analytics.coverage.companies.toLocaleString()}
+                {activeCoverage.companies.toLocaleString()}
               </p>
             </div>
             <div className="rounded-2xl border border-[rgba(38,37,30,0.08)] bg-white/60 px-5 py-4">
               <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[rgba(38,37,30,0.45)]">
-                Workers represented
+                Avg AI exposure
               </p>
               <p className="mt-1.5 text-2xl font-semibold tabular-nums text-[#26251e]">
-                {formatHeadcount(analytics.coverage.totalHeadcount)}
+                {activeCoverage.averageExposure.toFixed(1)}%
               </p>
             </div>
           </>
@@ -823,7 +846,7 @@ export function WhatsChanged({ movers, summary, transitions, analytics, analytic
 
       {/* ── Industry Trajectory ── */}
       {industryTrajectory.length > 0 && (
-        <Section title="Industry trajectory (avg AI exposure, v1 → v3 → v4)">
+        <Section title={isOnV3 ? "Industry trajectory (avg AI exposure, v1 → v3)" : "Industry trajectory (avg AI exposure, v1 → v3 → v4)"}>
           <p className="mb-4 -mt-2 text-sm text-[rgba(38,37,30,0.55)]">
             Each line is one industry. Click to highlight and compare trajectories.
           </p>
@@ -832,6 +855,7 @@ export function WhatsChanged({ movers, summary, transitions, analytics, analytic
             highlightedKey={effectiveIndustry}
             onHighlight={(k) => setHighlightedIndustry(k ?? "")}
             yLabel="Avg AI exposure"
+            endLabel={isOnV3 ? "Sep 2025" : undefined}
           />
         </Section>
       )}
@@ -1057,7 +1081,7 @@ export function WhatsChanged({ movers, summary, transitions, analytics, analytic
 
       {/* ── Country Trajectory ── */}
       {countryTrajectory.length > 0 && (
-        <Section title="Country trajectory (avg AI exposure, v1 → v3 → v4)">
+        <Section title={isOnV3 ? "Country trajectory (avg AI exposure, v1 → v3)" : "Country trajectory (avg AI exposure, v1 → v3 → v4)"}>
           <p className="mb-4 -mt-2 text-sm text-[rgba(38,37,30,0.55)]">
             Each line is one country. Click to highlight and compare trajectories.
           </p>
@@ -1066,6 +1090,7 @@ export function WhatsChanged({ movers, summary, transitions, analytics, analytic
             highlightedKey={effectiveCountry}
             onHighlight={(k) => setHighlightedCountry(k ?? "")}
             yLabel="Avg AI exposure"
+            endLabel={isOnV3 ? "Sep 2025" : undefined}
           />
         </Section>
       )}

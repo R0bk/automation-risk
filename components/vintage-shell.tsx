@@ -55,6 +55,7 @@ export function VintageShell({
             analytics={analyticsV4}
             analyticsV3={analyticsV3}
             analyticsV1={analyticsV1}
+            activeVintage={activeYear}
           />
         )}
       </div>
