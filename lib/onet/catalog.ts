@@ -1,4 +1,5 @@
 import onetDataJson from "@/data/onet/onetData.json" assert { type: "json" };
+import onetDataV3Json from "@/data/onet/onetData-v3-2025-09.json" assert { type: "json" };
 import onetDataV4Json from "@/data/onet/onetData-v4-2025-11.json" assert { type: "json" };
 import onetRoleCodesJson from "@/data/onet/onetRoleCodes.json" assert { type: "json" };
 
@@ -113,12 +114,16 @@ export interface OnetCatalogRole {
   metrics: CatalogMetrics;
   /** Metrics from the prior (v1, Jan 2025) data vintage for delta comparison */
   prior?: VintageSnapshot | null;
+  /** Metrics from the v3 (Sep 2025) intermediate vintage */
+  v3?: VintageSnapshot | null;
   /** Computed delta: current (v4) minus prior (v1) */
   delta?: CatalogDelta | null;
 }
 
 /** Primary data: v4 (Nov 2025) with updated metrics + new economic primitives */
 const onetHierarchy: OnetHierarchy = onetDataV4Json as OnetHierarchy;
+/** v3 data: Sep 2025 intermediate vintage */
+const onetHierarchyV3: OnetHierarchy = onetDataV3Json as OnetHierarchy;
 /** Prior data: v1 (Jan 2025) for delta computation */
 const onetHierarchyPrior: OnetHierarchy = onetDataJson as OnetHierarchy;
 const roleCodes: RoleCodeMap = onetRoleCodesJson as RoleCodeMap;
@@ -349,12 +354,35 @@ function buildPriorLookup(): Map<string, VintageSnapshot> {
   return lookup;
 }
 
+/** Build a lookup of v3 (Sep 2025) role metrics by normalized title */
+function buildV3Lookup(): Map<string, VintageSnapshot> {
+  const lookup = new Map<string, VintageSnapshot>();
+  const sectors = onetHierarchyV3.onet_hierarchy ?? [];
+  for (const sector of sectors) {
+    for (const roleNode of sector.children ?? []) {
+      const normalizedTitle = normalizeRole(roleNode.cluster_name);
+      if (!normalizedTitle) continue;
+      const m = aggregateRoleMetrics(roleNode);
+      lookup.set(normalizedTitle, {
+        automationTasks: m.automationTasks,
+        augmentationTasks: m.augmentationTasks,
+        manualTasks: m.manualTasks,
+        automationCount: m.automationCount,
+        augmentationCount: m.augmentationCount,
+        totalCount: m.totalCount,
+      });
+    }
+  }
+  return lookup;
+}
+
 export function loadOnetCatalog(): OnetCatalogRole[] {
   if (cachedCatalog) {
     return cachedCatalog;
   }
 
   const priorLookup = buildPriorLookup();
+  const v3Lookup = buildV3Lookup();
 
   const catalog: OnetCatalogRole[] = [];
   const sectors = onetHierarchy.onet_hierarchy ?? [];
@@ -374,6 +402,7 @@ export function loadOnetCatalog(): OnetCatalogRole[] {
 
       const currentMetrics = aggregateRoleMetrics(roleNode);
       const prior = priorLookup.get(normalizedTitle) ?? null;
+      const v3 = v3Lookup.get(normalizedTitle) ?? null;
 
       const delta: CatalogDelta | null = prior ? {
         automationTasksDelta: currentMetrics.automationTasks - prior.automationTasks,
@@ -388,6 +417,7 @@ export function loadOnetCatalog(): OnetCatalogRole[] {
         parentCluster,
         metrics: currentMetrics,
         prior,
+        v3,
         delta,
       };
 
@@ -743,14 +773,17 @@ export type VintageAggregate = {
 
 export type VintageAggregates = {
   v1: VintageAggregate;
+  v3: VintageAggregate;
   v4: VintageAggregate;
 };
 
 /** Compute aggregate stats at each vintage for side-by-side comparison */
 export function getVintageAggregates(catalog: OnetCatalogRole[]): VintageAggregates {
   const v1Totals = { totalRoles: 0, automationTasks: 0, augmentationTasks: 0, manualTasks: 0 };
+  const v3Totals = { totalRoles: 0, automationTasks: 0, augmentationTasks: 0, manualTasks: 0 };
   const v4Totals = { totalRoles: 0, automationTasks: 0, augmentationTasks: 0, manualTasks: 0 };
   const v1Industries = new Map<string, VintageIndustryAggregate>();
+  const v3Industries = new Map<string, VintageIndustryAggregate>();
   const v4Industries = new Map<string, VintageIndustryAggregate>();
 
   for (const role of catalog) {
@@ -768,6 +801,21 @@ export function getVintageAggregates(catalog: OnetCatalogRole[]): VintageAggrega
     v4Ind.augmentationTasks += role.metrics.augmentationTasks;
     v4Ind.manualTasks += role.metrics.manualTasks;
     v4Industries.set(cluster, v4Ind);
+
+    // V3 (Sep 2025)
+    if (role.v3) {
+      v3Totals.totalRoles++;
+      v3Totals.automationTasks += role.v3.automationTasks;
+      v3Totals.augmentationTasks += role.v3.augmentationTasks;
+      v3Totals.manualTasks += role.v3.manualTasks;
+
+      const v3Ind = v3Industries.get(cluster) ?? { name: cluster, totalRoles: 0, automationTasks: 0, augmentationTasks: 0, manualTasks: 0 };
+      v3Ind.totalRoles++;
+      v3Ind.automationTasks += role.v3.automationTasks;
+      v3Ind.augmentationTasks += role.v3.augmentationTasks;
+      v3Ind.manualTasks += role.v3.manualTasks;
+      v3Industries.set(cluster, v3Ind);
+    }
 
     // V1 (prior)
     if (role.prior) {
@@ -790,6 +838,7 @@ export function getVintageAggregates(catalog: OnetCatalogRole[]): VintageAggrega
 
   return {
     v1: { ...v1Totals, byIndustry: Array.from(v1Industries.values()).sort(sortByTotal) },
+    v3: { ...v3Totals, byIndustry: Array.from(v3Industries.values()).sort(sortByTotal) },
     v4: { ...v4Totals, byIndustry: Array.from(v4Industries.values()).sort(sortByTotal) },
   };
 }

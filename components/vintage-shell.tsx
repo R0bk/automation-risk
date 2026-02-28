@@ -9,6 +9,7 @@ import type { ComparativeAnalytics } from "@/lib/run/comparative-analytics-types
 
 const TIMELINE_POINTS: TimelinePoint[] = [
   { year: 2025.0, label: "Jan 2025", available: true },
+  { year: 2025.7, label: "Sep 2025", available: true },
   { year: 2025.9, label: "Nov 2025", available: true },
 ];
 
@@ -34,6 +35,7 @@ export function VintageShell({
   const [activeYear, setActiveYear] = useState(2025.9);
 
   const isV1 = activeYear === 2025.0;
+  const isV4 = activeYear === 2025.9;
 
   // Use the v1 snapshot if available, otherwise fall back to v4
   const displayAnalytics = isV1 ? (analyticsV1 ?? analyticsV4) : analyticsV4;
@@ -41,12 +43,13 @@ export function VintageShell({
   return (
     <>
       <div id="whats-changed" className="transition-all duration-300">
-        {!isV1 && (
+        {(isV4 || activeYear === 2025.7) && (
           <WhatsChanged
             movers={movers}
             summary={summary}
             transitions={transitions}
             analytics={analyticsV4}
+            vintageAggregates={vintageAggregates}
           />
         )}
       </div>

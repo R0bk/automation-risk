@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
-import type { TopMover, CatalogChangeSummary, CatalogTransitions } from "@/lib/onet/catalog";
+import type { TopMover, CatalogChangeSummary, CatalogTransitions, VintageAggregates } from "@/lib/onet/catalog";
 import type { ComparativeAnalytics } from "@/lib/run/comparative-analytics-types";
 
 export interface TopMoverEntry extends TopMover {}
@@ -12,6 +12,7 @@ interface WhatsChangedProps {
   summary: CatalogChangeSummary;
   transitions: CatalogTransitions;
   analytics: ComparativeAnalytics | null;
+  vintageAggregates?: VintageAggregates;
 }
 
 const AUTOMATION_COLOR = "hsl(22deg 92% 48%)";
@@ -88,8 +89,8 @@ function Sparkline({
   );
 }
 
-// ── Slope / Trajectory chart (v1 → v4 multi-line) ──────────
-type SlopeLine = { key: string; label: string; v1: number; v4: number };
+// ── Slope / Trajectory chart (v1 → v3 → v4 multi-line) ─────
+type SlopeLine = { key: string; label: string; v1: number; v3?: number; v4: number };
 
 function SlopeChart({
   lines,
@@ -105,12 +106,14 @@ function SlopeChart({
   const [pillsExpanded, setPillsExpanded] = useState(false);
   if (lines.length === 0) return null;
 
+  const hasV3 = lines.some((l) => l.v3 != null);
+
   const W = 680, H = 300;
   const padL = 48, padR = 130, padT = 20, padB = 36;
   const plotW = W - padL - padR;
   const plotH = H - padT - padB;
 
-  const allVals = lines.flatMap((l) => [l.v1, l.v4]);
+  const allVals = lines.flatMap((l) => [l.v1, ...(l.v3 != null ? [l.v3] : []), l.v4]);
   const yMin = Math.min(...allVals);
   const yMax = Math.max(...allVals);
   const yRange = yMax - yMin || 0.01;
@@ -121,6 +124,8 @@ function SlopeChart({
   const toY = (v: number) => padT + plotH * (1 - (v - yLow) / (yHigh - yLow));
   const x1 = padL;
   const x2 = padL + plotW;
+  // v3 positioned proportionally: Sep 2025 is ~8/10 of the way from Jan to Nov
+  const xMid = hasV3 ? padL + plotW * (8 / 10) : 0;
 
   const tickCount = 5;
   const ticks = Array.from({ length: tickCount }, (_, i) => yLow + ((yHigh - yLow) / (tickCount - 1)) * i);
@@ -128,6 +133,11 @@ function SlopeChart({
 
   const grey = lines.filter((l) => l.key !== highlightedKey);
   const hi = lines.find((l) => l.key === highlightedKey);
+
+  const polyPoints = (l: SlopeLine) =>
+    l.v3 != null
+      ? `${x1},${toY(l.v1)} ${xMid},${toY(l.v3)} ${x2},${toY(l.v4)}`
+      : `${x1},${toY(l.v1)} ${x2},${toY(l.v4)}`;
 
   return (
     <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] p-4 shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
@@ -151,17 +161,22 @@ function SlopeChart({
 
         {/* X labels */}
         <text x={x1} y={H - 6} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui">Jan 2025</text>
+        {hasV3 && (
+          <text x={xMid} y={H - 6} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui">Sep 2025</text>
+        )}
         <text x={x2} y={H - 6} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui">Nov 2025</text>
 
         {/* Vertical axes */}
         <line x1={x1} y1={padT} x2={x1} y2={padT + plotH} stroke="rgba(38,37,30,0.08)" strokeWidth={1} />
+        {hasV3 && <line x1={xMid} y1={padT} x2={xMid} y2={padT + plotH} stroke="rgba(38,37,30,0.05)" strokeWidth={1} strokeDasharray="3 3" />}
         <line x1={x2} y1={padT} x2={x2} y2={padT + plotH} stroke="rgba(38,37,30,0.08)" strokeWidth={1} />
 
         {/* Grey lines */}
         {grey.map((l) => (
           <g key={l.key} className="cursor-pointer" opacity={hi ? 0.1 : 0.3} onClick={() => onHighlight(l.key)}>
-            <line x1={x1} y1={toY(l.v1)} x2={x2} y2={toY(l.v4)} stroke="rgba(38,37,30,0.5)" strokeWidth={1.5} strokeLinecap="round" />
+            <polyline points={polyPoints(l)} fill="none" stroke="rgba(38,37,30,0.5)" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
             <circle cx={x1} cy={toY(l.v1)} r={2.5} fill="rgba(38,37,30,0.3)" />
+            {l.v3 != null && <circle cx={xMid} cy={toY(l.v3)} r={2} fill="rgba(38,37,30,0.2)" />}
             <circle cx={x2} cy={toY(l.v4)} r={2.5} fill="rgba(38,37,30,0.3)" />
             {!hi && (
               <text x={x2 + 6} y={toY(l.v4) + 3.5} fill="rgba(38,37,30,0.3)" fontSize={8.5} fontFamily="system-ui">
@@ -174,13 +189,19 @@ function SlopeChart({
         {/* Highlighted line */}
         {hi && (
           <g className="cursor-pointer" onClick={() => onHighlight(null)}>
-            <line x1={x1} y1={toY(hi.v1)} x2={x2} y2={toY(hi.v4)} stroke={AUGMENTATION_COLOR} strokeWidth={2.5} strokeLinecap="round" />
+            <polyline points={polyPoints(hi)} fill="none" stroke={AUGMENTATION_COLOR} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
             <circle cx={x1} cy={toY(hi.v1)} r={4.5} fill={AUGMENTATION_COLOR} stroke="white" strokeWidth={2} />
+            {hi.v3 != null && <circle cx={xMid} cy={toY(hi.v3)} r={4} fill={AUGMENTATION_COLOR} stroke="white" strokeWidth={2} />}
             <circle cx={x2} cy={toY(hi.v4)} r={4.5} fill={AUGMENTATION_COLOR} stroke="white" strokeWidth={2} />
             <text x={x2 + 8} y={toY(hi.v4) + 4} fill="#26251e" fontSize={11} fontWeight={600} fontFamily="system-ui">{hi.label}</text>
             <text x={x1 - 4} y={toY(hi.v1) - 8} textAnchor="end" fill="rgba(38,37,30,0.5)" fontSize={9} fontFamily="system-ui">
               {isSmallScale ? hi.v1.toFixed(3) : Math.round(hi.v1)}
             </text>
+            {hi.v3 != null && (
+              <text x={xMid} y={toY(hi.v3) - 8} textAnchor="middle" fill="rgba(38,37,30,0.4)" fontSize={8} fontFamily="system-ui">
+                {isSmallScale ? hi.v3.toFixed(3) : Math.round(hi.v3)}
+              </text>
+            )}
             <text x={x2 + 4} y={toY(hi.v4) - 8} fill="rgba(38,37,30,0.5)" fontSize={9} fontFamily="system-ui">
               {isSmallScale ? hi.v4.toFixed(3) : Math.round(hi.v4)}
             </text>
@@ -245,16 +266,134 @@ function SlopeChart({
   );
 }
 
+// ── Company Scatter (Auto Δ vs Aug Δ) ───────────────────────
+type ScatterPoint = { key: string; label: string; x: number; y: number; size: number };
+
+function CompanyScatter({
+  points,
+  highlightedKey,
+  onHighlight,
+}: {
+  points: ScatterPoint[];
+  highlightedKey: string | null;
+  onHighlight: (key: string | null) => void;
+}) {
+  if (points.length === 0) return null;
+
+  const W = 680, H = 400;
+  const padL = 56, padR = 20, padT = 20, padB = 44;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+
+  const xs = points.map((p) => p.x);
+  const ys = points.map((p) => p.y);
+  const xMin = Math.min(...xs);
+  const xMax = Math.max(...xs);
+  const yMin = Math.min(...ys);
+  const yMax = Math.max(...ys);
+  const xRange = xMax - xMin || 0.01;
+  const yRange = yMax - yMin || 0.01;
+  const xPad = xRange * 0.1;
+  const yPad = yRange * 0.1;
+  const xLow = xMin - xPad;
+  const xHigh = xMax + xPad;
+  const yLow = yMin - yPad;
+  const yHigh = yMax + yPad;
+
+  const toX = (v: number) => padL + plotW * ((v - xLow) / (xHigh - xLow));
+  const toY = (v: number) => padT + plotH * (1 - (v - yLow) / (yHigh - yLow));
+
+  const xTicks = 5;
+  const yTicks = 5;
+  const xTickArr = Array.from({ length: xTicks }, (_, i) => xLow + ((xHigh - xLow) / (xTicks - 1)) * i);
+  const yTickArr = Array.from({ length: yTicks }, (_, i) => yLow + ((yHigh - yLow) / (yTicks - 1)) * i);
+
+  const hi = points.find((p) => p.key === highlightedKey);
+
+  return (
+    <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] p-4 shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" preserveAspectRatio="xMidYMid meet">
+        {/* Grid */}
+        {yTickArr.map((t, i) => (
+          <g key={`y${i}`}>
+            <line x1={padL} y1={toY(t)} x2={padL + plotW} y2={toY(t)} stroke="rgba(38,37,30,0.05)" strokeWidth={1} />
+            <text x={padL - 6} y={toY(t) + 3.5} textAnchor="end" fill="rgba(38,37,30,0.3)" fontSize={9} fontFamily="system-ui">
+              {t.toFixed(2)}
+            </text>
+          </g>
+        ))}
+        {xTickArr.map((t, i) => (
+          <g key={`x${i}`}>
+            <line x1={toX(t)} y1={padT} x2={toX(t)} y2={padT + plotH} stroke="rgba(38,37,30,0.05)" strokeWidth={1} />
+            <text x={toX(t)} y={H - 10} textAnchor="middle" fill="rgba(38,37,30,0.3)" fontSize={9} fontFamily="system-ui">
+              {t.toFixed(2)}
+            </text>
+          </g>
+        ))}
+
+        {/* Zero lines */}
+        {xLow <= 0 && xHigh >= 0 && (
+          <line x1={toX(0)} y1={padT} x2={toX(0)} y2={padT + plotH} stroke="rgba(38,37,30,0.15)" strokeWidth={1} strokeDasharray="4 3" />
+        )}
+        {yLow <= 0 && yHigh >= 0 && (
+          <line x1={padL} y1={toY(0)} x2={padL + plotW} y2={toY(0)} stroke="rgba(38,37,30,0.15)" strokeWidth={1} strokeDasharray="4 3" />
+        )}
+
+        {/* Axis labels */}
+        <text x={padL + plotW / 2} y={H - 1} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui">
+          Automation \u0394
+        </text>
+        <text x={10} y={padT + plotH / 2} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui" transform={`rotate(-90, 10, ${padT + plotH / 2})`}>
+          Augmentation \u0394
+        </text>
+
+        {/* Points */}
+        {points.map((p) => {
+          const isHi = p.key === highlightedKey;
+          const hasHi = highlightedKey != null;
+          return (
+            <g key={p.key} className="cursor-pointer" onClick={() => onHighlight(isHi ? null : p.key)}>
+              <circle
+                cx={toX(p.x)}
+                cy={toY(p.y)}
+                r={isHi ? 6 : Math.max(p.size, 3)}
+                fill={isHi ? AUGMENTATION_COLOR : hasHi ? "rgba(38,37,30,0.08)" : "rgba(245,78,0,0.25)"}
+                stroke={isHi ? "white" : "none"}
+                strokeWidth={isHi ? 2 : 0}
+                opacity={hasHi && !isHi ? 0.4 : 1}
+              />
+            </g>
+          );
+        })}
+
+        {/* Highlighted label */}
+        {hi && (
+          <g>
+            <text x={toX(hi.x) + 9} y={toY(hi.y) + 4} fill="#26251e" fontSize={11} fontWeight={600} fontFamily="system-ui">
+              {hi.label}
+            </text>
+            <text x={toX(hi.x) + 9} y={toY(hi.y) + 16} fill="rgba(38,37,30,0.45)" fontSize={9} fontFamily="system-ui">
+              auto {hi.x >= 0 ? "+" : ""}{hi.x.toFixed(3)} · aug {hi.y >= 0 ? "+" : ""}{hi.y.toFixed(3)}
+            </text>
+          </g>
+        )}
+      </svg>
+    </div>
+  );
+}
+
 // ── Constants ───────────────────────────────────────────────
 const COUNTRY_PREVIEW = 8;
 const COMPANY_PREVIEW = 8;
 
 // ─────────────────────────────────────────────────────────────
-export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsChangedProps) {
+export function WhatsChanged({ movers, summary, transitions, analytics, vintageAggregates }: WhatsChangedProps) {
   const [showAllCountries, setShowAllCountries] = useState(false);
   const [companyView, setCompanyView] = useState<"winners" | "losers" | "shift">("winners");
   const [showAllCompanies, setShowAllCompanies] = useState(false);
+  const [classificationOpen, setClassificationOpen] = useState(false);
   const [highlightedCountry, setHighlightedCountry] = useState<string>("__initial__");
+  const [highlightedScatterCompany, setHighlightedScatterCompany] = useState<string | null>(null);
   const [highlightedIndustry, setHighlightedIndustry] = useState<string>("__initial__");
 
   if (movers.length === 0) return null;
@@ -291,14 +430,36 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
   const companyMaxDelta = Math.max(...companies.map((c) => Math.max(Math.abs(c.automationDelta), Math.abs(c.augmentationDelta))), 0.001);
   const countryMaxDelta = Math.max(...countriesWithDeltas.map((c) => Math.max(Math.abs(c.automationDelta ?? 0), Math.abs(c.augmentationDelta ?? 0))), 0.001);
 
+  // ── Company scatter data ─────────────────────────────────
+  const maxHC = Math.max(...companies.map((c) => c.headcount), 1);
+  const companyScatter: ScatterPoint[] = companies.map((c) => ({
+    key: c.name,
+    label: c.name,
+    x: c.automationDelta,
+    y: c.augmentationDelta,
+    size: 2.5 + (c.headcount / maxHC) * 5,
+  }));
+
   // ── Trajectory chart data ───────────────────────────────
+  // Build v3 industry lookup for mid-point
+  const v3IndustryMap = new Map<string, number>();
+  if (vintageAggregates?.v3) {
+    for (const ind of vintageAggregates.v3.byIndustry) {
+      const total = ind.automationTasks + ind.augmentationTasks + ind.manualTasks;
+      if (total > 0) {
+        v3IndustryMap.set(ind.name, (ind.automationTasks + ind.augmentationTasks) / total);
+      }
+    }
+  }
+
   const analyticsIndustries = analytics?.industries ?? [];
   const industryTrajectory: SlopeLine[] = analyticsIndustries
     .filter((i) => i.netExposureDelta != null && i.averageAutomation != null && i.averageAugmentation != null)
     .map((i) => {
       const v4 = (i.averageAutomation ?? 0) + (i.averageAugmentation ?? 0);
       const v1 = v4 - (i.netExposureDelta ?? 0);
-      return { key: i.industry, label: i.industry, v1, v4 };
+      const v3 = v3IndustryMap.get(i.industry);
+      return { key: i.industry, label: i.industry, v1, v3, v4 };
     })
     .filter((l) => Math.abs(l.v4 - l.v1) > 0.0001)
     .sort((a, b) => (b.v4 - b.v1) - (a.v4 - a.v1));
@@ -410,8 +571,19 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
         )}
       </div>
 
-      {/* ── V1→V4 Metrics Change Table ── */}
-      <Section title="V1 → V4 task classification changes">
+      {/* ── V1→V4 Metrics Change Table (collapsed by default) ── */}
+      <div className="mt-10">
+        <button
+          type="button"
+          onClick={() => setClassificationOpen((v) => !v)}
+          className="group mb-4 flex w-full items-center gap-2 text-left"
+        >
+          <h3 className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[rgba(38,37,30,0.5)]">
+            V1 → V4 task classification changes
+          </h3>
+          <ChevronsUpDown className="h-3.5 w-3.5 flex-shrink-0 text-[rgba(38,37,30,0.3)] transition-colors group-hover:text-[rgba(38,37,30,0.5)]" strokeWidth={1.8} />
+        </button>
+        {classificationOpen && (
         <div className="overflow-hidden rounded-2xl border border-[rgba(38,37,30,0.1)] bg-[rgba(255,255,255,0.68)] shadow-[0_20px_40px_rgba(34,28,20,0.08)]">
           <table className="w-full text-sm">
             <thead>
@@ -516,7 +688,8 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
             </tbody>
           </table>
         </div>
-      </Section>
+        )}
+      </div>
 
       {/* ── Industry Trajectory ── */}
       {industryTrajectory.length > 0 && (
@@ -652,6 +825,20 @@ export function WhatsChanged({ movers, summary, transitions, analytics }: WhatsC
               </div>
             )}
           </div>
+        </Section>
+      )}
+
+      {/* ── Company Scatter ── */}
+      {companyScatter.length > 0 && (
+        <Section title="Company landscape (automation Δ vs augmentation Δ)">
+          <p className="mb-4 -mt-2 text-sm text-[rgba(38,37,30,0.55)]">
+            Each dot is one company. Size reflects headcount. Click to inspect.
+          </p>
+          <CompanyScatter
+            points={companyScatter}
+            highlightedKey={highlightedScatterCompany}
+            onHighlight={setHighlightedScatterCompany}
+          />
         </Section>
       )}
 
