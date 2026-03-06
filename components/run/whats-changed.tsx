@@ -569,67 +569,69 @@ export function WhatsChanged({ movers, summary, transitions, analytics, analytic
   const exposure = (m: { averageAutomation: number | null; averageAugmentation: number | null }) =>
     (m.averageAutomation ?? 0) + (m.averageAugmentation ?? 0);
 
-  // Industry trajectory: v1 from v4 deltas, v3 from snapshot, endpoint based on active vintage
+  // Industry trajectory: use actual v1/v3/v4 snapshot values
   const industryTrajectory: SlopeLine[] = (() => {
     const v4Industries = analytics?.industries ?? [];
     if (v4Industries.length === 0) return [];
 
-    // v3 analytics lookup
+    const v1Map = new Map(
+      (analyticsV1?.industries ?? []).map((i) => [i.industry, i]),
+    );
     const v3Map = new Map(
       (analyticsV3?.industries ?? []).map((i) => [i.industry, i]),
     );
 
-    // Only include industries with meaningful v1→v4 change
-    const withDeltas = v4Industries.filter(
-      (i) => i.netExposureDelta != null && i.netExposureDelta !== 0,
-    );
-
     const result: SlopeLine[] = [];
-    for (const ind of withDeltas) {
+    for (const ind of v4Industries) {
       const v4Val = exposure(ind);
-      // v1 from delta (guaranteed to differ from v4)
-      const v1Val = v4Val - (ind.netExposureDelta ?? 0);
-      // v3 from analytics snapshot
+      const v1Ind = v1Map.get(ind.industry);
+      const v1Val = v1Ind ? exposure(v1Ind) : undefined;
       const v3Ind = v3Map.get(ind.industry);
       const v3Val = v3Ind ? exposure(v3Ind) : undefined;
 
+      // Need at least v1 to show a trajectory
+      if (v1Val == null) continue;
+      // Skip if v1 == v4 (no change)
+      if (Math.abs(v4Val - v1Val) < 0.0001 && (v3Val == null || Math.abs(v3Val - v1Val) < 0.0001)) continue;
+
       if (isOnV3) {
-        // On v3 timeline: show v1 → v3 (2-point), skip if no v3 data
         if (v3Val == null) continue;
         result.push({ key: ind.industry, label: ind.industry, v1: v1Val, v4: v3Val });
       } else {
-        // On v4 timeline: show v1 → v3 → v4 (3-point with optional midpoint)
         result.push({ key: ind.industry, label: ind.industry, v1: v1Val, v3: v3Val, v4: v4Val });
       }
     }
     return result.sort((a, b) => (b.v4 - b.v1) - (a.v4 - a.v1));
   })();
 
-  // Country trajectory: v1 from v4 deltas, v3 from snapshot, endpoint based on active vintage
+  // Country trajectory: use actual v1/v3/v4 snapshot values
   const countryTrajectory: SlopeLine[] = (() => {
-    if (countriesWithDeltas.length === 0) return [];
+    const v4Countries = analytics?.countries ?? [];
+    if (v4Countries.length === 0) return [];
 
-    // v3 analytics lookup
+    const v1Map = new Map(
+      (analyticsV1?.countries ?? []).map((c) => [c.country, c]),
+    );
     const v3Map = new Map(
       (analyticsV3?.countries ?? []).map((c) => [c.country, c]),
     );
 
     const result: SlopeLine[] = [];
-    for (const c of countriesWithDeltas) {
+    for (const c of v4Countries) {
       if (c.averageAutomation == null || c.averageAugmentation == null) continue;
       const v4Val = exposure(c);
-      // v1 from delta (guaranteed to differ from v4)
-      const v1Val = v4Val - (c.netExposureDelta ?? 0);
-      // v3 from analytics snapshot
+      const v1C = v1Map.get(c.country);
+      const v1Val = v1C ? exposure(v1C) : undefined;
       const v3C = v3Map.get(c.country);
       const v3Val = v3C ? exposure(v3C) : undefined;
 
+      if (v1Val == null) continue;
+      if (Math.abs(v4Val - v1Val) < 0.0001 && (v3Val == null || Math.abs(v3Val - v1Val) < 0.0001)) continue;
+
       if (isOnV3) {
-        // On v3 timeline: show v1 → v3 (2-point), skip if no v3 data
         if (v3Val == null) continue;
         result.push({ key: c.country, label: c.country, v1: v1Val, v4: v3Val });
       } else {
-        // On v4 timeline: show v1 → v3 → v4 (3-point with optional midpoint)
         result.push({ key: c.country, label: c.country, v1: v1Val, v3: v3Val, v4: v4Val });
       }
     }
