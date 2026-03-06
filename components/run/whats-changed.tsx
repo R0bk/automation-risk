@@ -397,10 +397,10 @@ function CompanyScatter({
 
           {/* Axis labels */}
           <text x={padL + plotW / 2} y={H - 1} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui">
-            Automation \u0394
+            Automation Δ
           </text>
           <text x={10} y={padT + plotH / 2} textAnchor="middle" fill="rgba(38,37,30,0.45)" fontSize={10} fontWeight={600} fontFamily="system-ui" transform={`rotate(-90, 10, ${padT + plotH / 2})`}>
-            Augmentation \u0394
+            Augmentation Δ
           </text>
 
           {/* Points */}
