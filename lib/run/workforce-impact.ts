@@ -52,37 +52,19 @@ function collectRoleStats(report: EnrichedOrgReport): ImpactAccumulator | null {
       continue;
     }
 
-    // Prefer continuous share values (taskMixShares) when available —
-    // integer task-bucket counts (taskMixCounts) lose precision and make
-    // v1/v3 vintage snapshots look identical because the same tasks flip
-    // into the same buckets even when underlying share magnitudes differ.
-    const shares = role.taskMixShares;
-    const hasShares =
-      shares &&
-      typeof shares.automation === "number" &&
-      typeof shares.augmentation === "number" &&
-      (shares.automation > 0 || shares.augmentation > 0);
+    const counts = role.taskMixCounts ?? deriveTaskMixCounts(role);
 
-    let automationShare: number;
-    let augmentationShare: number;
+    const totalTaskCount = counts.automation + counts.augmentation + counts.manual;
 
-    if (hasShares) {
-      automationShare = Math.max(0, Math.min(1, shares.automation ?? 0));
-      augmentationShare = Math.max(0, Math.min(1, shares.augmentation ?? 0));
-    } else {
-      const counts = role.taskMixCounts ?? deriveTaskMixCounts(role);
-      const totalTaskCount = counts.automation + counts.augmentation + counts.manual;
-
-      if (!counts || totalTaskCount <= 0) {
-        if (debugWorkforceImpact) {
-          console.debug("[workforce-impact:role-skip]", { roleCode: roleKey, reason: "no-task-counts" });
-        }
-        continue;
+    if (!counts || totalTaskCount <= 0) {
+      if (debugWorkforceImpact) {
+        console.debug("[workforce-impact:role-skip]", { roleCode: roleKey, reason: "no-task-counts" });
       }
-
-      automationShare = counts.automation / totalTaskCount;
-      augmentationShare = counts.augmentation / totalTaskCount;
+      continue;
     }
+
+    const automationShare = counts.automation / totalTaskCount;
+    const augmentationShare = counts.augmentation / totalTaskCount;
 
     automationImpact += headcount * automationShare;
     augmentationImpact += headcount * augmentationShare;
@@ -95,7 +77,8 @@ function collectRoleStats(report: EnrichedOrgReport): ImpactAccumulator | null {
         headcount,
         automationShare,
         augmentationShare,
-        shareSource: hasShares ? "taskMixShares" : "taskMixCounts",
+        taskCounts: counts,
+        shareSource: "counts",
       });
     }
   }
